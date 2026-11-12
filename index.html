@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SayItRight — pronunciation practice</title>
+<meta name="theme-color" content="#14213d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213d; --muted:#5b6475; --line:#e3e6ec; --bg:#f6f7f9; --card:#fff;
+    --accent:#1f6feb; --good:#1a7f37; --mid:#b26b00; --bad:#c62828;
+    --goodbg:#e6f4ea; --midbg:#fff4e0; --badbg:#fdecec;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  header{background:var(--ink);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:-.01em}
+  header h1 span{opacity:.6;font-weight:500}
+  select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  header select{border-color:transparent}
+  main{max-width:680px;margin:0 auto;padding:16px}
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+  .tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 12px;border-radius:999px;font:500 13px Inter,sans-serif;cursor:pointer}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:10px}
+  .phrase{font-size:26px;font-weight:700;line-height:1.3;margin:4px 0 6px;display:flex;flex-wrap:wrap;gap:4px 8px}
+  .phrase .w{cursor:pointer;border-radius:6px;padding:0 3px;margin:0 -3px;transition:background .15s}
+  .phrase .w:hover{background:#eef2ff}
+  .phrase .w.ok{color:var(--good);background:var(--goodbg)}
+  .phrase .w.miss{color:var(--bad);background:var(--badbg);text-decoration:underline wavy;text-underline-offset:5px}
+  .en{color:var(--muted);font-size:15px;margin-bottom:16px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:12px;font:600 14px Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .mic{width:100%;justify-content:center;padding:18px;font-size:17px;background:var(--accent);color:#fff;border:none;margin-top:14px;border-radius:14px}
+  .mic.rec{background:var(--bad);animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(198,40,40,.4)}50%{box-shadow:0 0 0 10px rgba(198,40,40,0)}}
+  .result{display:none;margin-top:16px;border-radius:14px;padding:16px}
+  .result.show{display:block}
+  .result.good{background:var(--goodbg)} .result.mid{background:var(--midbg)} .result.bad{background:var(--badbg)}
+  .score{display:flex;align-items:baseline;gap:10px}
+  .score b{font-size:34px;letter-spacing:-.02em}
+  .stars{font-size:20px;letter-spacing:2px}
+  .heard{font-size:14px;color:var(--muted);margin-top:6px}
+  .heard em{color:var(--ink);font-style:normal;font-weight:600}
+  .tip{font-size:14px;margin-top:8px}
+  .nav{display:flex;justify-content:space-between;margin-top:14px}
+  .custom textarea{width:100%;font:500 16px Inter,sans-serif;padding:12px;border-radius:12px;border:1px solid var(--line);resize:vertical;min-height:60px}
+  .progress{font-size:13px;color:var(--muted)}
+  .bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
+  .bar i{display:block;height:100%;background:var(--good);width:0;transition:width .3s}
+  .warn{background:var(--midbg);border:1px solid #f1d7a6;color:#6b4300;padding:12px 14px;border-radius:12px;font-size:14px;margin-bottom:14px;display:none}
+  .warn.show{display:block}
+  details{font-size:14px;color:var(--muted)}
+  details summary{cursor:pointer;font-weight:600;color:var(--ink)}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 30px}
+  .sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<header>
+  <h1>SayItRight <span>· pronunciation</span></h1>
+  <select id="lang" aria-label="Language">
+    <option value="en">🇬🇧 English</option>
+    <option value="es">🇪🇸 Spanish</option>
+    <option value="fr">🇫🇷 French</option>
+    <option value="it">🇮🇹 Italian</option>
+    <option value="de">🇩🇪 German</option>
+    <option value="pt">🇵🇹 Portuguese</option>
+  </select>
+</header>
+
+<main>
+  <div class="warn" id="warn"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <section class="card" id="practice">
+    <div class="meta"><span id="counter">1 / 10</span><span id="best"></span></div>
+    <div class="phrase" id="phrase" aria-live="polite"></div>
+    <div class="en" id="en"></div>
+    <div class="row">
+      <button class="btn" id="play">🔊 Listen</button>
+      <button class="btn" id="slow">🐢 Slowly</button>
+    </div>
+    <button class="btn mic" id="mic">🎙️ Tap and say it</button>
+
+    <div class="result" id="result" role="status">
+      <div class="score"><b id="pct">0%</b><span class="stars" id="stars"></span></div>
+      <div class="heard">We heard: <em id="heard"></em></div>
+      <div class="tip" id="tip"></div>
+    </div>
+
+    <div class="nav">
+      <button class="btn" id="prev">← Back</button>
+      <button class="btn" id="next">Next →</button>
+    </div>
+  </section>
+
+  <section class="card custom" id="customCard" style="display:none">
+    <label for="customText" style="font-weight:600;display:block;margin-bottom:8px">Type any phrase to practise</label>
+    <textarea id="customText" placeholder="e.g. ¿Me puede recomendar un buen restaurante?"></textarea>
+    <div class="row" style="margin-top:10px"><button class="btn" id="useCustom">Use this phrase</button></div>
+  </section>
+
+  <section class="card">
+    <div class="progress"><span id="progText">0 of 10 phrases mastered (80%+)</span></div>
+    <div class="bar"><i id="progBar"></i></div>
+  </section>
+
+  <details class="card">
+    <summary>How it works & tips</summary>
+    <p>Tap <b>Listen</b> to hear a native-style voice, then tap the mic and say the phrase. Words we recognised turn green; words we didn't catch turn red. Tap any word to hear it on its own.</p>
+    <p>The score is based on how closely the speech engine's transcript matches the target phrase, weighted by its confidence. It's a good guide to intelligibility, not a phonetics lab — a native speaker is still the gold standard.</p>
+    <p>Works best in Chrome, Edge or Safari (including iPhone). Firefox doesn't support speech recognition. Use a quiet room and speak at a natural pace.</p>
+  </details>
+</main>
+<footer>Your voice is processed by your browser's built-in speech service. Nothing is stored except your scores, on this device.</footer>
+
+<script>
+const DATA = {
+  en:{code:'en-GB',name:'English',nums:{0:'zero',1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'},
+    sets:{
+      'Basics':[['Hello, how are you?','Greeting'],['Nice to meet you','Meeting someone new'],['Thank you very much','Saying thanks'],['Sorry, I don\'t understand','When you\'re stuck'],['Could you say that again, please?','Asking someone to repeat']],
+      'Café & restaurant':[['Could I have a cup of tea, please?','Ordering politely'],['Can I have the bill, please?','Asking to pay'],['I\'ve booked a table for two','Arriving at a restaurant'],['What would you recommend?','Asking for advice'],['That was delicious','Paying a compliment']],
+      'Travel':[['Where is the nearest station?','Asking directions'],['How much does this cost?','Asking the price'],['What time does the train leave?','Checking times'],['I need a taxi','Getting around'],['I think I\'m lost','Asking for help']],
+      'Tricky sounds':[['I think three things are worth thanking','TH sound'],['The weather is better than yesterday','TH and W'],['Light and right are different words','L vs R'],['The ship carried a sheep','Short I vs long EE'],['Very well, we will visit Wales','V vs W']]
+    }},
+  es:{code:'es-ES',name:'Spanish',nums:{0:'cero',1:'uno',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis',7:'siete',8:'ocho',9:'nueve',10:'diez'},
+    sets:{
+      'Basics':[['Hola, ¿qué tal?','Hi, how are you?'],['Buenos días','Good morning'],['Mucho gusto','Nice to meet you'],['No hablo mucho español','I don\'t speak much Spanish'],['¿Puede repetirlo, por favor?','Can you repeat that, please?']],
+      'Café & restaurant':[['Quisiera un café con leche, por favor','I\'d like a white coffee, please'],['La cuenta, por favor','The bill, please'],['Tengo una reserva para dos personas','I have a reservation for two'],['¿Qué me recomienda?','What do you recommend?'],['Está muy rico','It\'s delicious']],
+      'Travel':[['¿Dónde está el baño?','Where is the toilet?'],['¿Cuánto cuesta?','How much is it?'],['¿A qué hora sale el tren?','What time does the train leave?'],['Necesito un taxi','I need a taxi'],['Estoy perdido','I\'m lost']],
+      'Tricky sounds':[['El perro de Roberto corre rápido','Roberto\'s dog runs fast (rolled R)'],['Llueve en la calle','It\'s raining in the street (LL)'],['Mañana voy a España','Tomorrow I\'m going to Spain (Ñ)'],['Jorge juega en el jardín','Jorge plays in the garden (J)'],['Cerveza y zumo de naranja','Beer and orange juice (Z/C)']]
+    }},
+  fr:{code:'fr-FR',name:'French',nums:{0:'zéro',1:'un',2:'deux',3:'trois',4:'quatre',5:'cinq',6:'six',7:'sept',8:'huit',9:'neuf',10:'dix'},
+    sets:{
+      'Basics':[['Bonjour, comment allez-vous ?','Hello, how are you?'],['Merci beaucoup','Thank you very much'],['Enchanté','Nice to meet you'],['Je ne parle pas bien français','I don\'t speak French well'],['Pouvez-vous répéter, s\'il vous plaît ?','Can you repeat, please?']],
+      'Café & restaurant':[['Je voudrais un croissant, s\'il vous plaît','I\'d like a croissant, please'],['L\'addition, s\'il vous plaît','The bill, please'],['J\'ai une réservation pour deux personnes','I have a reservation for two'],['Qu\'est-ce que vous recommandez ?','What do you recommend?'],['C\'était délicieux','It was delicious']],
+      'Travel':[['Où est la gare ?','Where is the station?'],['Combien ça coûte ?','How much does it cost?'],['À quelle heure part le train ?','What time does the train leave?'],['J\'ai besoin d\'un taxi','I need a taxi'],['Je suis perdu','I\'m lost']],
+      'Tricky sounds':[['Un bon vin blanc','A good white wine (nasal vowels)'],['La rue est très jolie','The street is very pretty (U vs OU)'],['Il fait beau aujourd\'hui','The weather is nice today'],['Je regarde la grenouille','I\'m looking at the frog (R)'],['Les enfants ont faim','The children are hungry (liaison)']]
+    }},
+  it:{code:'it-IT',name:'Italian',nums:{0:'zero',1:'uno',2:'due',3:'tre',4:'quattro',5:'cinque',6:'sei',7:'sette',8:'otto',9:'nove',10:'dieci'},
+    sets:{
+      'Basics':[['Buongiorno, come sta?','Good morning, how are you?'],['Grazie mille','Thanks a lot'],['Piacere di conoscerla','Nice to meet you'],['Non parlo bene l\'italiano','I don\'t speak Italian well'],['Può ripetere, per favore?','Can you repeat, please?']],
+      'Café & restaurant':[['Vorrei un caffè, per favore','I\'d like a coffee, please'],['Il conto, per favore','The bill, please'],['Ho una prenotazione per due persone','I have a reservation for two'],['Che cosa mi consiglia?','What do you recommend?'],['Era buonissimo','It was delicious']],
+      'Travel':[['Dov\'è la stazione?','Where is the station?'],['Quanto costa?','How much is it?'],['A che ora parte il treno?','What time does the train leave?'],['Ho bisogno di un taxi','I need a taxi'],['Mi sono perso','I\'m lost']],
+      'Tricky sounds':[['Gli gnocchi sono buoni','The gnocchi are good (GLI / GN)'],['Ho fatto una bella passeggiata','I had a nice walk (double consonants)'],['Ciao, ci vediamo domani','Bye, see you tomorrow (CI)'],['Che bella giornata!','What a lovely day! (CHE / GI)'],['Il ragazzo mangia la pizza','The boy eats the pizza (ZZ)']]
+    }},
+  de:{code:'de-DE',name:'German',nums:{0:'null',1:'eins',2:'zwei',3:'drei',4:'vier',5:'fünf',6:'sechs',7:'sieben',8:'acht',9:'neun',10:'zehn'},
+    sets:{
+      'Basics':[['Guten Morgen, wie geht es Ihnen?','Good morning, how are you?'],['Vielen Dank','Thank you very much'],['Freut mich','Nice to meet you'],['Ich spreche nicht gut Deutsch','I don\'t speak German well'],['Können Sie das bitte wiederholen?','Can you repeat that, please?']],
+      'Café & restaurant':[['Ich hätte gern einen Kaffee, bitte','I\'d like a coffee, please'],['Die Rechnung, bitte','The bill, please'],['Ich habe eine Reservierung für zwei Personen','I have a reservation for two'],['Was empfehlen Sie?','What do you recommend?'],['Das war sehr lecker','That was very tasty']],
+      'Travel':[['Wo ist der Bahnhof?','Where is the station?'],['Wie viel kostet das?','How much does it cost?'],['Wann fährt der Zug ab?','When does the train leave?'],['Ich brauche ein Taxi','I need a taxi'],['Ich habe mich verlaufen','I\'m lost']],
+      'Tricky sounds':[['Ich möchte ein Brötchen','I\'d like a bread roll (Ö / CH)'],['Die Tür ist grün','The door is green (Ü)'],['Acht Nächte in München','Eight nights in Munich (ACH / ICH)'],['Zwei zahme Ziegen','Two tame goats (Z)'],['Das Eichhörnchen ist schnell','The squirrel is fast']]
+    }},
+  pt:{code:'pt-PT',name:'Portuguese',nums:{0:'zero',1:'um',2:'duas',3:'três',4:'quatro',5:'cinco',6:'seis',7:'sete',8:'oito',9:'nove',10:'dez'},
+    sets:{
+      'Basics':[['Bom dia, como está?','Good morning, how are you?'],['Muito obrigado','Thank you very much'],['Muito prazer','Nice to meet you'],['Não falo bem português','I don\'t speak Portuguese well'],['Pode repetir, por favor?','Can you repeat, please?']],
+      'Café & restaurant':[['Queria um café, por favor','I\'d like a coffee, please'],['A conta, por favor','The bill, please'],['Tenho uma reserva para duas pessoas','I have a reservation for two'],['O que me recomenda?','What do you recommend?'],['Estava delicioso','It was delicious']],
+      'Travel':[['Onde fica a estação?','Where is the station?'],['Quanto custa?','How much is it?'],['A que horas parte o comboio?','What time does the train leave?'],['Preciso de um táxi','I need a taxi'],['Estou perdido','I\'m lost']],
+      'Tricky sounds':[['O pão está quente','The bread is hot (nasal ÃO)'],['Vamos à praia amanhã','Let\'s go to the beach tomorrow'],['Lisboa é linda','Lisbon is beautiful'],['O coelho come a cenoura','The rabbit eats the carrot (LH)'],['Ninguém sabe','Nobody knows (nasal EM)']]
+    }}
+};
+const CUSTOM = 'My phrase';
+
+// ---------- state ----------
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+let lang = store.get('sir_lang','es');
+let set = Object.keys(DATA[lang].sets)[0];
+let idx = 0;
+let custom = null;
+let scores = store.get('sir_scores',{});
+
+const $ = id => document.getElementById(id);
+const els = {lang:$('lang'),tabs:$('tabs'),phrase:$('phrase'),en:$('en'),counter:$('counter'),best:$('best'),
+  play:$('play'),slow:$('slow'),mic:$('mic'),result:$('result'),pct:$('pct'),stars:$('stars'),heard:$('heard'),
+  tip:$('tip'),prev:$('prev'),next:$('next'),customCard:$('customCard'),customText:$('customText'),
+  useCustom:$('useCustom'),progText:$('progText'),progBar:$('progBar'),warn:$('warn'),practice:$('practice')};
+
+// ---------- text helpers ----------
+function strip(s){return s.normalize('NFD').replace(/[̀-ͯ]/g,'')}
+function tokens(s){
+  return s.toLowerCase()
+    .replace(/[’'`´\-]/g,' ')
+    .replace(/[¿?¡!.,;:"«»()…]/g,' ')
+    .split(/\s+/).filter(Boolean);
+}
+function normTok(t){
+  const n = DATA[lang].nums;
+  if(/^\d+$/.test(t) && n[+t]!==undefined) t = n[+t];
+  t = strip(t);
+  if(lang==='de') t = t.replace(/ß/g,'ss');
+  if(lang==='pt' && (t==='dois')) t='duas';
+  if(lang==='es' && t==='un') t='uno';
+  if(lang==='it' && t==='un') t='uno';
+  return t;
+}
+// LCS alignment: which target words were heard (in order)
+function align(target, heard){
+  const a = target.map(normTok), b = heard.map(normTok);
+  const m=a.length,n=b.length, dp=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=m-1;i>=0;i--)for(let j=n-1;j>=0;j--)
+    dp[i][j]= a[i]===b[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j],dp[i][j+1]);
+  const hit=new Array(m).fill(false); let i=0,j=0;
+  while(i<m&&j<n){ if(a[i]===b[j]){hit[i]=true;i++;j++} else if(dp[i+1][j]>=dp[i][j+1]) i++; else j++; }
+  // second pass: fuzzy match remaining words (allow 1 char slip on long words only, so drills like perro/pero still count)
+  for(let k=0;k<m;k++) if(!hit[k] && a[k].length>6 && b.some(w=>lev(w,a[k])<=1)) hit[k]=true;
+  return hit;
+}
+function lev(x,y){
+  const d=Array.from({length:x.length+1},(_,i)=>[i]);
+  for(let j=1;j<=y.length;j++)d[0][j]=j;
+  for(let i=1;i<=x.length;i++)for(let j=1;j<=y.length;j++)
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(x[i-1]===y[j-1]?0:1));
+  return d[x.length][y.length];
+}
+
+// ---------- current phrase ----------
+function list(){ return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
+function current(){ return list()[idx]; }
+function key(p){ return lang+'|'+p[0]; }
+
+function renderTabs(){
+  els.tabs.innerHTML='';
+  [...Object.keys(DATA[lang].sets),CUSTOM].forEach(name=>{
+    const b=document.createElement('button');
+    b.textContent=name; if(name===set) b.className='on';
+    b.onclick=()=>{set=name;idx=0;render()};
+    els.tabs.appendChild(b);
+  });
+}
+function renderPhrase(hits){
+  const p=current();
+  els.phrase.innerHTML='';
+  if(!p){ els.en.textContent=''; els.phrase.textContent='Type a phrase below to begin.'; return; }
+  // keep original words incl. punctuation for display; map to tokens by index
+  const display = p[0].split(/\s+/);
+  let ti=0;
+  display.forEach(w=>{
+    const span=document.createElement('span'); span.className='w'; span.textContent=w;
+    const n=tokens(w).length;
+    if(hits){ const slice=hits.slice(ti,ti+n); if(slice.length) span.classList.add(slice.every(Boolean)?'ok':'miss'); }
+    ti+=n;
+    span.onclick=()=>speak(tokens(w).join(' ')||w,0.7);
+    els.phrase.appendChild(span);
+  });
+  els.en.textContent=p[1]||'';
+}
+function render(){
+  renderTabs();
+  els.customCard.style.display = set===CUSTOM ? 'block':'none';
+  const L=list();
+  els.counter.textContent = L.length ? `${idx+1} / ${L.length}` : '';
+  const p=current();
+  const b = p ? scores[key(p)] : undefined;
+  els.best.textContent = b!==undefined ? `Best: ${b}%` : '';
+  els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1;
+  els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
+  els.result.className='result';
+  renderPhrase(null);
+  renderProgress();
+}
+function renderProgress(){
+  const all = Object.values(DATA[lang].sets).flat();
+  const done = all.filter(p=> (scores[key(p)]||0) >= 80).length;
+  els.progText.textContent = `${done} of ${all.length} ${DATA[lang].name} phrases mastered (80%+)`;
+  els.progBar.style.width = (100*done/all.length)+'%';
+}
+
+// ---------- speech synthesis ----------
+let voices=[];
+function loadVoices(){ voices = speechSynthesis.getVoices(); }
+if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+function pickVoice(){
+  const code=DATA[lang].code, base=code.slice(0,2);
+  const exact=voices.filter(v=>v.lang.replace('_','-')===code);
+  const pref = v=>/google|premium|enhanced|natural|neural/i.test(v.name);
+  return exact.find(pref)||exact[0]||voices.find(v=>v.lang.startsWith(base));
+}
+function speak(text,rate=0.95){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=DATA[lang].code; const v=pickVoice(); if(v) u.voice=v;
+  u.rate=rate; speechSynthesis.speak(u);
+}
+
+// ---------- speech recognition ----------
+const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec=null, listening=false;
+function startListening(){
+  if(!Rec||!current()) return;
+  if(listening){ rec.stop(); return; }
+  speechSynthesis && speechSynthesis.cancel();
+  rec = new Rec();
+  rec.lang = DATA[lang].code;
+  rec.interimResults = false;
+  rec.continuous = false;
+  rec.maxAlternatives = 5;
+  let got=false;
+  rec.onstart=()=>{listening=true;els.mic.classList.add('rec');els.mic.textContent='⏹ Listening… tap to stop'};
+  rec.onend=()=>{listening=false;els.mic.classList.remove('rec');els.mic.textContent='🎙️ Tap and say it';
+    if(!got) showError('We didn\'t catch anything — try again, a little closer to the mic.');};
+  rec.onerror=e=>{
+    got=true;
+    const m={ 'not-allowed':'Microphone access was blocked. Allow the mic for this site in your browser settings and reload.',
+      'service-not-allowed':'Speech recognition isn\'t available here. Try Chrome or Safari, served over https.',
+      'no-speech':'We didn\'t hear anything — try again.',
+      'network':'Speech recognition needs an internet connection.',
+      'language-not-supported':`Your browser doesn't support ${DATA[lang].name} recognition.`};
+    showError(m[e.error]||('Speech error: '+e.error));
+  };
+  rec.onresult=e=>{
+    got=true;
+    const res=e.results[0]; const target=tokens(current()[0]);
+    let best=null;
+    for(let i=0;i<res.length;i++){
+      const alt=res[i]; const hits=align(target,tokens(alt.transcript));
+      const ratio=hits.filter(Boolean).length/target.length;
+      const conf = alt.confidence>0 ? alt.confidence : null;
+      if(!best||ratio>best.ratio) best={hits,ratio,conf,text:alt.transcript};
+    }
+    grade(best);
+  };
+  try{ rec.start(); }catch(err){ showError('Couldn\'t start the microphone: '+err.message); }
+}
+function showError(msg){
+  els.result.className='result show bad';
+  els.pct.textContent='—'; els.stars.textContent=''; els.heard.parentElement.style.display='none';
+  els.tip.textContent=msg;
+}
+function grade(b){
+  let s = b.ratio;
+  if(b.conf!==null) s = b.ratio*(0.75+0.25*Math.min(1,b.conf/0.9));
+  const pct = Math.round(s*100);
+  const p=current(); const k=key(p);
+  if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
+  const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
+  els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad');
+  els.pct.textContent=pct+'%';
+  els.stars.textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
+  els.heard.parentElement.style.display='block';
+  els.heard.textContent='“'+b.text+'”';
+  const missed = b.hits.filter(h=>!h).length;
+  els.tip.textContent = pct>=90 ? '¡Excelente! That was clear and natural.'
+    : missed===0 ? 'All the words came through — say it a little more crisply and confidently to lift the score.'
+    : `${missed} word${missed>1?'s':''} didn't come through (in red). Tap a red word to hear it, then try again.`;
+  if(lang!=='es' && pct>=90) els.tip.textContent = {en:'Excellent! ',fr:'Excellent ! ',it:'Ottimo! ',de:'Ausgezeichnet! ',pt:'Excelente! '}[lang]+'That was clear and natural.';
+  renderPhrase(b.hits);
+  els.best.textContent=`Best: ${scores[k]}%`;
+  renderProgress();
+}
+
+// ---------- wiring ----------
+els.lang.value=lang;
+els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
+els.play.onclick=()=>current()&&speak(current()[0],0.95);
+els.slow.onclick=()=>current()&&speak(current()[0],0.6);
+els.mic.onclick=startListening;
+els.prev.onclick=()=>{if(idx>0){idx--;render()}};
+els.next.onclick=()=>{if(idx<list().length-1){idx++;render()}};
+els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; custom=[t,'']; idx=0; render();};
+
+if(!Rec){
+  els.warn.innerHTML='Your browser doesn\'t support speech recognition, so you can listen but not be scored. Open this page in <b>Chrome</b>, <b>Edge</b> or <b>Safari</b>.';
+  els.warn.classList.add('show');
+} else if(location.protocol==='file:'){
+  els.warn.innerHTML='Opened as a local file — the microphone may not work. Host it (e.g. Netlify) so it runs over https.';
+  els.warn.classList.add('show');
+}
+render();
+</script>
+</body>
+</html>
