@@ -36,6 +36,7 @@
   .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:12px;font:600 14px Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
   .btn:disabled{opacity:.45;cursor:not-allowed}
   .mic{width:100%;justify-content:center;padding:18px;font-size:17px;background:var(--accent);color:#fff;border:none;margin-top:14px;border-radius:14px}
+  .btn.rec{background:var(--bad);color:#fff;border-color:var(--bad)}
   .mic.rec{background:var(--bad);animation:pulse 1.2s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(198,40,40,.4)}50%{box-shadow:0 0 0 10px rgba(198,40,40,0)}}
   .result{display:none;margin-top:16px;border-radius:14px;padding:16px}
@@ -101,9 +102,19 @@
   </section>
 
   <section class="card custom" id="customCard" style="display:none">
-    <label for="customText" style="font-weight:600;display:block;margin-bottom:8px">Type any phrase to practise</label>
-    <textarea id="customText" placeholder="e.g. ¿Me puede recomendar un buen restaurante?"></textarea>
-    <div class="row" style="margin-top:10px"><button class="btn" id="useCustom">Use this phrase</button></div>
+    <label for="customText" style="font-weight:600;display:block;margin-bottom:4px">Your own phrase</label>
+    <p class="heard" style="margin:0 0 10px">Type or say something in any of the languages, translate it, then practise it.</p>
+    <div class="row" style="align-items:center;margin-bottom:8px">
+      <span style="font-size:14px;color:var(--muted)">I'm writing in</span>
+      <select id="fromLang" aria-label="Input language"></select>
+      <button class="btn" id="dictate">🎙️ Say it</button>
+    </div>
+    <textarea id="customText" placeholder="e.g. Could you recommend a good restaurant nearby?"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="translateBtn" style="background:var(--ink);color:#fff;border-color:var(--ink)">🌍 Translate &amp; practise</button>
+      <button class="btn" id="useCustom">Practise as written</button>
+    </div>
+    <div class="heard" id="trMsg" style="margin-top:8px"></div>
   </section>
 
   <section class="card">
@@ -120,51 +131,9 @@
 </main>
 <footer>Your voice is processed by your browser's built-in speech service. Nothing is stored except your scores, on this device.</footer>
 
+<script src="phrases.js"></script>
 <script>
-const DATA = {
-  en:{code:'en-GB',name:'English',nums:{0:'zero',1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'},
-    sets:{
-      'Basics':[['Hello, how are you?','Greeting'],['Nice to meet you','Meeting someone new'],['Thank you very much','Saying thanks'],['Sorry, I don\'t understand','When you\'re stuck'],['Could you say that again, please?','Asking someone to repeat']],
-      'Café & restaurant':[['Could I have a cup of tea, please?','Ordering politely'],['Can I have the bill, please?','Asking to pay'],['I\'ve booked a table for two','Arriving at a restaurant'],['What would you recommend?','Asking for advice'],['That was delicious','Paying a compliment']],
-      'Travel':[['Where is the nearest station?','Asking directions'],['How much does this cost?','Asking the price'],['What time does the train leave?','Checking times'],['I need a taxi','Getting around'],['I think I\'m lost','Asking for help']],
-      'Tricky sounds':[['I think three things are worth thanking','TH sound'],['The weather is better than yesterday','TH and W'],['Light and right are different words','L vs R'],['The ship carried a sheep','Short I vs long EE'],['Very well, we will visit Wales','V vs W']]
-    }},
-  es:{code:'es-ES',name:'Spanish',nums:{0:'cero',1:'uno',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis',7:'siete',8:'ocho',9:'nueve',10:'diez'},
-    sets:{
-      'Basics':[['Hola, ¿qué tal?','Hi, how are you?'],['Buenos días','Good morning'],['Mucho gusto','Nice to meet you'],['No hablo mucho español','I don\'t speak much Spanish'],['¿Puede repetirlo, por favor?','Can you repeat that, please?']],
-      'Café & restaurant':[['Quisiera un café con leche, por favor','I\'d like a white coffee, please'],['La cuenta, por favor','The bill, please'],['Tengo una reserva para dos personas','I have a reservation for two'],['¿Qué me recomienda?','What do you recommend?'],['Está muy rico','It\'s delicious']],
-      'Travel':[['¿Dónde está el baño?','Where is the toilet?'],['¿Cuánto cuesta?','How much is it?'],['¿A qué hora sale el tren?','What time does the train leave?'],['Necesito un taxi','I need a taxi'],['Estoy perdido','I\'m lost']],
-      'Tricky sounds':[['El perro de Roberto corre rápido','Roberto\'s dog runs fast (rolled R)'],['Llueve en la calle','It\'s raining in the street (LL)'],['Mañana voy a España','Tomorrow I\'m going to Spain (Ñ)'],['Jorge juega en el jardín','Jorge plays in the garden (J)'],['Cerveza y zumo de naranja','Beer and orange juice (Z/C)']]
-    }},
-  fr:{code:'fr-FR',name:'French',nums:{0:'zéro',1:'un',2:'deux',3:'trois',4:'quatre',5:'cinq',6:'six',7:'sept',8:'huit',9:'neuf',10:'dix'},
-    sets:{
-      'Basics':[['Bonjour, comment allez-vous ?','Hello, how are you?'],['Merci beaucoup','Thank you very much'],['Enchanté','Nice to meet you'],['Je ne parle pas bien français','I don\'t speak French well'],['Pouvez-vous répéter, s\'il vous plaît ?','Can you repeat, please?']],
-      'Café & restaurant':[['Je voudrais un croissant, s\'il vous plaît','I\'d like a croissant, please'],['L\'addition, s\'il vous plaît','The bill, please'],['J\'ai une réservation pour deux personnes','I have a reservation for two'],['Qu\'est-ce que vous recommandez ?','What do you recommend?'],['C\'était délicieux','It was delicious']],
-      'Travel':[['Où est la gare ?','Where is the station?'],['Combien ça coûte ?','How much does it cost?'],['À quelle heure part le train ?','What time does the train leave?'],['J\'ai besoin d\'un taxi','I need a taxi'],['Je suis perdu','I\'m lost']],
-      'Tricky sounds':[['Un bon vin blanc','A good white wine (nasal vowels)'],['La rue est très jolie','The street is very pretty (U vs OU)'],['Il fait beau aujourd\'hui','The weather is nice today'],['Je regarde la grenouille','I\'m looking at the frog (R)'],['Les enfants ont faim','The children are hungry (liaison)']]
-    }},
-  it:{code:'it-IT',name:'Italian',nums:{0:'zero',1:'uno',2:'due',3:'tre',4:'quattro',5:'cinque',6:'sei',7:'sette',8:'otto',9:'nove',10:'dieci'},
-    sets:{
-      'Basics':[['Buongiorno, come sta?','Good morning, how are you?'],['Grazie mille','Thanks a lot'],['Piacere di conoscerla','Nice to meet you'],['Non parlo bene l\'italiano','I don\'t speak Italian well'],['Può ripetere, per favore?','Can you repeat, please?']],
-      'Café & restaurant':[['Vorrei un caffè, per favore','I\'d like a coffee, please'],['Il conto, per favore','The bill, please'],['Ho una prenotazione per due persone','I have a reservation for two'],['Che cosa mi consiglia?','What do you recommend?'],['Era buonissimo','It was delicious']],
-      'Travel':[['Dov\'è la stazione?','Where is the station?'],['Quanto costa?','How much is it?'],['A che ora parte il treno?','What time does the train leave?'],['Ho bisogno di un taxi','I need a taxi'],['Mi sono perso','I\'m lost']],
-      'Tricky sounds':[['Gli gnocchi sono buoni','The gnocchi are good (GLI / GN)'],['Ho fatto una bella passeggiata','I had a nice walk (double consonants)'],['Ciao, ci vediamo domani','Bye, see you tomorrow (CI)'],['Che bella giornata!','What a lovely day! (CHE / GI)'],['Il ragazzo mangia la pizza','The boy eats the pizza (ZZ)']]
-    }},
-  de:{code:'de-DE',name:'German',nums:{0:'null',1:'eins',2:'zwei',3:'drei',4:'vier',5:'fünf',6:'sechs',7:'sieben',8:'acht',9:'neun',10:'zehn'},
-    sets:{
-      'Basics':[['Guten Morgen, wie geht es Ihnen?','Good morning, how are you?'],['Vielen Dank','Thank you very much'],['Freut mich','Nice to meet you'],['Ich spreche nicht gut Deutsch','I don\'t speak German well'],['Können Sie das bitte wiederholen?','Can you repeat that, please?']],
-      'Café & restaurant':[['Ich hätte gern einen Kaffee, bitte','I\'d like a coffee, please'],['Die Rechnung, bitte','The bill, please'],['Ich habe eine Reservierung für zwei Personen','I have a reservation for two'],['Was empfehlen Sie?','What do you recommend?'],['Das war sehr lecker','That was very tasty']],
-      'Travel':[['Wo ist der Bahnhof?','Where is the station?'],['Wie viel kostet das?','How much does it cost?'],['Wann fährt der Zug ab?','When does the train leave?'],['Ich brauche ein Taxi','I need a taxi'],['Ich habe mich verlaufen','I\'m lost']],
-      'Tricky sounds':[['Ich möchte ein Brötchen','I\'d like a bread roll (Ö / CH)'],['Die Tür ist grün','The door is green (Ü)'],['Acht Nächte in München','Eight nights in Munich (ACH / ICH)'],['Zwei zahme Ziegen','Two tame goats (Z)'],['Das Eichhörnchen ist schnell','The squirrel is fast']]
-    }},
-  pt:{code:'pt-PT',name:'Portuguese',nums:{0:'zero',1:'um',2:'duas',3:'três',4:'quatro',5:'cinco',6:'seis',7:'sete',8:'oito',9:'nove',10:'dez'},
-    sets:{
-      'Basics':[['Bom dia, como está?','Good morning, how are you?'],['Muito obrigado','Thank you very much'],['Muito prazer','Nice to meet you'],['Não falo bem português','I don\'t speak Portuguese well'],['Pode repetir, por favor?','Can you repeat, please?']],
-      'Café & restaurant':[['Queria um café, por favor','I\'d like a coffee, please'],['A conta, por favor','The bill, please'],['Tenho uma reserva para duas pessoas','I have a reservation for two'],['O que me recomenda?','What do you recommend?'],['Estava delicioso','It was delicious']],
-      'Travel':[['Onde fica a estação?','Where is the station?'],['Quanto custa?','How much is it?'],['A que horas parte o comboio?','What time does the train leave?'],['Preciso de um táxi','I need a taxi'],['Estou perdido','I\'m lost']],
-      'Tricky sounds':[['O pão está quente','The bread is hot (nasal ÃO)'],['Vamos à praia amanhã','Let\'s go to the beach tomorrow'],['Lisboa é linda','Lisbon is beautiful'],['O coelho come a cenoura','The rabbit eats the carrot (LH)'],['Ninguém sabe','Nobody knows (nasal EM)']]
-    }}
-};
+const DATA = window.SIR_DATA;
 const CUSTOM = 'My phrase';
 
 // ---------- state ----------
@@ -198,6 +167,7 @@ function normTok(t){
   t = strip(t);
   if(lang==='de') t = t.replace(/ß/g,'ss');
   if(lang==='pt' && (t==='dois')) t='duas';
+  if(lang==='de' && t==='eins') t='ein';
   if(lang==='es' && t==='un') t='uno';
   if(lang==='it' && t==='un') t='uno';
   return t;
@@ -366,7 +336,52 @@ els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
 els.prev.onclick=()=>{if(idx>0){idx--;render()}};
 els.next.onclick=()=>{if(idx<list().length-1){idx++;render()}};
-els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; custom=[t,'']; idx=0; render();};
+els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; custom=[t,'']; idx=0; render(); els.practice.scrollIntoView({behavior:'smooth'});};
+
+// ---------- own phrase: input language, dictation, translation ----------
+const fromSel=$('fromLang'), trBtn=$('translateBtn'), trMsg=$('trMsg'), dictBtn=$('dictate');
+Object.entries(DATA).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v.name;fromSel.appendChild(o);});
+function syncFrom(){
+  let f=store.get('sir_from',null);
+  if(!f||f===lang) f = lang==='en' ? 'es' : 'en';
+  fromSel.value=f; updateTrBtn();
+}
+function updateTrBtn(){
+  const same = fromSel.value===lang;
+  trBtn.style.display = same ? 'none':'inline-flex';
+  trBtn.textContent = `🌍 Translate to ${DATA[lang].name} & practise`;
+}
+fromSel.onchange=()=>{store.set('sir_from',fromSel.value);updateTrBtn();};
+els.lang.addEventListener('change',syncFrom);
+
+let dictRec=null;
+dictBtn.onclick=()=>{
+  if(!Rec){trMsg.textContent='Voice input needs Chrome, Edge or Safari.';return;}
+  if(dictRec){dictRec.stop();return;}
+  dictRec=new Rec(); dictRec.lang=DATA[fromSel.value].code; dictRec.interimResults=true; dictRec.continuous=false;
+  dictRec.onstart=()=>{dictBtn.textContent='⏹ Listening…';dictBtn.classList.add('rec');};
+  dictRec.onresult=e=>{els.customText.value=[...e.results].map(r=>r[0].transcript).join(' ');};
+  dictRec.onerror=e=>{trMsg.textContent= e.error==='not-allowed'?'Microphone access was blocked.':'Couldn\'t hear that — try again.';};
+  dictRec.onend=()=>{dictBtn.textContent='🎙️ Say it';dictBtn.classList.remove('rec');dictRec=null;};
+  try{dictRec.start();}catch(err){dictRec=null;}
+};
+
+trBtn.onclick=async()=>{
+  const text=els.customText.value.trim(); if(!text){trMsg.textContent='Type or say a phrase first.';return;}
+  if(text.length>300){trMsg.textContent='Please keep it under 300 characters.';return;}
+  trBtn.disabled=true; trMsg.textContent='Translating…';
+  try{
+    const r=await fetch('/.netlify/functions/translate',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text,from:fromSel.value,to:lang})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.translation) throw new Error(j.error||('HTTP '+r.status));
+    custom=[j.translation, text]; idx=0; trMsg.textContent='';
+    render(); els.practice.scrollIntoView({behavior:'smooth'}); speak(j.translation,0.95);
+  }catch(err){
+    trMsg.textContent = /not configured/i.test(err.message) ? 'Translation isn\'t switched on yet (no API key set on the server).' : 'Translation failed: '+err.message;
+  }finally{trBtn.disabled=false;}
+};
+syncFrom();
 
 if(!Rec){
   els.warn.innerHTML='Your browser doesn\'t support speech recognition, so you can listen but not be scored. Open this page in <b>Chrome</b>, <b>Edge</b> or <b>Safari</b>.';
