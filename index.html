@@ -65,7 +65,9 @@
   .sr{position:absolute;left:-9999px}
   .hdr-r{display:flex;gap:8px;align-items:center}
   .hdr-r{flex:1;min-width:0;justify-content:flex-end}
-  .hdr-r select{min-width:0;max-width:260px;flex:0 1 auto;text-overflow:ellipsis}
+  .langbar{display:flex;gap:8px 14px;flex-wrap:wrap;justify-content:center;align-items:center;padding:10px 12px;background:#E8EBFA;border-bottom:1px solid var(--line)}
+  .langbar label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink)}
+  .langbar select{max-width:210px;min-width:0;text-overflow:ellipsis}
   header h1{flex-shrink:0}
   @media(max-width:440px){.prem-btn .t{display:none} header h1 span:not(.logo){display:none} header{padding:12px 12px}}
   .prem-btn{border:none;background:#f5c542;color:var(--ink);font:700 13px Inter,sans-serif;padding:8px 11px;border-radius:10px;cursor:pointer;white-space:nowrap}
@@ -97,21 +99,15 @@
 </head>
 <body>
 <header>
-  <h1 style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg></span>Harley Says <span>· pronunciation</span></h1>
+  <h1 style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg></span>Harley Says <span id="tagline">· pronunciation</span></h1>
   <div class="hdr-r">
   <button class="prem-btn" id="premBtn" aria-label="Premium">⭐<span class="t"> Premium</span></button>
-  <select id="lang" aria-label="Language">
-    <option value="en">🇬🇧 English (UK)</option>
-    <option value="enus">🇺🇸 English (US)</option>
-    <option value="es">🇪🇸 Spanish (Spain)</option>
-    <option value="esmx">🇲🇽 Spanish (LatAm)</option>
-    <option value="fr">🇫🇷 French</option>
-    <option value="it">🇮🇹 Italian</option>
-    <option value="de">🇩🇪 German</option>
-    <option value="pt">🇵🇹 Portuguese</option>
-  </select>
   </div>
 </header>
+<div class="langbar">
+  <label><span data-i18n="iSpeak">I speak</span> <select id="ui"></select></label>
+  <label><span data-i18n="learning">I'm learning</span> <select id="lang"></select></label>
+</div>
 
 <main>
   <div class="warn" id="warn"></div>
@@ -130,7 +126,7 @@
 
     <div class="result" id="result" role="status">
       <div class="score" style="align-items:center"><span class="mood" id="mood" aria-hidden="true"></span><b id="pct">0%</b><span class="stars" id="stars"></span></div>
-      <div class="heard">We heard: <em id="heard"></em></div>
+      <div class="heard"><span data-i18n="weHeard">We heard:</span> <em id="heard"></em></div>
       <div class="tip" id="tip"></div>
     </div>
 
@@ -146,21 +142,21 @@
     <h3 id="lockedTitle"></h3>
     <p id="lockedText"></p>
     <div class="skel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    <button class="btn primary" id="lockedCta">⭐ Get notified when it launches</button>
+    <button class="btn primary" id="lockedCta" data-i18n="lockedCta">⭐ Get notified when it launches</button>
   </section>
 
   <section class="card custom" id="customCard" style="display:none">
-    <label for="customText" style="font-weight:600;display:block;margin-bottom:4px">Your own phrase</label>
-    <p class="heard" style="margin:0 0 10px">Type or say something in any of the languages, translate it, then practise it.</p>
+    <label for="customText" style="font-weight:600;display:block;margin-bottom:4px" data-i18n="ownTitle">Your own phrase</label>
+    <p class="heard" style="margin:0 0 10px" data-i18n="ownSub"></p>
     <div class="row" style="align-items:center;margin-bottom:8px">
-      <span style="font-size:14px;color:var(--muted)">I'm writing in</span>
+      <span style="font-size:14px;color:var(--muted)" data-i18n="writingIn">I'm writing in</span>
       <select id="fromLang" aria-label="Input language"></select>
-      <button class="btn" id="dictate">🎙️ Say it</button>
+      <button class="btn" id="dictate" data-i18n="sayIt">🎙️ Say it</button>
     </div>
     <textarea id="customText" placeholder="e.g. Could you recommend a good restaurant nearby?"></textarea>
     <div class="row" style="margin-top:10px">
       <button class="btn" id="translateBtn" style="background:var(--ink);color:#fff;border-color:var(--ink)">🌍 Translate &amp; practise</button>
-      <button class="btn" id="useCustom">Practise as written</button>
+      <button class="btn" id="useCustom" data-i18n="asWritten">Practise as written</button>
     </div>
     <div class="heard" id="trMsg" style="margin-top:8px"></div>
   </section>
@@ -171,59 +167,54 @@
   </section>
 
   <section class="card premium" id="premiumCard">
-    <span class="badge">Coming soon</span>
-    <h2>⭐ Harley Says Premium</h2>
-    <ul class="feat">
-      <li><b>200 phrases per topic</b>, ten times the free library</li>
-      <li><b>5 extra topics</b>: Business &amp; work, Shopping, Health &amp; emergencies, Social &amp; small talk, Numbers, dates &amp; time</li>
-      <li><b>Sound-by-sound scoring</b> that shows exactly which sounds to fix</li>
-      <li><b>Unlimited translations</b> of your own phrases</li>
-      <li><b>Progress synced</b> across your phone and computer</li>
-    </ul>
+    <span class="badge" data-i18n="comingSoon">Coming soon</span>
+    <h2 data-i18n="premTitle">⭐ Harley Says Premium</h2>
+    <ul class="feat" id="feats"></ul>
     <form name="waitlist" method="POST" data-netlify="true" netlify-honeypot="company" id="waitForm">
       <input type="hidden" name="form-name" value="waitlist">
       <input type="hidden" name="language" id="wlLang" value="">
       <p class="sr"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
-      <label for="wlEmail">Get notified when Premium launches</label>
+      <label for="wlEmail" data-i18n="notifyLabel">Get notified when Premium launches</label>
       <div class="row">
         <input type="email" name="email" id="wlEmail" required placeholder="you@example.com" autocomplete="email">
-        <button class="btn primary" type="submit" id="wlBtn">Notify me</button>
+        <button class="btn primary" type="submit" id="wlBtn" data-i18n="notifyBtn">Notify me</button>
       </div>
-      <p class="fine">We'll only email you about the Premium launch. No spam, unsubscribe any time.</p>
+      <p class="fine" data-i18n="fine">We'll only email you about the Premium launch. No spam, unsubscribe any time.</p>
       <p class="fine" id="wlErr" style="color:var(--bad)"></p>
     </form>
-    <div class="done" id="wlDone" style="display:none">✓ You're on the list. We'll let you know when Premium launches.</div>
+    <div class="done" id="wlDone" style="display:none" data-i18n="wlDone">✓ You're on the list. We'll let you know when Premium launches.</div>
   </section>
 
   <section class="card story">
-    <h2 style="margin:0 0 8px;font-size:18px">Why we built Harley Says</h2>
-    <p style="margin:0 0 8px;line-height:1.6">My wife lives in the UK and is always looking for ways to practise her pronunciation. Classes help, but in between it's hard to find someone patient enough to listen, say it back properly, and tell you honestly how you sounded.</p>
-    <p style="margin:0 0 8px;line-height:1.6">So we built the tool we wished existed: free, no sign-up, and ready whenever you are.</p>
-    <h3 style="margin:14px 0 6px;font-size:16px">Why Harley?</h3>
+    <h2 style="margin:0 0 8px;font-size:18px" data-i18n="storyH">Why we built Harley Says</h2>
+    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story1">My wife lives in the UK and is always looking for ways to practise her pronunciation. Classes help, but in between it's hard to find someone patient enough to listen, say it back properly, and tell you honestly how you sounded.</p>
+    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story2">So we built the tool we wished existed: free, no sign-up, and ready whenever you are.</p>
+    <h3 style="margin:14px 0 6px;font-size:16px" data-i18n="whyH">Why Harley?</h3>
     <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:4px 0 10px">
       <figure style="margin:0">
         <img src="harley.jpg" width="560" height="420" loading="lazy" alt="Harley, a white bichon frise, running happily across a grassy field" style="width:100%;height:190px;object-fit:cover;border-radius:14px;display:block">
-        <figcaption style="font-size:13px;color:var(--muted);margin-top:6px">In full flight</figcaption>
+        <figcaption style="font-size:13px;color:var(--muted);margin-top:6px" data-i18n="cap1">In full flight</figcaption>
       </figure>
       <figure style="margin:0">
         <img src="harley-ball.jpg" width="420" height="492" loading="lazy" alt="Harley, a fluffy white bichon frise, looking up with a tennis ball in his mouth" style="width:100%;height:190px;object-fit:cover;object-position:50% 30%;border-radius:14px;display:block">
-        <figcaption style="font-size:13px;color:var(--muted);margin-top:6px">Ready to play</figcaption>
+        <figcaption style="font-size:13px;color:var(--muted);margin-top:6px" data-i18n="cap2">Ready to play</figcaption>
       </figure>
     </div>
-    <p style="margin:0 0 8px;line-height:1.6">The app is named after Harley, our much-loved bichon frise. In the app, he's learning to talk too, so every time you practise, you're practising together.</p>
+    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story3">The app is named after Harley, our much-loved bichon frise. In the app, he's learning to talk too, so every time you practise, you're practising together.</p>
     <p style="margin:0;color:var(--muted);font-style:italic">Neil</p>
   </section>
 
   <details class="card">
-    <summary>How it works & tips</summary>
-    <p>Tap <b>Listen</b> to hear a native-style voice, then tap the mic and say the phrase. Words we recognised turn green; words we didn't catch turn red. Tap any word to hear it on its own.</p>
-    <p>The score is based on how closely the speech engine's transcript matches the target phrase, weighted by its confidence. It's a good guide to intelligibility, not a phonetics lab — a native speaker is still the gold standard.</p>
-    <p>Works best in Chrome, Edge or Safari (including iPhone). Firefox doesn't support speech recognition. Use a quiet room and speak at a natural pace.</p>
+    <summary data-i18n="howH">How it works &amp; tips</summary>
+    <p data-i18n="how1"></p>
+    <p data-i18n="how2"></p>
+    <p data-i18n="how3"></p>
   </details>
 </main>
-<footer>Your voice is processed by your browser's built-in speech service. Your scores stay on this device. If you join the Premium waitlist, we keep your email only to tell you about the launch.</footer>
+<footer data-i18n="footer">Your voice is processed by your browser's built-in speech service. Your scores stay on this device. If you join the Premium waitlist, we keep your email only to tell you about the launch.</footer>
 
 <script src="phrases.js"></script>
+<script src="i18n.js"></script>
 <script>
 const DATA = window.SIR_DATA;
 const CUSTOM = 'My phrase';
@@ -237,14 +228,18 @@ const store = {
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 };
 const ORDER = ['en','enus','es','esmx','fr','it','de','pt'];
+const FLAGS = {en:'🇬🇧',enus:'🇺🇸',es:'🇪🇸',esmx:'🇲🇽',fr:'🇫🇷',it:'🇮🇹',de:'🇩🇪',pt:'🇵🇹'};
+const UI = window.SIR_UI;
+const NAV = (navigator.languages&&navigator.languages[0]||navigator.language||'en-GB').toLowerCase();
+const IN_AMERICAS = (()=>{ const r=NAV.split('-')[1]||''; return ['us','ca','mx','br','ar','co','cl','pe','ve','419'].includes(r) || (Intl.DateTimeFormat().resolvedOptions().timeZone||'').startsWith('America/'); })();
+let ui = (()=>{ try{ const v=localStorage.getItem('sir_ui'); if(v && UI[JSON.parse(v)]) return JSON.parse(v); }catch(e){} const b=NAV.split('-')[0]; return UI[b] ? b : 'en'; })();
+function t(k, vars){ let v=(UI[ui]&&UI[ui][k]!==undefined)?UI[ui][k]:UI.en[k]; if(typeof v==='string'&&vars) for(const [a,b] of Object.entries(vars)) v=v.split('{'+a+'}').join(b); return v; }
+const LN = k => (window.SIR_LANG_NAMES[ui]||window.SIR_LANG_NAMES.en)[k];
+const setName = n => (t('sets')||{})[n] || n;
 const base = l => l==='enus' ? 'en' : l==='esmx' ? 'es' : l;
 function detectLang(){
-  const nav=(navigator.languages&&navigator.languages[0]||navigator.language||'en-GB').toLowerCase();
-  const [l,r='']=nav.split('-');
-  if(l==='en') return ['us','ca','ph'].includes(r) ? 'enus' : 'en';
-  if(l==='es') return r==='es' || r==='' ? 'es' : 'esmx';
-  if(DATA[l]) return l;
-  return (Intl.DateTimeFormat().resolvedOptions().timeZone||'').startsWith('America/') ? 'esmx' : 'es';
+  if(ui==='en') return IN_AMERICAS ? 'esmx' : 'es';
+  return IN_AMERICAS ? 'enus' : 'en';
 }
 let lang = store.get('sir_lang',null);
 if(!DATA[lang]) lang = detectLang();
@@ -304,17 +299,22 @@ function list(){ if(isLocked(set)) return []; return set===CUSTOM ? (custom?[cus
 function current(){ return list()[idx]; }
 function key(p){ return lang+'|'+p[0]; }
 
+function meaning(p){
+  if(set===CUSTOM || ui==='en') return p[1]||'';
+  if(base(lang)==='en'){ const m=window.SIR_EN_MEANING(p[0],ui); if(m) return m; }
+  return p[1]||'';
+}
 function renderTabs(){
   els.tabs.innerHTML='';
   [...Object.keys(DATA[lang].sets),CUSTOM].forEach(name=>{
     const b=document.createElement('button');
-    b.textContent=name; if(name===set) b.className='on';
+    b.textContent=setName(name); if(name===set) b.className='on';
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });
   PREMIUM_TOPICS.forEach(name=>{
     const b=document.createElement('button');
-    b.textContent='🔒 '+name; b.className='locked'+(name===set?' on':'');
+    b.textContent='🔒 '+setName(name); b.className='locked'+(name===set?' on':'');
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });
@@ -322,7 +322,7 @@ function renderTabs(){
 function renderPhrase(hits){
   const p=current();
   els.phrase.innerHTML='';
-  if(!p){ els.en.textContent=''; els.phrase.textContent='Type a phrase below to begin.'; return; }
+  if(!p){ els.en.textContent=''; els.phrase.textContent=t('typeBelow'); return; }
   // keep original words incl. punctuation for display; map to tokens by index
   const display = p[0].split(/\s+/);
   let ti=0;
@@ -334,7 +334,7 @@ function renderPhrase(hits){
     span.onclick=()=>speak(tokens(w).join(' ')||w,0.7);
     els.phrase.appendChild(span);
   });
-  els.en.textContent=p[1]||'';
+  els.en.textContent=meaning(p);
 }
 function render(){
   renderTabs();
@@ -343,20 +343,20 @@ function render(){
   els.practice.style.display = locked ? 'none':'block';
   $('lockedView').style.display = locked ? 'block':'none';
   if(locked){
-    $('lockedTitle').textContent = set;
-    $('lockedText').textContent = `${PREMIUM_PER_TOPIC} ${DATA[lang].name} phrases with sound-by-sound scoring. Part of Harley Says Premium, coming soon.`;
+    $('lockedTitle').textContent = setName(set);
+    $('lockedText').textContent = t('lockedText',{n:PREMIUM_PER_TOPIC,lang:LN(lang)});
   }
   const L=list();
   els.counter.textContent = L.length ? `${idx+1} / ${L.length}` : '';
   const p=current();
   const b = p ? scores[key(p)] : undefined;
-  els.best.textContent = b!==undefined ? `Best: ${b}%` : '';
+  els.best.textContent = b!==undefined ? t('best',{n:b}) : '';
   els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1;
   els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
   els.result.className='result';
   const up=$('upsell');
   if(!locked && set!==CUSTOM && L.length && idx===L.length-1){
-    up.innerHTML = `🎉 That's all ${L.length} free <b>${set}</b> phrases. Premium adds ${PREMIUM_PER_TOPIC-L.length} more. <button class="linkbtn" data-prem>Get notified</button>`;
+    up.innerHTML = t('upsell',{n:L.length,set:'<b>'+setName(set)+'</b>',m:PREMIUM_PER_TOPIC-L.length})+' <button class="linkbtn" data-prem>'+t('getNotified')+'</button>';
     up.classList.add('show');
   } else { up.classList.remove('show'); up.innerHTML=''; }
   renderPhrase(null);
@@ -365,7 +365,7 @@ function render(){
 function renderProgress(){
   const all = Object.values(DATA[lang].sets).flat();
   const done = all.filter(p=> (scores[key(p)]||0) >= 80).length;
-  els.progText.textContent = `${done} of ${all.length} ${DATA[lang].name} phrases mastered (80%+)`;
+  els.progText.textContent = t('progress',{lang:LN(lang),done,total:all.length});
   els.progBar.style.width = (100*done/all.length)+'%';
 }
 
@@ -400,17 +400,13 @@ function startListening(){
   rec.continuous = false;
   rec.maxAlternatives = 5;
   let got=false;
-  rec.onstart=()=>{listening=true;els.mic.classList.add('rec');els.mic.textContent='⏹ Listening… tap to stop'};
-  rec.onend=()=>{listening=false;els.mic.classList.remove('rec');els.mic.textContent='🎙️ Tap and say it';
-    if(!got) showError('We didn\'t catch anything — try again, a little closer to the mic.');};
+  rec.onstart=()=>{listening=true;els.mic.classList.add('rec');els.mic.textContent=t('listening')};
+  rec.onend=()=>{listening=false;els.mic.classList.remove('rec');els.mic.textContent=t('tapSay');
+    if(!got) showError(t('noCatch'));};
   rec.onerror=e=>{
     got=true;
-    const m={ 'not-allowed':'Microphone access was blocked. Allow the mic for this site in your browser settings and reload.',
-      'service-not-allowed':'Speech recognition isn\'t available here. Try Chrome or Safari, served over https.',
-      'no-speech':'We didn\'t hear anything — try again.',
-      'network':'Speech recognition needs an internet connection.',
-      'language-not-supported':`Your browser doesn't support ${DATA[lang].name} recognition.`};
-    showError(m[e.error]||('Speech error: '+e.error));
+    const m={'not-allowed':t('errNotAllowed'),'service-not-allowed':t('errService'),'no-speech':t('errNoSpeech'),'network':t('errNetwork'),'language-not-supported':t('errLang',{lang:LN(lang)})};
+    showError(m[e.error]||(t('errOther')+e.error));
   };
   rec.onresult=e=>{
     got=true;
@@ -424,7 +420,7 @@ function startListening(){
     }
     grade(best);
   };
-  try{ rec.start(); }catch(err){ showError('Couldn\'t start the microphone: '+err.message); }
+  try{ rec.start(); }catch(err){ showError(t('errStart')+err.message); }
 }
 const HARLEY={happy:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg>`,puzzled:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><text x="238" y="86" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="54" fill="#fff">?</text><g transform="rotate(14 150 148)"><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="140" r="9" fill="#1C2563"/><circle cx="175" cy="136" r="10" fill="#1C2563"/><circle cx="128" cy="137" r="3" fill="#fff"/><circle cx="178" cy="133" r="3" fill="#fff"/><path d="M112 120 q12 -6 24 -2" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M140 180 q10 -4 20 0" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></g></svg>`,celebrate:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><rect x="50" y="50" width="10" height="16" rx="3" fill="#FFD166" transform="rotate(20 55 58)"/><rect x="232" y="44" width="10" height="16" rx="3" fill="#7FE0C9" transform="rotate(-25 237 52)"/><rect x="40" y="150" width="10" height="16" rx="3" fill="#F7B8C4" transform="rotate(35 45 158)"/><rect x="250" y="140" width="10" height="16" rx="3" fill="#FFD166" transform="rotate(-15 255 148)"/><rect x="78" y="96" width="10" height="16" rx="3" fill="#7FE0C9" transform="rotate(-40 83 104)"/><rect x="220" y="96" width="10" height="16" rx="3" fill="#F7B8C4" transform="rotate(30 225 104)"/><circle cx="212" cy="150" r="33" fill="#fff"/><circle cx="200" cy="186" r="33" fill="#fff"/><circle cx="169" cy="209" r="33" fill="#fff"/><circle cx="131" cy="209" r="33" fill="#fff"/><circle cx="100" cy="186" r="33" fill="#fff"/><circle cx="88" cy="150" r="33" fill="#fff"/><circle cx="100" cy="114" r="33" fill="#fff"/><circle cx="131" cy="91" r="33" fill="#fff"/><circle cx="169" cy="91" r="33" fill="#fff"/><circle cx="200" cy="114" r="33" fill="#fff"/><circle cx="150" cy="150" r="70" fill="#fff"/><path d="M114 140 q11 -14 22 0 M164 140 q11 -14 22 0" fill="none" stroke="#1C2563" stroke-width="5" stroke-linecap="round"/><circle cx="108" cy="168" r="10" fill="#F7B8C4" opacity="0.8"/><circle cx="192" cy="168" r="10" fill="#F7B8C4" opacity="0.8"/><ellipse cx="150" cy="160" rx="13" ry="9" fill="#1C2563"/><path d="M126 174 q24 34 48 0 z" fill="#1C2563"/><path d="M138 186 q12 16 24 0 z" fill="#F07C92"/></svg>`};
 function setMood(m){ $('mood').innerHTML=HARLEY[m]; }
@@ -448,16 +444,30 @@ function grade(b){
   els.heard.parentElement.style.display='block';
   els.heard.textContent='“'+b.text+'”';
   const missed = b.hits.filter(h=>!h).length;
-  els.tip.textContent = pct>=90 ? '¡Excelente! That was clear and natural.'
-    : missed===0 ? 'All the words came through — say it a little more crisply and confidently to lift the score.'
-    : `${missed} word${missed>1?'s':''} didn't come through (in red). Tap a red word to hear it, then try again.`;
-  if(base(lang)!=='es' && pct>=90) els.tip.textContent = {en:'Excellent! ',enus:'Awesome! ',fr:'Excellent ! ',it:'Ottimo! ',de:'Ausgezeichnet! ',pt:'Excelente! '}[lang]+'That was clear and natural.';
+  els.tip.textContent = pct>=90 ? t('tipGreat') : missed===0 ? t('tipAll') : missed===1 ? t('missed1') : t('missedN',{n:missed});
   renderPhrase(b.hits);
-  els.best.textContent=`Best: ${scores[k]}%`;
+  els.best.textContent=t('best',{n:scores[k]});
   renderProgress();
 }
 
 // ---------- wiring ----------
+function fillLang(){ els.lang.innerHTML=''; ORDER.filter(k=>DATA[k]).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=FLAGS[k]+' '+LN(k);els.lang.appendChild(o);}); els.lang.value=lang; }
+const uiSel=$('ui');
+window.SIR_UI_LANGS.forEach(([k,n])=>{const o=document.createElement('option');o.value=k;o.textContent=n;uiSel.appendChild(o);});
+uiSel.value=ui;
+function applyUI(){
+  document.documentElement.lang=ui;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
+  $('tagline').textContent='· '+t('tagline');
+  els.play.textContent=t('listen'); els.slow.textContent=t('slowly'); if(!listening) els.mic.textContent=t('tapSay');
+  els.prev.textContent=t('back'); els.next.textContent=t('next');
+  els.customText.placeholder=t('placeholder');
+  $('feats').innerHTML=''; t('feats').forEach(([b,r])=>{ const li=document.createElement('li'); const bb=document.createElement('b'); bb.textContent=b; li.appendChild(bb); li.appendChild(document.createTextNode(r)); $('feats').appendChild(li); });
+  $('premBtn').setAttribute('aria-label',t('premium')); $('premBtn').querySelector('.t').textContent=' '+t('premium');
+  fillLang();
+}
+applyUI();
+uiSel.onchange=()=>{ ui=uiSel.value; store.set('sir_ui',ui); applyUI(); if(typeof fillFrom==='function'){ fillFrom(); } render(); if(typeof syncFrom==='function') syncFrom(); };
 els.lang.value=lang;
 els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
 els.play.onclick=()=>current()&&speak(current()[0],0.95);
@@ -469,36 +479,37 @@ els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; c
 
 // ---------- own phrase: input language, dictation, translation ----------
 const fromSel=$('fromLang'), trBtn=$('translateBtn'), trMsg=$('trMsg'), dictBtn=$('dictate');
-ORDER.filter(k=>DATA[k]).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=DATA[k].name;fromSel.appendChild(o);});
+function fillFrom(){ const v=fromSel.value; fromSel.innerHTML=''; ORDER.filter(k=>DATA[k]).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=LN(k);fromSel.appendChild(o);}); if(v) fromSel.value=v; }
+fillFrom();
 function syncFrom(){
   let f=store.get('sir_from',null);
-  if(!f||f===lang||!DATA[f]) f = {en:'es',enus:'esmx',esmx:'enus'}[lang] || 'en';
+  if(!f||f===lang||!DATA[f]){ f = ui==='en' ? (IN_AMERICAS?'enus':'en') : ui; if(f===lang) f = {en:'es',enus:'esmx',esmx:'enus'}[lang] || 'en'; }
   fromSel.value=f; updateTrBtn();
 }
 function updateTrBtn(){
   const same = fromSel.value===lang;
   trBtn.style.display = same ? 'none':'inline-flex';
-  trBtn.textContent = `🌍 Translate to ${DATA[lang].name} & practise`;
+  trBtn.textContent = t('translateTo',{lang:LN(lang)});
 }
 fromSel.onchange=()=>{store.set('sir_from',fromSel.value);updateTrBtn();};
 els.lang.addEventListener('change',syncFrom);
 
 let dictRec=null;
 dictBtn.onclick=()=>{
-  if(!Rec){trMsg.textContent='Voice input needs Chrome, Edge or Safari.';return;}
+  if(!Rec){trMsg.textContent=t('voiceNeeds');return;}
   if(dictRec){dictRec.stop();return;}
   dictRec=new Rec(); dictRec.lang=DATA[fromSel.value].code; dictRec.interimResults=true; dictRec.continuous=false;
-  dictRec.onstart=()=>{dictBtn.textContent='⏹ Listening…';dictBtn.classList.add('rec');};
+  dictRec.onstart=()=>{dictBtn.textContent=t('listeningShort');dictBtn.classList.add('rec');};
   dictRec.onresult=e=>{els.customText.value=[...e.results].map(r=>r[0].transcript).join(' ');};
-  dictRec.onerror=e=>{trMsg.textContent= e.error==='not-allowed'?'Microphone access was blocked.':'Couldn\'t hear that — try again.';};
-  dictRec.onend=()=>{dictBtn.textContent='🎙️ Say it';dictBtn.classList.remove('rec');dictRec=null;};
+  dictRec.onerror=e=>{trMsg.textContent= e.error==='not-allowed'?t('micBlocked'):t('cantHear');};
+  dictRec.onend=()=>{dictBtn.textContent=t('sayIt');dictBtn.classList.remove('rec');dictRec=null;};
   try{dictRec.start();}catch(err){dictRec=null;}
 };
 
 trBtn.onclick=async()=>{
-  const text=els.customText.value.trim(); if(!text){trMsg.textContent='Type or say a phrase first.';return;}
-  if(text.length>300){trMsg.textContent='Please keep it under 300 characters.';return;}
-  trBtn.disabled=true; trMsg.textContent='Translating…';
+  const text=els.customText.value.trim(); if(!text){trMsg.textContent=t('trFirst');return;}
+  if(text.length>300){trMsg.textContent=t('trLong');return;}
+  trBtn.disabled=true; trMsg.textContent=t('translating');
   try{
     const r=await fetch('/.netlify/functions/translate',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({text,from:fromSel.value,to:lang})});
@@ -507,16 +518,16 @@ trBtn.onclick=async()=>{
     custom=[j.translation, text]; idx=0; trMsg.textContent='';
     render(); els.practice.scrollIntoView({behavior:'smooth'}); speak(j.translation,0.95);
   }catch(err){
-    trMsg.textContent = /not configured/i.test(err.message) ? 'Translation isn\'t switched on yet (no API key set on the server).' : 'Translation failed: '+err.message;
+    trMsg.textContent = /not configured/i.test(err.message) ? t('trOff') : t('trFail')+err.message;
   }finally{trBtn.disabled=false;}
 };
 syncFrom();
 
 if(!Rec){
-  els.warn.innerHTML='Your browser doesn\'t support speech recognition, so you can listen but not be scored. Open this page in <b>Chrome</b>, <b>Edge</b> or <b>Safari</b>.';
+  els.warn.textContent=t('noRec');
   els.warn.classList.add('show');
 } else if(location.protocol==='file:'){
-  els.warn.innerHTML='Opened as a local file — the microphone may not work. Host it (e.g. Netlify) so it runs over https.';
+  els.warn.textContent=t('fileWarn');
   els.warn.classList.add('show');
 }
 // ---------- premium preview + waitlist ----------
@@ -533,13 +544,13 @@ const wlForm=$('waitForm');
 if(store.get('sir_waitlisted',false)){ wlForm.style.display='none'; $('wlDone').style.display='block'; }
 wlForm.addEventListener('submit',async e=>{
   e.preventDefault();
-  $('wlLang').value=lang; $('wlErr').textContent=''; $('wlBtn').disabled=true;
+  $('wlLang').value=lang+' / speaks '+ui; $('wlErr').textContent=''; $('wlBtn').disabled=true;
   try{
     const r=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams(new FormData(wlForm)).toString()});
     if(!r.ok) throw new Error('HTTP '+r.status);
     wlForm.style.display='none'; $('wlDone').style.display='block'; store.set('sir_waitlisted',true);
-  }catch(err){ $('wlErr').textContent='Sorry, that didn\'t go through. Please try again.'; }
+  }catch(err){ $('wlErr').textContent=t('wlErr'); }
   finally{ $('wlBtn').disabled=false; }
 });
 
