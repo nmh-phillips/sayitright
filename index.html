@@ -59,11 +59,39 @@
   details summary{cursor:pointer;font-weight:600;color:var(--ink)}
   footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 30px}
   .sr{position:absolute;left:-9999px}
+  .hdr-r{display:flex;gap:8px;align-items:center}
+  .prem-btn{border:none;background:#f5c542;color:var(--ink);font:700 13px Inter,sans-serif;padding:8px 11px;border-radius:10px;cursor:pointer;white-space:nowrap}
+  .tabs button.locked{color:#8a6d00;background:#fff8e1;border-color:#f3dfa0}
+  .tabs button.locked.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
+  .upsell{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;background:#fff8e1;border:1px solid #f3dfa0;font-size:14px}
+  .upsell.show{display:block}
+  .upsell a,.linkbtn{color:#7a5c00;font-weight:700;cursor:pointer;text-decoration:underline;background:none;border:none;font:inherit;padding:0}
+  .locked-view{text-align:center}
+  .locked-view .ic{font-size:34px}
+  .locked-view h3{margin:6px 0 4px;font-size:20px}
+  .locked-view p{color:var(--muted);font-size:14px;margin:0 0 14px}
+  .skel{display:grid;gap:10px;margin:0 auto 16px;max-width:420px;filter:blur(1.5px);opacity:.55}
+  .skel i{display:block;height:16px;border-radius:6px;background:linear-gradient(90deg,#d9dde5,#eceef2)}
+  .skel i:nth-child(2n){width:78%} .skel i:nth-child(3n){width:62%}
+  .primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .premium{border:2px solid #f5c542;background:linear-gradient(180deg,#fffdf5,#fff)}
+  .premium h2{margin:6px 0 10px;font-size:21px}
+  .badge{display:inline-block;background:#f5c542;color:var(--ink);font:700 11px Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:4px 8px;border-radius:6px}
+  .feat{list-style:none;padding:0;margin:0 0 16px;display:grid;gap:8px;font-size:15px}
+  .feat li::before{content:'✓';color:var(--good);font-weight:700;margin-right:8px}
+  .premium label{font-weight:600;display:block;margin-bottom:8px}
+  .premium input[type=email]{flex:1;min-width:180px;font:500 16px Inter,sans-serif;padding:10px 12px;border-radius:12px;border:1px solid var(--line)}
+  .fine{font-size:12px;color:var(--muted);margin:8px 0 0}
+  .done{background:var(--goodbg);color:var(--good);padding:12px 14px;border-radius:12px;font-weight:600}
+  .flash{animation:flash 1.2s}
+  @keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px #f5c542}}
 </style>
 </head>
 <body>
 <header>
   <h1>SayItRight <span>· pronunciation</span></h1>
+  <div class="hdr-r">
+  <button class="prem-btn" id="premBtn">⭐ Premium</button>
   <select id="lang" aria-label="Language">
     <option value="en">🇬🇧 English</option>
     <option value="es">🇪🇸 Spanish</option>
@@ -72,6 +100,7 @@
     <option value="de">🇩🇪 German</option>
     <option value="pt">🇵🇹 Portuguese</option>
   </select>
+  </div>
 </header>
 
 <main>
@@ -99,6 +128,15 @@
       <button class="btn" id="prev">← Back</button>
       <button class="btn" id="next">Next →</button>
     </div>
+    <div class="upsell" id="upsell"></div>
+  </section>
+
+  <section class="card locked-view" id="lockedView" style="display:none">
+    <div class="ic">🔒</div>
+    <h3 id="lockedTitle"></h3>
+    <p id="lockedText"></p>
+    <div class="skel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <button class="btn primary" id="lockedCta">⭐ Get notified when it launches</button>
   </section>
 
   <section class="card custom" id="customCard" style="display:none">
@@ -122,6 +160,31 @@
     <div class="bar"><i id="progBar"></i></div>
   </section>
 
+  <section class="card premium" id="premiumCard">
+    <span class="badge">Coming soon</span>
+    <h2>⭐ SayItRight Premium</h2>
+    <ul class="feat">
+      <li><b>200 phrases per topic</b>, ten times the free library</li>
+      <li><b>5 extra topics</b>: Business &amp; work, Shopping, Health &amp; emergencies, Social &amp; small talk, Numbers, dates &amp; time</li>
+      <li><b>Sound-by-sound scoring</b> that shows exactly which sounds to fix</li>
+      <li><b>Unlimited translations</b> of your own phrases</li>
+      <li><b>Progress synced</b> across your phone and computer</li>
+    </ul>
+    <form name="waitlist" method="POST" data-netlify="true" netlify-honeypot="company" id="waitForm">
+      <input type="hidden" name="form-name" value="waitlist">
+      <input type="hidden" name="language" id="wlLang" value="">
+      <p class="sr"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
+      <label for="wlEmail">Get notified when Premium launches</label>
+      <div class="row">
+        <input type="email" name="email" id="wlEmail" required placeholder="you@example.com" autocomplete="email">
+        <button class="btn primary" type="submit" id="wlBtn">Notify me</button>
+      </div>
+      <p class="fine">We'll only email you about the Premium launch. No spam, unsubscribe any time.</p>
+      <p class="fine" id="wlErr" style="color:var(--bad)"></p>
+    </form>
+    <div class="done" id="wlDone" style="display:none">✓ You're on the list. We'll let you know when Premium launches.</div>
+  </section>
+
   <details class="card">
     <summary>How it works & tips</summary>
     <p>Tap <b>Listen</b> to hear a native-style voice, then tap the mic and say the phrase. Words we recognised turn green; words we didn't catch turn red. Tap any word to hear it on its own.</p>
@@ -129,12 +192,15 @@
     <p>Works best in Chrome, Edge or Safari (including iPhone). Firefox doesn't support speech recognition. Use a quiet room and speak at a natural pace.</p>
   </details>
 </main>
-<footer>Your voice is processed by your browser's built-in speech service. Nothing is stored except your scores, on this device.</footer>
+<footer>Your voice is processed by your browser's built-in speech service. Your scores stay on this device. If you join the Premium waitlist, we keep your email only to tell you about the launch.</footer>
 
 <script src="phrases.js"></script>
 <script>
 const DATA = window.SIR_DATA;
 const CUSTOM = 'My phrase';
+const PREMIUM_TOPICS = ['Business & work','Shopping','Health & emergencies','Social & small talk','Numbers, dates & time'];
+const PREMIUM_PER_TOPIC = 200;
+const isLocked = name => PREMIUM_TOPICS.includes(name);
 
 // ---------- state ----------
 const store = {
@@ -193,7 +259,7 @@ function lev(x,y){
 }
 
 // ---------- current phrase ----------
-function list(){ return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
+function list(){ if(isLocked(set)) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
 function current(){ return list()[idx]; }
 function key(p){ return lang+'|'+p[0]; }
 
@@ -202,6 +268,12 @@ function renderTabs(){
   [...Object.keys(DATA[lang].sets),CUSTOM].forEach(name=>{
     const b=document.createElement('button');
     b.textContent=name; if(name===set) b.className='on';
+    b.onclick=()=>{set=name;idx=0;render()};
+    els.tabs.appendChild(b);
+  });
+  PREMIUM_TOPICS.forEach(name=>{
+    const b=document.createElement('button');
+    b.textContent='🔒 '+name; b.className='locked'+(name===set?' on':'');
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });
@@ -226,6 +298,13 @@ function renderPhrase(hits){
 function render(){
   renderTabs();
   els.customCard.style.display = set===CUSTOM ? 'block':'none';
+  const locked = isLocked(set);
+  els.practice.style.display = locked ? 'none':'block';
+  $('lockedView').style.display = locked ? 'block':'none';
+  if(locked){
+    $('lockedTitle').textContent = set;
+    $('lockedText').textContent = `${PREMIUM_PER_TOPIC} ${DATA[lang].name} phrases with sound-by-sound scoring. Part of SayItRight Premium, coming soon.`;
+  }
   const L=list();
   els.counter.textContent = L.length ? `${idx+1} / ${L.length}` : '';
   const p=current();
@@ -234,6 +313,11 @@ function render(){
   els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1;
   els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
   els.result.className='result';
+  const up=$('upsell');
+  if(!locked && set!==CUSTOM && L.length && idx===L.length-1){
+    up.innerHTML = `🎉 That's all ${L.length} free <b>${set}</b> phrases. Premium adds ${PREMIUM_PER_TOPIC-L.length} more. <button class="linkbtn" data-prem>Get notified</button>`;
+    up.classList.add('show');
+  } else { up.classList.remove('show'); up.innerHTML=''; }
   renderPhrase(null);
   renderProgress();
 }
@@ -390,6 +474,30 @@ if(!Rec){
   els.warn.innerHTML='Opened as a local file — the microphone may not work. Host it (e.g. Netlify) so it runs over https.';
   els.warn.classList.add('show');
 }
+// ---------- premium preview + waitlist ----------
+function goPremium(){
+  const c=$('premiumCard'); c.scrollIntoView({behavior:'smooth',block:'start'});
+  c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+  setTimeout(()=>{ const e=$('wlEmail'); if(e && e.offsetParent) e.focus({preventScroll:true}); },600);
+}
+$('premBtn').onclick=goPremium;
+$('lockedCta').onclick=goPremium;
+document.addEventListener('click',e=>{ if(e.target.closest('[data-prem]')) goPremium(); });
+
+const wlForm=$('waitForm');
+if(store.get('sir_waitlisted',false)){ wlForm.style.display='none'; $('wlDone').style.display='block'; }
+wlForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  $('wlLang').value=lang; $('wlErr').textContent=''; $('wlBtn').disabled=true;
+  try{
+    const r=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(new FormData(wlForm)).toString()});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    wlForm.style.display='none'; $('wlDone').style.display='block'; store.set('sir_waitlisted',true);
+  }catch(err){ $('wlErr').textContent='Sorry, that didn\'t go through. Please try again.'; }
+  finally{ $('wlBtn').disabled=false; }
+});
+
 render();
 </script>
 </body>
