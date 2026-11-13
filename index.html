@@ -60,6 +60,10 @@
   footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 30px}
   .sr{position:absolute;left:-9999px}
   .hdr-r{display:flex;gap:8px;align-items:center}
+  .hdr-r{flex:1;min-width:0;justify-content:flex-end}
+  .hdr-r select{min-width:0;max-width:260px;flex:0 1 auto;text-overflow:ellipsis}
+  header h1{flex-shrink:0}
+  @media(max-width:440px){header h1 span{display:none} header{padding:12px 12px}}
   .prem-btn{border:none;background:#f5c542;color:var(--ink);font:700 13px Inter,sans-serif;padding:8px 11px;border-radius:10px;cursor:pointer;white-space:nowrap}
   .tabs button.locked{color:#8a6d00;background:#fff8e1;border-color:#f3dfa0}
   .tabs button.locked.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
@@ -93,8 +97,10 @@
   <div class="hdr-r">
   <button class="prem-btn" id="premBtn">⭐ Premium</button>
   <select id="lang" aria-label="Language">
-    <option value="en">🇬🇧 English</option>
-    <option value="es">🇪🇸 Spanish</option>
+    <option value="en">🇬🇧 English (UK)</option>
+    <option value="enus">🇺🇸 English (US)</option>
+    <option value="es">🇪🇸 Spanish (Spain)</option>
+    <option value="esmx">🇲🇽 Spanish (LatAm)</option>
     <option value="fr">🇫🇷 French</option>
     <option value="it">🇮🇹 Italian</option>
     <option value="de">🇩🇪 German</option>
@@ -207,7 +213,18 @@ const store = {
   get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 };
-let lang = store.get('sir_lang','es');
+const ORDER = ['en','enus','es','esmx','fr','it','de','pt'];
+const base = l => l==='enus' ? 'en' : l==='esmx' ? 'es' : l;
+function detectLang(){
+  const nav=(navigator.languages&&navigator.languages[0]||navigator.language||'en-GB').toLowerCase();
+  const [l,r='']=nav.split('-');
+  if(l==='en') return ['us','ca','ph'].includes(r) ? 'enus' : 'en';
+  if(l==='es') return r==='es' || r==='' ? 'es' : 'esmx';
+  if(DATA[l]) return l;
+  return (Intl.DateTimeFormat().resolvedOptions().timeZone||'').startsWith('America/') ? 'esmx' : 'es';
+}
+let lang = store.get('sir_lang',null);
+if(!DATA[lang]) lang = detectLang();
 let set = Object.keys(DATA[lang].sets)[0];
 let idx = 0;
 let custom = null;
@@ -231,11 +248,12 @@ function normTok(t){
   const n = DATA[lang].nums;
   if(/^\d+$/.test(t) && n[+t]!==undefined) t = n[+t];
   t = strip(t);
-  if(lang==='de') t = t.replace(/ß/g,'ss');
-  if(lang==='pt' && (t==='dois')) t='duas';
-  if(lang==='de' && t==='eins') t='ein';
-  if(lang==='es' && t==='un') t='uno';
-  if(lang==='it' && t==='un') t='uno';
+  const b = base(lang);
+  if(b==='de') t = t.replace(/ß/g,'ss');
+  if(b==='pt' && (t==='dois')) t='duas';
+  if(b==='de' && t==='eins') t='ein';
+  if(b==='es' && t==='un') t='uno';
+  if(b==='it' && t==='un') t='uno';
   return t;
 }
 // LCS alignment: which target words were heard (in order)
@@ -406,7 +424,7 @@ function grade(b){
   els.tip.textContent = pct>=90 ? '¡Excelente! That was clear and natural.'
     : missed===0 ? 'All the words came through — say it a little more crisply and confidently to lift the score.'
     : `${missed} word${missed>1?'s':''} didn't come through (in red). Tap a red word to hear it, then try again.`;
-  if(lang!=='es' && pct>=90) els.tip.textContent = {en:'Excellent! ',fr:'Excellent ! ',it:'Ottimo! ',de:'Ausgezeichnet! ',pt:'Excelente! '}[lang]+'That was clear and natural.';
+  if(base(lang)!=='es' && pct>=90) els.tip.textContent = {en:'Excellent! ',enus:'Awesome! ',fr:'Excellent ! ',it:'Ottimo! ',de:'Ausgezeichnet! ',pt:'Excelente! '}[lang]+'That was clear and natural.';
   renderPhrase(b.hits);
   els.best.textContent=`Best: ${scores[k]}%`;
   renderProgress();
@@ -424,10 +442,10 @@ els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; c
 
 // ---------- own phrase: input language, dictation, translation ----------
 const fromSel=$('fromLang'), trBtn=$('translateBtn'), trMsg=$('trMsg'), dictBtn=$('dictate');
-Object.entries(DATA).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v.name;fromSel.appendChild(o);});
+ORDER.filter(k=>DATA[k]).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=DATA[k].name;fromSel.appendChild(o);});
 function syncFrom(){
   let f=store.get('sir_from',null);
-  if(!f||f===lang) f = lang==='en' ? 'es' : 'en';
+  if(!f||f===lang||!DATA[f]) f = {en:'es',enus:'esmx',esmx:'enus'}[lang] || 'en';
   fromSel.value=f; updateTrBtn();
 }
 function updateTrBtn(){

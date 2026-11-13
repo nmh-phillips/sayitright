@@ -2,9 +2,9 @@
 // Uses DeepL if DEEPL_API_KEY is set, otherwise Claude if ANTHROPIC_API_KEY is set.
 // Set keys in Netlify: Project configuration -> Environment variables.
 
-const NAMES = { en: 'English (British)', es: 'Spanish (Spain)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
-const DEEPL_TARGET = { en: 'EN-GB', es: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT' };
-const DEEPL_SOURCE = { en: 'EN', es: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT' };
+const NAMES = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American, as spoken in Mexico)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
+const DEEPL_TARGET = { en: 'EN-GB', enus: 'EN-US', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT' };
+const DEEPL_SOURCE = { en: 'EN', enus: 'EN', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT' };
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }

@@ -1,7 +1,7 @@
 // SayItRight phrase library (free tier: 20 per section).
 // Format: [phrase, meaning / hint]. Keep the first five of each section stable — saved scores are keyed on the phrase text.
 window.SIR_DATA = {
-  en:{code:'en-GB',name:'English',nums:{0:'zero',1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'},
+  en:{code:'en-GB',name:'English (UK)',nums:{0:'zero',1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'},
     sets:{
       'Basics':[
         ['Hello, how are you?','Greeting'],['Nice to meet you','Meeting someone new'],['Thank you very much','Saying thanks'],['Sorry, I don\'t understand','When you\'re stuck'],['Could you say that again, please?','Asking someone to repeat'],
@@ -25,7 +25,55 @@ window.SIR_DATA = {
         ['Think about the thing','NK vs NG'],['A bat and a bet','A vs E'],['World and word','R and L endings'],['Thank you for thinking of me','TH'],['Light the lamp on the right','L vs R']]
     }},
 
-  es:{code:'es-ES',name:'Spanish',nums:{0:'cero',1:'uno',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis',7:'siete',8:'ocho',9:'nueve',10:'diez'},
+  enus:{code:'en-US',name:'English (US)',nums:{0:'zero',1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'},
+    sets:{
+      'Basics':[
+        ['Hi, how are you doing?','Greeting'],['Nice to meet you','Meeting someone new'],['Thank you so much','Saying thanks'],['Sorry, I don\'t understand','When you\'re stuck'],['Could you say that again, please?','Asking someone to repeat'],
+        ['Good morning','Greeting'],['Good evening','Greeting'],['Bye, see you soon','Saying goodbye'],['My name is Anna','Introducing yourself'],['What\'s your name?','Asking a name'],
+        ['Where are you from?','Small talk'],['I\'m from Mexico','Small talk'],['Do you speak Spanish?','Checking a language'],['I\'m learning English','Talking about yourself'],['Could you speak more slowly, please?','When it\'s too fast'],
+        ['What does this word mean?','Asking for a meaning'],['How do you say this in English?','Asking for a word'],['Excuse me','Getting attention'],['You\'re welcome','Replying to thanks'],['Have a nice day','Saying goodbye']],
+      'Café & restaurant':[
+        ['Could I get a coffee, please?','Ordering'],['Can I get the check, please?','Asking to pay'],['I have a reservation for two','Arriving at a restaurant'],['What would you recommend?','Asking for advice'],['That was delicious','Paying a compliment'],
+        ['A table for two, please','Arriving'],['Can I see the menu, please?','Ordering'],['Could I get a glass of water?','Ordering'],['A bottle of red wine, please','Ordering'],['I\'m vegetarian','Dietary needs'],
+        ['Does this have nuts in it?','Dietary needs'],['I\'ll have the salmon, please','Ordering food'],['Can I pay with a card?','Paying'],['Could we get some more bread?','Asking for more'],['Is the tip included?','Paying'],
+        ['Can I get a beer, please?','At the bar'],['Two coffees, please','Ordering'],['No ice, thanks','Drinks'],['I\'ll have the same','Ordering'],['Can I get this to go?','Takeout']],
+      'Travel':[
+        ['Where\'s the nearest subway station?','Asking directions'],['How much does this cost?','Asking the price'],['What time does the train leave?','Checking times'],['I need a cab','Getting around'],['I think I\'m lost','Asking for help'],
+        ['A round-trip ticket, please','Buying tickets'],['Which track is it?','At the station'],['Where\'s the bus stop?','Getting around'],['Is it far from here?','Directions'],['Take a left at the corner','Directions'],
+        ['Go straight ahead','Directions'],['I have a room booked for three nights','At the hotel'],['What time do we need to leave the room?','At the hotel'],['Where\'s the nearest pharmacy?','Finding a pharmacy'],['Could you help me, please?','Asking for help'],
+        ['I need to see a doctor','Emergencies'],['Where can I buy a ticket?','Getting around'],['What time does the museum open?','Sightseeing'],['Can I pay in cash?','Paying'],['To the airport, please','In a cab']],
+      'Tricky sounds':[
+        ['I think three things are worth thanking','TH sound'],['Water, butter and better','Flap T (a quick, soft D)'],['Red leather, yellow leather','R and L (tongue twister)'],['The ship carried a sheep','Short I vs long EE'],['Very well, we will visit Washington','V vs W'],
+        ['Three free throws','TH vs F'],['This, that, these and those','Voiced TH'],['Walk to work in the wind','W'],['A vet with a van','V'],['Her bird heard the word','American R vowels (ER / IR / UR)'],
+        ['She sells seashells','S vs SH'],['Fill the bowl full','FILL vs FULL'],['Bit and beat','Short I vs long EE'],['The cat sat on the hat','Short A'],['Hungry hippos hurry home','H'],
+        ['Think about the thing','NK vs NG'],['A bat and a bet','A vs E'],['World and word','R and L endings'],['Got a lot of hot coffee','American short O'],['Light the lamp on the right','L vs R']]
+    }},
+
+  esmx:{code:'es-MX',name:'Spanish (Latin America)',nums:{0:'cero',1:'uno',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis',7:'siete',8:'ocho',9:'nueve',10:'diez'},
+    sets:{
+      'Basics':[
+        ['¡Hola! ¿Cómo estás?','Hi! How are you?'],['Buenos días','Good morning'],['Mucho gusto','Nice to meet you'],['No hablo mucho español','I don\'t speak much Spanish'],['¿Me lo puede repetir, por favor?','Can you repeat it, please?'],
+        ['Buenas tardes','Good afternoon'],['Buenas noches','Good evening / good night'],['Adiós, nos vemos pronto','Bye, see you soon'],['Me llamo Ana','My name is Ana'],['¿Cómo te llamas?','What\'s your name?'],
+        ['¿De dónde eres?','Where are you from?'],['Soy de Estados Unidos','I\'m from the United States'],['¿Habla inglés?','Do you speak English?'],['Estoy aprendiendo español','I\'m learning Spanish'],['¿Puede hablar más despacio, por favor?','Can you speak more slowly, please?'],
+        ['¿Qué significa esto?','What does this mean?'],['¿Cómo se dice esto en español?','How do you say this in Spanish?'],['Disculpe','Excuse me'],['De nada','You\'re welcome'],['Que le vaya bien','Take care / all the best']],
+      'Café & restaurant':[
+        ['Me da un café, por favor','Can I have a coffee, please?'],['La cuenta, por favor','The check, please'],['Tengo una reservación para dos personas','I have a reservation for two'],['¿Qué me recomienda?','What do you recommend?'],['Estuvo muy rico','It was delicious'],
+        ['Una mesa para dos, por favor','A table for two, please'],['¿Me trae el menú, por favor?','Can I see the menu, please?'],['Un vaso de agua, por favor','A glass of water, please'],['Una botella de vino tinto, por favor','A bottle of red wine, please'],['Soy vegetariano','I\'m vegetarian'],
+        ['¿Esto tiene nueces?','Does this have nuts?'],['Para mí, el pescado, por favor','The fish for me, please'],['¿Puedo pagar con tarjeta?','Can I pay by card?'],['¿Nos trae más tortillas, por favor?','Could we have more tortillas, please?'],['¿La propina está incluida?','Is the tip included?'],
+        ['Una cerveza, por favor','A beer, please'],['Dos cafés, por favor','Two coffees, please'],['Sin hielo, por favor','No ice, please'],['Lo mismo para mí','The same for me'],['Es para llevar','It\'s to go']],
+      'Travel':[
+        ['¿Dónde está el baño?','Where is the restroom?'],['¿Cuánto cuesta?','How much is it?'],['¿A qué hora sale el autobús?','What time does the bus leave?'],['Necesito un taxi','I need a taxi'],['Estoy perdido','I\'m lost'],
+        ['Un boleto de ida y vuelta, por favor','A round-trip ticket, please'],['¿De qué andén sale?','Which platform does it leave from?'],['¿Dónde está la parada del camión?','Where is the bus stop? (Mexico)'],['¿Está lejos de aquí?','Is it far from here?'],['Dé vuelta a la izquierda en la esquina','Turn left at the corner'],
+        ['Siga derecho','Go straight ahead'],['Tengo un cuarto reservado para tres noches','I have a room booked for three nights'],['¿A qué hora hay que dejar el cuarto?','What time is checkout?'],['¿Dónde está la farmacia más cercana?','Where is the nearest pharmacy?'],['¿Me puede ayudar, por favor?','Can you help me, please?'],
+        ['Necesito un doctor','I need a doctor'],['¿Dónde puedo comprar un boleto?','Where can I buy a ticket?'],['¿A qué hora abre el museo?','What time does the museum open?'],['¿Puedo pagar en efectivo?','Can I pay in cash?'],['Al aeropuerto, por favor','To the airport, please']],
+      'Tricky sounds':[
+        ['El perro de Roberto corre rápido','Roberto\'s dog runs fast (rolled R)'],['Llueve en la calle','It\'s raining in the street (LL)'],['Mañana voy a México','Tomorrow I\'m going to Mexico (Ñ, X)'],['Jorge juega en el jardín','Jorge plays in the garden (J)'],['Cerveza y jugo de naranja','Beer and orange juice (Z sounds like S)'],
+        ['Erre con erre, cigarro','R with R, cigar (tongue twister)'],['El ferrocarril corre rápido','The railroad runs fast (RR)'],['Tres tristes tigres','Three sad tigers (TR)'],['Yo llamo a mi amiga','I call my friend (Y / LL)'],['El niño come piña','The boy eats pineapple (Ñ)'],
+        ['Gente generosa en Guadalajara','Generous people in Guadalajara (soft G)'],['Guerra y guitarra','War and guitar (hard GU)'],['Hace calor en verano','It\'s hot in summer (silent H, C as S)'],['Vamos a ver la boda','Let\'s go and see the wedding (B and V)'],['Pero el perro ladra','But the dog barks (R vs RR)'],
+        ['Quiero queso','I want cheese (QU)'],['Xochimilco y Oaxaca','Place names (X as S and J)'],['Me gusta el pollo','I like chicken (LL)'],['Cinco zapatos azules','Five blue shoes (Z and C as S)'],['Huevos y hielo','Eggs and ice (HUE / HIE)']]
+    }},
+
+  es:{code:'es-ES',name:'Spanish (Spain)',nums:{0:'cero',1:'uno',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis',7:'siete',8:'ocho',9:'nueve',10:'diez'},
     sets:{
       'Basics':[
         ['Hola, ¿qué tal?','Hi, how are you?'],['Buenos días','Good morning'],['Mucho gusto','Nice to meet you'],['No hablo mucho español','I don\'t speak much Spanish'],['¿Puede repetirlo, por favor?','Can you repeat that, please?'],
