@@ -1,4 +1,4 @@
-# SayItRight
+# Twangly
 
 Pronunciation practice web app. Pick a language (English, Spanish, French, Italian, German, Portuguese), listen to a phrase, say it, and get a score with word-by-word feedback.
 

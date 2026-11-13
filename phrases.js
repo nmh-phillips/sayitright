@@ -1,4 +1,4 @@
-// SayItRight phrase library (free tier: 20 per section).
+// Twangly phrase library (free tier: 20 per section).
 // Format: [phrase, meaning / hint]. Keep the first five of each section stable — saved scores are keyed on the phrase text.
 window.SIR_DATA = {
   en:{code:'en-GB',name:'English (UK)',nums:{0:'zero',1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'},

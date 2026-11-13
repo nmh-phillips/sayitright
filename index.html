@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SayItRight — pronunciation practice</title>
+<title>Twangly — pronunciation practice</title>
 <meta name="theme-color" content="#14213d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
 </head>
 <body>
 <header>
-  <h1>SayItRight <span>· pronunciation</span></h1>
+  <h1>Twangly <span>· pronunciation</span></h1>
   <div class="hdr-r">
   <button class="prem-btn" id="premBtn">⭐ Premium</button>
   <select id="lang" aria-label="Language">
@@ -168,7 +168,7 @@
 
   <section class="card premium" id="premiumCard">
     <span class="badge">Coming soon</span>
-    <h2>⭐ SayItRight Premium</h2>
+    <h2>⭐ Twangly Premium</h2>
     <ul class="feat">
       <li><b>200 phrases per topic</b>, ten times the free library</li>
       <li><b>5 extra topics</b>: Business &amp; work, Shopping, Health &amp; emergencies, Social &amp; small talk, Numbers, dates &amp; time</li>
@@ -192,7 +192,7 @@
   </section>
 
   <section class="card story">
-    <h2 style="margin:0 0 8px;font-size:18px">Why we built SayItRight</h2>
+    <h2 style="margin:0 0 8px;font-size:18px">Why we built Twangly</h2>
     <p style="margin:0 0 8px;line-height:1.6">My wife lives in the UK and is always looking for ways to practise her pronunciation. Classes help, but in between it's hard to find someone patient enough to listen, say it back properly, and tell you honestly how you sounded.</p>
     <p style="margin:0 0 8px;line-height:1.6">So we built the tool we wished existed: free, no sign-up, and ready whenever you are.</p>
     <p style="margin:0;color:var(--muted);font-style:italic">Neil</p>
@@ -328,7 +328,7 @@ function render(){
   $('lockedView').style.display = locked ? 'block':'none';
   if(locked){
     $('lockedTitle').textContent = set;
-    $('lockedText').textContent = `${PREMIUM_PER_TOPIC} ${DATA[lang].name} phrases with sound-by-sound scoring. Part of SayItRight Premium, coming soon.`;
+    $('lockedText').textContent = `${PREMIUM_PER_TOPIC} ${DATA[lang].name} phrases with sound-by-sound scoring. Part of Twangly Premium, coming soon.`;
   }
   const L=list();
   els.counter.textContent = L.length ? `${idx+1} / ${L.length}` : '';
