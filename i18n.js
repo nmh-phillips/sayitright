@@ -425,3 +425,16 @@ pt:{a_tab:'📊 Avalie-me',a_title:'Avaliar o meu nível',a_free:'Grátis por ag
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Translation allowance strings
+(function(){
+const S={
+ en:{trLeft:'{n} free translations left today',trLimit:"You've used today's {n} free translations. Unlimited translations are part of Premium."},
+ es:{trLeft:'Te quedan {n} traducciones gratis hoy',trLimit:'Ya has usado las {n} traducciones gratis de hoy. Las traducciones ilimitadas son parte de Premium.'},
+ fr:{trLeft:'Encore {n} traductions gratuites aujourd’hui',trLimit:'Vous avez utilisé vos {n} traductions gratuites du jour. Les traductions illimitées font partie de Premium.'},
+ it:{trLeft:'Ti restano {n} traduzioni gratuite oggi',trLimit:'Hai usato le {n} traduzioni gratuite di oggi. Le traduzioni illimitate fanno parte di Premium.'},
+ de:{trLeft:'Heute noch {n} kostenlose Übersetzungen',trLimit:'Du hast deine {n} kostenlosen Übersetzungen für heute verbraucht. Unbegrenzte Übersetzungen gibt es mit Premium.'},
+ pt:{trLeft:'Restam {n} traduções grátis hoje',trLimit:'Já usou as {n} traduções grátis de hoje. As traduções ilimitadas fazem parte do Premium.'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

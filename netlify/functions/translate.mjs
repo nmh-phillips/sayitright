@@ -1,6 +1,14 @@
 // Netlify Function: POST /.netlify/functions/translate  { text, from, to }  ->  { translation }
 // Uses DeepL if DEEPL_API_KEY is set, otherwise Claude if ANTHROPIC_API_KEY is set.
 // Set keys in Netlify: Project configuration -> Environment variables.
+// Free users get TRANSLATE_FREE_LIMIT translations a day per device (default 5),
+// with a backstop of TRANSLATE_IP_LIMIT per connection (default 50). Counts live in Netlify Blobs.
+import { getStore } from '@netlify/blobs';
+import { createHash } from 'node:crypto';
+
+const FREE = Number(process.env.TRANSLATE_FREE_LIMIT || 5);
+const IP_CAP = Number(process.env.TRANSLATE_IP_LIMIT || 50);
+const hash = x => createHash('sha256').update('harley-says:' + x).digest('hex').slice(0, 24);
 
 const NAMES = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American, as spoken in Mexico)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
 const DEEPL_TARGET = { en: 'EN-GB', enus: 'EN-US', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT' };
@@ -10,7 +18,7 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
 });
 
-export default async (req) => {
+export default async (req, context) => {
   if (req.method !== 'POST') return json({ error: 'Use POST' }, 405);
 
   let body;
@@ -22,11 +30,27 @@ export default async (req) => {
   if (text.length > 300) return json({ error: 'Text too long (max 300 characters)' }, 400);
   if (!NAMES[to] || !NAMES[from]) return json({ error: 'Unsupported language' }, 400);
   if (from === to) return json({ translation: text });
+  if (!process.env.DEEPL_API_KEY && !process.env.ANTHROPIC_API_KEY) return json({ error: 'Translation not configured' }, 503);
+
+  // Daily free allowance (Pro accounts will skip this once logins and payments exist).
+  const day = new Date().toISOString().slice(0, 10);
+  const device = String(body.device || '').slice(0, 64) || 'none';
+  const ip = (context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown';
+  const devKey = `${day}/d/${hash(device)}`, ipKey = `${day}/ip/${hash(ip)}`;
+  let store = null, devUsed = 0, ipUsed = 0;
+  try {
+    store = getStore('translate-usage');
+    devUsed = Number(await store.get(devKey)) || 0;
+    ipUsed = Number(await store.get(ipKey)) || 0;
+  } catch { store = null; } // if usage storage is unavailable, don't block people
+  if (devUsed >= FREE || ipUsed >= IP_CAP) return json({ error: 'limit', limit: FREE, remaining: 0 }, 429);
 
   try {
-    if (process.env.DEEPL_API_KEY) return json({ translation: await deepl(text, from, to), via: 'deepl' });
-    if (process.env.ANTHROPIC_API_KEY) return json({ translation: await claude(text, from, to), via: 'claude' });
-    return json({ error: 'Translation not configured' }, 503);
+    let translation, via;
+    if (process.env.DEEPL_API_KEY) { translation = await deepl(text, from, to); via = 'deepl'; }
+    else { translation = await claude(text, from, to); via = 'claude'; }
+    if (store) { try { await store.set(devKey, String(devUsed + 1)); await store.set(ipKey, String(ipUsed + 1)); } catch {} }
+    return json({ translation, via, limit: FREE, remaining: Math.max(0, FREE - devUsed - 1) });
   } catch (e) {
     return json({ error: e.message || 'Translation error' }, 502);
   }

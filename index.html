@@ -190,6 +190,7 @@
       <button class="btn" id="useCustom" data-i18n="asWritten">Practise as written</button>
     </div>
     <div class="heard" id="trMsg" style="margin-top:8px"></div>
+    <div class="a-meta" id="trLeft"></div>
   </section>
 
   <section class="card" id="assessCard" style="display:none"></section>
@@ -543,16 +544,24 @@ dictBtn.onclick=()=>{
   try{dictRec.start();}catch(err){dictRec=null;}
 };
 
+const DEVICE_ID = (()=>{ let d=store.get('sir_dev',null); if(!d){ d=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now()); store.set('sir_dev',d); } return d; })();
+const trLeft=$('trLeft');
+function showTrLeft(n){ if(trLeft) trLeft.textContent = (typeof n==='number') ? t('trLeft',{n}) : ''; }
 trBtn.onclick=async()=>{
   const text=els.customText.value.trim(); if(!text){trMsg.textContent=t('trFirst');return;}
   if(text.length>300){trMsg.textContent=t('trLong');return;}
   trBtn.disabled=true; trMsg.textContent=t('translating');
   try{
     const r=await fetch('/.netlify/functions/translate',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text,from:fromSel.value,to:lang})});
+      body:JSON.stringify({text,from:fromSel.value,to:lang,device:DEVICE_ID})});
     const j=await r.json().catch(()=>({}));
+    if(r.status===429 || j.error==='limit'){
+      trMsg.innerHTML=''; const sp=document.createElement('span'); sp.textContent=t('trLimit',{n:j.limit||5})+' ';
+      const b=document.createElement('button'); b.className='linkbtn'; b.setAttribute('data-prem',''); b.textContent=t('getNotified');
+      trMsg.appendChild(sp); trMsg.appendChild(b); showTrLeft(0); return;
+    }
     if(!r.ok||!j.translation) throw new Error(j.error||('HTTP '+r.status));
-    custom=[j.translation, text]; idx=0; trMsg.textContent='';
+    custom=[j.translation, text]; idx=0; trMsg.textContent=''; showTrLeft(j.remaining);
     render(); els.practice.scrollIntoView({behavior:'smooth'}); speak(j.translation,0.95);
   }catch(err){
     trMsg.textContent = /not configured/i.test(err.message) ? t('trOff') : t('trFail')+err.message;
