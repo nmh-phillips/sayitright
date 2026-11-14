@@ -125,6 +125,24 @@
   .a-result ul{margin:0;padding-left:20px;font-size:14px;line-height:1.5}
   .a-summary{font-size:15px;line-height:1.5;margin:8px 0}
   .a-disclaimer{font-size:12px;color:var(--muted);margin:12px 0}
+  .pron{margin-top:12px}
+  .pron-btn{width:100%;justify-content:center;background:#E8EBFA;border-color:#cdd3f3;color:var(--ink)}
+  .pron-btn.rec{background:var(--bad);color:#fff;border-color:var(--bad);animation:pulse 1.2s infinite}
+  .pron-left{font-weight:500;color:var(--muted);font-size:13px}
+  .pron-btn.rec .pron-left{color:#fff}
+  .pron-res{margin-top:12px;padding:16px;border-radius:14px;background:#F3F4FB}
+  .pron-head{display:flex;align-items:center;gap:14px}
+  .pron-mood svg{width:60px;height:60px;display:block}
+  .pron-words{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .pw{border:2px solid transparent;border-radius:8px;padding:4px 9px;font:600 17px Inter,sans-serif;cursor:pointer}
+  .pw.ok{background:var(--goodbg);color:var(--good)} .pw.mid{background:var(--midbg);color:var(--mid)} .pw.bad{background:var(--badbg);color:var(--bad)}
+  .pw.sel{border-color:var(--ink)}
+  .pron-detail{background:#fff;border-radius:12px;padding:12px;margin-top:6px}
+  .pron-ph{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .ph{display:inline-flex;flex-direction:column;align-items:center;min-width:44px;padding:6px 6px;border-radius:8px}
+  .ph b{font-size:17px} .ph small{font-size:12px}
+  .ph.ok{background:var(--goodbg);color:var(--good)} .ph.mid{background:var(--midbg);color:var(--mid)} .ph.bad{background:var(--badbg);color:var(--bad)}
+  .pron-tip{font-size:14px;margin:10px 0 0}
   @keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px #f5c542}}
 </style>
 </head>
@@ -160,6 +178,8 @@
       <div class="heard"><span data-i18n="weHeard">We heard:</span> <em id="heard"></em></div>
       <div class="tip" id="tip"></div>
     </div>
+
+    <div id="pronBox" class="pron"></div>
 
     <div class="nav">
       <button class="btn" id="prev">← Back</button>
@@ -399,6 +419,7 @@ function render(){
   } else { up.classList.remove('show'); up.innerHTML=''; }
   renderPhrase(null);
   renderProgress();
+  if(window.pronReset) window.pronReset();
 }
 function renderProgress(){
   const all = Object.values(DATA[lang].sets).flat();
@@ -603,5 +624,6 @@ wlForm.addEventListener('submit',async e=>{
 render();
 </script>
 <script src="assess.js"></script>
+<script src="pron.js"></script>
 </body>
 </html>
