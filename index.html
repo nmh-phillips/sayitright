@@ -129,6 +129,19 @@
   .a-more p{margin:4px 0 6px;color:#6b4a00}
   .a-more ul{list-style:none;padding:0;margin:0 0 8px;display:grid;gap:4px;color:#7a5c00}
   .a-more-n{font-weight:600}
+  .tabs button.focus{color:#5a2d91;background:#f1e9fb;border-color:#dccaf3}
+  .tabs button.focus.on{background:#6b3fa0;color:#fff;border-color:#6b3fa0}
+  .f-list{display:grid;gap:8px;margin:12px 0}
+  .f-pack{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;text-align:left;font:inherit;color:var(--ink);width:100%}
+  button.f-pack{cursor:pointer}
+  .f-pack b{display:block;font-size:16px}
+  .f-pack small{color:var(--muted);font-size:13px}
+  .f-pack.locked{background:#fafafa;color:var(--muted)}
+  .f-tag{font:700 11px Inter,sans-serif;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:6px;white-space:nowrap;background:#e3f6ec;color:#0b5d3b}
+  .f-weak{margin-top:12px;padding:14px;border-radius:12px;background:#fff8e1;border:1px solid #f3dfa0;font-size:14px}
+  .f-weak p{margin:4px 0 8px;color:#6b4a00}
+  .f-bar{display:none;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:#5a2d91;background:#f1e9fb;border-radius:10px;padding:8px 12px;margin-bottom:10px}
+  .f-bar.show{display:flex}
   .pron{margin-top:12px}
   .pron-btn{width:100%;justify-content:center;background:#E8EBFA;border-color:#cdd3f3;color:var(--ink)}
   .pron-btn.rec{background:var(--bad);color:#fff;border-color:var(--bad);animation:pulse 1.2s infinite}
@@ -167,7 +180,10 @@
 
   <div class="tabs" id="tabs"></div>
 
+  <section class="card" id="focusCard" style="display:none"></section>
+
   <section class="card" id="practice">
+    <div class="f-bar" id="focusBar"><span id="focusBarName"></span><button class="linkbtn" data-fback style="color:#5a2d91"></button></div>
     <div class="meta"><span id="counter">1 / 10</span><span id="best"></span></div>
     <div class="phrase" id="phrase" aria-live="polite"></div>
     <div class="en" id="en"></div>
@@ -277,6 +293,9 @@
 const DATA = window.SIR_DATA;
 const CUSTOM = 'My phrase';
 const ASSESS = 'Assess me';
+const FOCUS = 'Focus packs';
+const FOCUS_SETS = ['Past tense'];
+const FOCUS_LOCKED = [['f_future','f_futureD'],['f_irregular','f_irregularD'],['f_questions','f_questionsD'],['f_numbers','f_numbersD'],['f_polite','f_politeD'],['f_vocab','f_vocabD']];
 const PREMIUM_TOPICS = ['Business & work','Shopping','Health & emergencies','Social & small talk','Numbers, dates & time'];
 const PREMIUM_PER_TOPIC = 200;
 const isLocked = name => PREMIUM_TOPICS.includes(name);
@@ -354,7 +373,7 @@ function lev(x,y){
 }
 
 // ---------- current phrase ----------
-function list(){ if(isLocked(set) || set===ASSESS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
+function list(){ if(isLocked(set) || set===ASSESS || set===FOCUS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
 function current(){ return list()[idx]; }
 function key(p){ return lang+'|'+p[0]; }
 
@@ -363,14 +382,35 @@ function meaning(p){
   if(base(lang)==='en'){ const m=window.SIR_EN_MEANING(p[0],ui); if(m) return m; }
   return p[1]||'';
 }
+function renderFocus(){
+  const c=$('focusCard'); c.innerHTML='';
+  const h=(tag,cls,txt)=>{ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!==undefined) e.textContent=txt; return e; };
+  const head=h('div','a-head'); head.appendChild(h('h2',null,t('f_title'))); c.appendChild(head);
+  c.appendChild(h('p','a-intro',t('f_intro')));
+  const listEl=h('div','f-list');
+  FOCUS_SETS.forEach(name=>{
+    const b=h('button','f-pack'); const d=h('div'); d.appendChild(h('b',null,'🎯 '+setName(name))); d.appendChild(h('small',null,t('f_pastD',{n:DATA[lang].sets[name].length})));
+    b.appendChild(d); b.appendChild(h('span','f-tag',t('f_free'))); b.onclick=()=>{ set=name; idx=0; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+    listEl.appendChild(b);
+  });
+  FOCUS_LOCKED.forEach(([n,dk])=>{
+    const r=h('div','f-pack locked'); const d=h('div'); d.appendChild(h('b',null,'🔒 '+t(n))); d.appendChild(h('small',null,t(dk))); r.appendChild(d);
+    const tag=h('span','f-tag','Premium'); tag.style.background='#fff8e1'; tag.style.color='#7a5c00'; r.appendChild(tag); listEl.appendChild(r);
+  });
+  c.appendChild(listEl);
+  const w=h('div','f-weak'); w.appendChild(h('b',null,'⭐ '+t('f_weakTitle'))); w.appendChild(h('p',null,t('f_weakText')));
+  const g=h('button','linkbtn',t('getNotified')); g.setAttribute('data-prem',''); w.appendChild(g); c.appendChild(w);
+}
+document.addEventListener('click',e=>{ if(e.target.closest('[data-fback]')){ set=FOCUS; idx=0; render(); } });
 function renderTabs(){
   els.tabs.innerHTML='';
-  [...Object.keys(DATA[lang].sets),CUSTOM].forEach(name=>{
+  [...Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n)),CUSTOM].forEach(name=>{
     const b=document.createElement('button');
     b.textContent=setName(name); if(name===set) b.className='on';
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });
+  { const b=document.createElement('button'); b.textContent=t('f_tab'); b.className='focus'+((set===FOCUS||FOCUS_SETS.includes(set))?' on':''); b.onclick=()=>{set=FOCUS;idx=0;render()}; els.tabs.appendChild(b); }
   { const b=document.createElement('button'); b.textContent=t('a_tab'); b.className='assess'+(set===ASSESS?' on':''); b.onclick=()=>{set=ASSESS;idx=0;render()}; els.tabs.appendChild(b); }
   PREMIUM_TOPICS.forEach(name=>{
     const b=document.createElement('button');
@@ -400,7 +440,12 @@ function render(){
   renderTabs();
   els.customCard.style.display = set===CUSTOM ? 'block':'none';
   const locked = isLocked(set);
-  els.practice.style.display = (locked || set===ASSESS) ? 'none':'block';
+  els.practice.style.display = (locked || set===ASSESS || set===FOCUS) ? 'none':'block';
+  $('focusCard').style.display = set===FOCUS ? 'block':'none';
+  if(set===FOCUS) renderFocus();
+  const inFocus = FOCUS_SETS.includes(set);
+  $('focusBar').classList.toggle('show', inFocus);
+  if(inFocus){ $('focusBarName').textContent='🎯 '+t('f_pack')+': '+setName(set); $('focusBar').querySelector('[data-fback]').textContent=t('f_back'); }
   $('assessCard').style.display = set===ASSESS ? 'block':'none';
   if(set===ASSESS && window.renderAssess) window.renderAssess();
   $('lockedView').style.display = locked ? 'block':'none';
@@ -417,7 +462,7 @@ function render(){
   els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
   els.result.className='result';
   const up=$('upsell');
-  if(!locked && set!==CUSTOM && set!==ASSESS && L.length && idx===L.length-1){
+  if(!locked && set!==CUSTOM && set!==ASSESS && set!==FOCUS && L.length && idx===L.length-1){
     up.innerHTML = t('upsell',{n:L.length,set:'<b>'+setName(set)+'</b>',m:PREMIUM_PER_TOPIC-L.length})+' <button class="linkbtn" data-prem>'+t('getNotified')+'</button>';
     up.classList.add('show');
   } else { up.classList.remove('show'); up.innerHTML=''; }
@@ -532,7 +577,7 @@ function applyUI(){
 applyUI();
 uiSel.onchange=()=>{ ui=uiSel.value; store.set('sir_ui',ui); applyUI(); if(typeof fillFrom==='function'){ fillFrom(); } render(); if(typeof syncFrom==='function') syncFrom(); };
 els.lang.value=lang;
-els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(set!==ASSESS) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
+els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(set!==ASSESS && set!==FOCUS && !FOCUS_SETS.includes(set)) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
 els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
