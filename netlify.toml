@@ -1,3 +1,34 @@
 [build]
   publish = "."
   command = ""
+
+# Send every other address to the main domain, keeping the page path.
+[[redirects]]
+  from = "https://harleysays.co.uk/*"
+  to = "https://harleysays.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.harleysays.co.uk/*"
+  to = "https://harleysays.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://harleysays.co.uk/*"
+  to = "https://harleysays.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.harleysays.co.uk/*"
+  to = "https://harleysays.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://harleysays.netlify.app/*"
+  to = "https://harleysays.com/:splat"
+  status = 301
+  force = true
