@@ -451,3 +451,16 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Assess me: Premium stories teaser
+(function(){
+const S={
+ en:{a_moreTitle:'50 more stories with Premium',a_moreText:'Longer passages at every level, from A1 to C2, on everyday topics.',a_story1:'A job interview',a_story2:'Lost at the airport',a_story3:'Dinner with friends',a_storyMore:'+ 47 more',f:['50 reading stories',' for Assess me, at every level']},
+ es:{a_moreTitle:'50 historias más con Premium',a_moreText:'Textos más largos para todos los niveles, de A1 a C2, sobre temas cotidianos.',a_story1:'Una entrevista de trabajo',a_story2:'Perdido en el aeropuerto',a_story3:'Cena con amigos',a_storyMore:'+ 47 más',f:['50 historias de lectura',' para Evalúame, de todos los niveles']},
+ fr:{a_moreTitle:'50 histoires de plus avec Premium',a_moreText:'Des textes plus longs pour tous les niveaux, de A1 à C2, sur des sujets du quotidien.',a_story1:'Un entretien d’embauche',a_story2:'Perdu à l’aéroport',a_story3:'Dîner entre amis',a_storyMore:'+ 47 autres',f:['50 histoires à lire',' pour Évaluez-moi, à tous les niveaux']},
+ it:{a_moreTitle:'50 storie in più con Premium',a_moreText:'Testi più lunghi per ogni livello, da A1 a C2, su temi di tutti i giorni.',a_story1:'Un colloquio di lavoro',a_story2:'Perso in aeroporto',a_story3:'Cena con gli amici',a_storyMore:'+ altre 47',f:['50 storie da leggere',' per Valutami, per ogni livello']},
+ de:{a_moreTitle:'50 weitere Geschichten mit Premium',a_moreText:'Längere Texte für jedes Niveau von A1 bis C2 zu Alltagsthemen.',a_story1:'Ein Vorstellungsgespräch',a_story2:'Verloren am Flughafen',a_story3:'Abendessen mit Freunden',a_storyMore:'+ 47 weitere',f:['50 Lesegeschichten',' für Teste mich, auf jedem Niveau']},
+ pt:{a_moreTitle:'50 histórias extra com o Premium',a_moreText:'Textos mais longos para todos os níveis, do A1 ao C2, sobre temas do dia a dia.',a_story1:'Uma entrevista de emprego',a_story2:'Perdido no aeroporto',a_story3:'Jantar com amigos',a_storyMore:'+ mais 47',f:['50 histórias para ler',' no Avalie-me, para todos os níveis']}
+};
+for (const k in S){ const {f,...rest}=S[k]; Object.assign(window.SIR_UI[k], rest); window.SIR_UI[k].feats = window.SIR_UI[k].feats.concat([f]); }
+})();

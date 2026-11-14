@@ -157,6 +157,9 @@ function renderAssess(){
     } else {
       h += `<button class="btn mic" data-astart>${esc(t('a_start'))}</button>`;
     }
+    if(A.mode==='read' && A.state==='idle') h += `<div class="a-more"><b>⭐ ${esc(t('a_moreTitle'))}</b><p>${esc(t('a_moreText'))}</p>
+      <ul>${['a_story1','a_story2','a_story3'].map(k=>`<li>🔒 ${esc(t(k))}</li>`).join('')}<li class="a-more-n">${esc(t('a_storyMore'))}</li></ul>
+      <button class="linkbtn" data-prem>${esc(t('getNotified'))}</button></div>`;
   }
   if(A.error) h += `<p class="a-error" role="alert">${esc(A.error)}</p>`;
   card.innerHTML = h;
