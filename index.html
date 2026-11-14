@@ -94,6 +94,37 @@
   .fine{font-size:12px;color:var(--muted);margin:8px 0 0}
   .done{background:var(--goodbg);color:var(--good);padding:12px 14px;border-radius:12px;font-weight:600}
   .flash{animation:flash 1.2s}
+  .tabs button.assess{color:#0b5d3b;background:#e3f6ec;border-color:#b7e4cc}
+  .tabs button.assess.on{background:#1a7f37;color:#fff;border-color:#1a7f37}
+  .a-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .a-head h2{margin:0;font-size:20px}
+  .a-free{font:700 11px Inter,sans-serif;text-transform:uppercase;letter-spacing:.04em;background:#e3f6ec;color:#0b5d3b;padding:4px 8px;border-radius:6px;white-space:nowrap}
+  .a-intro,.a-how{color:var(--muted);font-size:15px;line-height:1.55;margin:8px 0}
+  .a-last{font-size:13px;color:var(--muted);margin:0 0 8px}
+  .a-modes{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+  .a-modes .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .a-passage{margin:10px 0;padding:14px 16px;background:#F3F4FB;border-radius:12px;font-size:18px;line-height:1.6}
+  #aWrite{width:100%;font:500 16px Inter,sans-serif;padding:12px;border-radius:12px;border:1px solid var(--line);resize:vertical}
+  .a-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}
+  .a-meta{font-size:13px;color:var(--muted);margin:6px 0}
+  .a-live{font-size:15px;line-height:1.5;min-height:1.5em;color:var(--ink)}
+  .a-wait{font-weight:600;color:var(--accent);margin:14px 0}
+  .a-error{color:var(--bad);font-size:14px;margin:10px 0 0}
+  .a-result{margin-top:12px;padding:16px;border-radius:14px;background:#F3F4FB}
+  .a-score{display:flex;align-items:center;gap:14px}
+  .a-mood svg{width:72px;height:72px;display:block}
+  .a-num{font-size:44px;font-weight:700;line-height:1;letter-spacing:-.02em}
+  .a-num small{font-size:18px;color:var(--muted);font-weight:600}
+  .a-level{margin-top:4px;font-size:15px}
+  .a-level b{background:var(--ink);color:#fff;padding:2px 8px;border-radius:6px;margin-right:4px}
+  .a-subs{display:grid;gap:8px;margin:14px 0}
+  .a-sub{display:grid;grid-template-columns:110px 1fr 32px;align-items:center;gap:8px;font-size:14px}
+  .a-bar{height:8px;background:#dde1f2;border-radius:4px;overflow:hidden}
+  .a-bar i{display:block;height:100%;background:var(--accent)}
+  .a-result h3{font-size:15px;margin:12px 0 4px}
+  .a-result ul{margin:0;padding-left:20px;font-size:14px;line-height:1.5}
+  .a-summary{font-size:15px;line-height:1.5;margin:8px 0}
+  .a-disclaimer{font-size:12px;color:var(--muted);margin:12px 0}
   @keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px #f5c542}}
 </style>
 </head>
@@ -161,6 +192,8 @@
     <div class="heard" id="trMsg" style="margin-top:8px"></div>
   </section>
 
+  <section class="card" id="assessCard" style="display:none"></section>
+
   <section class="card">
     <div class="progress"><span id="progText">0 of 10 phrases mastered (80%+)</span></div>
     <div class="bar"><i id="progBar"></i></div>
@@ -218,6 +251,7 @@
 <script>
 const DATA = window.SIR_DATA;
 const CUSTOM = 'My phrase';
+const ASSESS = 'Assess me';
 const PREMIUM_TOPICS = ['Business & work','Shopping','Health & emergencies','Social & small talk','Numbers, dates & time'];
 const PREMIUM_PER_TOPIC = 200;
 const isLocked = name => PREMIUM_TOPICS.includes(name);
@@ -295,7 +329,7 @@ function lev(x,y){
 }
 
 // ---------- current phrase ----------
-function list(){ if(isLocked(set)) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
+function list(){ if(isLocked(set) || set===ASSESS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
 function current(){ return list()[idx]; }
 function key(p){ return lang+'|'+p[0]; }
 
@@ -312,6 +346,7 @@ function renderTabs(){
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });
+  { const b=document.createElement('button'); b.textContent=t('a_tab'); b.className='assess'+(set===ASSESS?' on':''); b.onclick=()=>{set=ASSESS;idx=0;render()}; els.tabs.appendChild(b); }
   PREMIUM_TOPICS.forEach(name=>{
     const b=document.createElement('button');
     b.textContent='🔒 '+setName(name); b.className='locked'+(name===set?' on':'');
@@ -340,7 +375,9 @@ function render(){
   renderTabs();
   els.customCard.style.display = set===CUSTOM ? 'block':'none';
   const locked = isLocked(set);
-  els.practice.style.display = locked ? 'none':'block';
+  els.practice.style.display = (locked || set===ASSESS) ? 'none':'block';
+  $('assessCard').style.display = set===ASSESS ? 'block':'none';
+  if(set===ASSESS && window.renderAssess) window.renderAssess();
   $('lockedView').style.display = locked ? 'block':'none';
   if(locked){
     $('lockedTitle').textContent = setName(set);
@@ -355,7 +392,7 @@ function render(){
   els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
   els.result.className='result';
   const up=$('upsell');
-  if(!locked && set!==CUSTOM && L.length && idx===L.length-1){
+  if(!locked && set!==CUSTOM && set!==ASSESS && L.length && idx===L.length-1){
     up.innerHTML = t('upsell',{n:L.length,set:'<b>'+setName(set)+'</b>',m:PREMIUM_PER_TOPIC-L.length})+' <button class="linkbtn" data-prem>'+t('getNotified')+'</button>';
     up.classList.add('show');
   } else { up.classList.remove('show'); up.innerHTML=''; }
@@ -469,7 +506,7 @@ function applyUI(){
 applyUI();
 uiSel.onchange=()=>{ ui=uiSel.value; store.set('sir_ui',ui); applyUI(); if(typeof fillFrom==='function'){ fillFrom(); } render(); if(typeof syncFrom==='function') syncFrom(); };
 els.lang.value=lang;
-els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
+els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(set!==ASSESS) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
 els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
@@ -556,5 +593,6 @@ wlForm.addEventListener('submit',async e=>{
 
 render();
 </script>
+<script src="assess.js"></script>
 </body>
 </html>
