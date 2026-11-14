@@ -58,15 +58,21 @@ export default async (req, context) => {
 
 async function deepl(text, from, to) {
   const key = process.env.DEEPL_API_KEY;
-  const host = key.endsWith(':fx') ? 'https://api-free.deepl.com' : 'https://api.deepl.com';
-  const r = await fetch(`${host}/v2/translate`, {
-    method: 'POST',
-    headers: { 'Authorization': `DeepL-Auth-Key ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: [text], source_lang: DEEPL_SOURCE[from], target_lang: DEEPL_TARGET[to] })
-  });
-  if (!r.ok) throw new Error(`DeepL error ${r.status}`);
-  const j = await r.json();
-  return j.translations?.[0]?.text?.trim();
+  // Free/Developer keys have used api-free.deepl.com; paid keys use api.deepl.com. Try the likely one first, then the other.
+  const hosts = key.endsWith(':fx') ? ['https://api-free.deepl.com', 'https://api.deepl.com'] : ['https://api.deepl.com', 'https://api-free.deepl.com'];
+  let last = 0;
+  for (const host of hosts) {
+    const r = await fetch(`${host}/v2/translate`, {
+      method: 'POST',
+      headers: { 'Authorization': `DeepL-Auth-Key ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: [text], source_lang: DEEPL_SOURCE[from], target_lang: DEEPL_TARGET[to] })
+    });
+    if (r.ok) { const j = await r.json(); return j.translations?.[0]?.text?.trim(); }
+    last = r.status;
+    if (r.status !== 403 && r.status !== 401) break; // only a wrong-host key error is worth retrying
+  }
+  if (last === 456) throw new Error('DeepL character allowance used up');
+  throw new Error(`DeepL error ${last}`);
 }
 
 async function claude(text, from, to) {
