@@ -18,6 +18,10 @@ const wc = s => (s.trim().match(/\S+/g) || []).length;
 
 const A = { mode:'read', state:'idle', result:null, error:'', finals:[], confs:[], interim:'', start:0, timer:null, rec:null, writeText:'',
   az:null, quick:false, offerQuick:false, part:0, st:[], res:[], jobs:[], secs:[], wav:null };
+// Azure's scores bunch up near the top (learners often get 85-95), so stretch them before showing a level.
+// 98 → ~95 (C2), 95 → ~87 (C1), 90 → ~75 (B2), 80 → ~52 (B1), 70 → ~33 (A2). Tweak AZ_CURVE to make it stricter or kinder.
+const AZ_FLOOR = 40, AZ_CURVE = 1.6;
+const azCurve = v => Math.round(100*Math.pow(Math.max(0, Math.min(100, Number(v)||0) - AZ_FLOOR)/(100-AZ_FLOOR), AZ_CURVE));
 const PART_COUNT = 3, PART_MAX = 28; // Azure scores up to 30 s of audio per request, so the passage is read in 3 parts
 
 // ---- detailed (Azure) read-aloud scoring, in short parts ----
@@ -124,11 +128,12 @@ function combineStream(){
   if (completeness < 30){ A.state='idle'; A.error=t('a_readShort'); renderAssess(); return; }
   const accuracy = matched.reduce((s,j) => s + heard[j].acc, 0) / matched.length;
   const fluency = dur ? flu / dur : 0;
-  const score = Math.round(0.6*accuracy + 0.2*fluency + 0.2*completeness);
+  const ca = azCurve(accuracy), cf = azCurve(fluency), cc = azCurve(completeness);
+  const score = Math.round(0.5*ca + 0.3*cf + 0.2*cc);
   const weak = [];
   map.forEach((j,i) => { if (j >= 0 && (heard[j].acc < 60 || heard[j].err === 'Mispronunciation') && !weak.includes(target[i])) weak.push(target[i]); });
   map.forEach((j,i) => { if (j < 0 && weak.length < 10 && !weak.includes(target[i])) weak.push(target[i]); });
-  finishResult({ kind:'read', score, cefr:cefrFor(score), subs:[['a_sub_accuracy',accuracy],['a_sub_fluency',fluency],['p_completeness',completeness]], missed: weak.slice(0,10), wpm: A.streamSecs ? heard.length/(A.streamSecs/60) : 0 });
+  finishResult({ kind:'read', score, cefr:cefrFor(score), subs:[['a_sub_accuracy',ca],['a_sub_fluency',cf],['p_completeness',cc]], missed: weak.slice(0,10), wpm: A.streamSecs ? heard.length/(A.streamSecs/60) : 0 });
 }
 
 async function azOn(){
@@ -191,11 +196,12 @@ async function sendPart(i, wav){
 function combineParts(){
   const parts = passageParts(), wts = parts.map(p => wc(p)), tot = wts.reduce((a,b)=>a+b,0);
   const avg = k => A.res.reduce((s,r,i) => s + (Number(r[k])||0)*wts[i], 0) / tot;
-  const score = Math.round(avg('score'));
+  const ca = azCurve(avg('accuracy')), cf = azCurve(avg('fluency')), cc = azCurve(avg('completeness'));
+  const score = Math.round(0.5*ca + 0.3*cf + 0.2*cc);
   const weak = [];
   A.res.forEach(r => r.words.forEach(w => { if ((w.error === 'Omission' || w.error === 'Mispronunciation' || w.score < 60) && w.error !== 'Insertion'){ const x = String(w.word).toLowerCase(); if (!weak.includes(x)) weak.push(x); } }));
   const secs = A.secs.reduce((a,b)=>a+(b||0),0);
-  const subs = [['a_sub_accuracy',avg('accuracy')],['a_sub_fluency',avg('fluency')],['p_completeness',avg('completeness')]];
+  const subs = [['a_sub_accuracy',ca],['a_sub_fluency',cf],['p_completeness',cc]];
   resetParts();
   finishResult({ kind:'read', score, cefr:cefrFor(score), subs, missed:weak.slice(0,10), wpm: secs ? tot/(secs/60) : 0 });
 }
