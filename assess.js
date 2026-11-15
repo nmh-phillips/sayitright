@@ -31,15 +31,117 @@ function passageParts(){
   if (cur) parts.push(cur);
   return parts;
 }
+// ---- streaming (Speech SDK): whole passage in one take, no 30-second limit ----
+const SDK_SRC = '/vendor/speech-sdk-1.53.0.min.js';
+const AZ_LOC = { en:'en-GB', enus:'en-US', es:'es-ES', esmx:'es-MX', fr:'fr-FR', it:'it-IT', de:'de-DE', pt:'pt-PT' };
+function loadSDK(){
+  if (window.SpeechSDK) return Promise.resolve();
+  if (!A.sdkP) A.sdkP = new Promise((res, rej) => {
+    const sc = document.createElement('script'); sc.src = SDK_SRC; sc.async = true;
+    sc.onload = () => window.SpeechSDK ? res() : rej(new Error('sdk'));
+    sc.onerror = () => { A.sdkP = null; rej(new Error('sdk')); };
+    document.head.appendChild(sc);
+  });
+  return A.sdkP;
+}
+function streamFallback(){ // anything goes wrong with streaming → use the 3-part upload method instead
+  if (A.sr){ try{ A.sr.close(); }catch(e){} A.sr = null; }
+  clearInterval(A.timer); A.noStream = true; A.state = 'idle'; A.error = ''; renderAssess();
+}
+async function startStream(){
+  A.state = 'preparing'; A.error = ''; A.result = null; A.finals = []; A.interim = ''; A.segs = []; renderAssess();
+  let tok;
+  try {
+    const [r] = await Promise.all([
+      fetch('/.netlify/functions/speech-token', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ device: DEVICE_ID }) }),
+      loadSDK()
+    ]);
+    tok = await r.json().catch(()=>({}));
+    if (r.status === 429 || tok.error === 'limit'){ A.state='idle'; A.error=t('a_limitA'); A.offerQuick=true; renderAssess(); return; }
+    if (r.status === 503){ A.az = false; A.state='idle'; renderAssess(); return; }
+    if (!r.ok || !tok.token) return streamFallback();
+  } catch(e){ return streamFallback(); }
+  try {
+    const S = window.SpeechSDK;
+    const cfg = S.SpeechConfig.fromAuthorizationToken(tok.token, tok.region);
+    cfg.speechRecognitionLanguage = AZ_LOC[lang] || 'en-GB';
+    const pa = new S.PronunciationAssessmentConfig(ASSESS_PASSAGES[lang], S.PronunciationAssessmentGradingSystem.HundredMark, S.PronunciationAssessmentGranularity.Word, false);
+    const rec = new S.SpeechRecognizer(cfg, S.AudioConfig.fromDefaultMicrophoneInput());
+    pa.applyTo(rec);
+    rec.recognizing = (s, e) => { A.interim = e.result.text || ''; updateLive(); };
+    rec.recognized = (s, e) => {
+      if (e.result.reason !== S.ResultReason.RecognizedSpeech) return;
+      try { A.segs.push(JSON.parse(e.result.properties.getProperty(S.PropertyId.SpeechServiceResponse_JsonResult))); } catch(err){}
+      A.finals.push(e.result.text || ''); A.interim = ''; updateLive();
+    };
+    rec.canceled = (s, e) => {
+      if (e.reason !== S.CancellationReason.Error) return;
+      if (A.state === 'recording' && A.segs.length) stopStream();
+      else if (A.state === 'recording' || A.state === 'preparing') streamFallback();
+    };
+    A.sr = rec;
+    rec.startContinuousRecognitionAsync(() => {
+      A.state = 'recording'; A.start = Date.now();
+      clearInterval(A.timer);
+      A.timer = setInterval(() => { updateLive(); if (elapsed() >= ASSESS_MAX.read) stopStream(); }, 300);
+      renderAssess();
+    }, () => streamFallback());
+  } catch(e){ streamFallback(); }
+}
+function stopStream(){
+  if (!A.sr || A.state !== 'recording') return;
+  clearInterval(A.timer);
+  A.streamSecs = elapsed(); A.state = 'finishing'; renderAssess();
+  const rec = A.sr; A.sr = null;
+  let done = false;
+  const fin = () => { if (done) return; done = true; try{ rec.close(); }catch(e){} setTimeout(combineStream, 400); };
+  rec.stopContinuousRecognitionAsync(fin, fin);
+  setTimeout(fin, 5000);
+}
+function mapLCS(a, b){ // target index -> heard index (or -1)
+  const m=a.length, n=b.length, dp=Array.from({length:m+1},()=>new Uint16Array(n+1));
+  for(let i=m-1;i>=0;i--) for(let j=n-1;j>=0;j--) dp[i][j] = a[i]===b[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j], dp[i][j+1]);
+  const map = new Array(m).fill(-1); let i=0, j=0;
+  while(i<m && j<n){ if(a[i]===b[j]){ map[i]=j; i++; j++; } else if(dp[i+1][j] >= dp[i][j+1]) i++; else j++; }
+  return map;
+}
+function combineStream(){
+  const heard = []; let flu = 0, dur = 0;
+  for (const seg of A.segs || []){
+    const nb = seg.NBest && seg.NBest[0]; if (!nb) continue;
+    const pa = nb.PronunciationAssessment || nb, d = Number(seg.Duration) || 1;
+    flu += (Number(pa.FluencyScore) || 0) * d; dur += d;
+    for (const w of nb.Words || []){
+      const wp = w.PronunciationAssessment || w;
+      for (const piece of tokens(String(w.Word || ''))) heard.push({ w: normTok(piece), raw: piece, acc: Number(wp.AccuracyScore) || 0, err: wp.ErrorType || 'None' });
+    }
+  }
+  const target = tokens(ASSESS_PASSAGES[lang]);
+  if (!heard.length){ A.state='idle'; A.error=t('a_noMatch'); renderAssess(); return; }
+  const map = mapLCS(target.map(normTok), heard.map(h => h.w));
+  const matched = map.filter(j => j >= 0);
+  const completeness = 100 * matched.length / target.length;
+  if (completeness < 30){ A.state='idle'; A.error=t('a_readShort'); renderAssess(); return; }
+  const accuracy = matched.reduce((s,j) => s + heard[j].acc, 0) / matched.length;
+  const fluency = dur ? flu / dur : 0;
+  const score = Math.round(0.6*accuracy + 0.2*fluency + 0.2*completeness);
+  const weak = [];
+  map.forEach((j,i) => { if (j >= 0 && (heard[j].acc < 60 || heard[j].err === 'Mispronunciation') && !weak.includes(target[i])) weak.push(target[i]); });
+  map.forEach((j,i) => { if (j < 0 && weak.length < 10 && !weak.includes(target[i])) weak.push(target[i]); });
+  finishResult({ kind:'read', score, cefr:cefrFor(score), subs:[['a_sub_accuracy',accuracy],['a_sub_fluency',fluency],['p_completeness',completeness]], missed: weak.slice(0,10), wpm: A.streamSecs ? heard.length/(A.streamSecs/60) : 0 });
+}
+
 async function azOn(){
   if (A.az !== null) return A.az;
   try { const r = await fetch('/.netlify/functions/pronounce'); const j = await r.json(); A.az = !!j.enabled; } catch(e){ A.az = false; }
   return A.az;
 }
-function resetParts(){ A.part=0; A.st=[]; A.res=[]; A.jobs=[]; A.secs=[]; if(A.wav){ try{A.wav.cancel();}catch(e){} A.wav=null; } }
+function resetParts(){ if(A.sr){ try{ A.sr.stopContinuousRecognitionAsync(()=>{},()=>{}); A.sr.close(); }catch(e){} A.sr=null; } A.part=0; A.st=[]; A.res=[]; A.jobs=[]; A.secs=[]; if(A.wav){ try{A.wav.cancel();}catch(e){} A.wav=null; } }
 async function startAssess(){
   A.error=''; A.offerQuick=false;
-  if (A.mode !== 'read' || A.quick || !navigator.mediaDevices || typeof pronRecord !== 'function' || !(await azOn())) return startRec();
+  if (A.mode !== 'read' || A.quick || !navigator.mediaDevices || !(await azOn())) return startRec();
+  if (!A.noStream) return startStream();
+  if (typeof pronRecord !== 'function') return startRec();
   try { A.wav = await pronRecord(); } catch(e){ A.error = t('p_mic'); renderAssess(); return; }
   A.result=null; A.state='recording'; A.start=Date.now();
   clearInterval(A.timer);
@@ -229,7 +331,7 @@ function renderAssess(){
       <div class="a-row"><span class="a-meta" id="aWc">${esc(t('a_words',{n:wc(A.writeText)}))}</span>
       <button class="btn primary" data-awrite ${A.state==='assessing'?'disabled':''}>${esc(A.state==='assessing'?t('a_assessing'):t('a_assessWrite'))}</button></div>`;
   } else {
-    const parted = A.mode==='read' && A.az && !A.quick;
+    const parted = A.mode==='read' && A.az && !A.quick && A.noStream;
     h += `<p class="a-how">${esc(parted ? t('a_readHowParts',{m:PART_COUNT}) : t(A.mode==='read'?'a_readHow':'a_speakHow'))}</p>`;
     if(parted) h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${passageParts().map((p,i)=>`<span class="pt${i===A.part?' cur':A.st[i]?' done':''}">${esc(p)}</span>`).join(' ')}</blockquote>`;
     else if(A.mode==='read') h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${esc(ASSESS_PASSAGES[lang])}</blockquote>`;
@@ -240,6 +342,8 @@ function renderAssess(){
     } else if(A.state==='recording'){
       h += `<button class="btn mic rec" data-astop>${esc(t('a_finish'))}</button>
         <p class="a-meta" id="aTime"></p><p class="a-live" id="aLive" aria-live="polite"></p>`;
+    } else if(A.state==='preparing'){
+      h += `<p class="a-wait">⏳</p>`;
     } else if(A.state==='finishing' || A.state==='assessing'){
       h += `<p class="a-wait">${esc(t('a_assessing'))}</p>`;
     } else {
@@ -253,6 +357,7 @@ function renderAssess(){
   if(A.offerQuick && A.state==='idle' && !A.result) h += `<button class="linkbtn" data-aquick>${esc(t('a_quickBtn'))}</button>`;
   card.innerHTML = h;
   updateLive();
+  if (A.az && A.mode==='read' && !A.noStream && card.offsetParent !== null) loadSDK().catch(()=>{}); // fetch the speech script only once Assess me is open
   const ta = $('aWrite'); if(ta) ta.oninput = () => { A.writeText = ta.value; const w=$('aWc'); if(w) w.textContent=t('a_words',{n:wc(ta.value)}); };
 }
 document.addEventListener('click', e => {
@@ -260,7 +365,7 @@ document.addEventListener('click', e => {
   if(!b) return;
   if(b.dataset.amode) setMode(b.dataset.amode);
   else if(b.hasAttribute('data-astart')) startAssess();
-  else if(b.hasAttribute('data-astop')) { if(A.wav) stopPart(); else finishRec(); }
+  else if(b.hasAttribute('data-astop')) { if(A.sr) stopStream(); else if(A.wav) stopPart(); else finishRec(); }
   else if(b.hasAttribute('data-aquick')){ A.quick=true; A.offerQuick=false; A.error=''; renderAssess(); }
   else if(b.hasAttribute('data-awrite')) assessWriting();
   else if(b.hasAttribute('data-aagain')){ A.state='idle'; A.result=null; A.quick=false; resetParts(); renderAssess(); }
