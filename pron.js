@@ -79,6 +79,33 @@ function pronLeft(){ const v = store.get('sir_pron_left', null); return (v && v.
 const pc = s => s>=80 ? 'ok' : s>=60 ? 'mid' : 'bad';
 const pesc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+
+// Azure only names sounds for US English, so label each sound with the letters that spell it.
+const PH_UNITS = ['sch','eau','tch','igh','dge','ção','ão','ões','sh','ch','th','ph','wh','ck','ng','qu','gu','gn','gl','gh','nh','lh','sc','ll','rr','ss','tt','nn','mm','pp','ff','dd','bb','cc','zz','ee','oo','ea','ai','ay','oa','ou','ow','oi','oy','au','aw','ie','ei','eu','äu','ue','ui','ey','ew','on','an','en','in','un'];
+function phLabels(word, n){
+  const src = String(word||'').replace(/[^\p{L}]/gu,'');
+  if (!n) return [];
+  if (!src) return Array(n).fill('·');
+  const low = src.toLowerCase(); let u = [], i = 0;
+  while (i < src.length){
+    const m = PH_UNITS.find(d => low.startsWith(d, i));
+    const len = m ? m.length : 1; u.push(src.slice(i, i+len)); i += len;
+  }
+  while (u.length > n){
+    if (u.length > 1 && /^e$/i.test(u[u.length-1])) { const e = u.pop(); u[u.length-1] += e; continue; }
+    let best = 0; for (let k = 1; k < u.length-1; k++) if (u[k].length+u[k+1].length < u[best].length+u[best+1].length) best = k;
+    u.splice(best, 2, u[best]+u[best+1]);
+  }
+  while (u.length < n){
+    let k = -1; u.forEach((x,j) => { if (x.length > 1 && (k < 0 || x.length > u[k].length)) k = j; });
+    if (k < 0) break;
+    u.splice(k, 1, u[k].slice(0,1), u[k].slice(1));
+  }
+  while (u.length < n) u.push(u[u.length-1]);
+  return u;
+}
+const phName = (ph, lab) => ph.p ? `${lab} /${ph.p}/` : lab;
+
 function pronRender(){
   const box = $('pronBox'); if (!box) return;
   const p = current();
@@ -102,11 +129,11 @@ function pronRender(){
     if (w){
       h += `<div class="pron-detail"><div class="a-row"><b>${pesc(t('p_sounds',{w:w.word}))}</b><button class="btn" data-phear="${P.sel}">${pesc(t('listen'))}</button></div>`;
       if (w.error === 'Omission') h += `<p class="a-meta">${pesc(t('p_omitted'))}</p>`;
-      if (w.phonemes.length) h += `<div class="pron-ph">${w.phonemes.map(ph=>`<span class="ph ${pc(ph.score)}"><b>${pesc(ph.p)}</b><small>${ph.score}</small></span>`).join('')}</div>`;
+      if (w.phonemes.length){ const L = phLabels(w.word, w.phonemes.length); h += `<div class="pron-ph">${w.phonemes.map((ph,j)=>`<span class="ph ${pc(ph.score)}"${ph.p?` title="/${pesc(ph.p)}/"`:''}><b>${pesc(L[j])}</b><small>${ph.score}</small></span>`).join('')}</div>`; }
       h += `</div>`;
     }
     const worst = [];
-    r.words.forEach(w => w.phonemes.forEach(ph => { if (ph.score < 60) worst.push(`${ph.p} (${w.word})`); }));
+    r.words.forEach(w => { const L = phLabels(w.word, w.phonemes.length); w.phonemes.forEach((ph,j) => { if (ph.score < 60) worst.push(`“${phName(ph, L[j])}” in ${w.word}`); }); });
     h += `<p class="pron-tip">${pesc(worst.length ? t('p_focus',{s:worst.slice(0,3).join(', ')}) : t('p_good'))}</p></div>`;
   }
   box.innerHTML = h;
