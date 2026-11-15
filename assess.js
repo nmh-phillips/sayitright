@@ -288,14 +288,15 @@ function assessWriting(){
 async function callAI(payload, toResult){
   A.state='assessing'; A.error=''; renderAssess();
   try{
-    const r = await fetch('/.netlify/functions/assess',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload, lang, ui})});
+    const r = await fetch('/.netlify/functions/assess',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload, lang, ui, device: DEVICE_ID})});
     const j = await r.json().catch(()=>({}));
     if(r.status===503 || /not configured/i.test(j.error||'')) throw new Error('__off');
+    if(r.status===429 || j.error==='limit') throw new Error('__limit');
     if(!r.ok || typeof j.score!=='number') throw new Error(j.error || ('HTTP '+r.status));
     finishResult(toResult(j));
   }catch(err){
     A.state='idle';
-    A.error = err.message==='__off' ? t('a_off') : t('a_fail')+err.message;
+    A.error = err.message==='__off' ? t('a_off') : err.message==='__limit' ? t('a_limitA') : t('a_fail')+err.message;
     renderAssess();
   }
 }
