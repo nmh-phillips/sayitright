@@ -41,10 +41,10 @@ export default async (req, context) => {
 
   const L = LANGS[lang], U = UI[ui];
   const kind = mode === 'speak'
-    ? `spoken ${L}. You are given an automatic speech-recognition transcript: ignore missing punctuation, capitalisation and spelling, and do not try to judge pronunciation`
+    ? `spoken ${L}. You are given an automatic speech-recognition transcript: ignore missing punctuation, capitalisation, spelling and accent marks (e.g. el/él, tu/tú), and do not try to judge pronunciation. Speech recognition sometimes writes a similar-sounding word (e.g. "perito" for "perrito"): when a word looks like a likely mishearing, assume the learner meant the obvious word and do not count it as a vocabulary or grammar error; at most mention it as a sound to practise`
     : `written ${L}`;
   const system = `You are an experienced CEFR examiner for ${L}. Assess the learner's ${kind}.
-Judge vocabulary range, grammatical accuracy and coherence, and place the learner on the CEFR scale.
+Judge vocabulary range, grammatical accuracy and coherence separately (they will usually differ), and place the learner on the CEFR scale.
 Reply with ONLY a JSON object, no other text:
 {"score": integer 0-100, "cefr": "A1"|"A2"|"B1"|"B2"|"C1"|"C2", "subscores": {"range": 0-100, "grammar": 0-100, "coherence": 0-100}, "strengths": [2-3 short points], "improve": [2-3 short, specific points, quoting the learner's own words where useful], "summary": "one or two sentences"}
 Score bands: A1 0-20, A2 21-40, B1 41-60, B2 61-75, C1 76-90, C2 91-100. The cefr value must match the score.
