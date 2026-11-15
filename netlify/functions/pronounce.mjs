@@ -3,17 +3,21 @@
 // Returns: { score, accuracy, fluency, completeness, words:[{word, score, error, phonemes:[{p, score}]}], limit, remaining }
 // Needs AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (e.g. uksouth) in Netlify environment variables.
 // Free allowance: PRON_FREE_LIMIT checks per device per day (default 3), PRON_IP_LIMIT per connection (default 30).
+// Assess me sends kind:'assess' (one call per passage part, each under 30 s): separate allowance ASSESS_PRON_LIMIT parts per day (default 9 = 3 assessments).
+// GET returns { enabled } so the page knows whether sound scoring is switched on.
 import { getStore } from '@netlify/blobs';
 import { createHash } from 'node:crypto';
 
 const LOCALES = { en: 'en-GB', enus: 'en-US', es: 'es-ES', esmx: 'es-MX', fr: 'fr-FR', it: 'it-IT', de: 'de-DE', pt: 'pt-PT' };
 const FREE = Number(process.env.PRON_FREE_LIMIT || 3);
 const IP_CAP = Number(process.env.PRON_IP_LIMIT || 30);
+const ASSESS_FREE = Number(process.env.ASSESS_PRON_LIMIT || 9);
 const hash = x => createHash('sha256').update('harley-says-pron:' + x).digest('hex').slice(0, 24);
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 const num = v => Math.round(Number(v) || 0);
 
 export default async (req, context) => {
+  if (req.method === 'GET') return json({ enabled: !!(process.env.AZURE_SPEECH_KEY && process.env.AZURE_SPEECH_REGION) });
   if (req.method !== 'POST') return json({ error: 'Use POST' }, 405);
   let b;
   try { b = await req.json(); } catch { return json({ error: 'Bad JSON' }, 400); }
@@ -27,7 +31,9 @@ export default async (req, context) => {
 
   // Daily free allowance (Premium accounts will skip this once logins and payments exist).
   const day = new Date().toISOString().slice(0, 10);
-  const devKey = `${day}/d/${hash(String(b.device || 'none').slice(0, 64))}`;
+  const assess = b.kind === 'assess';
+  const limit = assess ? ASSESS_FREE : FREE;
+  const devKey = `${day}/${assess ? 'a' : 'd'}/${hash(String(b.device || 'none').slice(0, 64))}`;
   const ipKey = `${day}/ip/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
   let store = null, devUsed = 0, ipUsed = 0;
   try {
@@ -35,7 +41,7 @@ export default async (req, context) => {
     devUsed = Number(await store.get(devKey)) || 0;
     ipUsed = Number(await store.get(ipKey)) || 0;
   } catch { store = null; }
-  if (devUsed >= FREE || ipUsed >= IP_CAP) return json({ error: 'limit', limit: FREE, remaining: 0 }, 429);
+  if (devUsed >= limit || ipUsed >= IP_CAP) return json({ error: 'limit', limit, remaining: 0 }, 429);
 
   const config = { ReferenceText: text, GradingSystem: 'HundredMark', Granularity: 'Phoneme', Dimension: 'Comprehensive', EnableMiscue: true, PhonemeAlphabet: 'IPA' };
   const url = `https://${region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=${locale}&format=detailed`;
@@ -71,6 +77,6 @@ export default async (req, context) => {
   return json({
     score: num(pa.PronScore ?? pa.AccuracyScore),
     accuracy: num(pa.AccuracyScore), fluency: num(pa.FluencyScore), completeness: num(pa.CompletenessScore),
-    words, limit: FREE, remaining: Math.max(0, FREE - devUsed - 1)
+    words, limit, remaining: Math.max(0, limit - devUsed - 1)
   });
 };

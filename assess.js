@@ -16,18 +16,98 @@ const cefrFor = s => CEFR_BANDS.find(([m]) => s <= m)[1];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const wc = s => (s.trim().match(/\S+/g) || []).length;
 
-const A = { mode:'read', state:'idle', result:null, error:'', finals:[], confs:[], interim:'', start:0, timer:null, rec:null, writeText:'' };
+const A = { mode:'read', state:'idle', result:null, error:'', finals:[], confs:[], interim:'', start:0, timer:null, rec:null, writeText:'',
+  az:null, quick:false, offerQuick:false, part:0, st:[], res:[], jobs:[], secs:[], wav:null };
+const PART_COUNT = 3, PART_MAX = 28; // Azure scores up to 30 s of audio per request, so the passage is read in 3 parts
+
+// ---- detailed (Azure) read-aloud scoring, in short parts ----
+function passageParts(){
+  const txt = ASSESS_PASSAGES[lang], sents = (txt.match(/[^.!?]+[.!?]+/g) || [txt]).map(x => x.trim());
+  const target = txt.length/PART_COUNT, parts = []; let done = 0, cur = '';
+  for (const x of sents){
+    if (cur && parts.length < PART_COUNT-1 && done + cur.length + x.length/2 > target*(parts.length+1)){ parts.push(cur); done += cur.length; cur = ''; }
+    cur = (cur + ' ' + x).trim();
+  }
+  if (cur) parts.push(cur);
+  return parts;
+}
+async function azOn(){
+  if (A.az !== null) return A.az;
+  try { const r = await fetch('/.netlify/functions/pronounce'); const j = await r.json(); A.az = !!j.enabled; } catch(e){ A.az = false; }
+  return A.az;
+}
+function resetParts(){ A.part=0; A.st=[]; A.res=[]; A.jobs=[]; A.secs=[]; if(A.wav){ try{A.wav.cancel();}catch(e){} A.wav=null; } }
+async function startAssess(){
+  A.error=''; A.offerQuick=false;
+  if (A.mode !== 'read' || A.quick || !navigator.mediaDevices || typeof pronRecord !== 'function' || !(await azOn())) return startRec();
+  try { A.wav = await pronRecord(); } catch(e){ A.error = t('p_mic'); renderAssess(); return; }
+  A.result=null; A.state='recording'; A.start=Date.now();
+  clearInterval(A.timer);
+  A.timer = setInterval(() => { updateLive(); if (elapsed() >= PART_MAX) stopPart(); }, 300);
+  renderAssess();
+}
+async function stopPart(){
+  if (A.state !== 'recording' || !A.wav) return;
+  clearInterval(A.timer);
+  const i = A.part, rec = A.wav; A.wav = null;
+  A.state = 'finishing'; renderAssess();
+  const wav = await rec.stop();
+  if (wav.seconds < 1){ A.state='idle'; A.error=t('a_partFail',{n:i+1}); renderAssess(); return; }
+  A.secs[i] = wav.seconds; A.st[i] = 'pending';
+  A.jobs[i] = sendPart(i, wav);
+  const next = [...Array(PART_COUNT).keys()].find(j => !A.st[j]);
+  if (next !== undefined){ A.part = next; A.state = 'idle'; renderAssess(); return; }
+  A.state = 'assessing'; renderAssess();
+  await Promise.all(A.jobs);
+  const failed = [...Array(PART_COUNT).keys()].filter(j => A.st[j] !== 'ok');
+  if (failed.length){
+    const lim = failed.find(j => A.st[j] === 'limit') !== undefined;
+    failed.forEach(j => { A.st[j] = undefined; });
+    A.part = failed[0]; A.state = 'idle';
+    if (lim){ A.error = t('a_limitA'); A.offerQuick = true; resetParts(); }
+    else A.error = A.st.__off ? t('p_off') : t('a_partFail',{n:failed[0]+1});
+    renderAssess(); return;
+  }
+  combineParts();
+}
+async function sendPart(i, wav){
+  const text = passageParts()[i];
+  try {
+    const r = await fetch('/.netlify/functions/pronounce', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ audio: wav.b64, text, lang, device: DEVICE_ID, kind:'assess' }) });
+    const j = await r.json().catch(()=>({}));
+    if (r.status === 429 || j.error === 'limit'){
+      A.st[i] = 'limit';
+      if (A.state !== 'assessing'){ clearInterval(A.timer); resetParts(); A.state='idle'; A.error=t('a_limitA'); A.offerQuick=true; renderAssess(); }
+      return;
+    }
+    if (r.status === 503){ A.az = false; A.st.__off = true; A.st[i] = 'fail'; return; }
+    if (!r.ok || typeof j.score !== 'number'){ A.st[i] = 'fail'; return; }
+    A.res[i] = j; A.st[i] = 'ok';
+  } catch(e){ A.st[i] = 'fail'; }
+}
+function combineParts(){
+  const parts = passageParts(), wts = parts.map(p => wc(p)), tot = wts.reduce((a,b)=>a+b,0);
+  const avg = k => A.res.reduce((s,r,i) => s + (Number(r[k])||0)*wts[i], 0) / tot;
+  const score = Math.round(avg('score'));
+  const weak = [];
+  A.res.forEach(r => r.words.forEach(w => { if ((w.error === 'Omission' || w.error === 'Mispronunciation' || w.score < 60) && w.error !== 'Insertion'){ const x = String(w.word).toLowerCase(); if (!weak.includes(x)) weak.push(x); } }));
+  const secs = A.secs.reduce((a,b)=>a+(b||0),0);
+  const subs = [['a_sub_accuracy',avg('accuracy')],['a_sub_fluency',avg('fluency')],['p_completeness',avg('completeness')]];
+  resetParts();
+  finishResult({ kind:'read', score, cefr:cefrFor(score), subs, missed:weak.slice(0,10), wpm: secs ? tot/(secs/60) : 0 });
+}
 
 function fluencyFrom(wpm, conf){
   let f = wpm < 60 ? (wpm/60)*0.6 : wpm <= 170 ? Math.min(1, 0.6 + (wpm-60)/60*0.4) : Math.max(0.6, 1-(wpm-170)/120);
   return Math.round(100*(0.75*f + 0.25*conf));
 }
-function avgConf(){ const c = A.confs.filter(x => x > 0); return c.length ? c.reduce((a,b)=>a+b,0)/c.length : 0.85; }
+function avgConf(){ const c = A.confs.filter(x => x > 0); return c.length ? c.reduce((a,b)=>a+b,0)/c.length : 0.7; }
 function heardText(){ return (A.finals.join(' ') + ' ' + A.interim).trim(); }
 function elapsed(){ return A.start ? (Date.now()-A.start)/1000 : 0; }
 function fmt(sec){ sec=Math.max(0,Math.round(sec)); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
 
-function setMode(m){ if(A.state==='recording') return; A.mode=m; A.state='idle'; A.result=null; A.error=''; renderAssess(); }
+function setMode(m){ if(A.state==='recording') return; A.mode=m; A.state='idle'; A.result=null; A.error=''; A.offerQuick=false; renderAssess(); }
 
 function startRec(){
   if(!Rec){ A.error=t('voiceNeeds'); renderAssess(); return; }
@@ -54,7 +134,7 @@ function startRec(){
   renderAssess();
 }
 function updateLive(){
-  const tl = $('aTime'); if(tl) tl.textContent = t('a_timeLeft',{t:fmt(ASSESS_MAX[A.mode]-elapsed())}) + ' · ' + t('a_words',{n:wc(heardText())});
+  const tl = $('aTime'); if(tl) tl.textContent = A.wav ? t('a_timeLeft',{t:fmt(PART_MAX-elapsed())}) : t('a_timeLeft',{t:fmt(ASSESS_MAX[A.mode]-elapsed())}) + ' · ' + t('a_words',{n:wc(heardText())});
   const lv = $('aLive'); if(lv) lv.textContent = heardText();
 }
 function finishRec(){
@@ -79,9 +159,10 @@ function evaluateSpeech(dur){
     const acc = hits.filter(Boolean).length/target.length;
     if(acc < 0.15){ A.state='idle'; A.error=t('a_noMatch'); renderAssess(); return; }
     const flu = fluencyFrom(wpm, conf);
-    const score = Math.round(100*(0.65*acc + 0.2*(flu/100) + 0.15*conf));
+    // Browser recognition guesses the expected words even when speech is unclear, so this quick estimate is stricter and capped.
+    const score = Math.min(85, Math.round(100*(0.55*acc + 0.25*(flu/100) + 0.2*conf)));
     const missed = [...new Set(target.filter((w,i)=>!hits[i]))].slice(0,10);
-    finishResult({ kind:'read', score, cefr:cefrFor(score), subs:[['a_sub_accuracy',acc*100],['a_sub_fluency',flu],['a_sub_clarity',conf*100]], missed, wpm });
+    finishResult({ kind:'read', quick:true, score, cefr:cefrFor(score), subs:[['a_sub_accuracy',acc*100],['a_sub_fluency',flu],['a_sub_clarity',conf*100]], missed, wpm });
     return;
   }
   if(dur < ASSESS_MIN_SPEAK_SEC || words < ASSESS_MIN_WORDS){ A.state='idle'; A.error=t('a_tooShort'); renderAssess(); return; }
@@ -132,13 +213,14 @@ function renderAssess(){
     h += `<div class="a-result">
       <div class="a-score"><span class="a-mood" aria-hidden="true">${HARLEY[mood]}</span>
         <div><div class="a-num">${r.score}<small>/100</small></div>
-        <div class="a-level"><b>${esc(r.cefr)}</b> ${esc(t('lvl_'+r.cefr))}${r.kind==='read'?' · '+esc(t('a_pronLevel')):''}</div></div></div>
+        <div class="a-level"><b>${esc(r.quick ? cefrRange(r.score) : r.cefr)}</b> ${r.quick ? '' : esc(t('lvl_'+r.cefr))}${r.kind==='read'?' · '+esc(t('a_pronLevel')):''}</div></div></div>
       <div class="a-subs">${r.subs.map(([k,v])=>`<div class="a-sub"><span>${esc(t(k))}</span><span class="a-bar"><i style="width:${Math.round(v)}%"></i></span><b>${Math.round(v)}</b></div>`).join('')}</div>`;
     if(r.summary) h += `<p class="a-summary">${esc(r.summary)}</p>`;
     if(r.strengths && r.strengths.length) h += `<h3>${esc(t('a_strengths'))}</h3><ul>${r.strengths.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`;
     if(r.improve && r.improve.length) h += `<h3>${esc(t('a_improve'))}</h3><ul>${r.improve.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`;
     if(r.missed && r.missed.length) h += `<p class="a-meta">${esc(t('a_missed',{w:r.missed.join(', ')}))}</p>`;
     if(r.wpm) h += `<p class="a-meta">${esc(t('a_pace',{n:Math.round(r.wpm)}))}</p>`;
+    if(r.quick) h += `<p class="a-meta">${esc(t('a_quickNote'))}</p>`;
     h += `<p class="a-disclaimer">${esc(t('a_indicative'))}</p>
       <button class="btn primary" data-aagain>${esc(t('a_again'))}</button></div>`;
   } else if(A.mode==='write'){
@@ -147,9 +229,15 @@ function renderAssess(){
       <div class="a-row"><span class="a-meta" id="aWc">${esc(t('a_words',{n:wc(A.writeText)}))}</span>
       <button class="btn primary" data-awrite ${A.state==='assessing'?'disabled':''}>${esc(A.state==='assessing'?t('a_assessing'):t('a_assessWrite'))}</button></div>`;
   } else {
-    h += `<p class="a-how">${esc(t(A.mode==='read'?'a_readHow':'a_speakHow'))}</p>`;
-    if(A.mode==='read') h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${esc(ASSESS_PASSAGES[lang])}</blockquote>`;
-    if(A.state==='recording'){
+    const parted = A.mode==='read' && A.az && !A.quick;
+    h += `<p class="a-how">${esc(parted ? t('a_readHowParts',{m:PART_COUNT}) : t(A.mode==='read'?'a_readHow':'a_speakHow'))}</p>`;
+    if(parted) h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${passageParts().map((p,i)=>`<span class="pt${i===A.part?' cur':A.st[i]?' done':''}">${esc(p)}</span>`).join(' ')}</blockquote>`;
+    else if(A.mode==='read') h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${esc(ASSESS_PASSAGES[lang])}</blockquote>`;
+    if(parted && A.state==='recording'){
+      h += `<button class="btn mic rec" data-astop>${esc(t('a_partStop',{n:A.part+1}))}</button><p class="a-meta" id="aTime"></p>`;
+    } else if(parted && A.state==='idle'){
+      h += `<button class="btn mic" data-astart>${esc(t('a_partBtn',{n:A.part+1,m:PART_COUNT}))}</button>`;
+    } else if(A.state==='recording'){
       h += `<button class="btn mic rec" data-astop>${esc(t('a_finish'))}</button>
         <p class="a-meta" id="aTime"></p><p class="a-live" id="aLive" aria-live="polite"></p>`;
     } else if(A.state==='finishing' || A.state==='assessing'){
@@ -162,19 +250,23 @@ function renderAssess(){
       <button class="linkbtn" data-prem>${esc(t('getNotified'))}</button></div>`;
   }
   if(A.error) h += `<p class="a-error" role="alert">${esc(A.error)}</p>`;
+  if(A.offerQuick && A.state==='idle' && !A.result) h += `<button class="linkbtn" data-aquick>${esc(t('a_quickBtn'))}</button>`;
   card.innerHTML = h;
   updateLive();
   const ta = $('aWrite'); if(ta) ta.oninput = () => { A.writeText = ta.value; const w=$('aWc'); if(w) w.textContent=t('a_words',{n:wc(ta.value)}); };
 }
 document.addEventListener('click', e => {
-  const b = e.target.closest('#assessCard [data-amode],#assessCard [data-astart],#assessCard [data-astop],#assessCard [data-awrite],#assessCard [data-aagain]');
+  const b = e.target.closest('#assessCard [data-amode],#assessCard [data-astart],#assessCard [data-astop],#assessCard [data-awrite],#assessCard [data-aagain],#assessCard [data-aquick]');
   if(!b) return;
   if(b.dataset.amode) setMode(b.dataset.amode);
-  else if(b.hasAttribute('data-astart')) startRec();
-  else if(b.hasAttribute('data-astop')) finishRec();
+  else if(b.hasAttribute('data-astart')) startAssess();
+  else if(b.hasAttribute('data-astop')) { if(A.wav) stopPart(); else finishRec(); }
+  else if(b.hasAttribute('data-aquick')){ A.quick=true; A.offerQuick=false; A.error=''; renderAssess(); }
   else if(b.hasAttribute('data-awrite')) assessWriting();
-  else if(b.hasAttribute('data-aagain')){ A.state='idle'; A.result=null; renderAssess(); }
+  else if(b.hasAttribute('data-aagain')){ A.state='idle'; A.result=null; A.quick=false; resetParts(); renderAssess(); }
 });
 window.renderAssess = renderAssess;
-window.assessLangChanged = () => { if(A.state==='recording'){ clearInterval(A.timer); A.state='idle'; try{A.rec.stop();}catch(e){} } A.result=null; A.error=''; A.state='idle'; };
+window.assessLangChanged = () => { if(A.state==='recording'){ clearInterval(A.timer); A.state='idle'; try{A.rec.stop();}catch(e){} } resetParts(); A.result=null; A.error=''; A.state='idle'; A.offerQuick=false; };
+function cefrRange(s){ const a = cefrFor(Math.max(0,s-8)), b = cefrFor(Math.min(100,s+8)); return a===b ? a : a+'–'+b; }
+azOn().then(() => { if (A.mode==='read' && A.state==='idle' && !A.result) renderAssess(); });
 if(typeof render==='function') render();
