@@ -104,6 +104,30 @@
   .a-last{font-size:13px;color:var(--muted);margin:0 0 8px}
   .a-modes{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
   .a-modes .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .sum{position:relative;overflow:hidden;text-align:center}
+  .sum-dog{width:132px;height:132px;margin:6px auto 4px}
+  .sum-dog svg{width:100%;height:100%;display:block;transform-origin:50% 85%}
+  .sum-set{color:var(--muted);font-size:14px;margin-top:6px}
+  .sum .a-num{font-size:52px}
+  .sum-stars{font-size:26px;color:#f5b400;letter-spacing:4px;margin:2px 0 8px}
+  .sum-msg{font-size:18px;font-weight:600;margin:6px 0}
+  .sum-list{display:flex;flex-direction:column;gap:8px;margin:8px 0 14px;text-align:left}
+  .sum-list button{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;width:100%}
+  .sum-list small{color:var(--muted);white-space:nowrap}
+  .sum h3{margin:16px 0 4px;font-size:16px;text-align:left}
+  .sum .row{justify-content:center;flex-wrap:wrap}
+  .anim-jump svg{animation:hjump .8s ease-in-out 4}
+  .anim-wag svg{animation:hwag .6s ease-in-out 5}
+  .anim-tilt svg{animation:htilt 1.6s ease-in-out 2}
+  .anim-bob svg{animation:hbob 1.2s ease-in-out 3}
+  @keyframes hjump{0%,100%{transform:translateY(0) scale(1)}35%{transform:translateY(-22px) scale(1.06)}55%{transform:translateY(-22px) scale(1.06) rotate(-4deg)}80%{transform:translateY(0) scale(.97,1.03)}}
+  @keyframes hwag{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+  @keyframes htilt{0%,100%{transform:rotate(0)}30%,70%{transform:rotate(12deg)}}
+  @keyframes hbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .confetti{position:absolute;inset:0;pointer-events:none}
+  .confetti i{position:absolute;top:-16px;width:9px;height:14px;border-radius:3px;animation:cfall linear forwards;opacity:.95}
+  @keyframes cfall{to{transform:translateY(520px) rotate(540deg);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.sum-dog svg{animation:none!important}.confetti{display:none}}
   .a-passage{margin:10px 0;padding:14px 16px;background:#F3F4FB;border-radius:12px;font-size:18px;line-height:1.6}
   .a-passage .pt{border-radius:6px;transition:background .2s,opacity .2s} .a-passage .pt.cur{background:#fff3c4;box-shadow:0 0 0 3px #fff3c4} .a-passage .pt.done{opacity:.45;background:none;color:inherit;box-shadow:none;padding:0;border:0;font-weight:inherit}
   #aWrite{width:100%;font:500 16px Inter,sans-serif;padding:12px;border-radius:12px;border:1px solid var(--line);resize:vertical}
@@ -209,6 +233,8 @@
     </div>
     <div class="upsell" id="upsell"></div>
   </section>
+
+  <section class="card sum" id="summaryCard" style="display:none" aria-live="polite"></section>
 
   <section class="card locked-view" id="lockedView" style="display:none">
     <div class="ic">🔒</div>
@@ -327,6 +353,7 @@ let set = Object.keys(DATA[lang].sets)[0];
 let idx = 0;
 let custom = null;
 let scores = store.get('sir_scores',{});
+let summaryOn=false; // 'lang|set' while the end-of-section summary is showing
 
 const $ = id => document.getElementById(id);
 const els = {lang:$('lang'),tabs:$('tabs'),phrase:$('phrase'),en:$('en'),counter:$('counter'),best:$('best'),
@@ -456,11 +483,16 @@ function render(){
     $('lockedText').textContent = t('lockedText',{n:PREMIUM_PER_TOPIC,lang:LN(lang)});
   }
   const L=list();
+  const canSum = !locked && set!==CUSTOM && set!==ASSESS && set!==FOCUS && L.length>1;
+  if(summaryOn && (!canSum || summaryOn!==lang+'|'+set)) summaryOn=false;
+  $('summaryCard').style.display = summaryOn ? 'block':'none';
+  if(summaryOn){ els.practice.style.display='none'; renderSummary(); }
   els.counter.textContent = L.length ? `${idx+1} / ${L.length}` : '';
   const p=current();
   const b = p ? scores[key(p)] : undefined;
   els.best.textContent = b!==undefined ? t('best',{n:b}) : '';
-  els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1;
+  els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1 && !canSum;
+  els.next.textContent = (canSum && idx===L.length-1) ? t('s_see') : t('next');
   els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
   els.result.className='result';
   const up=$('upsell');
@@ -584,7 +616,51 @@ els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
 els.prev.onclick=()=>{if(idx>0){idx--;render()}};
-els.next.onclick=()=>{if(idx<list().length-1){idx++;render()}};
+els.next.onclick=()=>{ if(idx<list().length-1){idx++;render()} else if(list().length>1 && set!==CUSTOM){ summaryOn=lang+'|'+set; render(); $('summaryCard').scrollIntoView({behavior:'smooth',block:'start'}); } };
+
+// ---------- end-of-section summary with Harley ----------
+function renderSummary(){
+  const c=$('summaryCard'), L=list(), best=L.map(p=>scores[key(p)]);
+  const triedS=best.filter(b=>b!==undefined), tried=triedS.length;
+  const overall = tried ? Math.round(triedS.reduce((a,b)=>a+b,0)/tried) : 0;
+  const mastered = best.filter(b=>(b||0)>=80).length;
+  let band = overall>=85 && tried>=L.length*0.75 ? 'top' : overall>=65 ? 'good' : overall>=40 ? 'mid' : 'low';
+  if(!tried) band='low';
+  const look = {top:['celebrate','jump'], good:['happy','wag'], mid:['puzzled','tilt'], low:['happy','bob']}[band];
+  const stars = band==='top'?3:band==='good'?2:band==='mid'?1:0;
+  const weak = L.map((p,i)=>({p,i,b:best[i]})).filter(x=>x.b===undefined||x.b<80).sort((a,b)=>(a.b??999)-(b.b??999)).slice(0,3);
+  const e = s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  let h = `<div class="sum-set">${e(setName(set))} · ${e(t('s_title'))}</div>
+    <div class="sum-dog anim-${look[1]}" aria-hidden="true">${HARLEY[look[0]]}</div>`;
+  if(tried){
+    h += `<div class="a-num">${overall}<small>/100</small></div>
+      <div class="sum-stars" aria-label="${stars}/3">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`;
+  }
+  h += `<p class="sum-msg">${e(t(tried?'s_'+band:'s_none'))}</p>`;
+  if(tried) h += `<p class="a-meta">${e(t('s_mastered',{n:mastered,m:L.length}))}${tried<L.length?' · '+e(t('s_tried',{n:tried,m:L.length})):''}</p>`;
+  if(weak.length) h += `<h3>${e(t('s_again'))}</h3><div class="sum-list">${weak.map(x=>`<button class="btn" data-sgo="${x.i}"><span>${e(x.p[0])}</span><small>${x.b===undefined?e(t('s_notTried')):x.b+'%'}</small></button>`).join('')}</div>`;
+  h += `<div class="row"><button class="btn" data-srestart>${e(t('s_restart'))}</button><button class="btn primary" data-snext>${e(t('s_nextTopic'))}</button></div>`;
+  if(band==='top'){
+    const cols=['#FFD166','#7FE0C9','#F7B8C4','#3346C8','#F5C542'];
+    h += `<div class="confetti" aria-hidden="true">${Array.from({length:30},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cols[i%5]};animation-duration:${1.8+Math.random()*1.6}s;animation-delay:${Math.random()*0.8}s"></i>`).join('')}</div>`;
+  }
+  c.innerHTML = h;
+}
+document.addEventListener('click', ev=>{
+  const b = ev.target.closest('#summaryCard [data-sgo],#summaryCard [data-srestart],#summaryCard [data-snext]');
+  if(!b) return;
+  summaryOn=false;
+  if(b.dataset.sgo!==undefined) idx=Number(b.dataset.sgo);
+  else if(b.hasAttribute('data-srestart')) idx=0;
+  else {
+    const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n));
+    const i = free.indexOf(set);
+    set = FOCUS_SETS.includes(set) ? FOCUS : (i>=0 && i<free.length-1 ? free[i+1] : ASSESS);
+    idx=0;
+  }
+  render();
+  (set===FOCUS?$('focusCard'):set===ASSESS?$('assessCard'):els.practice).scrollIntoView({behavior:'smooth',block:'start'});
+});
 els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; custom=[t,'']; idx=0; render(); els.practice.scrollIntoView({behavior:'smooth'});};
 
 // ---------- own phrase: input language, dictation, translation ----------
