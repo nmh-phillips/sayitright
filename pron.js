@@ -3,7 +3,8 @@ const PRON_MAX_SEC = 12;
 const P = { state:'idle', result:null, error:'', rec:null, sel:-1, phrase:null };
 
 // ---- record 16 kHz mono WAV in the browser ----
-async function pronRecord(){
+// opts.onSilence: called once the speaker has started and then paused for ~0.9 s (or never starts within opts.waitSec).
+async function pronRecord(opts = {}){
   const stream = await navigator.mediaDevices.getUserMedia({ audio:{ channelCount:1, echoCancellation:true, noiseSuppression:true } });
   const Ctx = window.AudioContext || window.webkitAudioContext;
   const ctx = new Ctx();
@@ -11,7 +12,18 @@ async function pronRecord(){
   const src = ctx.createMediaStreamSource(stream);
   const node = ctx.createScriptProcessor(4096, 1, 1);
   const chunks = [];
-  node.onaudioprocess = e => chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  let floor = null, spoke = false, quiet = 0, heard = 0, fired = false;
+  node.onaudioprocess = e => {
+    const d = new Float32Array(e.inputBuffer.getChannelData(0)); chunks.push(d);
+    if (!opts.onSilence || fired) return;
+    let sum = 0; for (let i = 0; i < d.length; i++) sum += d[i]*d[i];
+    const rms = Math.sqrt(sum/d.length), secs = d.length/ctx.sampleRate;
+    heard += secs;
+    if (floor === null || (!spoke && heard < 0.4)) floor = floor === null ? rms : Math.min(floor*0.8 + rms*0.2, Math.max(floor, rms));
+    const th = Math.max(0.012, (floor || 0) * 3);
+    if (rms > th){ spoke = true; quiet = 0; } else if (spoke) quiet += secs;
+    if ((spoke && quiet > 0.9) || (!spoke && heard > (opts.waitSec || 6))){ fired = true; setTimeout(opts.onSilence, 0); }
+  };
   src.connect(node); node.connect(ctx.destination);
   return {
     stop: async () => {
@@ -43,11 +55,60 @@ function pronWav(chunks, inRate){
   return { b64: btoa(bin), seconds: pcm.length/16000 };
 }
 
+// ---- main "Tap and say it" button: precise Azure scoring with a daily free allowance ----
+const SAY_MAX_SEC = 10;
+let PRON_ON = null;
+fetch('/.netlify/functions/pronounce').then(r => r.json()).then(j => { PRON_ON = !!j.enabled; }).catch(() => { PRON_ON = false; }).finally(() => { pronRender(); if (typeof render === 'function' && els.mic) els.mic.disabled = !current() || (!Rec && !window.sayAzureOn()); });
+const today = () => new Date().toISOString().slice(0,10);
+function sayLeft(){ const v = store.get('sir_say_left', null); return (v && v.day === today()) ? v.n : null; }
+window.sayAzureOn = () => PRON_ON === true && sayLeft() !== 0 && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+const S = { state:'idle', rec:null, timer:null };
+function sayUI(){
+  const m = els.mic;
+  m.classList.toggle('rec', S.state === 'recording');
+  m.disabled = S.state === 'checking';
+  m.textContent = S.state === 'recording' ? t('listening') : S.state === 'checking' ? t('p_wait') : t('tapSay');
+}
+window.sayStart = async () => {
+  if (S.state === 'recording') return sayStop();
+  if (S.state === 'checking') return;
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  try {
+    S.rec = await pronRecord({ onSilence: () => sayStop(), waitSec: 6 });
+  } catch(e){ showError(t('errNotAllowed')); return; }
+  S.state = 'recording'; sayUI();
+  S.timer = setTimeout(sayStop, SAY_MAX_SEC*1000);
+};
+async function sayStop(){
+  if (S.state !== 'recording') return;
+  clearTimeout(S.timer); S.state = 'checking'; sayUI();
+  const p = current(), rec = S.rec; S.rec = null;
+  const wav = await rec.stop();
+  const done = () => { S.state = 'idle'; sayUI(); };
+  if (!p){ done(); return; }
+  if (wav.seconds < 0.6){ done(); showError(t('noCatch')); return; }
+  try {
+    const r = await fetch('/.netlify/functions/pronounce', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ audio: wav.b64, text: p[0], lang, device: DEVICE_ID, kind:'say' }) });
+    const j = await r.json().catch(()=>({}));
+    done();
+    if (current() !== p) return; // moved to another phrase meanwhile
+    if (r.status === 503){ PRON_ON = false; showError(t('say_tapAgain')); return; }
+    if (r.status === 429 || j.error === 'limit'){ store.set('sir_say_left', { day: today(), n: 0 }); showError(t('say_used')); return; }
+    if (j.error === 'nomatch'){ showError(t('noCatch')); return; }
+    if (!r.ok || typeof j.score !== 'number') throw new Error(j.error || ('HTTP '+r.status));
+    if (typeof j.remaining === 'number') store.set('sir_say_left', { day: today(), n: j.remaining });
+    gradeAzure(j);
+    P.result = j; P.state = 'done'; P.inline = true; P.sel = pronWorstWord(j); P.error = '';
+    pronRender();
+  } catch(e){ done(); showError(t('p_fail') + e.message); }
+}
+
 // ---- flow ----
 async function pronStart(){
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ P.error = t('voiceNeeds'); pronRender(); return; }
   try {
-    P.rec = await pronRecord(); P.state = 'recording'; P.error = ''; P.result = null; pronRender();
+    P.rec = await pronRecord(); P.state = 'recording'; P.error = ''; P.result = null; P.inline = false; pronRender();
     P.timer = setTimeout(pronStop, PRON_MAX_SEC*1000);
   } catch(e){ P.state='idle'; P.error = t('p_mic'); pronRender(); }
 }
@@ -112,7 +173,10 @@ function pronRender(){
   if (!p){ box.innerHTML=''; return; }
   const left = pronLeft();
   let h = '';
-  if (P.state === 'recording') h += `<button class="btn pron-btn rec" data-pstop>${pesc(t('p_rec'))}</button>`;
+  const inline = P.inline && P.state === 'done';
+  const sayMode = window.sayAzureOn && window.sayAzureOn();
+  if (inline || (sayMode && P.state === 'idle' && !P.error)) {} // main button already gives the full sound-by-sound result
+  else if (P.state === 'recording') h += `<button class="btn pron-btn rec" data-pstop>${pesc(t('p_rec'))}</button>`;
   else if (P.state === 'analysing') h += `<p class="a-wait">${pesc(t('p_wait'))}</p>`;
   else h += `<button class="btn pron-btn" data-pstart>${pesc(t('p_btn'))}${left!==null && P.state!=='done' ? ' <span class="pron-left">'+pesc(t('p_left',{n:left}))+'</span>' : ''}</button>`;
   if (P.error === '__limit'){
@@ -120,8 +184,11 @@ function pronRender(){
   } else if (P.error) h += `<p class="a-error">${pesc(P.error)}</p>`;
   if (P.state === 'done' && P.result){
     const r = P.result;
-    h += `<div class="pron-res"><div class="pron-head"><span class="pron-mood" aria-hidden="true">${HARLEY[r.score>=85?'celebrate':r.score>=60?'happy':'puzzled']}</span>
-      <div><div class="a-num">${r.score}<small>/100</small></div><div class="a-meta">${pesc(t('p_title'))}${typeof r.remaining==='number'?' · '+pesc(t('p_left',{n:r.remaining})):''}</div></div></div>
+    h += `<div class="pron-res">`;
+    if (inline) h += `<p class="a-meta">${pesc(t('p_title'))}${typeof r.remaining==='number' ? ' · '+pesc(t('say_left',{n:r.remaining})) : ''}</p>`;
+    else h += `<div class="pron-head"><span class="pron-mood" aria-hidden="true">${HARLEY[r.score>=85?'celebrate':r.score>=60?'happy':'puzzled']}</span>
+      <div><div class="a-num">${r.score}<small>/100</small></div><div class="a-meta">${pesc(t('p_title'))}${typeof r.remaining==='number'?' · '+pesc(t('p_left',{n:r.remaining})):''}</div></div></div>`;
+    h += `
       <div class="a-subs">${[['a_sub_accuracy',r.accuracy],['a_sub_fluency',r.fluency],['p_completeness',r.completeness]].map(([k,v])=>`<div class="a-sub"><span>${pesc(t(k))}</span><span class="a-bar"><i style="width:${v}%"></i></span><b>${v}</b></div>`).join('')}</div>
       <p class="a-meta">${pesc(t('p_tapWord'))}</p>
       <div class="pron-words">${r.words.map((w,i)=>`<button class="pw ${w.error==='Omission'?'bad':pc(w.score)}${i===P.sel?' sel':''}" data-pword="${i}">${pesc(w.word)}</button>`).join('')}</div>`;
@@ -148,7 +215,8 @@ document.addEventListener('click', e => {
 });
 window.pronReset = () => {
   const p = current(); const k = p ? lang+'|'+p[0] : null;
-  if (k !== P.phrase){ if (P.rec){ P.rec.cancel(); P.rec=null; clearTimeout(P.timer); } P.state='idle'; P.result=null; P.error=''; P.sel=-1; P.phrase=k; }
+  if (k !== P.phrase){ if (P.rec){ P.rec.cancel(); P.rec=null; clearTimeout(P.timer); } P.state='idle'; P.result=null; P.error=''; P.sel=-1; P.inline=false; P.phrase=k;
+    if (S.rec){ S.rec.cancel(); S.rec=null; clearTimeout(S.timer); S.state='idle'; sayUI(); } }
   pronRender();
 };
 if (typeof render === 'function') render();

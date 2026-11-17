@@ -12,6 +12,9 @@ const LOCALES = { en: 'en-GB', enus: 'en-US', es: 'es-ES', esmx: 'es-MX', fr: 'f
 const FREE = Number(process.env.PRON_FREE_LIMIT || 3);
 const IP_CAP = Number(process.env.PRON_IP_LIMIT || 30);
 const ASSESS_FREE = Number(process.env.ASSESS_PRON_LIMIT || 9);
+// Main "Tap and say it" button sends kind:'say': SAY_FREE_LIMIT per device per day (default 25), SAY_IP_LIMIT per connection (default 150).
+const SAY_FREE = Number(process.env.SAY_FREE_LIMIT || 25);
+const SAY_IP_CAP = Number(process.env.SAY_IP_LIMIT || 150);
 const hash = x => createHash('sha256').update('harley-says-pron:' + x).digest('hex').slice(0, 24);
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 const num = v => Math.round(Number(v) || 0);
@@ -31,17 +34,18 @@ export default async (req, context) => {
 
   // Daily free allowance (Premium accounts will skip this once logins and payments exist).
   const day = new Date().toISOString().slice(0, 10);
-  const assess = b.kind === 'assess';
-  const limit = assess ? ASSESS_FREE : FREE;
-  const devKey = `${day}/${assess ? 'a' : 'd'}/${hash(String(b.device || 'none').slice(0, 64))}`;
-  const ipKey = `${day}/ip/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
+  const kind = b.kind === 'assess' ? 'assess' : b.kind === 'say' ? 'say' : 'check';
+  const limit = kind === 'assess' ? ASSESS_FREE : kind === 'say' ? SAY_FREE : FREE;
+  const ipLimit = kind === 'say' ? SAY_IP_CAP : IP_CAP;
+  const devKey = `${day}/${kind === 'assess' ? 'a' : kind === 'say' ? 's' : 'd'}/${hash(String(b.device || 'none').slice(0, 64))}`;
+  const ipKey = `${day}/${kind === 'say' ? 'ips' : 'ip'}/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
   let store = null, devUsed = 0, ipUsed = 0;
   try {
     store = getStore('pron-usage');
     devUsed = Number(await store.get(devKey)) || 0;
     ipUsed = Number(await store.get(ipKey)) || 0;
   } catch { store = null; }
-  if (devUsed >= limit || ipUsed >= IP_CAP) return json({ error: 'limit', limit, remaining: 0 }, 429);
+  if (devUsed >= limit || ipUsed >= ipLimit) return json({ error: 'limit', limit, remaining: 0 }, 429);
 
   const config = { ReferenceText: text, GradingSystem: 'HundredMark', Granularity: 'Phoneme', Dimension: 'Comprehensive', EnableMiscue: true, PhonemeAlphabet: 'IPA' };
   const url = `https://${region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=${locale}&format=detailed`;

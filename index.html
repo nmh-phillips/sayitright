@@ -493,7 +493,7 @@ function render(){
   els.best.textContent = b!==undefined ? t('best',{n:b}) : '';
   els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1 && !canSum;
   els.next.textContent = (canSum && idx===L.length-1) ? t('s_see') : t('next');
-  els.mic.disabled = !p || !Rec; els.play.disabled = els.slow.disabled = !p;
+  els.mic.disabled = !p || (!Rec && !(window.sayAzureOn && window.sayAzureOn())); els.play.disabled = els.slow.disabled = !p;
   els.result.className='result';
   const up=$('upsell');
   if(!locked && set!==CUSTOM && set!==ASSESS && set!==FOCUS && L.length && idx===L.length-1){
@@ -533,7 +533,9 @@ function speak(text,rate=0.95){
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec=null, listening=false;
 function startListening(){
-  if(!Rec||!current()) return;
+  if(!current()) return;
+  if(!listening && window.sayAzureOn && window.sayAzureOn()) return window.sayStart(); // precise Azure check while today's free allowance lasts
+  if(!Rec) return;
   if(listening){ rec.stop(); return; }
   speechSynthesis && speechSynthesis.cancel();
   rec = new Rec();
@@ -571,6 +573,25 @@ function showError(msg){
   els.result.className='result show bad';
   els.pct.textContent='—'; els.stars.textContent=''; els.heard.parentElement.style.display='none';
   els.tip.textContent=msg;
+}
+// Result from Azure (precise, sound-by-sound): same display as the quick check, but scored on how each word sounded.
+function gradeAzure(j){
+  const p=current(), k=key(p), pct=Math.max(0,Math.min(100,Math.round(j.score)));
+  const said = j.words.filter(w=>w.error!=='Insertion').flatMap(w=>tokens(w.word).map(x=>({x:normTok(x), ok:w.error==='None' && w.score>=60})));
+  const target = tokens(p[0]); let ptr=0;
+  const hits = target.map(tk=>{ const n=normTok(tk); for(let i=ptr;i<said.length;i++){ if(said[i].x===n){ ptr=i+1; return said[i].ok; } } return false; });
+  if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
+  const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
+  els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad');
+  els.pct.textContent=pct+'%';
+  setMood(pct>=90?'celebrate':pct>=50?'happy':'puzzled');
+  els.stars.textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
+  els.heard.parentElement.style.display='none';
+  const missed = hits.filter(h=>!h).length;
+  els.tip.textContent = pct>=90 ? t('tipGreat') : missed===0 ? t('say_tipClose') : missed===1 ? t('say_miss1') : t('say_missN',{n:missed});
+  renderPhrase(hits);
+  els.best.textContent=t('best',{n:scores[k]});
+  renderProgress();
 }
 function grade(b){
   let s = b.ratio;
