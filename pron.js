@@ -285,7 +285,7 @@ async function coachAsk(){
     C.tip = j.tip; C.remaining = j.remaining; C.state = 'done';
     if (typeof j.remaining === 'number') store.set('sir_coach_left', { day: today(), n: j.remaining });
     track('coach'); coachRender(); coachSpeak(C.tip);
-  } catch(e){ if (C.data === d){ C.state = 'error'; C.err = t('c_fail'); coachRender(); } }
+  } catch(e){ if (C.data === d){ C.state = 'error'; C.err = t('c_fail') + ' (' + String(e.message || e).slice(0, 80) + ')'; coachRender(); } }
 }
 document.addEventListener('click', e => {
   if (e.target.closest('#coachBox [data-coach]')) return coachAsk();
