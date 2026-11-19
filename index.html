@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Harley Says — pronunciation practice</title>
+<meta name="description" content="Practise your pronunciation and get scored on every sound. English, Spanish, French, Italian, German and Portuguese. Free, no sign-up.">
+<link rel="canonical" href="https://harleysays.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Harley Says">
+<meta property="og:url" content="https://harleysays.com/">
+<meta property="og:title" content="Harley Says — practise your pronunciation">
+<meta property="og:description" content="Say it out loud and get scored on every sound. English, Spanish, French, Italian, German and Portuguese. Free, no sign-up.">
+<meta property="og:image" content="https://harleysays.com/icons/og-image.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Harley Says">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22280%22%20height%3D%22280%22%20rx%3D%2264%22%20fill%3D%22%233346C8%22/%3E%3Cpath%20d%3D%22M92%20228%20l-26%2040%20l52%20-24%20z%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22212%22%20cy%3D%22148%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22184%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22169%22%20cy%3D%22207%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%22207%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22184%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%2288%22%20cy%3D%22148%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22112%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%2289%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22169%22%20cy%3D%2289%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22112%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22148%22%20r%3D%2270%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22125%22%20cy%3D%22138%22%20r%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22138%22%20r%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22%23fff%22/%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22163%22%20rx%3D%2213%22%20ry%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Cpath%20d%3D%22M143%20180%20q7%2016%2014%200%20z%22%20fill%3D%22%23F07C92%22/%3E%3Cpath%20d%3D%22M150%20171%20q-10%2014%20-22%204%20M150%20171%20q10%2014%2022%204%22%20fill%3D%22none%22%20stroke%3D%22%231C2563%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
 <meta name="theme-color" content="#14213d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,6 +77,18 @@
   details{font-size:14px;color:var(--muted)}
   details summary{cursor:pointer;font-weight:600;color:var(--ink)}
   footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 30px}
+  .foot-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:0 0 8px}
+  .foot-links button{font:600 13px Inter,sans-serif;color:var(--accent);background:none;border:0;cursor:pointer;padding:4px}
+  .install{display:none;align-items:center;gap:12px}
+  .install.show{display:flex}
+  .install img{width:48px;height:48px;border-radius:12px;flex:0 0 48px}
+  .install p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+  .install .grow{flex:1}
+  dialog.fb{border:0;border-radius:16px;padding:18px;max-width:440px;width:calc(100% - 32px);color:var(--ink)}
+  dialog.fb::backdrop{background:rgba(20,25,60,.45)}
+  dialog.fb textarea{width:100%;min-height:110px;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);margin:6px 0 10px}
+  dialog.fb input[type=email]{width:100%;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);margin:6px 0 10px}
+  dialog.fb label{font-size:14px;font-weight:600}
   .sr{position:absolute;left:-9999px}
   .hdr-r{display:flex;gap:8px;align-items:center}
   .hdr-r{flex:1;min-width:0;justify-content:flex-end}
@@ -287,6 +313,13 @@
     <div class="done" id="wlDone" style="display:none" data-i18n="wlDone">✓ You're on the list. We'll let you know when Premium launches.</div>
   </section>
 
+  <section class="card install" id="installBar" aria-live="polite">
+    <img src="icons/icon-192.png" alt="" width="48" height="48">
+    <div class="grow"><b data-i18n="inst_title">Add Harley Says to your home screen</b><p id="instHow"></p></div>
+    <button class="btn primary" id="instBtn" style="display:none" data-i18n="inst_btn">Install</button>
+    <button class="btn" id="instClose" data-i18n="inst_close">Not now</button>
+  </section>
+
   <section class="card story">
     <h2 style="margin:0 0 8px;font-size:18px" data-i18n="storyH">Why we built Harley Says</h2>
     <p style="margin:0 0 8px;line-height:1.6" data-i18n="story1">My wife lives in the UK and is always looking for ways to practise her pronunciation. Classes help, but in between it's hard to find someone patient enough to listen, say it back properly, and tell you honestly how you sounded.</p>
@@ -313,12 +346,36 @@
     <p data-i18n="how3"></p>
   </details>
 </main>
-<footer data-i18n="footer">Your voice is processed by your browser's built-in speech service. Your scores stay on this device. If you join the Premium waitlist, we keep your email only to tell you about the launch.</footer>
+<footer>
+  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button></div>
+  <span data-i18n="footer"></span>
+</footer>
+
+<dialog class="fb" id="fbDlg">
+  <form name="feedback" method="POST" data-netlify="true" netlify-honeypot="company" id="fbForm">
+    <input type="hidden" name="form-name" value="feedback">
+    <input type="hidden" name="context" id="fbCtx" value="">
+    <p class="sr"><label>Company <input name="company" tabindex="-1" autocomplete="off"></label></p>
+    <h2 style="margin:0 0 6px;font-size:18px" data-i18n="fbTitle">Tell us what you think</h2>
+    <label for="fbMsg" data-i18n="fbMsgL">What worked, what didn't, what you'd like to see?</label>
+    <textarea name="message" id="fbMsg" required maxlength="3000"></textarea>
+    <label for="fbEmail" data-i18n="fbEmailL">Your email (optional, if you'd like a reply)</label>
+    <input type="email" name="email" id="fbEmail" autocomplete="email" placeholder="you@example.com">
+    <p class="fine" id="fbErr" style="color:var(--bad)"></p>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" type="button" id="fbCancel" data-i18n="fbCancel">Cancel</button>
+      <button class="btn primary" type="submit" id="fbSend" data-i18n="fbSend">Send</button>
+    </div>
+  </form>
+  <div id="fbDone" style="display:none"><p data-i18n="fbThanks">Thank you! Harley has passed it on.</p><div class="row" style="justify-content:flex-end"><button class="btn primary" type="button" id="fbClose" data-i18n="fbClose">Close</button></div></div>
+</dialog>
 
 <script src="phrases.js"></script>
 <script src="i18n.js"></script>
 <script>
 const DATA = window.SIR_DATA;
+// Privacy-friendly usage counts (daily totals only, see netlify/functions/track.mjs and /stats.html).
+function track(e){ try{ if(location.protocol==='file:') return; fetch('/.netlify/functions/track',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({e,l:typeof lang!=='undefined'?lang:'',u:typeof ui!=='undefined'?ui:''})}).catch(()=>{}); }catch(err){} }
 const CUSTOM = 'My phrase';
 const ASSESS = 'Assess me';
 const FOCUS = 'Focus packs';
@@ -591,9 +648,10 @@ function gradeAzure(j){
   els.tip.textContent = pct>=90 ? t('tipGreat') : missed===0 ? t('say_tipClose') : missed===1 ? t('say_miss1') : t('say_missN',{n:missed});
   renderPhrase(hits);
   els.best.textContent=t('best',{n:scores[k]});
-  renderProgress();
+  renderProgress(); track('say');
 }
 function grade(b){
+  track('say_quick');
   let s = b.ratio;
   if(b.conf!==null) s = b.ratio*(0.75+0.25*Math.min(1,b.conf/0.9));
   const pct = Math.round(s*100);
@@ -637,7 +695,7 @@ els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
 els.prev.onclick=()=>{if(idx>0){idx--;render()}};
-els.next.onclick=()=>{ if(idx<list().length-1){idx++;render()} else if(list().length>1 && set!==CUSTOM){ summaryOn=lang+'|'+set; render(); $('summaryCard').scrollIntoView({behavior:'smooth',block:'start'}); } };
+els.next.onclick=()=>{ if(idx<list().length-1){idx++;render()} else if(list().length>1 && set!==CUSTOM){ summaryOn=lang+'|'+set; render(); track('summary'); $('summaryCard').scrollIntoView({behavior:'smooth',block:'start'}); } };
 
 // ---------- end-of-section summary with Harley ----------
 function renderSummary(){
@@ -727,10 +785,10 @@ trBtn.onclick=async()=>{
     if(r.status===429 || j.error==='limit'){
       trMsg.innerHTML=''; const sp=document.createElement('span'); sp.textContent=t('trLimit',{n:j.limit||5})+' ';
       const b=document.createElement('button'); b.className='linkbtn'; b.setAttribute('data-prem',''); b.textContent=t('getNotified');
-      trMsg.appendChild(sp); trMsg.appendChild(b); showTrLeft(0); return;
+      trMsg.appendChild(sp); trMsg.appendChild(b); showTrLeft(0); track('limit'); return;
     }
     if(!r.ok||!j.translation) throw new Error(j.error||('HTTP '+r.status));
-    custom=[j.translation, text]; idx=0; trMsg.textContent=''; showTrLeft(j.remaining);
+    custom=[j.translation, text]; idx=0; trMsg.textContent=''; showTrLeft(j.remaining); track('translate');
     render(); els.practice.scrollIntoView({behavior:'smooth'}); speak(j.translation,0.95);
   }catch(err){
     trMsg.textContent = /not configured/i.test(err.message) ? t('trOff') : t('trFail')+err.message;
@@ -764,12 +822,48 @@ wlForm.addEventListener('submit',async e=>{
     const r=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams(new FormData(wlForm)).toString()});
     if(!r.ok) throw new Error('HTTP '+r.status);
-    wlForm.style.display='none'; $('wlDone').style.display='block'; store.set('sir_waitlisted',true);
+    wlForm.style.display='none'; $('wlDone').style.display='block'; store.set('sir_waitlisted',true); track('waitlist');
   }catch(err){ $('wlErr').textContent=t('wlErr'); }
   finally{ $('wlBtn').disabled=false; }
 });
 
+// ---------- feedback ----------
+const fbDlg=$('fbDlg'), fbForm=$('fbForm');
+$('fbOpen').onclick=()=>{ fbForm.style.display=''; $('fbDone').style.display='none'; $('fbErr').textContent=''; if(fbDlg.showModal) fbDlg.showModal(); else fbDlg.setAttribute('open',''); setTimeout(()=>$('fbMsg').focus(),50); };
+const fbHide=()=>{ if(fbDlg.close) fbDlg.close(); else fbDlg.removeAttribute('open'); };
+$('fbCancel').onclick=fbHide; $('fbClose').onclick=fbHide;
+fbForm.addEventListener('submit',async e=>{
+  e.preventDefault(); $('fbErr').textContent=''; $('fbSend').disabled=true;
+  $('fbCtx').value=`learning ${lang} · speaks ${ui} · topic ${set} · ${navigator.userAgent}`.slice(0,400);
+  try{
+    const r=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(fbForm)).toString()});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    fbForm.reset(); fbForm.style.display='none'; $('fbDone').style.display='block'; track('feedback');
+  }catch(err){ $('fbErr').textContent=t('fbErr'); }
+  finally{ $('fbSend').disabled=false; }
+});
+
+// ---------- install (home screen) ----------
+if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('/sw.js').catch(()=>{});
+let instEvt=null;
+const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+function showInstall(){
+  if(standalone || store.get('sir_inst_no',0) > Date.now()) return;
+  if(Object.keys(scores).length < 3) return; // only offer once they've practised a few phrases
+  if(instEvt){ $('instBtn').style.display=''; $('instHow').textContent=t('inst_sub'); }
+  else if(isIOS){ $('instBtn').style.display='none'; $('instHow').textContent=t('inst_ios'); }
+  else return;
+  $('installBar').classList.add('show');
+}
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); instEvt=e; showInstall(); });
+window.addEventListener('appinstalled',()=>{ $('installBar').classList.remove('show'); track('install'); });
+$('instBtn').onclick=async()=>{ if(!instEvt) return; instEvt.prompt(); const c=await instEvt.userChoice.catch(()=>null); instEvt=null; $('installBar').classList.remove('show'); if(c && c.outcome!=='accepted') store.set('sir_inst_no',Date.now()+14*864e5); };
+$('instClose').onclick=()=>{ store.set('sir_inst_no',Date.now()+14*864e5); $('installBar').classList.remove('show'); };
+showInstall();
+
 render();
+{ const d=new Date().toISOString().slice(0,10); if(store.get('sir_seen','')!==d){ store.set('sir_seen',d); track('visit'); } }
 </script>
 <script src="assess.js"></script>
 <script src="pron.js"></script>

@@ -61,7 +61,7 @@ async function startStream(){
       loadSDK()
     ]);
     tok = await r.json().catch(()=>({}));
-    if (r.status === 429 || tok.error === 'limit'){ A.state='idle'; A.error=t('a_limitA'); A.offerQuick=true; renderAssess(); return; }
+    if (r.status === 429 || tok.error === 'limit'){ A.state='idle'; A.error=t('a_limitA'); track('limit'); A.offerQuick=true; renderAssess(); return; }
     if (r.status === 503){ A.az = false; A.state='idle'; renderAssess(); return; }
     if (!r.ok || !tok.token) return streamFallback();
   } catch(e){ return streamFallback(); }
@@ -171,7 +171,7 @@ async function stopPart(){
     const lim = failed.find(j => A.st[j] === 'limit') !== undefined;
     failed.forEach(j => { A.st[j] = undefined; });
     A.part = failed[0]; A.state = 'idle';
-    if (lim){ A.error = t('a_limitA'); A.offerQuick = true; resetParts(); }
+    if (lim){ A.error = t('a_limitA'); track('limit'); A.offerQuick = true; resetParts(); }
     else A.error = A.st.__off ? t('p_off') : t('a_partFail',{n:failed[0]+1});
     renderAssess(); return;
   }
@@ -185,7 +185,7 @@ async function sendPart(i, wav){
     const j = await r.json().catch(()=>({}));
     if (r.status === 429 || j.error === 'limit'){
       A.st[i] = 'limit';
-      if (A.state !== 'assessing'){ clearInterval(A.timer); resetParts(); A.state='idle'; A.error=t('a_limitA'); A.offerQuick=true; renderAssess(); }
+      if (A.state !== 'assessing'){ clearInterval(A.timer); resetParts(); A.state='idle'; A.error=t('a_limitA'); track('limit'); A.offerQuick=true; renderAssess(); }
       return;
     }
     if (r.status === 503){ A.az = false; A.st.__off = true; A.st[i] = 'fail'; return; }
@@ -296,12 +296,13 @@ async function callAI(payload, toResult){
     finishResult(toResult(j));
   }catch(err){
     A.state='idle';
-    A.error = err.message==='__off' ? t('a_off') : err.message==='__limit' ? t('a_limitA') : t('a_fail')+err.message;
+    A.error = err.message==='__off' ? t('a_off') : err.message==='__limit' ? (track('limit'), t('a_limitA')) : t('a_fail')+err.message;
     renderAssess();
   }
 }
 function finishResult(res){
   res.date = new Date().toISOString(); res.lang = lang;
+  if (typeof track === 'function') track(A.mode);
   A.result = res; A.state='done';
   const hist = store.get('sir_assess',[]); hist.unshift({date:res.date,lang,kind:res.kind,score:res.score,cefr:res.cefr}); store.set('sir_assess',hist.slice(0,10));
   renderAssess();

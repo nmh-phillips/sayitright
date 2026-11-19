@@ -94,14 +94,14 @@ async function sayStop(){
     done();
     if (current() !== p) return; // moved to another phrase meanwhile
     if (r.status === 503){ PRON_ON = false; showError(t('say_tapAgain')); return; }
-    if (r.status === 429 || j.error === 'limit'){ store.set('sir_say_left', { day: today(), n: 0 }); showError(t('say_used')); return; }
+    if (r.status === 429 || j.error === 'limit'){ store.set('sir_say_left', { day: today(), n: 0 }); showError(t('say_used')); track('limit'); return; }
     if (j.error === 'nomatch'){ showError(t('noCatch')); return; }
     if (!r.ok || typeof j.score !== 'number') throw new Error(j.error || ('HTTP '+r.status));
     if (typeof j.remaining === 'number') store.set('sir_say_left', { day: today(), n: j.remaining });
     gradeAzure(j);
     P.result = j; P.state = 'done'; P.inline = true; P.sel = pronWorstWord(j); P.error = '';
     pronRender();
-  } catch(e){ done(); showError(t('p_fail') + e.message); }
+  } catch(e){ done(); PRON_ON = false; showError(t('say_tapAgain')); } // e.g. Azure's free monthly quota used up: fall back to the quick check
 }
 
 // ---- flow ----
@@ -125,7 +125,7 @@ async function pronStop(){
     if (r.status === 429 || j.error === 'limit') throw new Error('__limit:'+(j.limit||3));
     if (j.error === 'nomatch') throw new Error('__nomatch');
     if (!r.ok || typeof j.score !== 'number') throw new Error(j.error || ('HTTP '+r.status));
-    P.result = j; P.state = 'done'; P.sel = pronWorstWord(j);
+    P.result = j; P.state = 'done'; P.sel = pronWorstWord(j); track('check');
     store.set('sir_pron_left', { day: new Date().toISOString().slice(0,10), n: j.remaining });
   } catch(e){
     P.state = 'idle';

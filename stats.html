@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Harley Says — usage</title>
+<style>
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f6f7f9;color:#1C2563}
+  main{max-width:980px;margin:0 auto;padding:18px}
+  h1{font-size:20px;margin:0 0 4px} p{color:#5b6475;margin:4px 0 14px}
+  .card{background:#fff;border:1px solid #e3e6ec;border-radius:14px;padding:14px;margin-bottom:14px;overflow-x:auto}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+  .tile{background:#fff;border:1px solid #e3e6ec;border-radius:12px;padding:12px}
+  .tile b{display:block;font-size:24px} .tile span{color:#5b6475;font-size:13px}
+  table{border-collapse:collapse;width:100%;font-size:13px} th,td{padding:6px 8px;border-bottom:1px solid #eef0f4;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left} th{color:#5b6475;font-weight:600}
+  input,select,button{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid #e3e6ec}
+  button{background:#3346C8;color:#fff;border-color:#3346C8;cursor:pointer}
+  .err{color:#c62828}
+</style>
+</head>
+<body>
+<main>
+  <h1>Harley Says — usage</h1>
+  <p>Daily counts only: no cookies, no personal data. "Visitors" counts each device once per day.</p>
+  <div class="card" id="login">
+    <input type="password" id="key" placeholder="Stats key" autocomplete="current-password">
+    <select id="days"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select>
+    <button id="go">Show</button> <span class="err" id="err"></span>
+  </div>
+  <div id="out"></div>
+</main>
+<script>
+const COLS = [['visit','Visitors'],['say','Precise checks'],['say_quick','Quick checks'],['check','Sound checks'],['summary','Sections finished'],['focus','Focus packs'],['read','Read a text'],['speak','Speak freely'],['write','Write'],['translate','Translations'],['limit','Hit a limit'],['waitlist','Waitlist'],['feedback','Feedback'],['install','Installs']];
+const LN = {en:'English (UK)',enus:'English (US)',es:'Spanish (Spain)',esmx:'Spanish (LatAm)',fr:'French',it:'Italian',de:'German',pt:'Portuguese',other:'Other'};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+try { $('key').value = localStorage.getItem('hs_stats_key') || ''; } catch(e){}
+async function load(){
+  const key = $('key').value.trim(); $('err').textContent = '';
+  if (!key) return;
+  try { localStorage.setItem('hs_stats_key', key); } catch(e){}
+  const r = await fetch('/.netlify/functions/stats?days=' + $('days').value + '&key=' + encodeURIComponent(key));
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok){ $('err').textContent = j.error || ('Error ' + r.status); return; }
+  const days = j.days, tot = {};
+  days.forEach(d => Object.keys(d).forEach(k => { if (k !== 'day') tot[k] = (tot[k] || 0) + d[k]; }));
+  const langs = Object.keys(tot).filter(k => k.startsWith('lang:')).sort((a,b) => tot[b]-tot[a]);
+  const uis = Object.keys(tot).filter(k => k.startsWith('ui:')).sort((a,b) => tot[b]-tot[a]);
+  let h = '<div class="tiles">' + COLS.filter(([k]) => tot[k]).map(([k,n]) => `<div class="tile"><b>${tot[k]}</b><span>${esc(n)}</span></div>`).join('') + '</div>';
+  if (!Object.keys(tot).length) h = '<div class="card">No activity yet in this period.</div>';
+  if (langs.length) h += `<div class="card"><b>Learning</b><table>${langs.map(k => `<tr><td>${esc(LN[k.slice(5)] || k.slice(5))}</td><td>${tot[k]}</td></tr>`).join('')}</table></div>`;
+  if (uis.length) h += `<div class="card"><b>Interface language</b><table>${uis.map(k => `<tr><td>${esc(k.slice(3))}</td><td>${tot[k]}</td></tr>`).join('')}</table></div>`;
+  const used = COLS.filter(([k]) => tot[k]);
+  if (used.length) h += `<div class="card"><b>By day</b><table><tr><th>Day</th>${used.map(([,n]) => `<th>${esc(n)}</th>`).join('')}</tr>${days.map(d => `<tr><td>${d.day}</td>${used.map(([k]) => `<td>${d[k] || ''}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  $('out').innerHTML = h;
+}
+$('go').onclick = load;
+$('key').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
+if ($('key').value) load();
+</script>
+</body>
+</html>

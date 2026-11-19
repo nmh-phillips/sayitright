@@ -1,0 +1,15 @@
+{
+  "name": "Harley Says — pronunciation practice",
+  "short_name": "Harley Says",
+  "description": "Practise your pronunciation and get scored on every sound. English, Spanish, French, Italian, German and Portuguese.",
+  "start_url": "/?source=homescreen",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#1C2563",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

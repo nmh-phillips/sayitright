@@ -7,6 +7,8 @@ import { getStore } from '@netlify/blobs';
 import { createHash } from 'node:crypto';
 const FREE = Number(process.env.AI_ASSESS_LIMIT || 3);
 const IP_CAP = Number(process.env.AI_ASSESS_IP_LIMIT || 20);
+// Safety net for API spend: AI_ASSESS_GLOBAL_LIMIT assessments per day across everyone (default 300, roughly $3-6 a day at most).
+const GLOBAL_CAP = Number(process.env.AI_ASSESS_GLOBAL_LIMIT || 300);
 const hash = x => createHash('sha256').update('harley-says-ai:' + x).digest('hex').slice(0, 24);
 
 const LANGS = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese' };
@@ -34,10 +36,12 @@ export default async (req, context) => {
   const day = new Date().toISOString().slice(0, 10);
   const devKey = `${day}/d/${hash(String(b.device || 'none').slice(0, 64))}`;
   const ipKey = `${day}/ip/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
-  let store = null, devUsed = 0, ipUsed = 0;
-  try { store = getStore('ai-assess-usage'); devUsed = Number(await store.get(devKey)) || 0; ipUsed = Number(await store.get(ipKey)) || 0; } catch { store = null; }
+  const allKey = `${day}/all`;
+  let store = null, devUsed = 0, ipUsed = 0, allUsed = 0;
+  try { store = getStore('ai-assess-usage'); devUsed = Number(await store.get(devKey)) || 0; ipUsed = Number(await store.get(ipKey)) || 0; allUsed = Number(await store.get(allKey)) || 0; } catch { store = null; }
   if (devUsed >= FREE || ipUsed >= IP_CAP) return json({ error: 'limit', limit: FREE }, 429);
-  const count = async () => { if (store) { try { await store.set(devKey, String(devUsed + 1)); await store.set(ipKey, String(ipUsed + 1)); } catch {} } };
+  if (allUsed >= GLOBAL_CAP) return json({ error: 'Assessment not configured' }, 503); // shows "not switched on" until tomorrow
+  const count = async () => { if (store) { try { await store.set(devKey, String(devUsed + 1)); await store.set(ipKey, String(ipUsed + 1)); await store.set(allKey, String(allUsed + 1)); } catch {} } };
 
   const L = LANGS[lang], U = UI[ui];
   const kind = mode === 'speak'
