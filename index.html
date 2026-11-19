@@ -77,6 +77,15 @@
   details{font-size:14px;color:var(--muted)}
   details summary{cursor:pointer;font-weight:600;color:var(--ink)}
   footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 30px}
+  .coach{margin-top:12px}
+  .coach .cbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#FFF7DD;border:1px solid #f5c542;color:var(--ink);font-weight:600}
+  .coach .cbtn small{font-weight:500;color:var(--muted)}
+  .coach .ccard{display:flex;gap:12px;align-items:flex-start;background:#FFF7DD;border:1px solid #f5c542;border-radius:14px;padding:12px}
+  .coach .ccard .dog{width:46px;height:46px;flex:0 0 46px} .coach .ccard .dog svg{width:46px;height:46px;display:block}
+  .coach .ctext{margin:0;line-height:1.55;font-size:16px}
+  .coach .ctext b{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+  .coach .cact{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .coach .cact button{font-size:14px;padding:6px 10px}
   .foot-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:0 0 8px}
   .foot-links button{font:600 13px Inter,sans-serif;color:var(--accent);background:none;border:0;cursor:pointer;padding:4px}
   .install{display:none;align-items:center;gap:12px}
@@ -251,6 +260,7 @@
       <div class="tip" id="tip"></div>
     </div>
 
+    <div id="coachBox" class="coach"></div>
     <div id="pronBox" class="pron"></div>
 
     <div class="nav">
@@ -649,6 +659,7 @@ function gradeAzure(j){
   renderPhrase(hits);
   els.best.textContent=t('best',{n:scores[k]});
   renderProgress(); track('say');
+  if(window.coachReady) coachReady({ phrase:p[0], score:pct, words:j.words, quick:false });
 }
 function grade(b){
   track('say_quick');
@@ -669,6 +680,7 @@ function grade(b){
   renderPhrase(b.hits);
   els.best.textContent=t('best',{n:scores[k]});
   renderProgress();
+  if(window.coachReady){ const tk=tokens(p[0]); coachReady({ phrase:p[0], score:pct, quick:true, words:tk.map((w,i)=>({word:w, score:b.hits[i]?90:0, error:b.hits[i]?'None':'Omission', phonemes:[]})) }); }
 }
 
 // ---------- wiring ----------

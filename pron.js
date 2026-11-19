@@ -216,7 +216,80 @@ document.addEventListener('click', e => {
 window.pronReset = () => {
   const p = current(); const k = p ? lang+'|'+p[0] : null;
   if (k !== P.phrase){ if (P.rec){ P.rec.cancel(); P.rec=null; clearTimeout(P.timer); } P.state='idle'; P.result=null; P.error=''; P.sel=-1; P.inline=false; P.phrase=k;
-    if (S.rec){ S.rec.cancel(); S.rec=null; clearTimeout(S.timer); S.state='idle'; sayUI(); } }
+    if (S.rec){ S.rec.cancel(); S.rec=null; clearTimeout(S.timer); S.state='idle'; sayUI(); }
+    if (typeof coachReset === 'function') coachReset(); }
   pronRender();
 };
 if (typeof render === 'function') render();
+
+// ---------- "Harley explains": spoken coaching tip (2 free a day) ----------
+const UI_VOICE = { en:'en-GB', es:'es-ES', fr:'fr-FR', it:'it-IT', de:'de-DE', pt:'pt-PT' };
+var C = { state:'idle', data:null, tip:'', remaining:null, key:'' };
+function coachLeft(){ const v = store.get('sir_coach_left', null); return (v && v.day === today()) ? v.n : null; }
+window.coachReady = data => {
+  C.data = data; C.state = 'idle'; C.tip = ''; C.key = data.phrase;
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  coachRender();
+};
+function coachReset(){ if (C && C.data){ C.data = null; C.tip = ''; C.state = 'idle'; coachRender(); } }
+function voiceFor(code){
+  const vs = speechSynthesis.getVoices(), base = code.slice(0,2);
+  const exact = vs.filter(v => v.lang.replace('_','-') === code), pref = v => /google|premium|enhanced|natural|neural/i.test(v.name);
+  return exact.find(pref) || exact[0] || vs.find(v => v.lang.startsWith(base)) || null;
+}
+function coachSpeak(text){
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const target = DATA[lang].code, mine = UI_VOICE[ui] || 'en-GB';
+  text.split(/«([^»]+)»/).forEach((part, i) => {
+    const s = part.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+    if (!s) return;
+    const u = new SpeechSynthesisUtterance(s), code = i % 2 ? target : mine;
+    u.lang = code; const v = voiceFor(code); if (v) u.voice = v;
+    u.rate = i % 2 ? 0.85 : 1;
+    speechSynthesis.speak(u);
+  });
+}
+function coachRender(){
+  const box = $('coachBox'); if (!box) return;
+  if (!C.data || current()?.[0] !== C.key){ box.innerHTML = ''; return; }
+  const left = coachLeft();
+  let h = '';
+  if (C.state === 'loading') h = `<p class="a-wait">${pesc(t('c_wait'))}</p>`;
+  else if (C.state === 'done'){
+    const html = pesc(C.tip).replace(/«([^»]+)»/g, (m, w) => `<b data-csay="${w}">${w}</b>`);
+    h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.happy}</div><div><p class="ctext">${html}</p>
+      <div class="cact"><button class="btn" data-creplay>${pesc(t('c_replay'))}</button></div>
+      ${typeof C.remaining === 'number' ? `<p class="a-meta" style="margin:6px 0 0">${pesc(t('c_left',{n:C.remaining}))}</p>` : ''}</div></div>`;
+  }
+  else if (C.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.puzzled}</div><div><p class="ctext">${pesc(t('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${pesc(t('getNotified'))}</button></div></div></div>`;
+  else if (C.state === 'error') h = `<p class="a-error">${pesc(C.err)}</p><button class="btn cbtn" data-coach>${pesc(t('c_btn'))}</button>`;
+  else h = `<button class="btn cbtn" data-coach>${pesc(t('c_btn'))} <small>· ${pesc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
+  box.innerHTML = h;
+}
+async function coachAsk(){
+  if (!C.data || C.state === 'loading') return;
+  const d = C.data; C.state = 'loading'; coachRender();
+  const words = (d.words || []).filter(w => w.error !== 'Insertion').map(w => {
+    const L = phLabels(w.word, (w.phonemes || []).length);
+    return { w: w.word, score: w.score, error: w.error, sounds: (w.phonemes || []).map((ph, j) => ({ l: L[j], p: ph.p || '', s: ph.score })) };
+  });
+  try {
+    const r = await fetch('/.netlify/functions/coach', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ device: DEVICE_ID, lang, ui, phrase: d.phrase, score: d.score, quick: d.quick, words }) });
+    const j = await r.json().catch(() => ({}));
+    if (C.data !== d) return;
+    if (r.status === 429 || j.error === 'limit'){ store.set('sir_coach_left', { day: today(), n: 0 }); C.state = 'limit'; track('limit'); coachRender(); return; }
+    if (r.status === 503){ C.state = 'error'; C.err = t('c_off'); coachRender(); return; }
+    if (!r.ok || !j.tip) throw new Error(j.error || ('HTTP ' + r.status));
+    C.tip = j.tip; C.remaining = j.remaining; C.state = 'done';
+    if (typeof j.remaining === 'number') store.set('sir_coach_left', { day: today(), n: j.remaining });
+    track('coach'); coachRender(); coachSpeak(C.tip);
+  } catch(e){ if (C.data === d){ C.state = 'error'; C.err = t('c_fail'); coachRender(); } }
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#coachBox [data-coach]')) return coachAsk();
+  if (e.target.closest('#coachBox [data-creplay]')) return coachSpeak(C.tip);
+  const w = e.target.closest('#coachBox [data-csay]');
+  if (w) coachSpeak('«' + w.dataset.csay + '»');
+});

@@ -3,7 +3,7 @@
 // Read them at /stats.html with the STATS_KEY you set in Netlify.
 import { getStore } from '@netlify/blobs';
 
-const EVENTS = new Set(['visit','say','say_quick','check','read','speak','write','translate','summary','focus','waitlist','feedback','install','limit']);
+const EVENTS = new Set(['visit','say','say_quick','check','read','speak','write','translate','summary','focus','waitlist','feedback','install','limit','coach']);
 const LANGS = new Set(['en','enus','es','esmx','fr','it','de','pt']);
 const ok = () => new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
 

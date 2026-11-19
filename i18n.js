@@ -541,3 +541,16 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// "Harley explains" coach
+(function(){
+const S={
+ en:{c_btn:'🐶 Harley explains',c_free:'{n} free today',c_left:'{n} left today',c_wait:'Harley is thinking… 🐾',c_replay:'🔊 Hear it again',c_used:"You've used today's free tips from Harley. Unlimited coaching is coming with Premium.",c_off:'Harley’s coaching is not switched on yet.',c_fail:"Harley couldn't answer just now. Please try again."},
+ es:{c_btn:'🐶 Harley te lo explica',c_free:'{n} gratis hoy',c_left:'quedan {n} hoy',c_wait:'Harley está pensando… 🐾',c_replay:'🔊 Escuchar otra vez',c_used:'Ya has usado los consejos gratis de Harley de hoy. Las explicaciones ilimitadas llegarán con Premium.',c_off:'Los consejos de Harley aún no están activados.',c_fail:'Harley no ha podido responder ahora. Inténtalo de nuevo.'},
+ fr:{c_btn:'🐶 Harley vous explique',c_free:"{n} gratuits aujourd'hui",c_left:"encore {n} aujourd'hui",c_wait:'Harley réfléchit… 🐾',c_replay:'🔊 Réécouter',c_used:"Vous avez utilisé les conseils gratuits de Harley pour aujourd'hui. Le coaching illimité arrive avec Premium.",c_off:"Le coaching de Harley n'est pas encore activé.",c_fail:"Harley n'a pas pu répondre. Réessayez."},
+ it:{c_btn:'🐶 Harley ti spiega',c_free:'{n} gratis oggi',c_left:'ancora {n} oggi',c_wait:'Harley sta pensando… 🐾',c_replay:'🔊 Riascolta',c_used:'Hai usato i consigli gratuiti di Harley di oggi. Il coaching illimitato arriva con Premium.',c_off:'Il coaching di Harley non è ancora attivo.',c_fail:'Harley non è riuscito a rispondere. Riprova.'},
+ de:{c_btn:'🐶 Harley erklärt',c_free:'heute {n} gratis',c_left:'heute noch {n}',c_wait:'Harley denkt nach… 🐾',c_replay:'🔊 Nochmal hören',c_used:'Du hast Harleys kostenlose Tipps für heute verbraucht. Unbegrenztes Coaching kommt mit Premium.',c_off:'Harleys Coaching ist noch nicht eingeschaltet.',c_fail:'Harley konnte gerade nicht antworten. Bitte versuch es noch einmal.'},
+ pt:{c_btn:'🐶 O Harley explica',c_free:'{n} grátis hoje',c_left:'restam {n} hoje',c_wait:'O Harley está a pensar… 🐾',c_replay:'🔊 Ouvir outra vez',c_used:'Já usou as dicas grátis do Harley de hoje. O coaching ilimitado chega com o Premium.',c_off:'O coaching do Harley ainda não está ativo.',c_fail:'O Harley não conseguiu responder agora. Tente outra vez.'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();
