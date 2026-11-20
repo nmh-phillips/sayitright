@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Harley Says — pick Harley's voice</title>
+<style>
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f6f7f9;color:#1C2563}
+  main{max-width:620px;margin:0 auto;padding:18px}
+  h1{font-size:20px;margin:0 0 6px} p{color:#5b6475;margin:4px 0 14px}
+  .v{background:#fff;border:1px solid #e3e6ec;border-radius:14px;padding:14px;margin-bottom:12px}
+  .v b{font-size:17px} .v span{display:block;color:#5b6475;font-size:14px;margin:2px 0 10px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  button{font:600 15px Inter,sans-serif;padding:10px 14px;border-radius:12px;border:1px solid #e3e6ec;background:#fff;color:#1C2563;cursor:pointer}
+  button.p{background:#3346C8;color:#fff;border-color:#3346C8}
+  select{font:inherit;padding:8px;border-radius:10px;border:1px solid #e3e6ec;margin-bottom:12px}
+  .err{color:#c62828;font-size:14px}
+</style>
+</head>
+<body>
+<main>
+  <h1>🐶 Pick Harley's voice</h1>
+  <p>Listen to each option, then set <b>HARLEY_VOICE</b> in Netlify to the letter you like (A, B, C or D) and redeploy. Default is A.</p>
+  <select id="sample">
+    <option value="en">Tip in English (learning Spanish)</option>
+    <option value="es">Tip in Spanish (learning English)</option>
+    <option value="fr">Tip in French (learning Italian)</option>
+  </select>
+  <div id="list"></div>
+  <p class="err" id="err"></p>
+</main>
+<script>
+const SAMPLES = {
+  en: { target:'es-ES', text:'Nearly! In «perro», roll the double r: let your tongue flutter behind your top teeth. A single tap sounds like «pero», which means "but".' },
+  es: { target:'en-GB', text:'¡Casi! En «three», pon la lengua entre los dientes y sopla suavemente. Si dices una t, suena como «tree», que significa árbol.' },
+  fr: { target:'it-IT', text:'Presque ! Dans «gnocchi», le «gn» se prononce comme dans «montagne». Prenez votre temps sur le double c.' }
+};
+const V = [['A','Brian — youthful and cheerful'],['B','Brian — extra bouncy'],['C','Andrew — warmer'],['D','Ryan — friendly']];
+const audio = new Audio(), cache = {};
+const $ = id => document.getElementById(id);
+$('list').innerHTML = V.map(([k,n]) => `<div class="v"><b>${k}</b><span>${n}</span><div class="row">
+  <button class="p" data-k="${k}" data-kind="tip">▶ Tip</button><button data-k="${k}" data-kind="yay">Woof woof!</button><button data-k="${k}" data-kind="aww">Awww</button></div></div>`).join('');
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button[data-k]'); if (!b) return;
+  $('err').textContent = '';
+  const s = SAMPLES[$('sample').value], clip = b.dataset.kind !== 'tip';
+  const body = clip ? { kind:'clip', text:b.dataset.kind, target:s.target, preset:b.dataset.k } : { kind:'tip', text:s.text, target:s.target, preset:b.dataset.k };
+  const k = JSON.stringify(body);
+  try {
+    if (!cache[k]){
+      const r = await fetch('/.netlify/functions/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body:k });
+      if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || ('HTTP ' + r.status));
+      cache[k] = URL.createObjectURL(await r.blob());
+    }
+    audio.src = cache[k]; await audio.play();
+  } catch(err){ $('err').textContent = 'Could not play: ' + err.message; }
+});
+</script>
+</body>
+</html>

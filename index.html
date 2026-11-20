@@ -420,7 +420,7 @@ let set = Object.keys(DATA[lang].sets)[0];
 let idx = 0;
 let custom = null;
 let scores = store.get('sir_scores',{});
-let summaryOn=false; // 'lang|set' while the end-of-section summary is showing
+let summaryOn=false, summaryBark=false; // 'lang|set' while the end-of-section summary is showing
 
 const $ = id => document.getElementById(id);
 const els = {lang:$('lang'),tabs:$('tabs'),phrase:$('phrase'),en:$('en'),counter:$('counter'),best:$('best'),
@@ -707,7 +707,7 @@ els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
 els.prev.onclick=()=>{if(idx>0){idx--;render()}};
-els.next.onclick=()=>{ if(idx<list().length-1){idx++;render()} else if(list().length>1 && set!==CUSTOM){ summaryOn=lang+'|'+set; render(); track('summary'); $('summaryCard').scrollIntoView({behavior:'smooth',block:'start'}); } };
+els.next.onclick=()=>{ if(idx<list().length-1){idx++;render()} else if(list().length>1 && set!==CUSTOM){ summaryOn=lang+'|'+set; if(window.haUnlock) haUnlock(); summaryBark=true; render(); track('summary'); $('summaryCard').scrollIntoView({behavior:'smooth',block:'start'}); } };
 
 // ---------- end-of-section summary with Harley ----------
 function renderSummary(){
@@ -736,6 +736,7 @@ function renderSummary(){
     h += `<div class="confetti" aria-hidden="true">${Array.from({length:30},(_,i)=>`<i style="left:${Math.random()*100}%;background:${cols[i%5]};animation-duration:${1.8+Math.random()*1.6}s;animation-delay:${Math.random()*0.8}s"></i>`).join('')}</div>`;
   }
   c.innerHTML = h;
+  if(summaryBark && tried && window.harleySay){ summaryBark=false; harleySay('clip', band==='top'?'yay':band==='good'?'woof':'aww'); }
 }
 document.addEventListener('click', ev=>{
   const b = ev.target.closest('#summaryCard [data-sgo],#summaryCard [data-srestart],#summaryCard [data-snext]');

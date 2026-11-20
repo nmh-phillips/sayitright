@@ -237,7 +237,28 @@ function voiceFor(code){
   const exact = vs.filter(v => v.lang.replace('_','-') === code), pref = v => /google|premium|enhanced|natural|neural/i.test(v.name);
   return exact.find(pref) || exact[0] || vs.find(v => v.lang.startsWith(base)) || null;
 }
-function coachSpeak(text){
+// Harley's own voice (Azure neural, via /tts). Falls back to the phone's voices if it can't play.
+const HA = new Audio(); HA.preload = 'auto';
+const HA_SILENT = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+const haCache = {};
+function haUnlock(){ try { HA.src = HA_SILENT; const p = HA.play(); if (p) p.catch(()=>{}); } catch(e){} } // must run inside a tap (iPhone)
+async function harleySay(kind, text, fallback){
+  try {
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    const target = DATA[lang].code, k = kind + '|' + target + '|' + text;
+    let url = haCache[k];
+    if (!url){
+      const r = await fetch('/.netlify/functions/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ kind, text, target }) });
+      if (!r.ok || !(r.headers.get('content-type') || '').includes('audio')) throw new Error('tts ' + r.status);
+      url = haCache[k] = URL.createObjectURL(await r.blob());
+    }
+    HA.pause(); HA.src = url; HA.currentTime = 0;
+    await HA.play();
+  } catch(e){ if (fallback) fallback(); }
+}
+window.harleySay = harleySay; window.haUnlock = haUnlock;
+function coachSpeak(text){ harleySay('tip', text, () => coachSpeakBrowser(text)); }
+function coachSpeakBrowser(text){
   if (!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
   const target = DATA[lang].code, mine = UI_VOICE[ui] || 'en-GB';
@@ -288,8 +309,8 @@ async function coachAsk(){
   } catch(e){ if (C.data === d){ C.state = 'error'; C.err = t('c_fail') + ' (' + String(e.message || e).slice(0, 80) + ')'; coachRender(); } }
 }
 document.addEventListener('click', e => {
-  if (e.target.closest('#coachBox [data-coach]')) return coachAsk();
+  if (e.target.closest('#coachBox [data-coach]')){ haUnlock(); return coachAsk(); }
   if (e.target.closest('#coachBox [data-creplay]')) return coachSpeak(C.tip);
   const w = e.target.closest('#coachBox [data-csay]');
-  if (w) coachSpeak('«' + w.dataset.csay + '»');
+  if (w) harleySay('word', w.dataset.csay, () => coachSpeakBrowser('«' + w.dataset.csay + '»'));
 });
