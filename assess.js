@@ -133,7 +133,8 @@ function combineStream(){
   const weak = [];
   map.forEach((j,i) => { if (j >= 0 && (heard[j].acc < 60 || heard[j].err === 'Mispronunciation') && !weak.includes(target[i])) weak.push(target[i]); });
   map.forEach((j,i) => { if (j < 0 && weak.length < 10 && !weak.includes(target[i])) weak.push(target[i]); });
-  finishResult({ kind:'read', score, cefr:cefrFor(score), subs:[['a_sub_accuracy',ca],['a_sub_fluency',cf],['p_completeness',cc]], missed: weak.slice(0,10), wpm: A.streamSecs ? heard.length/(A.streamSecs/60) : 0 });
+  const cw = map.map((j,i) => ({ w: target[i], score: j >= 0 ? Math.round(heard[j].acc) : 0, error: j < 0 ? 'Omission' : heard[j].err })).sort((a,b) => a.score - b.score).slice(0, 15);
+  finishResult({ kind:'read', score, cefr:cefrFor(score), subs:[['a_sub_accuracy',ca],['a_sub_fluency',cf],['p_completeness',cc]], missed: weak.slice(0,10), wpm: A.streamSecs ? heard.length/(A.streamSecs/60) : 0, cw });
 }
 
 async function azOn(){
@@ -202,8 +203,9 @@ function combineParts(){
   A.res.forEach(r => r.words.forEach(w => { if ((w.error === 'Omission' || w.error === 'Mispronunciation' || w.score < 60) && w.error !== 'Insertion'){ const x = String(w.word).toLowerCase(); if (!weak.includes(x)) weak.push(x); } }));
   const secs = A.secs.reduce((a,b)=>a+(b||0),0);
   const subs = [['a_sub_accuracy',ca],['a_sub_fluency',cf],['p_completeness',cc]];
+  const cw = A.res.flatMap(r => r.words).filter(w => w.error !== 'Insertion').map(w => ({ w: w.word, score: Math.round(w.score), error: w.error })).sort((a,b) => a.score - b.score).slice(0, 15);
   resetParts();
-  finishResult({ kind:'read', score, cefr:cefrFor(score), subs, missed:weak.slice(0,10), wpm: secs ? tot/(secs/60) : 0 });
+  finishResult({ kind:'read', score, cefr:cefrFor(score), subs, missed:weak.slice(0,10), wpm: secs ? tot/(secs/60) : 0, cw });
 }
 
 function fluencyFrom(wpm, conf){
@@ -270,7 +272,7 @@ function evaluateSpeech(dur){
     // Browser recognition guesses the expected words even when speech is unclear, so this quick estimate is stricter and capped.
     const score = Math.min(85, Math.round(100*(0.55*acc + 0.25*(flu/100) + 0.2*conf)));
     const missed = [...new Set(target.filter((w,i)=>!hits[i]))].slice(0,10);
-    finishResult({ kind:'read', quick:true, score, cefr:cefrFor(score), subs:[['a_sub_accuracy',acc*100],['a_sub_fluency',flu],['a_sub_clarity',conf*100]], missed, wpm });
+    finishResult({ kind:'read', quick:true, score, cefr:cefrFor(score), subs:[['a_sub_accuracy',acc*100],['a_sub_fluency',flu],['a_sub_clarity',conf*100]], missed, wpm, cw: missed.map(w => ({ w, score: 0, error: 'Omission' })) });
     return;
   }
   if(dur < ASSESS_MIN_SPEAK_SEC || words < ASSESS_MIN_WORDS){ A.state='idle'; A.error=t('a_tooShort'); renderAssess(); return; }
@@ -329,6 +331,7 @@ function renderAssess(){
     if(r.strengths && r.strengths.length) h += `<h3>${esc(t('a_strengths'))}</h3><ul>${r.strengths.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`;
     if(r.improve && r.improve.length) h += `<h3>${esc(t('a_improve'))}</h3><ul>${r.improve.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`;
     if(r.missed && r.missed.length) h += `<p class="a-meta">${esc(t('a_missed',{w:r.missed.join(', ')}))}</p>`;
+    if(r.kind==='read' && r.cw) h += `<div id="aCoach" class="coach"></div>`;
     if(r.wpm) h += `<p class="a-meta">${esc(t('a_pace',{n:Math.round(r.wpm)}))}</p>`;
     if(r.quick) h += `<p class="a-meta">${esc(t('a_quickNote'))}</p>`;
     h += `<p class="a-disclaimer">${esc(t('a_indicative'))}</p>
@@ -365,6 +368,7 @@ function renderAssess(){
   if(A.offerQuick && A.state==='idle' && !A.result) h += `<button class="linkbtn" data-aquick>${esc(t('a_quickBtn'))}</button>`;
   card.innerHTML = h;
   updateLive();
+  if (A.result && A.result.cw && $('aCoach')) aCoachRender();
   if (A.az && A.mode==='read' && !A.noStream && card.offsetParent !== null) loadSDK().catch(()=>{}); // fetch the speech script only once Assess me is open
   const ta = $('aWrite'); if(ta) ta.oninput = () => { A.writeText = ta.value; const w=$('aWc'); if(w) w.textContent=t('a_words',{n:wc(ta.value)}); };
 }
@@ -379,6 +383,44 @@ document.addEventListener('click', e => {
   else if(b.hasAttribute('data-aagain')){ A.state='idle'; A.result=null; A.quick=false; resetParts(); renderAssess(); }
 });
 window.renderAssess = renderAssess;
+// ---- "Harley explains" for the read-aloud result (shares the 2-a-day allowance) ----
+const AC = { state:'idle', tip:'', key:'', err:'' };
+function aCoachRender(){
+  const box = $('aCoach'); if (!box) return;
+  const r = A.result; if (AC.key !== r.date){ AC.key = r.date; AC.state = 'idle'; AC.tip = ''; }
+  const v = store.get('sir_coach_left', null), left = (v && v.day === new Date().toISOString().slice(0,10)) ? v.n : null;
+  let h = '';
+  if (AC.state === 'loading') h = `<p class="a-wait">${esc(t('c_wait'))}</p>`;
+  else if (AC.state === 'done') h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.happy}</div><div><p class="ctext">${esc(AC.tip).replace(/«([^»]+)»/g,(m,w)=>`<b data-acsay="${w}">${w}</b>`)}</p><div class="cact"><button class="btn" data-acreplay>${esc(t('c_replay'))}</button></div></div></div>`;
+  else if (AC.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.puzzled}</div><div><p class="ctext">${esc(t('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${esc(t('getNotified'))}</button></div></div></div>`;
+  else h = (AC.state === 'error' ? `<p class="a-error">${esc(AC.err)}</p>` : '') + `<button class="btn cbtn" data-acoach>${esc(t('c_btn'))} <small>· ${esc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
+  box.innerHTML = h;
+}
+function aCoachSpeak(text){ if (window.harleySay) harleySay('tip', text, () => { if (typeof coachSpeakBrowser === 'function') coachSpeakBrowser(text); }); }
+async function aCoachAsk(){
+  const r = A.result; if (!r || AC.state === 'loading') return;
+  AC.state = 'loading'; aCoachRender();
+  const sub = k => { const s = (r.subs || []).find(x => x[0] === k); return s ? Math.round(s[1]) : null; };
+  try {
+    const res = await fetch('/.netlify/functions/coach', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      mode:'passage', device: DEVICE_ID, lang, ui, phrase: ASSESS_PASSAGES[lang], score: r.score, quick: !!r.quick,
+      accuracy: sub('a_sub_accuracy'), fluency: sub('a_sub_fluency'), completeness: sub('p_completeness'), wpm: Math.round(r.wpm || 0),
+      words: r.cw.map(w => ({ w: w.w, score: w.score, error: w.error, sounds: [] })) }) });
+    const j = await res.json().catch(() => ({}));
+    if (res.status === 429 || j.error === 'limit'){ store.set('sir_coach_left', { day: new Date().toISOString().slice(0,10), n: 0 }); AC.state = 'limit'; track('limit'); aCoachRender(); return; }
+    if (res.status === 503) throw new Error(t('c_off'));
+    if (!res.ok || !j.tip) throw new Error(t('c_fail') + ' (' + (j.error || res.status) + ')');
+    if (typeof j.remaining === 'number') store.set('sir_coach_left', { day: new Date().toISOString().slice(0,10), n: j.remaining });
+    AC.tip = j.tip; AC.state = 'done'; track('coach'); aCoachRender(); aCoachSpeak(AC.tip);
+  } catch(e){ AC.state = 'error'; AC.err = e.message; aCoachRender(); }
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#aCoach [data-acoach]')){ if (window.haUnlock) haUnlock(); return aCoachAsk(); }
+  if (e.target.closest('#aCoach [data-acreplay]')) return aCoachSpeak(AC.tip);
+  const w = e.target.closest('#aCoach [data-acsay]');
+  if (w && window.harleySay) harleySay('word', w.dataset.acsay, () => {});
+});
+
 window.assessLangChanged = () => { if(A.state==='recording'){ clearInterval(A.timer); A.state='idle'; try{A.rec.stop();}catch(e){} } resetParts(); A.result=null; A.error=''; A.state='idle'; A.offerQuick=false; };
 function cefrRange(s){ const a = cefrFor(Math.max(0,s-8)), b = cefrFor(Math.min(100,s+8)); return a===b ? a : a+'–'+b; }
 azOn().then(() => { if (A.mode==='read' && A.state==='idle' && !A.result) renderAssess(); });
