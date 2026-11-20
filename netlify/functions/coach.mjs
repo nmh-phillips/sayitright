@@ -59,12 +59,12 @@ ${JSON.stringify(words)}`;
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: process.env.COACH_MODEL || 'claude-sonnet-5-5', max_tokens: 300, system, messages: [{ role: 'user', content: user }] })
+      body: JSON.stringify({ model: process.env.COACH_MODEL || 'claude-sonnet-5-5', max_tokens: 1200, system, messages: [{ role: 'user', content: user }] })
     });
     if (!r.ok) return json({ error: `AI service error ${r.status}` }, 502);
     const j = await r.json();
-    const tip = (j.content || []).map(c => c.text || '').join('').trim().slice(0, 600);
-    if (!tip) return json({ error: 'No tip' }, 502);
+    const tip = (j.content || []).filter(c => c.type === 'text').map(c => c.text || '').join('').trim().slice(0, 600);
+    if (!tip) return json({ error: `No tip (${j.stop_reason || 'empty'}; ${(j.content || []).map(c => c.type).join(',') || 'no content'})` }, 502);
     if (store) { try { await store.set(devKey, String(devUsed + 1)); await store.set(ipKey, String(ipUsed + 1)); await store.set(allKey, String(allUsed + 1)); } catch {} }
     return json({ tip, limit: FREE, remaining: Math.max(0, FREE - devUsed - 1) });
   } catch (e) {
