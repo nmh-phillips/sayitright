@@ -39,6 +39,15 @@
   select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   header select{border-color:transparent}
   main{max-width:680px;margin:0 auto;padding:16px}
+  .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+  .groups button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;padding:9px 2px 8px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--muted);font:600 12px/1.15 Inter,sans-serif;cursor:pointer;text-align:center}
+  .groups button .ic{font-size:21px;line-height:1}
+  .groups button span:last-child{max-width:100%;overflow-wrap:anywhere}
+  .groups button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .groups button.g-focus{background:#f1e9fb;border-color:#dccaf3;color:#5a2d91} .groups button.g-focus.on{background:#6b3fa0;color:#fff;border-color:#6b3fa0}
+  .groups button.g-assess{background:#e3f6ec;border-color:#b7e4cc;color:#0b5d3b} .groups button.g-assess.on{background:#1a7f37;color:#fff;border-color:#1a7f37}
+  .groups button.g-premium{background:#fff8e1;border-color:#f3dfa0;color:#8a6d00} .groups button.g-premium.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
+  .tabs:empty{display:none}
   .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
   .tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 12px;border-radius:999px;font:500 13px Inter,sans-serif;cursor:pointer}
   .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -250,6 +259,7 @@
 <main>
   <div class="warn" id="warn"></div>
 
+  <nav class="groups" id="groups" aria-label="Sections"></nav>
   <div class="tabs" id="tabs"></div>
 
   <section class="card" id="focusCard" style="display:none"></section>
@@ -511,19 +521,35 @@ function renderFocus(){
   const g=h('button','linkbtn',t('getNotified')); g.setAttribute('data-prem',''); w.appendChild(g); c.appendChild(w);
 }
 document.addEventListener('click',e=>{ if(e.target.closest('[data-fback]')){ set=FOCUS; idx=0; render(); } });
+// Two-level menu: 5 section buttons, then the topics of the chosen section (Phrases / Premium) underneath.
+let lastPhraseSet=null;
+function groupOf(s){ return s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
 function renderTabs(){
-  els.tabs.innerHTML='';
-  [...Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n)),CUSTOM].forEach(name=>{
+  const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n));
+  const g = groupOf(set);
+  if(g==='phrases') lastPhraseSet=set;
+  const groups = [
+    ['phrases','📚','g_phrases', ()=>{ set = free.includes(lastPhraseSet) ? lastPhraseSet : free[0]; }],
+    ['mine','✏️','g_mine', ()=>{ set=CUSTOM; }],
+    ['focus','🎯','g_focus', ()=>{ set=FOCUS; }],
+    ['assess','📊','g_assess', ()=>{ set=ASSESS; }],
+    ['premium','⭐','g_premium', ()=>{ set=PREMIUM_TOPICS[0]; }]
+  ];
+  const G=$('groups'); G.innerHTML='';
+  groups.forEach(([id,ic,label,go])=>{
     const b=document.createElement('button');
-    b.textContent=setName(name); if(name===set) b.className='on';
-    b.onclick=()=>{set=name;idx=0;render()};
-    els.tabs.appendChild(b);
+    b.className='g-'+id+(g===id?' on':''); b.setAttribute('aria-pressed', g===id);
+    b.innerHTML=`<span class="ic" aria-hidden="true">${ic}</span><span>${t(label).replace(/[&<>]/g,'')}</span>`;
+    b.onclick=()=>{ go(); idx=0; render(); };
+    G.appendChild(b);
   });
-  { const b=document.createElement('button'); b.textContent=t('f_tab'); b.className='focus'+((set===FOCUS||FOCUS_SETS.includes(set))?' on':''); b.onclick=()=>{set=FOCUS;idx=0;render()}; els.tabs.appendChild(b); }
-  { const b=document.createElement('button'); b.textContent=t('a_tab'); b.className='assess'+(set===ASSESS?' on':''); b.onclick=()=>{set=ASSESS;idx=0;render()}; els.tabs.appendChild(b); }
-  PREMIUM_TOPICS.forEach(name=>{
+  els.tabs.innerHTML='';
+  const sub = g==='phrases' ? free : g==='premium' ? PREMIUM_TOPICS : [];
+  sub.forEach(name=>{
     const b=document.createElement('button');
-    b.textContent='🔒 '+setName(name); b.className='locked'+(name===set?' on':'');
+    const lockedTopic = PREMIUM_TOPICS.includes(name);
+    b.textContent=(lockedTopic?'🔒 ':'')+setName(name);
+    b.className=(lockedTopic?'locked':'')+(name===set?' on':'');
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });

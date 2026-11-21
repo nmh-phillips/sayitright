@@ -560,3 +560,16 @@ for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 const S={en:{p_show:'🔬 Each sound',p_hide:'Hide details ▴'},es:{p_show:'🔬 Cada sonido',p_hide:'Ocultar detalles ▴'},fr:{p_show:'🔬 Chaque son',p_hide:'Masquer les détails ▴'},it:{p_show:'🔬 Ogni suono',p_hide:'Nascondi dettagli ▴'},de:{p_show:'🔬 Jeder Laut',p_hide:'Details ausblenden ▴'},pt:{p_show:'🔬 Cada som',p_hide:'Ocultar detalhes ▴'}};
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Section buttons (two-level menu)
+(function(){
+const S={
+ en:{g_phrases:'Phrases',g_mine:'My phrase',g_focus:'Focus packs',g_assess:'Assess me',g_premium:'Premium'},
+ es:{g_phrases:'Frases',g_mine:'Mi frase',g_focus:'Packs',g_assess:'Evalúame',g_premium:'Premium'},
+ fr:{g_phrases:'Phrases',g_mine:'Ma phrase',g_focus:'Packs',g_assess:'Évaluez-moi',g_premium:'Premium'},
+ it:{g_phrases:'Frasi',g_mine:'La mia frase',g_focus:'Pacchetti',g_assess:'Valutami',g_premium:'Premium'},
+ de:{g_phrases:'Sätze',g_mine:'Mein Satz',g_focus:'Pakete',g_assess:'Teste mich',g_premium:'Premium'},
+ pt:{g_phrases:'Frases',g_mine:'A minha frase',g_focus:'Pacotes',g_assess:'Avalie-me',g_premium:'Premium'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();
