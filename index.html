@@ -706,7 +706,7 @@ function showError(msg){
 // Result from Azure (precise, sound-by-sound): same display as the quick check, but scored on how each word sounded.
 function gradeAzure(j){
   const p=current(), k=key(p), pct=Math.max(0,Math.min(100,Math.round(j.score)));
-  const said = j.words.filter(w=>w.error!=='Insertion').flatMap(w=>tokens(w.word).map(x=>({x:normTok(x), ok:w.error==='None' && w.score>=60})));
+  const said = j.words.filter(w=>w.error!=='Insertion').flatMap(w=>tokens(w.word).map(x=>({x:normTok(x), ok:(w.error==='None'||w.error==='') && w.score>=60})));
   const target = tokens(p[0]); let ptr=0;
   const hits = target.map(tk=>{ const n=normTok(tk); for(let i=ptr;i<said.length;i++){ if(said[i].x===n){ ptr=i+1; return said[i].ok; } } return false; });
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
@@ -738,7 +738,7 @@ function grade(b){
   els.heard.parentElement.style.display='block';
   els.heard.textContent='“'+b.text+'”';
   const missed = b.hits.filter(h=>!h).length;
-  els.tip.textContent = pct>=90 ? t('tipGreat') : missed===0 ? t('tipAll') : missed===1 ? t('missed1') : t('missedN',{n:missed});
+  els.tip.textContent = t('q_label') + ' ' + (pct>=90 ? t('tipGreat') : missed===0 ? t('tipAll') : missed===1 ? t('missed1') : t('missedN',{n:missed}));
   renderPhrase(b.hits);
   els.best.textContent=t('best',{n:scores[k]});
   renderProgress();

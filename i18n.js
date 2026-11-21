@@ -573,3 +573,9 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Quick check label
+(function(){
+const S={en:{q_label:'Quick check (less strict):'},es:{q_label:'Comprobación rápida (menos estricta):'},fr:{q_label:'Vérification rapide (moins stricte) :'},it:{q_label:'Verifica rapida (meno severa):'},de:{q_label:'Schnellprüfung (weniger streng):'},pt:{q_label:'Verificação rápida (menos rigorosa):'}};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

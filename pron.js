@@ -55,6 +55,33 @@ function pronWav(chunks, inRate){
   return { b64: btoa(bin), seconds: pcm.length/16000 };
 }
 
+// ---- stricter phrase scoring ----
+// Azure is lenient and bunches scores near the top, so for phrases:
+// 1) a word turns red if its score is under 60, Azure flags it, or any single sound in it is under 40;
+// 2) scores are stretched like Assess me (98 → ~95, 95 → ~87, 90 → ~75, 80 → ~52);
+// 3) a red word of 3+ letters caps the phrase at 69% (very short words like "a", "de" still count but can't trigger the cap,
+//    because native speakers naturally swallow them).
+const STRICT_FLOOR = 40, STRICT_CURVE = 1.6, STRICT_CAP = 69;
+const strictCurve = v => Math.round(100*Math.pow(Math.max(0, Math.min(100, Number(v)||0) - STRICT_FLOOR)/(100-STRICT_FLOOR), STRICT_CURVE));
+function strictAzure(j){
+  if (!j || j.strict) return j;
+  let capped = false;
+  j.raw = { score:j.score, accuracy:j.accuracy, fluency:j.fluency, completeness:j.completeness };
+  (j.words || []).forEach(w => {
+    if (w.error === 'Insertion') return;
+    const badSound = (w.phonemes || []).some(ph => Number(ph.score) < 40);
+    if (w.score >= 60 && badSound) { w.score = 59; if (w.error === 'None') w.error = 'Mispronunciation'; }
+    const bad = w.score < 60 || w.error === 'Mispronunciation' || w.error === 'Omission';
+    if (bad && String(w.word || '').replace(/[^\p{L}]/gu, '').length >= 3) capped = true;
+  });
+  j.accuracy = strictCurve(j.accuracy); j.fluency = strictCurve(j.fluency); j.completeness = strictCurve(j.completeness);
+  j.score = strictCurve(j.score);
+  if (capped) j.score = Math.min(j.score, STRICT_CAP);
+  j.strict = true;
+  return j;
+}
+window.strictAzure = strictAzure;
+
 // ---- main "Tap and say it" button: precise Azure scoring with a daily free allowance ----
 const SAY_MAX_SEC = 10;
 let PRON_ON = null;
@@ -99,6 +126,7 @@ async function sayStop(){
     if (j.error === 'nomatch'){ showError(t('noCatch')); return; }
     if (!r.ok || typeof j.score !== 'number') throw new Error(j.error || ('HTTP '+r.status));
     if (typeof j.remaining === 'number') store.set('sir_say_left', { day: today(), n: j.remaining });
+    strictAzure(j);
     gradeAzure(j);
     P.result = j; P.state = 'done'; P.inline = true; P.sel = pronWorstWord(j); P.error = '';
     pronRender();
@@ -126,6 +154,7 @@ async function pronStop(){
     if (r.status === 429 || j.error === 'limit') throw new Error('__limit:'+(j.limit||3));
     if (j.error === 'nomatch') throw new Error('__nomatch');
     if (!r.ok || typeof j.score !== 'number') throw new Error(j.error || ('HTTP '+r.status));
+    strictAzure(j);
     P.result = j; P.state = 'done'; P.sel = pronWorstWord(j); track('check');
     store.set('sir_pron_left', { day: new Date().toISOString().slice(0,10), n: j.remaining });
   } catch(e){
