@@ -66,6 +66,25 @@
   .mic{width:100%;justify-content:center;padding:18px;font-size:17px;background:var(--accent);color:#fff;border:none;margin-top:14px;border-radius:14px}
   .btn.rec{background:var(--bad);color:#fff;border-color:var(--bad)}
   .mic.rec{background:var(--bad);animation:pulse 1.2s infinite}
+  /* ---- Harley animations ---- */
+  svg circle[r="9"][fill="#1C2563"]{transform-box:fill-box;transform-origin:center;animation:hblink 5s infinite}
+  .mood.m-happy svg,.mood.m-celebrate svg,.mood.m-puzzled svg{transform-origin:50% 80%}
+  .mood.m-celebrate svg{animation:hjump .75s ease-in-out 2}
+  .mood.m-happy svg{animation:hwag .55s ease-in-out 3}
+  .mood.m-puzzled svg{animation:htilt 1.4s ease-in-out 1}
+  .mood{position:relative}
+  .mood .spark{position:absolute;left:50%;top:40%;width:8px;height:8px;border-radius:2px;pointer-events:none;animation:hspark .9s ease-out forwards}
+  header h1 .logo svg{transform-origin:50% 85%;animation:hidle 9s ease-in-out infinite}
+  header h1 .logo:hover svg,header h1 .logo:active svg{animation:hwag .5s ease-in-out 2}
+  .mic .mic-dog{display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:8px}
+  .mic .mic-dog svg{width:30px;height:30px;display:block;transform-origin:50% 85%;animation:hlisten .7s ease-in-out infinite}
+  .coach .dog.talking svg{transform-origin:50% 85%;animation:htalk .32s ease-in-out infinite}
+  @keyframes hblink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  @keyframes hidle{0%,86%,100%{transform:rotate(0)}89%{transform:rotate(-10deg)}92%{transform:rotate(8deg)}95%{transform:rotate(0)}}
+  @keyframes hlisten{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-3px) rotate(-6deg)}70%{transform:translateY(-3px) rotate(6deg)}}
+  @keyframes htalk{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.04,.97) translateY(-2px)}}
+  @keyframes hspark{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(200deg) scale(1);opacity:0}}
+  @media (prefers-reduced-motion:reduce){svg circle[r="9"],.mood svg,header h1 .logo svg,.mic .mic-dog svg,.coach .dog svg{animation:none!important}.mood .spark{display:none}}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(198,40,40,.4)}50%{box-shadow:0 0 0 10px rgba(198,40,40,0)}}
   .result{display:none;margin-top:16px;border-radius:14px;padding:16px}
   .result.show{display:block}
@@ -673,7 +692,11 @@ function startListening(){
   try{ rec.start(); }catch(err){ showError(t('errStart')+err.message); }
 }
 const HARLEY={happy:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg>`,puzzled:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><text x="238" y="86" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="54" fill="#fff">?</text><g transform="rotate(14 150 148)"><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="140" r="9" fill="#1C2563"/><circle cx="175" cy="136" r="10" fill="#1C2563"/><circle cx="128" cy="137" r="3" fill="#fff"/><circle cx="178" cy="133" r="3" fill="#fff"/><path d="M112 120 q12 -6 24 -2" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M140 180 q10 -4 20 0" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></g></svg>`,celebrate:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><rect x="50" y="50" width="10" height="16" rx="3" fill="#FFD166" transform="rotate(20 55 58)"/><rect x="232" y="44" width="10" height="16" rx="3" fill="#7FE0C9" transform="rotate(-25 237 52)"/><rect x="40" y="150" width="10" height="16" rx="3" fill="#F7B8C4" transform="rotate(35 45 158)"/><rect x="250" y="140" width="10" height="16" rx="3" fill="#FFD166" transform="rotate(-15 255 148)"/><rect x="78" y="96" width="10" height="16" rx="3" fill="#7FE0C9" transform="rotate(-40 83 104)"/><rect x="220" y="96" width="10" height="16" rx="3" fill="#F7B8C4" transform="rotate(30 225 104)"/><circle cx="212" cy="150" r="33" fill="#fff"/><circle cx="200" cy="186" r="33" fill="#fff"/><circle cx="169" cy="209" r="33" fill="#fff"/><circle cx="131" cy="209" r="33" fill="#fff"/><circle cx="100" cy="186" r="33" fill="#fff"/><circle cx="88" cy="150" r="33" fill="#fff"/><circle cx="100" cy="114" r="33" fill="#fff"/><circle cx="131" cy="91" r="33" fill="#fff"/><circle cx="169" cy="91" r="33" fill="#fff"/><circle cx="200" cy="114" r="33" fill="#fff"/><circle cx="150" cy="150" r="70" fill="#fff"/><path d="M114 140 q11 -14 22 0 M164 140 q11 -14 22 0" fill="none" stroke="#1C2563" stroke-width="5" stroke-linecap="round"/><circle cx="108" cy="168" r="10" fill="#F7B8C4" opacity="0.8"/><circle cx="192" cy="168" r="10" fill="#F7B8C4" opacity="0.8"/><ellipse cx="150" cy="160" rx="13" ry="9" fill="#1C2563"/><path d="M126 174 q24 34 48 0 z" fill="#1C2563"/><path d="M138 186 q12 16 24 0 z" fill="#F07C92"/></svg>`};
-function setMood(m){ $('mood').innerHTML=HARLEY[m]; }
+function setMood(m){
+  const el=$('mood'); el.className='mood m-'+m; el.innerHTML=HARLEY[m];
+  if(m==='celebrate'){ const cols=['#FFD166','#7FE0C9','#F7B8C4','#F5C542','#fff'];
+    el.insertAdjacentHTML('beforeend', Array.from({length:12},(_,i)=>{ const a=i/12*Math.PI*2, r=38+Math.random()*18; return `<i class="spark" style="background:${cols[i%5]};--dx:${Math.round(Math.cos(a)*r)}px;--dy:${Math.round(Math.sin(a)*r)}px;animation-delay:${(Math.random()*.15).toFixed(2)}s"></i>`; }).join('')); }
+}
 function showError(msg){
   setMood('puzzled');
   els.result.className='result show bad';

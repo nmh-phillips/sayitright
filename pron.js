@@ -67,7 +67,8 @@ function sayUI(){
   const m = els.mic;
   m.classList.toggle('rec', S.state === 'recording');
   m.disabled = S.state === 'checking';
-  m.textContent = S.state === 'recording' ? t('listening') : S.state === 'checking' ? t('p_wait') : t('tapSay');
+  if (S.state === 'recording') m.innerHTML = `<span class="mic-dog" aria-hidden="true">${HARLEY.happy}</span>${pesc(t('listening').replace(/^\S*\s/, ''))}`;
+  else m.textContent = S.state === 'checking' ? t('p_wait') : t('tapSay');
 }
 window.sayStart = async () => {
   if (S.state === 'recording') return sayStop();
@@ -242,6 +243,10 @@ function voiceFor(code){
 }
 // Harley's own voice (Azure neural, via /tts). Falls back to the phone's voices if it can't play.
 const HA = new Audio(); HA.preload = 'auto';
+// Harley bounces while he talks
+const haTalk = on => document.querySelectorAll('.coach .dog').forEach(d => d.classList.toggle('talking', on));
+HA.addEventListener('playing', () => { if (HA.src !== HA_SILENT) haTalk(true); });
+['pause','ended','error'].forEach(ev => HA.addEventListener(ev, () => haTalk(false)));
 const HA_SILENT = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
 const haCache = {};
 function haUnlock(){ try { HA.src = HA_SILENT; const p = HA.play(); if (p) p.catch(()=>{}); } catch(e){} } // must run inside a tap (iPhone)
@@ -271,6 +276,7 @@ function coachSpeakBrowser(text){
     const u = new SpeechSynthesisUtterance(s), code = i % 2 ? target : mine;
     u.lang = code; const v = voiceFor(code); if (v) u.voice = v;
     u.rate = i % 2 ? 0.85 : 1;
+    u.onstart = () => haTalk(true); u.onend = () => haTalk(false);
     speechSynthesis.speak(u);
   });
 }
