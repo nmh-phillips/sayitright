@@ -393,7 +393,7 @@ function aCoachRender(){
   if (AC.state === 'loading') h = `<p class="a-wait">${esc(t('c_wait'))}</p>`;
   else if (AC.state === 'done') h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.happy}</div><div><p class="ctext">${esc(AC.tip).replace(/«([^»]+)»/g,(m,w)=>`<b data-acsay="${w}">${w}</b>`)}</p><div class="cact"><button class="btn" data-acreplay>${esc(t('c_replay'))}</button></div></div></div>`;
   else if (AC.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.puzzled}</div><div><p class="ctext">${esc(t('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${esc(t('getNotified'))}</button></div></div></div>`;
-  else h = (AC.state === 'error' ? `<p class="a-error">${esc(AC.err)}</p>` : '') + `<button class="btn cbtn" data-acoach>${esc(t('c_btn'))} <small>· ${esc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
+  else h = (AC.state === 'error' ? `<p class="a-error">${esc(AC.err)}</p>` : '') + `<button class="btn cbtn" data-acoach>${esc(t('c_btn'))} <small>${esc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
   box.innerHTML = h;
 }
 function aCoachSpeak(text){ if (window.harleySay) harleySay('tip', text, () => { if (typeof coachSpeakBrowser === 'function') coachSpeakBrowser(text); }); }

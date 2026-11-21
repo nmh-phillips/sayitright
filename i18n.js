@@ -554,3 +554,9 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Collapsible sound-by-sound details
+(function(){
+const S={en:{p_show:'🔬 Each sound',p_hide:'Hide details ▴'},es:{p_show:'🔬 Cada sonido',p_hide:'Ocultar detalles ▴'},fr:{p_show:'🔬 Chaque son',p_hide:'Masquer les détails ▴'},it:{p_show:'🔬 Ogni suono',p_hide:'Nascondi dettagli ▴'},de:{p_show:'🔬 Jeder Laut',p_hide:'Details ausblenden ▴'},pt:{p_show:'🔬 Cada som',p_hide:'Ocultar detalhes ▴'}};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

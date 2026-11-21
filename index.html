@@ -77,8 +77,19 @@
   details{font-size:14px;color:var(--muted)}
   details summary{cursor:pointer;font-weight:600;color:var(--ink)}
   footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 30px}
-  .coach{margin-top:12px}
-  .coach .cbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#FFF7DD;border:1px solid #f5c542;color:var(--ink);font-weight:600}
+  .extras{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .extras>div:empty{display:none!important}
+  .extras>div{flex:1 1 130px;min-width:0;display:flex}
+  .extras>div>*{flex:1}
+  .extras>div.full{display:block}
+  .extras>div.full{flex-basis:100%}
+  .coach{margin-top:0}
+  .pron-toggle{width:100%;font-size:15px;padding:10px 12px;font-weight:600;margin:0}
+  .extras .pron,.extras .coach{margin-top:0}
+  .coach .cbtn small{display:block;width:100%;font-size:13px}
+  .btn.next-go{background:var(--accent);color:#fff;border-color:var(--accent)}
+  body{padding-bottom:64px}
+  .coach .cbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;padding:10px 12px;flex-wrap:wrap;background:#FFF7DD;border:1px solid #f5c542;color:var(--ink);font-weight:600}
   .coach .cbtn small{font-weight:500;color:var(--muted)}
   .coach .ccard{display:flex;gap:12px;align-items:flex-start;background:#FFF7DD;border:1px solid #f5c542;border-radius:14px;padding:12px}
   .coach .ccard .dog{width:46px;height:46px;flex:0 0 46px} .coach .ccard .dog svg{width:46px;height:46px;display:block}
@@ -260,12 +271,14 @@
       <div class="tip" id="tip"></div>
     </div>
 
-    <div id="coachBox" class="coach"></div>
-    <div id="pronBox" class="pron"></div>
-
     <div class="nav">
       <button class="btn" id="prev">← Back</button>
       <button class="btn" id="next">Next →</button>
+    </div>
+
+    <div class="extras">
+      <div id="coachBox" class="coach"></div>
+      <div id="pronBox" class="pron"></div>
     </div>
     <div class="upsell" id="upsell"></div>
   </section>
@@ -561,7 +574,7 @@ function render(){
   els.prev.disabled = idx<=0; els.next.disabled = idx>=L.length-1 && !canSum;
   els.next.textContent = (canSum && idx===L.length-1) ? t('s_see') : t('next');
   els.mic.disabled = !p || (!Rec && !(window.sayAzureOn && window.sayAzureOn())); els.play.disabled = els.slow.disabled = !p;
-  els.result.className='result';
+  els.result.className='result'; els.next.classList.remove('next-go');
   const up=$('upsell');
   if(!locked && set!==CUSTOM && set!==ASSESS && set!==FOCUS && L.length && idx===L.length-1){
     up.innerHTML = t('upsell',{n:L.length,set:'<b>'+setName(set)+'</b>',m:PREMIUM_PER_TOPIC-L.length})+' <button class="linkbtn" data-prem>'+t('getNotified')+'</button>';
@@ -649,7 +662,7 @@ function gradeAzure(j){
   const hits = target.map(tk=>{ const n=normTok(tk); for(let i=ptr;i<said.length;i++){ if(said[i].x===n){ ptr=i+1; return said[i].ok; } } return false; });
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
   const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
-  els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad');
+  els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad'); els.next.classList.toggle('next-go', pct>=70 && !els.next.disabled);
   els.pct.textContent=pct+'%';
   setMood(pct>=90?'celebrate':pct>=50?'happy':'puzzled');
   els.stars.textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
@@ -669,7 +682,7 @@ function grade(b){
   const p=current(); const k=key(p);
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
   const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
-  els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad');
+  els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad'); els.next.classList.toggle('next-go', pct>=70 && !els.next.disabled);
   els.pct.textContent=pct+'%';
   setMood(pct>=90?'celebrate':pct>=50?'happy':'puzzled');
   els.stars.textContent='★'.repeat(stars)+'☆'.repeat(3-stars);

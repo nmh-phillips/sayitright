@@ -184,8 +184,9 @@ function pronRender(){
   } else if (P.error) h += `<p class="a-error">${pesc(P.error)}</p>`;
   if (P.state === 'done' && P.result){
     const r = P.result;
+    if (inline && !P.open){ box.innerHTML = `<button class="btn pron-toggle" data-ptoggle>${pesc(t('p_show'))}</button>`; box.classList.remove('full'); return; }
     h += `<div class="pron-res">`;
-    if (inline) h += `<p class="a-meta">${pesc(t('p_title'))}${typeof r.remaining==='number' ? ' · '+pesc(t('say_left',{n:r.remaining})) : ''}</p>`;
+    if (inline) h += `<div class="a-row"><span></span><button class="linkbtn" data-ptoggle>${pesc(t('p_hide'))}</button></div><p class="a-meta">${pesc(t('p_title'))}${typeof r.remaining==='number' ? ' · '+pesc(t('say_left',{n:r.remaining})) : ''}</p>`;
     else h += `<div class="pron-head"><span class="pron-mood" aria-hidden="true">${HARLEY[r.score>=85?'celebrate':r.score>=60?'happy':'puzzled']}</span>
       <div><div class="a-num">${r.score}<small>/100</small></div><div class="a-meta">${pesc(t('p_title'))}${typeof r.remaining==='number'?' · '+pesc(t('p_left',{n:r.remaining})):''}</div></div></div>`;
     h += `
@@ -204,8 +205,10 @@ function pronRender(){
     h += `<p class="pron-tip">${pesc(worst.length ? t('p_focus',{s:worst.slice(0,3).join(', ')}) : t('p_good'))}</p></div>`;
   }
   box.innerHTML = h;
+  box.classList.toggle('full', !!h);
 }
 document.addEventListener('click', e => {
+  if (e.target.closest('#pronBox [data-ptoggle]')){ P.open = !P.open; pronRender(); return; }
   const b = e.target.closest('#pronBox [data-pstart],#pronBox [data-pstop],#pronBox [data-pword],#pronBox [data-phear]');
   if (!b) return;
   if (b.hasAttribute('data-pstart')) pronStart();
@@ -215,7 +218,7 @@ document.addEventListener('click', e => {
 });
 window.pronReset = () => {
   const p = current(); const k = p ? lang+'|'+p[0] : null;
-  if (k !== P.phrase){ if (P.rec){ P.rec.cancel(); P.rec=null; clearTimeout(P.timer); } P.state='idle'; P.result=null; P.error=''; P.sel=-1; P.inline=false; P.phrase=k;
+  if (k !== P.phrase){ if (P.rec){ P.rec.cancel(); P.rec=null; clearTimeout(P.timer); } P.state='idle'; P.result=null; P.error=''; P.sel=-1; P.inline=false; P.open=false; P.phrase=k;
     if (S.rec){ S.rec.cancel(); S.rec=null; clearTimeout(S.timer); S.state='idle'; sayUI(); }
     if (typeof coachReset === 'function') coachReset(); }
   pronRender();
@@ -285,8 +288,9 @@ function coachRender(){
   }
   else if (C.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.puzzled}</div><div><p class="ctext">${pesc(t('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${pesc(t('getNotified'))}</button></div></div></div>`;
   else if (C.state === 'error') h = `<p class="a-error">${pesc(C.err)}</p><button class="btn cbtn" data-coach>${pesc(t('c_btn'))}</button>`;
-  else h = `<button class="btn cbtn" data-coach>${pesc(t('c_btn'))} <small>· ${pesc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
+  else h = `<button class="btn cbtn" data-coach>${pesc(t('c_btn'))} <small>${pesc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
   box.innerHTML = h;
+  box.classList.toggle('full', C.state !== 'idle' && C.state !== undefined);
 }
 async function coachAsk(){
   if (!C.data || C.state === 'loading') return;
