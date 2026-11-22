@@ -42,3 +42,12 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - The Inter font is self-hosted in `fonts/` (SIL OFL), so no visitor data goes to Google Fonts.
 - `netlify/functions/cleanup.mjs` is a daily scheduled function that deletes daily-allowance counters (hashed device and IP codes) older than 7 days, as the privacy policy says.
 - If you change the Azure region from the UK, or add a new provider, update the table in `privacy.html`.
+
+## Optional sign-in (progress across devices)
+- `account.js` adds a "👤 Sign in" button in the header. People sign in with their email and a 6-digit code (or the link in the email). No password. The app still works fully without signing in.
+- Synced: best scores, Assess me history, and settings (languages, coach). Not synced: device ID and daily allowances. On sign-in the device and the account are merged (best score wins).
+- Backend: Supabase (Auth + one `progress` table with row-level security). Run `supabase/setup.sql` once in the Supabase SQL editor.
+- Netlify environment variables: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (public by design), and `SUPABASE_SECRET_KEY` (mark as secret; used only by `delete-account.mjs` and the stats count). The button stays hidden until the first two are set.
+- In Supabase → Authentication → Emails, the "Magic link" template must include `{{ .Token }}` so people get a code. Set custom SMTP (e.g. Google Workspace) because Supabase's built-in email sender is heavily rate-limited.
+- `delete-account.mjs` lets people delete their account (and saved progress) from the sign-in panel. The stats page shows the number of accounts.
+- Library: `vendor/supabase-2.119.2.min.js` (MIT), loaded only when someone signs in or is signed in.

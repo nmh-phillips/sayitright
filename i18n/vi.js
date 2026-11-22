@@ -40,3 +40,6 @@ window.SIR_MEANINGS.vi = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.vi, {lg_priv:"Quyền riêng tư",lg_terms:"Điều khoản",lg_adult:"Dành cho người lớn từ 18 tuổi trở lên."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.vi, {acc_signin:"Đăng nhập",acc_title:"Lưu tiến độ của bạn",acc_intro:"Đăng nhập bằng email để giữ điểm số trên mọi thiết bị. Không cần mật khẩu. Tùy chọn và miễn phí.",acc_emailL:"Email của bạn",acc_send:"Gửi mã",acc_sent:"Chúng tôi đã gửi mã đến {e}. Nhập mã bên dưới hoặc chạm vào liên kết trong email trên thiết bị này.",acc_codeL:"Mã trong email",acc_back:"Đổi email",acc_verify:"Đăng nhập",acc_badcode:"Mã không đúng. Hãy kiểm tra và thử lại.",acc_bademail:"Vui lòng nhập địa chỉ email hợp lệ.",acc_err:"Đã xảy ra lỗi. Vui lòng thử lại.",acc_wait:"Quá nhiều lần thử. Hãy đợi một phút rồi thử lại.",acc_in:"Đã đăng nhập: {e}",acc_synced:"Tiến độ của bạn được lưu vào tài khoản và theo bạn trên mọi thiết bị.",acc_out:"Đăng xuất",acc_del:"Xóa tài khoản của tôi",acc_delq:"Xóa tài khoản và tiến độ đã lưu? Không thể hoàn tác. Điểm số trên thiết bị này vẫn được giữ lại.",acc_delyes:"Xóa",acc_deleted:"Tài khoản của bạn đã bị xóa."});

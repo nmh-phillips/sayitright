@@ -40,3 +40,6 @@ window.SIR_MEANINGS.nl = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.nl, {lg_priv:"Privacy",lg_terms:"Voorwaarden",lg_adult:"Voor volwassenen vanaf 18 jaar."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.nl, {acc_signin:"Inloggen",acc_title:"Bewaar je voortgang",acc_intro:"Log in met je e-mail om je scores op al je apparaten te hebben. Geen wachtwoord nodig. Het is optioneel en gratis.",acc_emailL:"Je e-mail",acc_send:"Code sturen",acc_sent:"We hebben een code naar {e} gestuurd. Vul hem hieronder in of tik op dit apparaat op de link in de e-mail.",acc_codeL:"Code uit de e-mail",acc_back:"E-mail wijzigen",acc_verify:"Inloggen",acc_badcode:"Die code werkte niet. Controleer hem en probeer het opnieuw.",acc_bademail:"Vul een geldig e-mailadres in.",acc_err:"Er ging iets mis. Probeer het opnieuw.",acc_wait:"Te veel pogingen. Wacht een minuut en probeer het opnieuw.",acc_in:"Ingelogd als {e}",acc_synced:"Je voortgang is opgeslagen in je account en gaat mee naar elk apparaat.",acc_out:"Uitloggen",acc_del:"Mijn account verwijderen",acc_delq:"Je account en de opgeslagen voortgang verwijderen? Dit kan niet ongedaan worden gemaakt. Scores op dit apparaat blijven hier.",acc_delyes:"Verwijderen",acc_deleted:"Je account is verwijderd."});

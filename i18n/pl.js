@@ -40,3 +40,6 @@ window.SIR_MEANINGS.pl = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.pl, {lg_priv:"Prywatność",lg_terms:"Regulamin",lg_adult:"Dla dorosłych od 18 lat."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.pl, {acc_signin:"Zaloguj się",acc_title:"Zapisz swoje postępy",acc_intro:"Zaloguj się e-mailem, aby mieć swoje wyniki na wszystkich urządzeniach. Bez hasła. To opcjonalne i bezpłatne.",acc_emailL:"Twój e-mail",acc_send:"Wyślij kod",acc_sent:"Wysłaliśmy kod na {e}. Wpisz go poniżej albo stuknij link w e-mailu na tym urządzeniu.",acc_codeL:"Kod z e-maila",acc_back:"Zmień e-mail",acc_verify:"Zaloguj się",acc_badcode:"Ten kod nie zadziałał. Sprawdź go i spróbuj ponownie.",acc_bademail:"Wpisz poprawny adres e-mail.",acc_err:"Coś poszło nie tak. Spróbuj ponownie.",acc_wait:"Za dużo prób. Poczekaj minutę i spróbuj ponownie.",acc_in:"Zalogowano jako {e}",acc_synced:"Twoje postępy są zapisane na koncie i są dostępne na każdym urządzeniu.",acc_out:"Wyloguj się",acc_del:"Usuń moje konto",acc_delq:"Usunąć konto i zapisane na nim postępy? Tego nie można cofnąć. Wyniki na tym urządzeniu zostaną.",acc_delyes:"Usuń",acc_deleted:"Twoje konto zostało usunięte."});

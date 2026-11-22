@@ -154,6 +154,12 @@
   .langbar select{max-width:210px;min-width:0;text-overflow:ellipsis}
   header h1{flex-shrink:0}
   @media(max-width:440px){.prem-btn .t{display:none} header h1 span:not(.logo){display:none} header{padding:12px 12px}}
+  .hdr-r{display:flex;gap:8px;align-items:center}
+  .acc-btn{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font:700 13px Inter,sans-serif;padding:7px 10px;border-radius:10px;cursor:pointer;white-space:nowrap}
+  .acc-btn[hidden]{display:none}
+  @media(max-width:440px){.acc-btn .t{display:none}}
+  dialog.fb input.code{width:100%;font:700 22px Inter,sans-serif;letter-spacing:.3em;text-align:center;padding:10px;border-radius:10px;border:1px solid var(--line);margin:6px 0 10px}
+  dialog.fb .acc-st{display:none}
   .prem-btn{border:none;background:#f5c542;color:var(--ink);font:700 13px Inter,sans-serif;padding:8px 11px;border-radius:10px;cursor:pointer;white-space:nowrap}
   .tabs button.locked{color:#8a6d00;background:#fff8e1;border-color:#f3dfa0}
   .tabs button.locked.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
@@ -276,6 +282,7 @@
 <header>
   <h1 style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg></span>Harley Says <span id="tagline">· pronunciation</span></h1>
   <div class="hdr-r">
+  <button class="acc-btn" id="accBtn" type="button" hidden>👤</button>
   <button class="prem-btn" id="premBtn" aria-label="Premium">⭐<span class="t"> Premium</span></button>
   </div>
 </header>
@@ -435,6 +442,54 @@
     </div>
   </form>
   <div id="fbDone" style="display:none"><p data-i18n="fbThanks">Thank you! Harley has passed it on.</p><div class="row" style="justify-content:flex-end"><button class="btn primary" type="button" id="fbClose" data-i18n="fbClose">Close</button></div></div>
+</dialog>
+
+<dialog class="fb" id="accDlg" aria-labelledby="accTitle">
+  <h2 id="accTitle" style="margin:0 0 6px;font-size:18px" data-i18n="acc_title">Save your progress</h2>
+  <div id="accStepEmail">
+    <p class="fine" data-i18n="acc_intro">Sign in with your email to keep your scores on all your devices. No password needed. It's optional and free.</p>
+    <form id="accFormEmail" novalidate>
+      <label for="accEmail" data-i18n="acc_emailL">Your email</label>
+      <input type="email" id="accEmail" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+      <p class="fine"><span data-i18n="lg_adult">For adults aged 18 and over.</span> <a href="/privacy.html" data-i18n="lg_priv">Privacy</a></p>
+      <div class="row" style="justify-content:flex-end">
+        <button class="btn" type="button" data-acc-close data-i18n="fbCancel">Cancel</button>
+        <button class="btn primary" type="submit" id="accSend" data-i18n="acc_send">Send code</button>
+      </div>
+    </form>
+  </div>
+  <div id="accStepCode" style="display:none">
+    <p class="fine" id="accSentTo"></p>
+    <form id="accFormCode" novalidate>
+      <label for="accCode" data-i18n="acc_codeL">Code from the email</label>
+      <input class="code" id="accCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••">
+      <div class="row" style="justify-content:space-between">
+        <button class="btn" type="button" id="accBack" data-i18n="acc_back">Change email</button>
+        <button class="btn primary" type="submit" id="accVerify" data-i18n="acc_verify">Sign in</button>
+      </div>
+    </form>
+  </div>
+  <div id="accStepIn" style="display:none">
+    <p><b id="accWho"></b></p>
+    <p class="fine" id="accStatus"></p>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <button class="btn" type="button" id="accDel" data-i18n="acc_del">Delete my account</button>
+      <span><button class="btn" type="button" id="accOut" data-i18n="acc_out">Sign out</button>
+      <button class="btn primary" type="button" data-acc-close data-i18n="fbClose">Close</button></span>
+    </div>
+  </div>
+  <div id="accStepDel" style="display:none">
+    <p data-i18n="acc_delq">Delete your account and the progress saved to it? This can't be undone. Scores on this device stay here.</p>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" type="button" id="accDelNo" data-i18n="fbCancel">Cancel</button>
+      <button class="btn primary" type="button" id="accDelYes" style="background:var(--bad)" data-i18n="acc_delyes">Delete</button>
+    </div>
+  </div>
+  <div id="accStepGone" style="display:none">
+    <p data-i18n="acc_deleted">Your account has been deleted.</p>
+    <div class="row" style="justify-content:flex-end"><button class="btn primary" type="button" data-acc-close data-i18n="fbClose">Close</button></div>
+  </div>
+  <p class="fine" id="accErr" role="alert" style="color:var(--bad)"></p>
 </dialog>
 
 <script src="phrases.js"></script>
@@ -788,6 +843,7 @@ function applyUI(){
   document.documentElement.lang=ui;
   document.documentElement.dir=(window.SIR_EXTRA[ui]&&window.SIR_EXTRA[ui].rtl)?'rtl':'ltr';
   document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
+  if(window.hsAccountRelabel) window.hsAccountRelabel();
   $('tagline').textContent='· '+t('tagline');
   els.play.textContent=t('listen'); els.slow.textContent=t('slowly'); if(!listening) els.mic.textContent=t('tapSay');
   els.prev.textContent=t('back'); els.next.textContent=t('next');
@@ -977,5 +1033,6 @@ render();
 </script>
 <script src="assess.js"></script>
 <script src="pron.js"></script>
+<script src="account.js"></script>
 </body>
 </html>

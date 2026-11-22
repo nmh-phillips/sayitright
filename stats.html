@@ -50,6 +50,7 @@ async function load(){
   const uis = Object.keys(tot).filter(k => k.startsWith('ui:')).sort((a,b) => tot[b]-tot[a]);
   let h = '<div class="tiles">' + COLS.filter(([k]) => tot[k]).map(([k,n]) => `<div class="tile"><b>${tot[k]}</b><span>${esc(n)}</span></div>`).join('') + '</div>';
   if (!Object.keys(tot).length) h = '<div class="card">No activity yet in this period.</div>';
+  if (j.accounts != null) h = `<div class="card"><b>Signed-up accounts (all time):</b> ${j.accounts}</div>` + h;
   if (langs.length) h += `<div class="card"><b>Learning</b><table>${langs.map(k => `<tr><td>${esc(LN[k.slice(5)] || k.slice(5))}</td><td>${tot[k]}</td></tr>`).join('')}</table></div>`;
   if (uis.length) h += `<div class="card"><b>Interface language</b><table>${uis.map(k => `<tr><td>${esc(k.slice(3))}</td><td>${tot[k]}</td></tr>`).join('')}</table></div>`;
   const used = COLS.filter(([k]) => tot[k]);

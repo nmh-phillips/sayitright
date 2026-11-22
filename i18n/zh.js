@@ -40,3 +40,6 @@ window.SIR_MEANINGS.zh = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.zh, {lg_priv:"隐私",lg_terms:"条款",lg_adult:"仅供18岁及以上的成年人使用。"});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.zh, {acc_signin:"登录",acc_title:"保存你的进度",acc_intro:"用邮箱登录，就能在所有设备上看到你的分数。无需密码，可选且免费。",acc_emailL:"你的邮箱",acc_send:"发送验证码",acc_sent:"我们已向 {e} 发送验证码。请在下方输入，或在本设备上点击邮件中的链接。",acc_codeL:"邮件中的验证码",acc_back:"更换邮箱",acc_verify:"登录",acc_badcode:"验证码无效，请检查后重试。",acc_bademail:"请输入有效的邮箱地址。",acc_err:"出了点问题，请重试。",acc_wait:"尝试次数过多，请稍等一分钟再试。",acc_in:"已登录：{e}",acc_synced:"你的进度已保存到账户，在任何设备上都能继续。",acc_out:"退出登录",acc_del:"删除我的账户",acc_delq:"要删除你的账户及其中保存的进度吗？此操作无法撤销。本设备上的分数会保留。",acc_delyes:"删除",acc_deleted:"你的账户已删除。"});

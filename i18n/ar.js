@@ -40,3 +40,6 @@ window.SIR_MEANINGS.ar = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.ar, {lg_priv:"الخصوصية",lg_terms:"الشروط",lg_adult:"للبالغين من عمر 18 عامًا فما فوق."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.ar, {acc_signin:"تسجيل الدخول",acc_title:"احفظ تقدّمك",acc_intro:"سجّل الدخول ببريدك الإلكتروني لتبقى نتائجك على كل أجهزتك. دون كلمة مرور. الأمر اختياري ومجاني.",acc_emailL:"بريدك الإلكتروني",acc_send:"أرسل الرمز",acc_sent:"أرسلنا رمزًا إلى {e}. أدخله أدناه أو اضغط على الرابط في الرسالة على هذا الجهاز.",acc_codeL:"الرمز من الرسالة",acc_back:"تغيير البريد",acc_verify:"تسجيل الدخول",acc_badcode:"لم ينجح هذا الرمز. تحقّق منه وحاول مجددًا.",acc_bademail:"أدخل عنوان بريد إلكتروني صحيحًا.",acc_err:"حدث خطأ ما. حاول مجددًا.",acc_wait:"محاولات كثيرة جدًا. انتظر دقيقة ثم حاول مجددًا.",acc_in:"تم تسجيل الدخول باسم {e}",acc_synced:"تقدّمك محفوظ في حسابك ويرافقك على أي جهاز.",acc_out:"تسجيل الخروج",acc_del:"حذف حسابي",acc_delq:"هل تريد حذف حسابك والتقدّم المحفوظ فيه؟ لا يمكن التراجع عن ذلك. تبقى النتائج على هذا الجهاز.",acc_delyes:"حذف",acc_deleted:"تم حذف حسابك."});

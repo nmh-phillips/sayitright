@@ -13,5 +13,17 @@ export default async (req) => {
     let v = null; try { v = await store.get(`day/${day}`, { type: 'json' }); } catch {}
     out.push({ day, ...(v || {}) });
   }
-  return json({ days: out });
+  return json({ days: out, accounts: await countAccounts() });
+};
+
+// Number of people who have signed in at least once (one saved-progress row each), if accounts are set up.
+async function countAccounts() {
+  const base = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
+  const secret = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!base || !secret) return null;
+  try {
+    const r = await fetch(`${base}/rest/v1/progress?select=user_id`, { headers: { apikey: secret, Authorization: `Bearer ${secret}`, Prefer: 'count=exact', Range: '0-0' } });
+    const m = (r.headers.get('content-range') || '').match(/\/(\d+)$/);
+    return m ? Number(m[1]) : null;
+  } catch { return null; }
 };

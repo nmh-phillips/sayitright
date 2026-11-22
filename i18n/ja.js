@@ -40,3 +40,6 @@ window.SIR_MEANINGS.ja = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.ja, {lg_priv:"プライバシー",lg_terms:"利用規約",lg_adult:"18歳以上の成人向けです。"});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.ja, {acc_signin:"ログイン",acc_title:"進捗を保存",acc_intro:"メールでログインすると、すべての端末でスコアを引き継げます。パスワード不要、任意・無料です。",acc_emailL:"メールアドレス",acc_send:"コードを送信",acc_sent:"{e} にコードを送りました。下に入力するか、この端末でメール内のリンクをタップしてください。",acc_codeL:"メールのコード",acc_back:"メールアドレスを変更",acc_verify:"ログイン",acc_badcode:"コードが正しくありません。確認してもう一度お試しください。",acc_bademail:"有効なメールアドレスを入力してください。",acc_err:"問題が発生しました。もう一度お試しください。",acc_wait:"試行回数が多すぎます。1分ほど待ってからお試しください。",acc_in:"{e} でログイン中",acc_synced:"進捗はアカウントに保存され、どの端末でも続けられます。",acc_out:"ログアウト",acc_del:"アカウントを削除",acc_delq:"アカウントと保存された進捗を削除しますか？元に戻せません。この端末のスコアは残ります。",acc_delyes:"削除",acc_deleted:"アカウントを削除しました。"});

@@ -40,3 +40,6 @@ window.SIR_MEANINGS.ko = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.ko, {lg_priv:"개인정보",lg_terms:"이용약관",lg_adult:"18세 이상 성인을 위한 서비스입니다."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.ko, {acc_signin:"로그인",acc_title:"진행 상황 저장",acc_intro:"이메일로 로그인하면 모든 기기에서 점수를 이어볼 수 있어요. 비밀번호는 필요 없고, 선택 사항이며 무료입니다.",acc_emailL:"이메일",acc_send:"코드 보내기",acc_sent:"{e}(으)로 코드를 보냈어요. 아래에 입력하거나 이 기기에서 이메일의 링크를 누르세요.",acc_codeL:"이메일의 코드",acc_back:"이메일 변경",acc_verify:"로그인",acc_badcode:"코드가 맞지 않아요. 확인 후 다시 시도하세요.",acc_bademail:"올바른 이메일 주소를 입력하세요.",acc_err:"문제가 발생했어요. 다시 시도하세요.",acc_wait:"시도 횟수가 너무 많아요. 1분 후 다시 시도하세요.",acc_in:"{e}(으)로 로그인됨",acc_synced:"진행 상황이 계정에 저장되어 어떤 기기에서든 이어집니다.",acc_out:"로그아웃",acc_del:"내 계정 삭제",acc_delq:"계정과 저장된 진행 상황을 삭제할까요? 되돌릴 수 없어요. 이 기기의 점수는 그대로 남습니다.",acc_delyes:"삭제",acc_deleted:"계정이 삭제되었습니다."});

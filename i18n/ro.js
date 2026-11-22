@@ -40,3 +40,6 @@ window.SIR_MEANINGS.ro = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.ro, {lg_priv:"Confidențialitate",lg_terms:"Termeni",lg_adult:"Pentru adulți de la 18 ani în sus."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.ro, {acc_signin:"Conectează-te",acc_title:"Salvează-ți progresul",acc_intro:"Conectează-te cu emailul ca să ai scorurile pe toate dispozitivele. Fără parolă. Este opțional și gratuit.",acc_emailL:"Emailul tău",acc_send:"Trimite codul",acc_sent:"Am trimis un cod la {e}. Introdu-l mai jos sau atinge linkul din email pe acest dispozitiv.",acc_codeL:"Codul din email",acc_back:"Schimbă emailul",acc_verify:"Conectează-te",acc_badcode:"Codul nu a funcționat. Verifică-l și încearcă din nou.",acc_bademail:"Introdu o adresă de email validă.",acc_err:"Ceva n-a mers bine. Încearcă din nou.",acc_wait:"Prea multe încercări. Așteaptă un minut și încearcă din nou.",acc_in:"Conectat ca {e}",acc_synced:"Progresul tău este salvat în cont și te urmează pe orice dispozitiv.",acc_out:"Deconectează-te",acc_del:"Șterge-mi contul",acc_delq:"Ștergi contul și progresul salvat în el? Acțiunea nu poate fi anulată. Scorurile de pe acest dispozitiv rămân aici.",acc_delyes:"Șterge",acc_deleted:"Contul tău a fost șters."});

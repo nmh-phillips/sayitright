@@ -40,3 +40,6 @@ window.SIR_MEANINGS.tr = {
 
 // Footer: privacy and terms links, adults-only line
 Object.assign(window.SIR_UI.tr, {lg_priv:"Gizlilik",lg_terms:"Koşullar",lg_adult:"18 yaş ve üzeri yetişkinler içindir."});
+
+// Optional sign-in (account.js)
+Object.assign(window.SIR_UI.tr, {acc_signin:"Giriş yap",acc_title:"İlerlemeni kaydet",acc_intro:"Puanlarını tüm cihazlarında görmek için e-postanla giriş yap. Şifre gerekmez. İsteğe bağlı ve ücretsiz.",acc_emailL:"E-postan",acc_send:"Kod gönder",acc_sent:"{e} adresine bir kod gönderdik. Aşağıya gir ya da bu cihazda e-postadaki bağlantıya dokun.",acc_codeL:"E-postadaki kod",acc_back:"E-postayı değiştir",acc_verify:"Giriş yap",acc_badcode:"Bu kod işe yaramadı. Kontrol edip tekrar dene.",acc_bademail:"Lütfen geçerli bir e-posta adresi gir.",acc_err:"Bir şeyler ters gitti. Lütfen tekrar dene.",acc_wait:"Çok fazla deneme. Bir dakika bekleyip tekrar dene.",acc_in:"{e} olarak giriş yapıldı",acc_synced:"İlerlemen hesabına kaydedildi ve her cihazda seninle.",acc_out:"Çıkış yap",acc_del:"Hesabımı sil",acc_delq:"Hesabın ve kayıtlı ilerlemen silinsin mi? Bu geri alınamaz. Bu cihazdaki puanlar burada kalır.",acc_delyes:"Sil",acc_deleted:"Hesabın silindi."});
