@@ -20,3 +20,7 @@ create policy "add own progress" on public.progress
 drop policy if exists "update own progress" on public.progress;
 create policy "update own progress" on public.progress
   for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+-- Let signed-in people (and the server's secret key) use the table through the Data API.
+grant select, insert, update on public.progress to authenticated;
+grant all on public.progress to service_role;
