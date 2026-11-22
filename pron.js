@@ -256,7 +256,7 @@ window.pronReset = () => {
 if (typeof render === 'function') render();
 
 // ---------- "Harley explains": spoken coaching tip (2 free a day) ----------
-const UI_VOICE = { en:'en-GB', es:'es-ES', fr:'fr-FR', it:'it-IT', de:'de-DE', pt:'pt-PT' };
+const UI_VOICE = { en:'en-GB', es:'es-ES', fr:'fr-FR', it:'it-IT', de:'de-DE', pt:'pt-PT', ...Object.fromEntries(Object.entries(window.SIR_EXTRA||{}).map(([k,v])=>[k,v.code])) };
 var C = { state:'idle', data:null, tip:'', remaining:null, key:'' };
 function coachLeft(){ const v = store.get('sir_coach_left', null); return (v && v.day === today()) ? v.n : null; }
 window.coachReady = data => {

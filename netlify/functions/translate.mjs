@@ -13,6 +13,9 @@ const hash = x => createHash('sha256').update('harley-says:' + x).digest('hex').
 const NAMES = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American, as spoken in Mexico)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
 const DEEPL_TARGET = { en: 'EN-GB', enus: 'EN-US', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT' };
 const DEEPL_SOURCE = { en: 'EN', enus: 'EN', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT' };
+// Extra languages people can type in (translation source only)
+Object.assign(NAMES, { pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' });
+Object.assign(DEEPL_SOURCE, { pl: 'PL', ro: 'RO', uk: 'UK', zh: 'ZH', ar: 'AR', nl: 'NL', tr: 'TR', ja: 'JA', ko: 'KO', vi: 'VI' });
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
@@ -28,7 +31,7 @@ export default async (req, context) => {
   const to = String(body.to || '');
   if (!text) return json({ error: 'No text' }, 400);
   if (text.length > 300) return json({ error: 'Text too long (max 300 characters)' }, 400);
-  if (!NAMES[to] || !NAMES[from]) return json({ error: 'Unsupported language' }, 400);
+  if (!NAMES[to] || !NAMES[from] || !DEEPL_TARGET[to]) return json({ error: 'Unsupported language' }, 400);
   if (from === to) return json({ translation: text });
   if (!process.env.DEEPL_API_KEY && !process.env.ANTHROPIC_API_KEY) return json({ error: 'Translation not configured' }, 503);
 
@@ -47,7 +50,10 @@ export default async (req, context) => {
 
   try {
     let translation, via;
-    if (process.env.DEEPL_API_KEY) { translation = await deepl(text, from, to); via = 'deepl'; }
+    if (process.env.DEEPL_API_KEY) {
+      try { translation = await deepl(text, from, to); via = 'deepl'; }
+      catch (e) { if (!process.env.ANTHROPIC_API_KEY) throw e; translation = await claude(text, from, to); via = 'claude'; } // e.g. a source language DeepL doesn't support
+    }
     else { translation = await claude(text, from, to); via = 'claude'; }
     if (store) { try { await store.set(devKey, String(devUsed + 1)); await store.set(ipKey, String(ipUsed + 1)); } catch {} }
     return json({ translation, via, limit: FREE, remaining: Math.max(0, FREE - devUsed - 1) });

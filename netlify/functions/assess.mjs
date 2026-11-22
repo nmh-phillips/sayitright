@@ -12,7 +12,7 @@ const GLOBAL_CAP = Number(process.env.AI_ASSESS_GLOBAL_LIMIT || 300);
 const hash = x => createHash('sha256').update('harley-says-ai:' + x).digest('hex').slice(0, 24);
 
 const LANGS = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese' };
-const UI = { en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese' };
+const UI = { en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' };
 const BANDS = [[20, 'A1'], [40, 'A2'], [60, 'B1'], [75, 'B2'], [90, 'C1'], [100, 'C2']];
 const cefrFor = s => BANDS.find(([max]) => s <= max)[1];
 

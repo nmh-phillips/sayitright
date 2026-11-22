@@ -1,5 +1,13 @@
 // Harley Says interface translations. UI languages: en, es, fr, it, de, pt.
 window.SIR_UI_LANGS = [['en','English'],['es','Español'],['fr','Français'],['it','Italiano'],['de','Deutsch'],['pt','Português']];
+// Extra interface languages, loaded on demand from i18n/<code>.js. They can also be typed in "My phrase" and translated.
+window.SIR_EXTRA = {
+  pl:{name:'Polski',code:'pl-PL'}, ro:{name:'Română',code:'ro-RO'}, uk:{name:'Українська',code:'uk-UA'},
+  zh:{name:'中文（简体）',code:'zh-CN'}, ar:{name:'العربية',code:'ar-SA',rtl:true}, nl:{name:'Nederlands',code:'nl-NL'},
+  tr:{name:'Türkçe',code:'tr-TR'}, ja:{name:'日本語',code:'ja-JP'}, ko:{name:'한국어',code:'ko-KR'}, vi:{name:'Tiếng Việt',code:'vi-VN'}
+};
+Object.entries(window.SIR_EXTRA).forEach(([k,v])=>window.SIR_UI_LANGS.push([k,v.name]));
+window.SIR_MEANINGS = window.SIR_MEANINGS || {};
 
 window.SIR_LANG_NAMES = {
   en:{en:'English (UK)',enus:'English (US)',es:'Spanish (Spain)',esmx:'Spanish (Latin America)',fr:'French',it:'Italian',de:'German',pt:'Portuguese'},
@@ -350,7 +358,7 @@ const M = {
 "To the airport, please":["Al aeropuerto, por favor","À l'aéroport, s'il vous plaît","All'aeroporto, per favore","Zum Flughafen, bitte","Para o aeroporto, por favor"]
 };
 const idx = {es:0,fr:1,it:2,de:3,pt:4};
-window.SIR_EN_MEANING = (phrase, ui) => (M[phrase] && idx[ui]!==undefined) ? M[phrase][idx[ui]] : null;
+window.SIR_EN_MEANING = (phrase, ui) => (M[phrase] && idx[ui]!==undefined) ? M[phrase][idx[ui]] : ((window.SIR_MEANINGS[ui]||{})[phrase] || null);
 })();
 
 // "Assess me" strings
@@ -604,4 +612,17 @@ const S={
  pt:{cap3:'O Harley e a priminha Lilou',story4:'A Lilou, priminha do Harley, também ajuda. Escolha-a como coach e ela explica os seus erros com a sua própria voz.'}
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();
+
+// Names of the extra languages (for the "I'm writing in" list) in the original six interface languages
+(function(){
+const N={
+ en:{pl:'Polish',ro:'Romanian',uk:'Ukrainian',zh:'Chinese',ar:'Arabic',nl:'Dutch',tr:'Turkish',ja:'Japanese',ko:'Korean',vi:'Vietnamese'},
+ es:{pl:'Polaco',ro:'Rumano',uk:'Ucraniano',zh:'Chino',ar:'Árabe',nl:'Neerlandés',tr:'Turco',ja:'Japonés',ko:'Coreano',vi:'Vietnamita'},
+ fr:{pl:'Polonais',ro:'Roumain',uk:'Ukrainien',zh:'Chinois',ar:'Arabe',nl:'Néerlandais',tr:'Turc',ja:'Japonais',ko:'Coréen',vi:'Vietnamien'},
+ it:{pl:'Polacco',ro:'Rumeno',uk:'Ucraino',zh:'Cinese',ar:'Arabo',nl:'Olandese',tr:'Turco',ja:'Giapponese',ko:'Coreano',vi:'Vietnamita'},
+ de:{pl:'Polnisch',ro:'Rumänisch',uk:'Ukrainisch',zh:'Chinesisch',ar:'Arabisch',nl:'Niederländisch',tr:'Türkisch',ja:'Japanisch',ko:'Koreanisch',vi:'Vietnamesisch'},
+ pt:{pl:'Polaco',ro:'Romeno',uk:'Ucraniano',zh:'Chinês',ar:'Árabe',nl:'Neerlandês',tr:'Turco',ja:'Japonês',ko:'Coreano',vi:'Vietnamita'}
+};
+for (const k in N) Object.assign(window.SIR_LANG_NAMES[k], N[k]);
 })();
