@@ -718,12 +718,29 @@ function renderProgress(){
 let voices=[];
 function loadVoices(){ voices = speechSynthesis.getVoices(); }
 if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
-function pickVoice(){
-  const code=DATA[lang].code, base=code.slice(0,2);
-  const exact=voices.filter(v=>v.lang.replace('_','-')===code);
-  const pref = v=>/google|premium|enhanced|natural|neural/i.test(v.name);
-  return exact.find(pref)||exact[0]||voices.find(v=>v.lang.startsWith(base));
+// Pick the most natural-sounding voice the device has for a language.
+// Skips Apple's novelty voices (Eddy, Grandpa, Zarvox…), which sound robotic and are often listed first,
+// and for Latin American Spanish also accepts US/LatAm Spanish voices (e.g. Chrome's "Google español de Estados Unidos").
+const NOVELTY_VOICES=/\b(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Fred|Junior|Ralph|Kathy)\b/i;
+const VOICE_ALT={'es-MX':['es-US','es-419'],'en-US':[],'en-GB':[]};
+function bestVoice(code){
+  const all=('speechSynthesis' in window)?speechSynthesis.getVoices():[];
+  const base=code.slice(0,2), alt=VOICE_ALT[code]||[];
+  let best=null, top=-1;
+  all.forEach(v=>{
+    const l=v.lang.replace('_','-');
+    let sc = l===code?100 : alt.includes(l)?80 : l.slice(0,2)===base?10 : -1;
+    if(sc<0) return;
+    if(NOVELTY_VOICES.test(v.name)) sc-=200;
+    if(/premium|enhanced|natural|neural|online/i.test(v.name)) sc+=40;
+    if(/google/i.test(v.name)) sc+=30;
+    if(/Paulina|M[oó]nica|Juan|Diego|Ang[eé]lica|Sabina|Francisca/i.test(v.name)) sc+=20;
+    if(sc>top){ top=sc; best=v; }
+  });
+  return top>0?best:null;
 }
+window.bestVoice=bestVoice;
+function pickVoice(){ return bestVoice(DATA[lang].code); }
 function speak(text,rate=0.95){
   if(!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();

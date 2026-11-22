@@ -265,11 +265,7 @@ window.coachReady = data => {
   coachRender();
 };
 function coachReset(){ if (C && C.data){ C.data = null; C.tip = ''; C.state = 'idle'; coachRender(); } }
-function voiceFor(code){
-  const vs = speechSynthesis.getVoices(), base = code.slice(0,2);
-  const exact = vs.filter(v => v.lang.replace('_','-') === code), pref = v => /google|premium|enhanced|natural|neural/i.test(v.name);
-  return exact.find(pref) || exact[0] || vs.find(v => v.lang.startsWith(base)) || null;
-}
+function voiceFor(code){ return window.bestVoice ? window.bestVoice(code) : null; }
 // Harley's own voice (Azure neural, via /tts). Falls back to the phone's voices if it can't play.
 const HA = new Audio(); HA.preload = 'auto';
 // Harley bounces while he talks
