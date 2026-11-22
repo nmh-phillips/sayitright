@@ -34,6 +34,8 @@
   header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:-.01em}
   header h1 span:not(.logo){opacity:.6;font-weight:500}
   header h1 .logo{display:inline-flex}
+  header h1 .logo-lilou{margin-left:-16px;align-self:flex-end;transform:translateY(3px)}
+  header h1 .logo-lilou svg{animation-delay:-4.5s}
   .mood{width:64px;height:64px;flex:0 0 64px}
   .mood svg{width:64px;height:64px;display:block}
   select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
@@ -707,6 +709,7 @@ const LILOU = Object.fromEntries(Object.entries(HARLEY).map(([m,svg])=>{
   const s = svg.replace('<rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/>', '<rect x="10" y="10" width="280" height="280" rx="64" fill="#B9478A"/><g transform="translate(24 34) scale(.84)">');
   return [m, s.replace(/<\/svg>$/, '</g>' + LILOU_BOW + '</svg>')];
 }));
+{ const l=document.querySelector('header h1 .logo'); if(l) l.insertAdjacentHTML('afterend', `<span class="logo logo-lilou" aria-hidden="true">${LILOU.happy.replace('<svg ','<svg width="22" height="22" ')}</span>`); }
 function coachId(){ return store.get('sir_coach','harley')==='lilou' ? 'lilou' : 'harley'; }
 function coachFace(m){ return (coachId()==='lilou' ? LILOU : HARLEY)[m]; }
 function ct(k, vars){ const lk = k + '_lilou'; return coachId()==='lilou' && ((UI[ui]||{})[lk]!==undefined || UI.en[lk]!==undefined) ? t(lk, vars) : t(k, vars); }
