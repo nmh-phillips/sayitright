@@ -94,7 +94,7 @@ function sayUI(){
   const m = els.mic;
   m.classList.toggle('rec', S.state === 'recording');
   m.disabled = S.state === 'checking';
-  if (S.state === 'recording') m.innerHTML = `<span class="mic-dog" aria-hidden="true">${HARLEY.happy}</span>${pesc(t('listening').replace(/^\S*\s/, ''))}`;
+  if (S.state === 'recording') m.innerHTML = `<span class="mic-dog" aria-hidden="true">${coachFace('happy')}</span>${pesc(t('listening').replace(/^\S*\s/, ''))}`;
   else m.textContent = S.state === 'checking' ? t('p_wait') : t('tapSay');
 }
 window.sayStart = async () => {
@@ -279,13 +279,14 @@ HA.addEventListener('playing', () => { if (HA.src !== HA_SILENT) haTalk(true); }
 const HA_SILENT = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
 const haCache = {};
 function haUnlock(){ try { HA.src = HA_SILENT; const p = HA.play(); if (p) p.catch(()=>{}); } catch(e){} } // must run inside a tap (iPhone)
-async function harleySay(kind, text, fallback){
+async function harleySay(kind, text, fallback, persona){
   try {
     if ('speechSynthesis' in window) speechSynthesis.cancel();
-    const target = DATA[lang].code, k = kind + '|' + target + '|' + text;
+    const who = persona || (kind === 'clip' ? 'harley' : coachId());
+    const target = DATA[lang].code, k = who + '|' + kind + '|' + target + '|' + text;
     let url = haCache[k];
     if (!url){
-      const r = await fetch('/.netlify/functions/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ kind, text, target }) });
+      const r = await fetch('/.netlify/functions/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ kind, text, target, persona: who }) });
       if (!r.ok || !(r.headers.get('content-type') || '').includes('audio')) throw new Error('tts ' + r.status);
       url = haCache[k] = URL.createObjectURL(await r.blob());
     }
@@ -314,18 +315,22 @@ function coachRender(){
   if (!C.data || current()?.[0] !== C.key){ box.innerHTML = ''; return; }
   const left = coachLeft();
   let h = '';
-  if (C.state === 'loading') h = `<p class="a-wait">${pesc(t('c_wait'))}</p>`;
+  if (C.state === 'loading') h = `<p class="a-wait">${pesc(ct('c_wait'))}</p>`;
   else if (C.state === 'done'){
     const html = pesc(C.tip).replace(/«([^»]+)»/g, (m, w) => `<b data-csay="${w}">${w}</b>`);
-    h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.happy}</div><div><p class="ctext">${html}</p>
+    h = `<div class="ccard"><div class="dog" aria-hidden="true">${coachFace('happy')}</div><div><p class="ctext">${html}</p>
       <div class="cact"><button class="btn" data-creplay>${pesc(t('c_replay'))}</button></div>
       ${typeof C.remaining === 'number' ? `<p class="a-meta" style="margin:6px 0 0">${pesc(t('c_left',{n:C.remaining}))}</p>` : ''}</div></div>`;
   }
-  else if (C.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.puzzled}</div><div><p class="ctext">${pesc(t('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${pesc(t('getNotified'))}</button></div></div></div>`;
-  else if (C.state === 'error') h = `<p class="a-error">${pesc(C.err)}</p><button class="btn cbtn" data-coach>${pesc(t('c_btn'))}</button>`;
-  else h = `<button class="btn cbtn" data-coach>${pesc(t('c_btn'))} <small>${pesc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
+  else if (C.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${coachFace('puzzled')}</div><div><p class="ctext">${pesc(ct('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${pesc(t('getNotified'))}</button></div></div></div>`;
+  else if (C.state === 'error') h = `<p class="a-error">${pesc(C.err)}</p><div class="cpick"><button class="btn cbtn" data-coach>${pesc(ct('c_btn'))}</button>${coachSwapBtn()}</div>`;
+  else h = `<div class="cpick"><button class="btn cbtn" data-coach>${pesc(ct('c_btn'))} <small>${pesc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>${coachSwapBtn()}</div>`;
   box.innerHTML = h;
   box.classList.toggle('full', C.state !== 'idle' && C.state !== undefined);
+}
+function coachSwapBtn(){
+  const other = coachId() === 'lilou' ? 'harley' : 'lilou';
+  return `<button class="btn cswap" data-cswap="${other}" title="${pesc(t('c_switch',{name: other === 'lilou' ? 'Lilou' : 'Harley'}))}" aria-label="${pesc(t('c_switch',{name: other === 'lilou' ? 'Lilou' : 'Harley'}))}">${(other === 'lilou' ? LILOU : HARLEY).happy}</button>`;
 }
 async function coachAsk(){
   if (!C.data || C.state === 'loading') return;
@@ -336,7 +341,7 @@ async function coachAsk(){
   });
   try {
     const r = await fetch('/.netlify/functions/coach', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ device: DEVICE_ID, lang, ui, phrase: d.phrase, score: d.score, quick: d.quick, words }) });
+      body: JSON.stringify({ device: DEVICE_ID, lang, ui, phrase: d.phrase, score: d.score, quick: d.quick, words, persona: coachId() }) });
     const j = await r.json().catch(() => ({}));
     if (C.data !== d) return;
     if (r.status === 429 || j.error === 'limit'){ store.set('sir_coach_left', { day: today(), n: 0 }); C.state = 'limit'; track('limit'); coachRender(); return; }
@@ -348,6 +353,8 @@ async function coachAsk(){
   } catch(e){ if (C.data === d){ C.state = 'error'; C.err = t('c_fail') + ' (' + String(e.message || e).slice(0, 80) + ')'; coachRender(); } }
 }
 document.addEventListener('click', e => {
+  const sw = e.target.closest('[data-cswap]');
+  if (sw){ setCoach(sw.dataset.cswap); return; }
   if (e.target.closest('#coachBox [data-coach]')){ haUnlock(); return coachAsk(); }
   if (e.target.closest('#coachBox [data-creplay]')) return coachSpeak(C.tip);
   const w = e.target.closest('#coachBox [data-csay]');

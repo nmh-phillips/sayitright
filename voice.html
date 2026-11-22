@@ -21,7 +21,7 @@
 <body>
 <main>
   <h1>🐶 Pick Harley's voice</h1>
-  <p>Listen to each option, then set <b>HARLEY_VOICE</b> in Netlify to the letter you like (A, B, C or D) and redeploy. Default is A.</p>
+  <p>Listen to each option, then in Netlify set <b>HARLEY_VOICE</b> (A–D, default A) and <b>LILOU_VOICE</b> (L1–L4, default L1), and redeploy.</p>
   <select id="sample">
     <option value="en">Tip in English (learning Spanish)</option>
     <option value="es">Tip in Spanish (learning English)</option>
@@ -36,11 +36,12 @@ const SAMPLES = {
   es: { target:'en-GB', text:'¡Casi! En «three», pon la lengua entre los dientes y sopla suavemente. Si dices una t, suena como «tree», que significa árbol.' },
   fr: { target:'it-IT', text:'Presque ! Dans «gnocchi», le «gn» se prononce comme dans «montagne». Prenez votre temps sur le double c.' }
 };
-const V = [['A','Brian — youthful and cheerful'],['B','Brian — extra bouncy'],['C','Andrew — warmer'],['D','Ryan — friendly']];
+const V = [['A','Harley · Brian — youthful and cheerful'],['B','Harley · Brian — extra bouncy'],['C','Harley · Andrew — warmer'],['D','Harley · Ryan — friendly'],
+  ['L1','Lilou · Ava — bright and friendly'],['L2','Lilou · Emma — warm and cheerful'],['L3','Lilou · Ava — younger, extra playful'],['L4','Lilou · Emma — younger, extra playful']];
 const audio = new Audio(), cache = {};
 const $ = id => document.getElementById(id);
 $('list').innerHTML = V.map(([k,n]) => `<div class="v"><b>${k}</b><span>${n}</span><div class="row">
-  <button class="p" data-k="${k}" data-kind="tip">▶ Tip</button><button data-k="${k}" data-kind="yay">Woof woof!</button><button data-k="${k}" data-kind="aww">Awww</button></div></div>`).join('');
+  <button class="p" data-k="${k}" data-kind="tip">▶ Tip</button><button data-k="${k}" data-kind="yay">${k[0]==='L'?'Yip yip!':'Woof woof!'}</button><button data-k="${k}" data-kind="aww">Awww</button></div></div>`).join('');
 document.addEventListener('click', async e => {
   const b = e.target.closest('button[data-k]'); if (!b) return;
   $('err').textContent = '';

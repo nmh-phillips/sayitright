@@ -4,7 +4,7 @@
 //   word : one word/phrase in the language being learnt
 //   clip : 'woof' | 'yay' | 'aww' — little doggy sounds for the end-of-section summary
 // Returns audio/mpeg. Clips are cached so repeats cost nothing.
-// Uses AZURE_SPEECH_KEY / AZURE_SPEECH_REGION. HARLEY_VOICE picks the preset (default A).
+// Uses AZURE_SPEECH_KEY / AZURE_SPEECH_REGION. HARLEY_VOICE picks Harley's preset (default A); LILOU_VOICE picks Lilou's (L1-L4, default L1). Body may include persona: 'lilou'.
 // Budget: TTS_DAILY_CHARS across everyone (default 15000 ≈ 450k a month, inside Azure's free allowance), TTS_IP_LIMIT requests per connection (default 200).
 import { getStore } from '@netlify/blobs';
 import { createHash } from 'node:crypto';
@@ -13,8 +13,14 @@ const PRESETS = {
   A: { voice: 'en-US-BrianMultilingualNeural',  pitch: 6,  rate: 6  },  // youthful, cheerful
   B: { voice: 'en-US-BrianMultilingualNeural',  pitch: 14, rate: 10 },  // extra bouncy
   C: { voice: 'en-US-AndrewMultilingualNeural', pitch: 10, rate: 6  },  // warmer
-  D: { voice: 'en-US-RyanMultilingualNeural',   pitch: 10, rate: 8  }
+  D: { voice: 'en-US-RyanMultilingualNeural',   pitch: 10, rate: 8  },
+  // Lilou (Harley's little sister)
+  L1: { voice: 'en-US-AvaMultilingualNeural',  pitch: 10, rate: 6  },  // bright, friendly
+  L2: { voice: 'en-US-EmmaMultilingualNeural', pitch: 12, rate: 6  },  // warm, cheerful
+  L3: { voice: 'en-US-AvaMultilingualNeural',  pitch: 18, rate: 10 },  // younger, extra playful
+  L4: { voice: 'en-US-EmmaMultilingualNeural', pitch: 20, rate: 10 }
 };
+const LILOU_CLIPS = { woof: ['Yip yip!', 26, 10], yay: ['Yip yip yip!', 30, 10], aww: ['Awww…', 14, -16] };
 // [text, extra pitch %, extra rate %]
 const CLIPS = { woof: ['Woof woof!', 24, 10], yay: ['Woof woof woof!', 30, 10], aww: ['Awww…', 14, -16] };
 const pct = n => (n >= 0 ? '+' : '') + n + '%';
@@ -32,7 +38,9 @@ export default async (req, context) => {
   let b = {};
   try { b = await req.json(); } catch { return err('Bad JSON', 400); }
   const kind = ['tip', 'word', 'clip'].includes(b.kind) ? b.kind : null;
-  const preset = PRESETS[b.preset] || PRESETS[process.env.HARLEY_VOICE] || PRESETS.A;
+  const lilou = b.persona === 'lilou' || /^L\d$/.test(b.preset || '');
+  const preset = PRESETS[b.preset] || (lilou ? (PRESETS[process.env.LILOU_VOICE] || PRESETS.L1) : (PRESETS[process.env.HARLEY_VOICE] || PRESETS.A));
+  const clips = lilou ? LILOU_CLIPS : CLIPS;
   const target = LOCALE.test(b.target || '') ? b.target : 'en-GB';
   const text = String(b.text || '').replace(/[\u0000-\u001f]/g, ' ').trim();
   if (!kind || !text) return err('Bad request', 400);
@@ -42,15 +50,15 @@ export default async (req, context) => {
   const foreign = t => `<lang xml:lang="${target}">${seg(t, 0, -12)}</lang>`;
   let body;
   if (kind === 'clip') {
-    if (!CLIPS[text]) return err('Unknown clip', 400);
-    body = seg(...CLIPS[text]);
+    if (!clips[text]) return err('Unknown clip', 400);
+    body = seg(...clips[text]);
   } else if (kind === 'word') {
     if (text.length > 120) return err('Too long', 400);
     body = foreign(text);
   } else {
     if (text.length > 700) return err('Too long', 400);
     const parts = text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').split(/«([^»]+)»/);
-    body = seg(...CLIPS.woof) + '<break time="250ms"/>' + parts.map((p, i) => !p.trim() ? '' : i % 2 ? foreign(p) : seg(p)).join('');
+    body = seg(...clips.woof) + '<break time="250ms"/>' + parts.map((p, i) => !p.trim() ? '' : i % 2 ? foreign(p) : seg(p)).join('');
   }
   const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="${preset.voice}">${body}</voice></speak>`;
   const cacheKey = sha(ssml);

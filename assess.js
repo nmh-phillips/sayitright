@@ -390,10 +390,10 @@ function aCoachRender(){
   const r = A.result; if (AC.key !== r.date){ AC.key = r.date; AC.state = 'idle'; AC.tip = ''; }
   const v = store.get('sir_coach_left', null), left = (v && v.day === new Date().toISOString().slice(0,10)) ? v.n : null;
   let h = '';
-  if (AC.state === 'loading') h = `<p class="a-wait">${esc(t('c_wait'))}</p>`;
-  else if (AC.state === 'done') h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.happy}</div><div><p class="ctext">${esc(AC.tip).replace(/«([^»]+)»/g,(m,w)=>`<b data-acsay="${w}">${w}</b>`)}</p><div class="cact"><button class="btn" data-acreplay>${esc(t('c_replay'))}</button></div></div></div>`;
-  else if (AC.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${HARLEY.puzzled}</div><div><p class="ctext">${esc(t('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${esc(t('getNotified'))}</button></div></div></div>`;
-  else h = (AC.state === 'error' ? `<p class="a-error">${esc(AC.err)}</p>` : '') + `<button class="btn cbtn" data-acoach>${esc(t('c_btn'))} <small>${esc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>`;
+  if (AC.state === 'loading') h = `<p class="a-wait">${esc(ct('c_wait'))}</p>`;
+  else if (AC.state === 'done') h = `<div class="ccard"><div class="dog" aria-hidden="true">${coachFace('happy')}</div><div><p class="ctext">${esc(AC.tip).replace(/«([^»]+)»/g,(m,w)=>`<b data-acsay="${w}">${w}</b>`)}</p><div class="cact"><button class="btn" data-acreplay>${esc(t('c_replay'))}</button></div></div></div>`;
+  else if (AC.state === 'limit' || left === 0) h = `<div class="ccard"><div class="dog" aria-hidden="true">${coachFace('puzzled')}</div><div><p class="ctext">${esc(ct('c_used'))}</p><div class="cact"><button class="btn primary" data-prem>${esc(t('getNotified'))}</button></div></div></div>`;
+  else h = (AC.state === 'error' ? `<p class="a-error">${esc(AC.err)}</p>` : '') + `<div class="cpick"><button class="btn cbtn" data-acoach>${esc(ct('c_btn'))} <small>${esc(left === null ? t('c_free',{n:2}) : t('c_left',{n:left}))}</small></button>${coachSwapBtn()}</div>`;
   box.innerHTML = h;
 }
 function aCoachSpeak(text){ if (window.harleySay) harleySay('tip', text, () => { if (typeof coachSpeakBrowser === 'function') coachSpeakBrowser(text); }); }
@@ -405,7 +405,7 @@ async function aCoachAsk(){
     const res = await fetch('/.netlify/functions/coach', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
       mode:'passage', device: DEVICE_ID, lang, ui, phrase: ASSESS_PASSAGES[lang], score: r.score, quick: !!r.quick,
       accuracy: sub('a_sub_accuracy'), fluency: sub('a_sub_fluency'), completeness: sub('p_completeness'), wpm: Math.round(r.wpm || 0),
-      words: r.cw.map(w => ({ w: w.w, score: w.score, error: w.error, sounds: [] })) }) });
+      words: r.cw.map(w => ({ w: w.w, score: w.score, error: w.error, sounds: [] })), persona: coachId() }) });
     const j = await res.json().catch(() => ({}));
     if (res.status === 429 || j.error === 'limit'){ store.set('sir_coach_left', { day: new Date().toISOString().slice(0,10), n: 0 }); AC.state = 'limit'; track('limit'); aCoachRender(); return; }
     if (res.status === 503) throw new Error(t('c_off'));

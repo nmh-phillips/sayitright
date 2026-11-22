@@ -579,3 +579,16 @@ for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 const S={en:{q_label:'Quick check (less strict):'},es:{q_label:'Comprobación rápida (menos estricta):'},fr:{q_label:'Vérification rapide (moins stricte) :'},it:{q_label:'Verifica rapida (meno severa):'},de:{q_label:'Schnellprüfung (weniger streng):'},pt:{q_label:'Verificação rápida (menos rigorosa):'}};
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Lilou, Harley's little sister (coach option)
+(function(){
+const S={
+ en:{c_btn_lilou:'🎀 Lilou explains',c_wait_lilou:'Lilou is thinking… 🎀',c_used_lilou:"You've used today's free tips. Unlimited coaching from Lilou and Harley is coming with Premium.",c_switch:'Switch coach to {name}'},
+ es:{c_btn_lilou:'🎀 Lilou te lo explica',c_wait_lilou:'Lilou está pensando… 🎀',c_used_lilou:'Ya has usado los consejos gratis de hoy. Las explicaciones ilimitadas de Lilou y Harley llegarán con Premium.',c_switch:'Cambiar a {name}'},
+ fr:{c_btn_lilou:'🎀 Lilou vous explique',c_wait_lilou:'Lilou réfléchit… 🎀',c_used_lilou:"Vous avez utilisé les conseils gratuits du jour. Le coaching illimité de Lilou et Harley arrive avec Premium.",c_switch:'Passer à {name}'},
+ it:{c_btn_lilou:'🎀 Lilou ti spiega',c_wait_lilou:'Lilou sta pensando… 🎀',c_used_lilou:'Hai usato i consigli gratuiti di oggi. Il coaching illimitato di Lilou e Harley arriva con Premium.',c_switch:'Passa a {name}'},
+ de:{c_btn_lilou:'🎀 Lilou erklärt',c_wait_lilou:'Lilou denkt nach… 🎀',c_used_lilou:'Du hast die kostenlosen Tipps für heute verbraucht. Unbegrenztes Coaching von Lilou und Harley kommt mit Premium.',c_switch:'Zu {name} wechseln'},
+ pt:{c_btn_lilou:'🎀 A Lilou explica',c_wait_lilou:'A Lilou está a pensar… 🎀',c_used_lilou:'Já usou as dicas grátis de hoje. O coaching ilimitado da Lilou e do Harley chega com o Premium.',c_switch:'Mudar para {name}'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();
