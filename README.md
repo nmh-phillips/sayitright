@@ -51,3 +51,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - In Supabase → Authentication → Emails, the "Magic link" template must include `{{ .Token }}` so people get a code. Set custom SMTP (e.g. Google Workspace) because Supabase's built-in email sender is heavily rate-limited.
 - `delete-account.mjs` lets people delete their account (and saved progress) from the sign-in panel. The stats page shows the number of accounts.
 - Library: `vendor/supabase-2.119.2.min.js` (MIT), loaded only when someone signs in or is signed in.
+
+## Free library: 40 phrases per topic
+- English (UK, US) and Spanish (Spain, Latin America) now have 40 phrases in each free topic (Basics, Café & restaurant, Travel, Tricky sounds) and in the Past tense pack. The second 20 are appended at the end of `phrases.js`.
+- Meanings for the new English Basics/Café/Travel phrases are in all 15 other interface languages (`SIR_MEANINGS`, appended to `i18n.js` and `i18n/*.js`).
+- French, Italian, German, Portuguese and Dutch still have 20 per topic (to do).
+- Premium copy now says "five times the free library".

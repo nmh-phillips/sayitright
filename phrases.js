@@ -238,3 +238,1658 @@ window.SIR_DATA = {
     }}
 
 };
+
+// More free phrases: 40 per topic (second 20 added Nov 2026)
+(function(){
+const add={
+"en": {
+"Basics": [
+[
+"See you tomorrow",
+"Saying goodbye"
+],
+[
+"How's it going?",
+"Casual greeting"
+],
+[
+"I'm fine, thanks. And you?",
+"Answering a greeting"
+],
+[
+"Pleased to meet you too",
+"Replying politely"
+],
+[
+"Sorry I'm late",
+"Apologising"
+],
+[
+"No problem at all",
+"Reassuring someone"
+],
+[
+"Could you write it down, please?",
+"Asking for help"
+],
+[
+"How do you spell that?",
+"Checking spelling"
+],
+[
+"I live with my family",
+"Talking about home"
+],
+[
+"I work in an office",
+"Talking about work"
+],
+[
+"I'm here on holiday",
+"Explaining your visit"
+],
+[
+"What do you do for a living?",
+"Asking about work"
+],
+[
+"Can I ask you a question?",
+"Asking politely"
+],
+[
+"I don't know",
+"Not knowing"
+],
+[
+"That's a good idea",
+"Agreeing"
+],
+[
+"I'm not sure",
+"Being unsure"
+],
+[
+"Just a moment, please",
+"Asking someone to wait"
+],
+[
+"What time is it?",
+"Asking the time"
+],
+[
+"Happy birthday!",
+"Celebrating"
+],
+[
+"Take care",
+"Saying goodbye"
+]
+],
+"Café & restaurant": [
+[
+"Is this table free?",
+"Finding a table"
+],
+[
+"Could we sit outside?",
+"Choosing a table"
+],
+[
+"We're ready to order",
+"Ordering"
+],
+[
+"I'd like the soup of the day",
+"Ordering"
+],
+[
+"What's in this dish?",
+"Asking about food"
+],
+[
+"Is it very spicy?",
+"Asking about food"
+],
+[
+"Could I have it without onions?",
+"Special requests"
+],
+[
+"I'm allergic to peanuts",
+"Allergies"
+],
+[
+"Could I have a black coffee?",
+"Ordering coffee"
+],
+[
+"A cappuccino with oat milk, please",
+"Ordering coffee"
+],
+[
+"Sparkling water, please",
+"Ordering drinks"
+],
+[
+"Could we have the dessert menu?",
+"Asking for dessert"
+],
+[
+"Could we split the bill?",
+"Paying"
+],
+[
+"Keep the change",
+"Tipping"
+],
+[
+"Excuse me, this is cold",
+"Complaining politely"
+],
+[
+"Could I have a clean fork, please?",
+"Asking for something"
+],
+[
+"Where are the toilets?",
+"Finding the toilets"
+],
+[
+"Everything was lovely, thank you",
+"Thanking the staff"
+],
+[
+"We'd like to book a table for Saturday",
+"Booking a table"
+],
+[
+"Do you have a children's menu?",
+"Eating with children"
+]
+],
+"Travel": [
+[
+"A single ticket, please",
+"Buying a ticket"
+],
+[
+"Does this train go to the airport?",
+"Checking the route"
+],
+[
+"Is this seat taken?",
+"Finding a seat"
+],
+[
+"The train is delayed",
+"Travel problems"
+],
+[
+"I've missed my connection",
+"Travel problems"
+],
+[
+"Where can I leave my luggage?",
+"Luggage"
+],
+[
+"My suitcase hasn't arrived",
+"At the airport"
+],
+[
+"Where is passport control?",
+"At the airport"
+],
+[
+"I'm here for two weeks",
+"At the border"
+],
+[
+"Can I have a window seat?",
+"Checking in"
+],
+[
+"How long does it take to get there?",
+"Asking about time"
+],
+[
+"Could you show me on the map?",
+"Asking directions"
+],
+[
+"It's on the left, next to the bank",
+"Giving directions"
+],
+[
+"Can I walk there?",
+"Asking directions"
+],
+[
+"Could you call me a taxi?",
+"Getting a taxi"
+],
+[
+"Please stop here",
+"In a taxi"
+],
+[
+"Is breakfast included?",
+"At the hotel"
+],
+[
+"The air conditioning isn't working",
+"Hotel problems"
+],
+[
+"Could I have the Wi-Fi password?",
+"At the hotel"
+],
+[
+"I'd like to hire a car",
+"Car hire"
+]
+],
+"Tricky sounds": [
+[
+"Thirty-three thirsty thinkers",
+"TH (soft)"
+],
+[
+"Weather, feather and leather",
+"TH (buzzing)"
+],
+[
+"Mother and father gather together",
+"TH (buzzing)"
+],
+[
+"Vicky's van is very wet",
+"V vs W"
+],
+[
+"Will we leave on Wednesday?",
+"W (and the silent D in Wednesday)"
+],
+[
+"Laura rarely reads really long letters",
+"L and R"
+],
+[
+"Ship, sheep, chip, cheap",
+"Short and long I"
+],
+[
+"Look at the full moon",
+"Short and long OO"
+],
+[
+"Hat, hut, hot, heart",
+"Four different vowels"
+],
+[
+"His house has a huge hall",
+"H at the start of words"
+],
+[
+"His house is half an hour away",
+"H and the silent H in hour"
+],
+[
+"Walked, played and wanted",
+"-ed endings (t, d, id)"
+],
+[
+"Choose the shoes",
+"CH vs SH"
+],
+[
+"Wednesday, comfortable and vegetable",
+"Silent letters"
+],
+[
+"Photograph, photographer, photographic",
+"Word stress moves"
+],
+[
+"Thorough, through, though, thought",
+"Four ways to say -ough"
+],
+[
+"Yes, yellow, year",
+"Y sound"
+],
+[
+"George enjoyed the juice",
+"J sound"
+],
+[
+"Ninety-nine nice knights",
+"N and the silent K"
+],
+[
+"Sixty-six sticky snacks",
+"S and X clusters"
+]
+],
+"Past tense": [
+[
+"I woke up early this morning",
+"wake → woke"
+],
+[
+"We drove to the coast",
+"drive → drove"
+],
+[
+"She wrote me a long email",
+"write → wrote"
+],
+[
+"He took the last bus home",
+"take → took"
+],
+[
+"I met my wife in 2015",
+"meet → met"
+],
+[
+"They left before midnight",
+"leave → left"
+],
+[
+"I paid for the tickets",
+"pay → paid"
+],
+[
+"We ate at a lovely restaurant",
+"eat → ate"
+],
+[
+"I made a mistake",
+"make → made"
+],
+[
+"She found her keys under the sofa",
+"find → found"
+],
+[
+"He gave me a present",
+"give → gave"
+],
+[
+"I felt much better after a rest",
+"feel → felt"
+],
+[
+"We spoke for hours",
+"speak → spoke"
+],
+[
+"I heard a strange noise",
+"hear → heard"
+],
+[
+"They won the match",
+"win → won"
+],
+[
+"I sent you a message",
+"send → sent"
+],
+[
+"She chose the red dress",
+"choose → chose"
+],
+[
+"We spent a week in Italy",
+"spend → spent"
+],
+[
+"I couldn't find the address",
+"can → couldn't"
+],
+[
+"Were you at home yesterday?",
+"was / were in questions"
+]
+]
+},
+"enus": {
+"Basics": [
+[
+"See you tomorrow",
+"Saying goodbye"
+],
+[
+"How's it going?",
+"Casual greeting"
+],
+[
+"I'm fine, thanks. And you?",
+"Answering a greeting"
+],
+[
+"Pleased to meet you too",
+"Replying politely"
+],
+[
+"Sorry I'm late",
+"Apologizing"
+],
+[
+"No problem at all",
+"Reassuring someone"
+],
+[
+"Could you write it down, please?",
+"Asking for help"
+],
+[
+"How do you spell that?",
+"Checking spelling"
+],
+[
+"I live with my family",
+"Talking about home"
+],
+[
+"I work in an office",
+"Talking about work"
+],
+[
+"I'm here on vacation",
+"Explaining your visit"
+],
+[
+"What do you do for a living?",
+"Asking about work"
+],
+[
+"Can I ask you a question?",
+"Asking politely"
+],
+[
+"I don't know",
+"Not knowing"
+],
+[
+"That's a good idea",
+"Agreeing"
+],
+[
+"I'm not sure",
+"Being unsure"
+],
+[
+"Just a moment, please",
+"Asking someone to wait"
+],
+[
+"What time is it?",
+"Asking the time"
+],
+[
+"Happy birthday!",
+"Celebrating"
+],
+[
+"Take care",
+"Saying goodbye"
+]
+],
+"Café & restaurant": [
+[
+"Is this table taken?",
+"Finding a table"
+],
+[
+"Could we sit outside?",
+"Choosing a table"
+],
+[
+"We're ready to order",
+"Ordering"
+],
+[
+"I'd like the soup of the day",
+"Ordering"
+],
+[
+"What's in this dish?",
+"Asking about food"
+],
+[
+"Is it very spicy?",
+"Asking about food"
+],
+[
+"Can I get it without onions?",
+"Special requests"
+],
+[
+"I'm allergic to peanuts",
+"Allergies"
+],
+[
+"Could I get a black coffee?",
+"Ordering coffee"
+],
+[
+"A cappuccino with oat milk, please",
+"Ordering coffee"
+],
+[
+"Sparkling water, please",
+"Ordering drinks"
+],
+[
+"Could we see the dessert menu?",
+"Asking for dessert"
+],
+[
+"Could we split the check?",
+"Paying"
+],
+[
+"Keep the change",
+"Tipping"
+],
+[
+"Excuse me, this is cold",
+"Complaining politely"
+],
+[
+"Could I get a clean fork, please?",
+"Asking for something"
+],
+[
+"Where's the restroom?",
+"Finding the restroom"
+],
+[
+"Everything was great, thank you",
+"Thanking the staff"
+],
+[
+"We'd like to make a reservation for Saturday",
+"Booking a table"
+],
+[
+"Do you have a kids' menu?",
+"Eating with children"
+]
+],
+"Travel": [
+[
+"A one-way ticket, please",
+"Buying a ticket"
+],
+[
+"Does this train go to the airport?",
+"Checking the route"
+],
+[
+"Is this seat taken?",
+"Finding a seat"
+],
+[
+"The train is delayed",
+"Travel problems"
+],
+[
+"I missed my connection",
+"Travel problems"
+],
+[
+"Where can I store my bags?",
+"Luggage"
+],
+[
+"My suitcase didn't arrive",
+"At the airport"
+],
+[
+"Where is immigration?",
+"At the airport"
+],
+[
+"I'm here for two weeks",
+"At the border"
+],
+[
+"Can I get a window seat?",
+"Checking in"
+],
+[
+"How long does it take to get there?",
+"Asking about time"
+],
+[
+"Could you show me on the map?",
+"Asking directions"
+],
+[
+"It's on the left, next to the bank",
+"Giving directions"
+],
+[
+"Can I walk there?",
+"Asking directions"
+],
+[
+"Could you call me a cab?",
+"Getting a cab"
+],
+[
+"You can drop me off here",
+"In a cab"
+],
+[
+"Is breakfast included?",
+"At the hotel"
+],
+[
+"The air conditioning isn't working",
+"Hotel problems"
+],
+[
+"What's the Wi-Fi password?",
+"At the hotel"
+],
+[
+"I'd like to rent a car",
+"Renting a car"
+]
+],
+"Tricky sounds": [
+[
+"Thirty-three thirsty thinkers",
+"TH (soft)"
+],
+[
+"Weather, feather and leather",
+"TH (buzzing)"
+],
+[
+"Mother and father gather together",
+"TH (buzzing)"
+],
+[
+"Vicky's van is very wet",
+"V vs W"
+],
+[
+"Will we leave on Wednesday?",
+"W (and the silent D in Wednesday)"
+],
+[
+"Laura rarely reads really long letters",
+"L and R"
+],
+[
+"Ship, sheep, chip, cheap",
+"Short and long I"
+],
+[
+"Look at the full moon",
+"Short and long OO"
+],
+[
+"Hat, hut, hot, heart",
+"Four different vowels"
+],
+[
+"His house has a huge hall",
+"H at the start of words"
+],
+[
+"His house is half an hour away",
+"H and the silent H in hour"
+],
+[
+"Walked, played and wanted",
+"-ed endings (t, d, id)"
+],
+[
+"Choose the shoes",
+"CH vs SH"
+],
+[
+"Wednesday, comfortable and vegetable",
+"Silent letters"
+],
+[
+"Photograph, photographer, photographic",
+"Word stress moves"
+],
+[
+"Thorough, through, though, thought",
+"Four ways to say -ough"
+],
+[
+"Yes, yellow, year",
+"Y sound"
+],
+[
+"George enjoyed the juice",
+"J sound"
+],
+[
+"Ninety-nine nice knights",
+"N and the silent K"
+],
+[
+"Sixty-six sticky snacks",
+"S and X clusters"
+]
+],
+"Past tense": [
+[
+"I woke up early this morning",
+"wake → woke"
+],
+[
+"We drove to the coast",
+"drive → drove"
+],
+[
+"She wrote me a long email",
+"write → wrote"
+],
+[
+"He took the last bus home",
+"take → took"
+],
+[
+"I met my wife in 2015",
+"meet → met"
+],
+[
+"They left before midnight",
+"leave → left"
+],
+[
+"I paid for the tickets",
+"pay → paid"
+],
+[
+"We ate at a lovely restaurant",
+"eat → ate"
+],
+[
+"I made a mistake",
+"make → made"
+],
+[
+"She found her keys under the sofa",
+"find → found"
+],
+[
+"He gave me a present",
+"give → gave"
+],
+[
+"I felt much better after a rest",
+"feel → felt"
+],
+[
+"We spoke for hours",
+"speak → spoke"
+],
+[
+"I heard a strange noise",
+"hear → heard"
+],
+[
+"They won the match",
+"win → won"
+],
+[
+"I sent you a message",
+"send → sent"
+],
+[
+"She chose the red dress",
+"choose → chose"
+],
+[
+"We spent a week in Italy",
+"spend → spent"
+],
+[
+"I couldn't find the address",
+"can → couldn't"
+],
+[
+"Were you at home yesterday?",
+"was / were in questions"
+]
+]
+},
+"es": {
+"Basics": [
+[
+"Hasta mañana",
+"See you tomorrow"
+],
+[
+"¿Qué tal te va?",
+"How's it going?"
+],
+[
+"Bien, gracias. ¿Y tú?",
+"Fine, thanks. And you?"
+],
+[
+"Encantado de conocerte",
+"Pleased to meet you"
+],
+[
+"Perdón por llegar tarde",
+"Sorry I'm late"
+],
+[
+"No pasa nada",
+"No problem"
+],
+[
+"¿Me lo puede escribir, por favor?",
+"Could you write it down, please?"
+],
+[
+"¿Cómo se escribe?",
+"How do you spell it?"
+],
+[
+"Vivo con mi familia",
+"I live with my family"
+],
+[
+"Trabajo en una oficina",
+"I work in an office"
+],
+[
+"Estoy aquí de vacaciones",
+"I'm here on holiday"
+],
+[
+"¿A qué te dedicas?",
+"What do you do for a living?"
+],
+[
+"¿Le puedo hacer una pregunta?",
+"Can I ask you a question?"
+],
+[
+"No lo sé",
+"I don't know"
+],
+[
+"Es una buena idea",
+"That's a good idea"
+],
+[
+"No estoy seguro",
+"I'm not sure"
+],
+[
+"Un momento, por favor",
+"Just a moment, please"
+],
+[
+"¿Qué hora es?",
+"What time is it?"
+],
+[
+"¡Feliz cumpleaños!",
+"Happy birthday!"
+],
+[
+"Cuídate",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"¿Está libre esta mesa?",
+"Is this table free?"
+],
+[
+"¿Podemos sentarnos en la terraza?",
+"Can we sit outside?"
+],
+[
+"Ya sabemos lo que queremos",
+"We're ready to order"
+],
+[
+"Para mí, el menú del día",
+"I'll have the set menu"
+],
+[
+"¿Qué lleva este plato?",
+"What's in this dish?"
+],
+[
+"¿Pica mucho?",
+"Is it very spicy?"
+],
+[
+"¿Me lo puede poner sin cebolla?",
+"Could I have it without onion?"
+],
+[
+"Soy alérgico a los cacahuetes",
+"I'm allergic to peanuts"
+],
+[
+"Un café solo, por favor",
+"A black coffee, please"
+],
+[
+"Un capuchino con leche de avena",
+"A cappuccino with oat milk"
+],
+[
+"Agua con gas, por favor",
+"Sparkling water, please"
+],
+[
+"¿Qué tienen de postre?",
+"What do you have for dessert?"
+],
+[
+"¿Podemos pagar por separado?",
+"Can we pay separately?"
+],
+[
+"Quédese con el cambio",
+"Keep the change"
+],
+[
+"Perdone, esto está frío",
+"Excuse me, this is cold"
+],
+[
+"¿Me trae otro tenedor, por favor?",
+"Could you bring me another fork?"
+],
+[
+"¿Dónde están los servicios?",
+"Where are the toilets?"
+],
+[
+"Todo estaba buenísimo, gracias",
+"Everything was delicious, thanks"
+],
+[
+"Quería reservar una mesa para el sábado",
+"I'd like to book a table for Saturday"
+],
+[
+"¿Tienen menú infantil?",
+"Do you have a children's menu?"
+]
+],
+"Travel": [
+[
+"Un billete de ida, por favor",
+"A single ticket, please"
+],
+[
+"¿Este tren va al aeropuerto?",
+"Does this train go to the airport?"
+],
+[
+"¿Está ocupado este asiento?",
+"Is this seat taken?"
+],
+[
+"El tren lleva retraso",
+"The train is delayed"
+],
+[
+"He perdido el enlace",
+"I've missed my connection"
+],
+[
+"¿Dónde puedo dejar el equipaje?",
+"Where can I leave my luggage?"
+],
+[
+"Mi maleta no ha llegado",
+"My suitcase hasn't arrived"
+],
+[
+"¿Dónde está el control de pasaportes?",
+"Where is passport control?"
+],
+[
+"Estoy aquí dos semanas",
+"I'm here for two weeks"
+],
+[
+"¿Me da un asiento de ventanilla?",
+"Can I have a window seat?"
+],
+[
+"¿Cuánto se tarda en llegar?",
+"How long does it take to get there?"
+],
+[
+"¿Me lo puede enseñar en el mapa?",
+"Could you show me on the map?"
+],
+[
+"Está a la izquierda, al lado del banco",
+"It's on the left, next to the bank"
+],
+[
+"¿Se puede ir andando?",
+"Can I walk there?"
+],
+[
+"¿Me puede pedir un taxi?",
+"Could you call me a taxi?"
+],
+[
+"Pare aquí, por favor",
+"Stop here, please"
+],
+[
+"¿El desayuno está incluido?",
+"Is breakfast included?"
+],
+[
+"El aire acondicionado no funciona",
+"The air conditioning isn't working"
+],
+[
+"¿Cuál es la contraseña del wifi?",
+"What's the Wi-Fi password?"
+],
+[
+"Quería alquilar un coche",
+"I'd like to hire a car"
+]
+],
+"Tricky sounds": [
+[
+"Rápido ruedan los carros",
+"Fast roll the carts (rolled R)"
+],
+[
+"Pablito clavó un clavito",
+"Little Pablo nailed a little nail (PL, CL)"
+],
+[
+"Caro, carro, pero, perro",
+"Expensive, cart, but, dog (R vs RR)"
+],
+[
+"Juan juega con el jabón",
+"Juan plays with the soap (J)"
+],
+[
+"La llave está en la silla",
+"The key is on the chair (LL)"
+],
+[
+"La niña sueña con el otoño",
+"The girl dreams of autumn (Ñ)"
+],
+[
+"Zaragoza y Cáceres",
+"Zaragoza and Cáceres (Z and C, like TH)"
+],
+[
+"Cecilia cocina cerezas",
+"Cecilia cooks cherries (C before E and I)"
+],
+[
+"Vino Víctor a ver a Bárbara",
+"Víctor came to see Bárbara (B and V sound the same)"
+],
+[
+"Gato, gota, guiso",
+"Cat, drop, stew (hard G)"
+],
+[
+"Dedo, nada, cada día",
+"Finger, nothing, every day (soft D)"
+],
+[
+"Hola, hermano, ¿hay helado?",
+"Hello brother, is there ice cream? (silent H)"
+],
+[
+"Ocho chicos chistosos",
+"Eight funny boys (CH)"
+],
+[
+"Un tigre, dos tigres, tres tigres",
+"One tiger, two tigers, three tigers (TR)"
+],
+[
+"La lluvia en Sevilla es una maravilla",
+"The rain in Seville is wonderful (LL, V)"
+],
+[
+"El examen es en Extremadura",
+"The exam is in Extremadura (X)"
+],
+[
+"Agua, guante, pingüino",
+"Water, glove, penguin (GU and GÜ)"
+],
+[
+"Me gusta el arroz con leche",
+"I like rice pudding (rolled R, Z)"
+],
+[
+"Aeropuerto, euro, Europa",
+"Airport, euro, Europe (vowel pairs)"
+],
+[
+"Verdad, salud y libertad",
+"Truth, health and freedom (soft final D)"
+]
+],
+"Past tense": [
+[
+"Me desperté temprano esta mañana",
+"despertarse → me desperté (I woke up)"
+],
+[
+"Fuimos en coche a la costa",
+"ir → fuimos (we went)"
+],
+[
+"Me escribió un correo largo",
+"escribir → escribió (she wrote)"
+],
+[
+"Cogió el último autobús",
+"coger → cogió (he took)"
+],
+[
+"Conocí a mi mujer en 2015",
+"conocer → conocí (I met)"
+],
+[
+"Se fueron antes de medianoche",
+"irse → se fueron (they left)"
+],
+[
+"Pagué las entradas",
+"pagar → pagué (I paid)"
+],
+[
+"Comimos en un restaurante precioso",
+"comer → comimos (we ate)"
+],
+[
+"Cometí un error",
+"cometer → cometí (I made)"
+],
+[
+"Encontró las llaves debajo del sofá",
+"encontrar → encontró (she found)"
+],
+[
+"Me dio un regalo",
+"dar → dio (he gave)"
+],
+[
+"Me sentí mucho mejor después de descansar",
+"sentirse → me sentí (I felt)"
+],
+[
+"Hablamos durante horas",
+"hablar → hablamos (we talked)"
+],
+[
+"Oí un ruido raro",
+"oír → oí (I heard)"
+],
+[
+"Ganaron el partido",
+"ganar → ganaron (they won)"
+],
+[
+"Te mandé un mensaje",
+"mandar → mandé (I sent)"
+],
+[
+"Eligió el vestido rojo",
+"elegir → eligió (she chose)"
+],
+[
+"Pasamos una semana en Italia",
+"pasar → pasamos (we spent)"
+],
+[
+"No pude encontrar la dirección",
+"poder → no pude (I couldn't)"
+],
+[
+"¿Estuviste en casa ayer?",
+"estar → estuviste (were you)"
+]
+]
+},
+"esmx": {
+"Basics": [
+[
+"Hasta mañana",
+"See you tomorrow"
+],
+[
+"¿Cómo te va?",
+"How's it going?"
+],
+[
+"Bien, gracias. ¿Y tú?",
+"Fine, thanks. And you?"
+],
+[
+"Encantado de conocerte",
+"Pleased to meet you"
+],
+[
+"Perdón por llegar tarde",
+"Sorry I'm late"
+],
+[
+"No hay problema",
+"No problem"
+],
+[
+"¿Me lo puede escribir, por favor?",
+"Could you write it down, please?"
+],
+[
+"¿Cómo se escribe?",
+"How do you spell it?"
+],
+[
+"Vivo con mi familia",
+"I live with my family"
+],
+[
+"Trabajo en una oficina",
+"I work in an office"
+],
+[
+"Estoy aquí de vacaciones",
+"I'm here on holiday"
+],
+[
+"¿A qué te dedicas?",
+"What do you do for a living?"
+],
+[
+"¿Le puedo hacer una pregunta?",
+"Can I ask you a question?"
+],
+[
+"No sé",
+"I don't know"
+],
+[
+"Es una buena idea",
+"That's a good idea"
+],
+[
+"No estoy seguro",
+"I'm not sure"
+],
+[
+"Un momento, por favor",
+"Just a moment, please"
+],
+[
+"¿Qué hora es?",
+"What time is it?"
+],
+[
+"¡Feliz cumpleaños!",
+"Happy birthday!"
+],
+[
+"Cuídate",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"¿Está libre esta mesa?",
+"Is this table free?"
+],
+[
+"¿Nos podemos sentar afuera?",
+"Can we sit outside?"
+],
+[
+"Ya estamos listos para ordenar",
+"We're ready to order"
+],
+[
+"Para mí, la comida corrida",
+"I'll have the set lunch"
+],
+[
+"¿Qué trae este platillo?",
+"What's in this dish?"
+],
+[
+"¿Pica mucho?",
+"Is it very spicy?"
+],
+[
+"¿Me lo puede dar sin cebolla?",
+"Could I have it without onion?"
+],
+[
+"Soy alérgico a los cacahuates",
+"I'm allergic to peanuts"
+],
+[
+"Un café americano, por favor",
+"An americano, please"
+],
+[
+"Un capuchino con leche de avena",
+"A cappuccino with oat milk"
+],
+[
+"Agua mineral, por favor",
+"Sparkling water, please"
+],
+[
+"¿Qué tienen de postre?",
+"What do you have for dessert?"
+],
+[
+"¿Podemos pagar por separado?",
+"Can we pay separately?"
+],
+[
+"Quédese con el cambio",
+"Keep the change"
+],
+[
+"Disculpe, esto está frío",
+"Excuse me, this is cold"
+],
+[
+"¿Me trae otro tenedor, por favor?",
+"Could you bring me another fork?"
+],
+[
+"¿Dónde están los baños?",
+"Where are the restrooms?"
+],
+[
+"Todo estuvo delicioso, gracias",
+"Everything was delicious, thanks"
+],
+[
+"Quisiera reservar una mesa para el sábado",
+"I'd like to book a table for Saturday"
+],
+[
+"¿Tienen menú para niños?",
+"Do you have a kids' menu?"
+]
+],
+"Travel": [
+[
+"Un boleto sencillo, por favor",
+"A one-way ticket, please"
+],
+[
+"¿Este camión va al aeropuerto?",
+"Does this bus go to the airport?"
+],
+[
+"¿Está ocupado este asiento?",
+"Is this seat taken?"
+],
+[
+"El vuelo viene retrasado",
+"The flight is delayed"
+],
+[
+"Perdí mi conexión",
+"I missed my connection"
+],
+[
+"¿Dónde puedo dejar mis maletas?",
+"Where can I leave my bags?"
+],
+[
+"Mi maleta no llegó",
+"My suitcase didn't arrive"
+],
+[
+"¿Dónde está migración?",
+"Where is immigration?"
+],
+[
+"Voy a estar aquí dos semanas",
+"I'll be here for two weeks"
+],
+[
+"¿Me da un asiento de ventanilla?",
+"Can I have a window seat?"
+],
+[
+"¿Cuánto tiempo se hace para llegar?",
+"How long does it take to get there?"
+],
+[
+"¿Me lo puede mostrar en el mapa?",
+"Could you show me on the map?"
+],
+[
+"Está a la izquierda, junto al banco",
+"It's on the left, next to the bank"
+],
+[
+"¿Se puede ir caminando?",
+"Can I walk there?"
+],
+[
+"¿Me puede pedir un taxi?",
+"Could you call me a taxi?"
+],
+[
+"Aquí me bajo, por favor",
+"I'll get out here, please"
+],
+[
+"¿El desayuno está incluido?",
+"Is breakfast included?"
+],
+[
+"El aire acondicionado no sirve",
+"The air conditioning doesn't work"
+],
+[
+"¿Cuál es la contraseña del wifi?",
+"What's the Wi-Fi password?"
+],
+[
+"Quisiera rentar un carro",
+"I'd like to rent a car"
+]
+],
+"Tricky sounds": [
+[
+"Rápido ruedan los carros",
+"Fast roll the carts (rolled R)"
+],
+[
+"Pablito clavó un clavito",
+"Little Pablo nailed a little nail (PL, CL)"
+],
+[
+"Caro, carro, pero, perro",
+"Expensive, cart, but, dog (R vs RR)"
+],
+[
+"Juan juega con el jabón",
+"Juan plays with the soap (J)"
+],
+[
+"La llave está en la silla",
+"The key is on the chair (LL)"
+],
+[
+"La niña sueña con el otoño",
+"The girl dreams of autumn (Ñ)"
+],
+[
+"Zapatos en Zacatecas",
+"Shoes in Zacatecas (Z sounds like S)"
+],
+[
+"Cecilia cocina cerezas",
+"Cecilia cooks cherries (C before E and I)"
+],
+[
+"Vino Víctor a ver a Bárbara",
+"Víctor came to see Bárbara (B and V sound the same)"
+],
+[
+"Gato, gota, guiso",
+"Cat, drop, stew (hard G)"
+],
+[
+"Dedo, nada, cada día",
+"Finger, nothing, every day (soft D)"
+],
+[
+"Hola, hermano, ¿hay helado?",
+"Hello brother, is there ice cream? (silent H)"
+],
+[
+"Ocho chicos chistosos",
+"Eight funny boys (CH)"
+],
+[
+"Un tigre, dos tigres, tres tigres",
+"One tiger, two tigers, three tigers (TR)"
+],
+[
+"La lluvia en Yucatán es una maravilla",
+"The rain in Yucatán is wonderful (LL, Y)"
+],
+[
+"El examen es en Texas y México",
+"The exam is in Texas and Mexico (X)"
+],
+[
+"Agua, guante, pingüino",
+"Water, glove, penguin (GU and GÜ)"
+],
+[
+"Me gusta el arroz con leche",
+"I like rice pudding (rolled R, Z)"
+],
+[
+"Aeropuerto, euro, Europa",
+"Airport, euro, Europe (vowel pairs)"
+],
+[
+"Verdad, salud y libertad",
+"Truth, health and freedom (soft final D)"
+]
+],
+"Past tense": [
+[
+"Me desperté temprano esta mañana",
+"despertarse → me desperté (I woke up)"
+],
+[
+"Fuimos en carro a la costa",
+"ir → fuimos (we went)"
+],
+[
+"Me escribió un correo largo",
+"escribir → escribió (she wrote)"
+],
+[
+"Tomó el último camión",
+"tomar → tomó (he took)"
+],
+[
+"Conocí a mi esposa en 2015",
+"conocer → conocí (I met)"
+],
+[
+"Se fueron antes de medianoche",
+"irse → se fueron (they left)"
+],
+[
+"Pagué los boletos",
+"pagar → pagué (I paid)"
+],
+[
+"Comimos en un restaurante muy bonito",
+"comer → comimos (we ate)"
+],
+[
+"Cometí un error",
+"cometer → cometí (I made)"
+],
+[
+"Encontró las llaves debajo del sofá",
+"encontrar → encontró (she found)"
+],
+[
+"Me dio un regalo",
+"dar → dio (he gave)"
+],
+[
+"Me sentí mucho mejor después de descansar",
+"sentirse → me sentí (I felt)"
+],
+[
+"Hablamos durante horas",
+"hablar → hablamos (we talked)"
+],
+[
+"Oí un ruido raro",
+"oír → oí (I heard)"
+],
+[
+"Ganaron el partido",
+"ganar → ganaron (they won)"
+],
+[
+"Te mandé un mensaje",
+"mandar → mandé (I sent)"
+],
+[
+"Eligió el vestido rojo",
+"elegir → eligió (she chose)"
+],
+[
+"Pasamos una semana en Italia",
+"pasar → pasamos (we spent)"
+],
+[
+"No pude encontrar la dirección",
+"poder → no pude (I couldn't)"
+],
+[
+"¿Estuviste en casa ayer?",
+"estar → estuviste (were you)"
+]
+]
+}
+};
+for (const l in add) for (const s in add[l]) window.SIR_DATA[l].sets[s].push(...add[l][s]);
+})();
