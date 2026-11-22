@@ -20,8 +20,7 @@
 <meta name="apple-mobile-web-app-title" content="Harley Says">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22280%22%20height%3D%22280%22%20rx%3D%2264%22%20fill%3D%22%233346C8%22/%3E%3Cpath%20d%3D%22M92%20228%20l-26%2040%20l52%20-24%20z%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22212%22%20cy%3D%22148%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22184%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22169%22%20cy%3D%22207%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%22207%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22184%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%2288%22%20cy%3D%22148%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22112%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%2289%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22169%22%20cy%3D%2289%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22112%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22148%22%20r%3D%2270%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22125%22%20cy%3D%22138%22%20r%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22138%22%20r%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22%23fff%22/%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22163%22%20rx%3D%2213%22%20ry%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Cpath%20d%3D%22M143%20180%20q7%2016%2014%200%20z%22%20fill%3D%22%23F07C92%22/%3E%3Cpath%20d%3D%22M150%20171%20q-10%2014%20-22%204%20M150%20171%20q10%2014%2022%204%22%20fill%3D%22none%22%20stroke%3D%22%231C2563%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
 <meta name="theme-color" content="#14213d">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/fonts/inter.css">
 <style>
   :root{
     --ink:#1C2563; --muted:#5b6475; --line:#e3e6ec; --bg:#f6f7f9; --card:#fff;
@@ -134,6 +133,8 @@
   .coach .cact{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
   .coach .cact button{font-size:14px;padding:6px 10px}
   .foot-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:0 0 8px}
+  .foot-links a{font:600 13px Inter,sans-serif;color:var(--accent);text-decoration:none;padding:4px}
+  footer .adult{margin:0 0 6px;font-weight:600}
   .foot-links button{font:600 13px Inter,sans-serif;color:var(--accent);background:none;border:0;cursor:pointer;padding:4px}
   .install{display:none;align-items:center;gap:12px}
   .install.show{display:flex}
@@ -412,7 +413,8 @@
   </details>
 </main>
 <footer>
-  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button></div>
+  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
+  <p class="adult" data-i18n="lg_adult">For adults aged 18 and over.</p>
   <span data-i18n="footer"></span>
 </footer>
 

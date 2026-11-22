@@ -37,3 +37,6 @@ window.SIR_MEANINGS.ja = {
 "Where is the nearest station?":"いちばん近い駅はどこですか？","Where's the nearest subway station?":"いちばん近い地下鉄の駅はどこですか？","How much does this cost?":"これはいくらですか？","What time does the train leave?":"電車は何時に出発しますか？","I need a taxi":"タクシーが必要です","I need a cab":"タクシーが必要です","I think I'm lost":"道に迷ったみたいです","A return ticket, please":"往復切符をお願いします","A round-trip ticket, please":"往復切符をお願いします","Which platform is it?":"何番線ですか？","Which track is it?":"何番線ですか？","Where is the bus stop?":"バス停はどこですか？","Where's the bus stop?":"バス停はどこですか？","Is it far from here?":"ここから遠いですか？","Turn left at the corner":"角を左に曲がってください","Take a left at the corner":"角を左に曲がってください","Go straight ahead":"まっすぐ進んでください","I've booked a room for three nights":"3泊で部屋を予約しています","I have a room booked for three nights":"3泊で部屋を予約しています","What time do we need to leave the room?":"チェックアウトは何時ですか？","Where is the nearest chemist?":"いちばん近い薬局はどこですか？","Where's the nearest pharmacy?":"いちばん近い薬局はどこですか？","Could you help me, please?":"手伝っていただけますか？","I need to see a doctor":"医者に診てもらいたいです","Where can I buy a ticket?":"切符はどこで買えますか？","What time does the museum open?":"博物館は何時に開きますか？","Can I pay in cash?":"現金で払えますか？","To the airport, please":"空港までお願いします"
 };
 })();
+
+// Footer: privacy and terms links, adults-only line
+Object.assign(window.SIR_UI.ja, {lg_priv:"プライバシー",lg_terms:"利用規約",lg_adult:"18歳以上の成人向けです。"});

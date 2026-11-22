@@ -37,3 +37,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - **Lilou (coach option):** Harley's little cousin. Tap the little face next to the coach button to switch coach (saved per device). She has her own look (built from Harley's drawings: smaller, rose background, pink bow), personality (coach.mjs `persona: 'lilou'`) and voice (tts.mjs `LILOU_VOICE` L1–L4, default L1; "Yip yip!").
 - **Dutch to learn:** 100 phrases + Past tense pack (phrases.js `nl`), Assess me passage, Azure nl-NL scoring and voices.
 - **Extra interface languages:** Polish, Romanian, Ukrainian, Chinese (Simplified), Arabic (right-to-left), Dutch, Turkish, Japanese, Korean, Vietnamese — one file each in `i18n/`, loaded only when chosen (or when it's the browser language). Each has the full interface, meanings for the English phrases, and can be typed in "My phrase" (DeepL, with Claude as fallback). AI-translated: get native speakers to check.
+
+## Privacy, terms and data retention
+- `privacy.html` and `terms.html` (styled by `legal.css`), linked in the footer with an "adults 18+" line (keys `lg_priv`, `lg_terms`, `lg_adult` in all 16 interface languages). The pages themselves are English only.
+- The Inter font is self-hosted in `fonts/` (SIL OFL), so no visitor data goes to Google Fonts.
+- `netlify/functions/cleanup.mjs` is a daily scheduled function that deletes daily-allowance counters (hashed device and IP codes) older than 7 days, as the privacy policy says.
+- If you change the Azure region from the UK, or add a new provider, update the table in `privacy.html`.

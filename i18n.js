@@ -626,3 +626,16 @@ const N={
 };
 for (const k in N) Object.assign(window.SIR_LANG_NAMES[k], N[k]);
 })();
+
+// Footer: privacy and terms links, adults-only line
+(function(){
+const S={
+ en:{lg_priv:"Privacy",lg_terms:"Terms",lg_adult:"For adults aged 18 and over."},
+ es:{lg_priv:"Privacidad",lg_terms:"Condiciones",lg_adult:"Para adultos a partir de 18 años."},
+ fr:{lg_priv:"Confidentialité",lg_terms:"Conditions",lg_adult:"Pour les adultes de 18 ans et plus."},
+ it:{lg_priv:"Privacy",lg_terms:"Termini",lg_adult:"Per adulti dai 18 anni in su."},
+ de:{lg_priv:"Datenschutz",lg_terms:"Nutzungsbedingungen",lg_adult:"Für Erwachsene ab 18 Jahren."},
+ pt:{lg_priv:"Privacidade",lg_terms:"Termos",lg_adult:"Para adultos com 18 anos ou mais."}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

@@ -37,3 +37,6 @@ window.SIR_MEANINGS.zh = {
 "Where is the nearest station?":"最近的车站在哪里？","Where's the nearest subway station?":"最近的地铁站在哪里？","How much does this cost?":"这个多少钱？","What time does the train leave?":"火车几点出发？","I need a taxi":"我需要一辆出租车","I need a cab":"我需要一辆出租车","I think I'm lost":"我好像迷路了","A return ticket, please":"请给我一张往返票","A round-trip ticket, please":"请给我一张往返票","Which platform is it?":"在几号站台？","Which track is it?":"在几号站台？","Where is the bus stop?":"公交车站在哪里？","Where's the bus stop?":"公交车站在哪里？","Is it far from here?":"离这里远吗？","Turn left at the corner":"在拐角处左转","Take a left at the corner":"在拐角处左转","Go straight ahead":"一直往前走","I've booked a room for three nights":"我订了一间房，住三晚","I have a room booked for three nights":"我订了一间房，住三晚","What time do we need to leave the room?":"我们几点需要退房？","Where is the nearest chemist?":"最近的药店在哪里？","Where's the nearest pharmacy?":"最近的药店在哪里？","Could you help me, please?":"请问你能帮我一下吗？","I need to see a doctor":"我需要看医生","Where can I buy a ticket?":"在哪里可以买票？","What time does the museum open?":"博物馆几点开门？","Can I pay in cash?":"可以付现金吗？","To the airport, please":"请去机场"
 };
 })();
+
+// Footer: privacy and terms links, adults-only line
+Object.assign(window.SIR_UI.zh, {lg_priv:"隐私",lg_terms:"条款",lg_adult:"仅供18岁及以上的成年人使用。"});
