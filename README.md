@@ -53,7 +53,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Library: `vendor/supabase-2.119.2.min.js` (MIT), loaded only when someone signs in or is signed in.
 
 ## Free library: 40 phrases per topic
-- English (UK, US) and Spanish (Spain, Latin America) now have 40 phrases in each free topic (Basics, Café & restaurant, Travel, Tricky sounds) and in the Past tense pack. The second 20 are appended at the end of `phrases.js`.
+- All 9 learning languages now have 40 phrases in each free topic (Basics, Café & restaurant, Travel, Tricky sounds) and in the Past tense pack. The second 20 are appended at the end of `phrases.js`.
 - Meanings for the new English Basics/Café/Travel phrases are in all 15 other interface languages (`SIR_MEANINGS`, appended to `i18n.js` and `i18n/*.js`).
-- French, Italian, German, Portuguese and Dutch still have 20 per topic (to do).
+- French, Italian, German, Portuguese and Dutch also have 40 per topic (second batch appended after the first).
 - Premium copy now says "five times the free library".

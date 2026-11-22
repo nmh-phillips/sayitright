@@ -1893,3 +1893,2070 @@ const add={
 };
 for (const l in add) for (const s in add[l]) window.SIR_DATA[l].sets[s].push(...add[l][s]);
 })();
+
+// More free phrases: 40 per topic for French, Italian, German, Portuguese and Dutch
+(function(){
+const add={
+"fr": {
+"Basics": [
+[
+"À demain",
+"See you tomorrow"
+],
+[
+"Comment ça va ?",
+"How's it going?"
+],
+[
+"Bien, merci. Et toi ?",
+"I'm fine, thanks. And you?"
+],
+[
+"Enchanté également",
+"Pleased to meet you too"
+],
+[
+"Désolé d'être en retard",
+"Sorry I'm late"
+],
+[
+"Pas de problème",
+"No problem at all"
+],
+[
+"Vous pouvez me l'écrire, s'il vous plaît ?",
+"Could you write it down, please?"
+],
+[
+"Ça s'écrit comment ?",
+"How do you spell that?"
+],
+[
+"J'habite avec ma famille",
+"I live with my family"
+],
+[
+"Je travaille dans un bureau",
+"I work in an office"
+],
+[
+"Je suis ici en vacances",
+"I'm here on holiday"
+],
+[
+"Qu'est-ce que tu fais dans la vie ?",
+"What do you do for a living?"
+],
+[
+"Je peux vous poser une question ?",
+"Can I ask you a question?"
+],
+[
+"Je ne sais pas",
+"I don't know"
+],
+[
+"C'est une bonne idée",
+"That's a good idea"
+],
+[
+"Je ne suis pas sûr",
+"I'm not sure"
+],
+[
+"Un instant, s'il vous plaît",
+"Just a moment, please"
+],
+[
+"Quelle heure est-il ?",
+"What time is it?"
+],
+[
+"Joyeux anniversaire !",
+"Happy birthday!"
+],
+[
+"Prends soin de toi",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"Cette table est libre ?",
+"Is this table free?"
+],
+[
+"On peut s'asseoir dehors ?",
+"Could we sit outside?"
+],
+[
+"Nous sommes prêts à commander",
+"We're ready to order"
+],
+[
+"Je voudrais la soupe du jour",
+"I'd like the soup of the day"
+],
+[
+"Qu'y a-t-il dans ce plat ?",
+"What's in this dish?"
+],
+[
+"C'est très épicé ?",
+"Is it very spicy?"
+],
+[
+"Je peux l'avoir sans oignons ?",
+"Could I have it without onions?"
+],
+[
+"Je suis allergique aux cacahuètes",
+"I'm allergic to peanuts"
+],
+[
+"Je pourrais avoir un café noir ?",
+"Could I have a black coffee?"
+],
+[
+"Un cappuccino au lait d'avoine, s'il vous plaît",
+"A cappuccino with oat milk, please"
+],
+[
+"De l'eau gazeuse, s'il vous plaît",
+"Sparkling water, please"
+],
+[
+"On peut avoir la carte des desserts ?",
+"Could we have the dessert menu?"
+],
+[
+"On peut payer séparément ?",
+"Could we split the bill?"
+],
+[
+"Gardez la monnaie",
+"Keep the change"
+],
+[
+"Excusez-moi, c'est froid",
+"Excuse me, this is cold"
+],
+[
+"Je pourrais avoir une fourchette propre ?",
+"Could I have a clean fork, please?"
+],
+[
+"Où sont les toilettes ?",
+"Where are the toilets?"
+],
+[
+"Tout était délicieux, merci",
+"Everything was lovely, thank you"
+],
+[
+"Nous voudrions réserver une table pour samedi",
+"We'd like to book a table for Saturday"
+],
+[
+"Vous avez un menu enfant ?",
+"Do you have a children's menu?"
+]
+],
+"Travel": [
+[
+"Un aller simple, s'il vous plaît",
+"A single ticket, please"
+],
+[
+"Ce train va à l'aéroport ?",
+"Does this train go to the airport?"
+],
+[
+"Cette place est prise ?",
+"Is this seat taken?"
+],
+[
+"Le train a du retard",
+"The train is delayed"
+],
+[
+"J'ai raté ma correspondance",
+"I've missed my connection"
+],
+[
+"Où puis-je laisser mes bagages ?",
+"Where can I leave my luggage?"
+],
+[
+"Ma valise n'est pas arrivée",
+"My suitcase hasn't arrived"
+],
+[
+"Où est le contrôle des passeports ?",
+"Where is passport control?"
+],
+[
+"Je suis ici pour deux semaines",
+"I'm here for two weeks"
+],
+[
+"Je peux avoir une place côté fenêtre ?",
+"Can I have a window seat?"
+],
+[
+"Il faut combien de temps pour y aller ?",
+"How long does it take to get there?"
+],
+[
+"Vous pouvez me montrer sur la carte ?",
+"Could you show me on the map?"
+],
+[
+"C'est à gauche, à côté de la banque",
+"It's on the left, next to the bank"
+],
+[
+"On peut y aller à pied ?",
+"Can I walk there?"
+],
+[
+"Vous pouvez m'appeler un taxi ?",
+"Could you call me a taxi?"
+],
+[
+"Arrêtez-vous ici, s'il vous plaît",
+"Please stop here"
+],
+[
+"Le petit-déjeuner est compris ?",
+"Is breakfast included?"
+],
+[
+"La climatisation ne marche pas",
+"The air conditioning isn't working"
+],
+[
+"Quel est le mot de passe du wifi ?",
+"What's the Wi-Fi password?"
+],
+[
+"Je voudrais louer une voiture",
+"I'd like to hire a car"
+]
+],
+"Tricky sounds": [
+[
+"Seize chaises sèches",
+"Sixteen dry chairs (S / CH twister)"
+],
+[
+"Le riz rouge et la roue",
+"Red rice and the wheel (R / OU)"
+],
+[
+"Un an, un an et demi",
+"A year, a year and a half (nasal AN)"
+],
+[
+"Le vin, le pain et le thym",
+"Wine, bread and thyme (nasal IN)"
+],
+[
+"Un bon garçon",
+"A good boy (nasal ON)"
+],
+[
+"Du jus de fruit",
+"Fruit juice (U)"
+],
+[
+"Douze douces poules",
+"Twelve gentle hens (OU)"
+],
+[
+"Le feu et le cœur",
+"Fire and heart (EU / ŒU)"
+],
+[
+"Je suis très heureux",
+"I'm very happy (EU, silent H)"
+],
+[
+"Il y a une fille dans la famille",
+"There's a girl in the family (-ILLE)"
+],
+[
+"Les oiseaux chantent",
+"The birds sing (OI, liaison)"
+],
+[
+"Gros et grand",
+"Big and tall (GR)"
+],
+[
+"Six, dix et neuf",
+"Six, ten and nine (final consonants)"
+],
+[
+"Mes amis arrivent à huit heures",
+"My friends arrive at eight (liaison)"
+],
+[
+"Un chat chauve",
+"A bald cat (CH)"
+],
+[
+"Joyeux anniversaire",
+"Happy birthday (J, liaison)"
+],
+[
+"Pierre prend le premier train",
+"Pierre takes the first train (PR / TR)"
+],
+[
+"Les yeux bleus",
+"Blue eyes (liaison Z, EU)"
+],
+[
+"Un œuf, des œufs",
+"An egg, some eggs (F silent in the plural)"
+],
+[
+"Un ver vert va vers un verre vert",
+"A green worm goes towards a green glass (same sound)"
+]
+],
+"Past tense": [
+[
+"Je me suis réveillé tôt ce matin",
+"se réveiller → je me suis réveillé (I woke up)"
+],
+[
+"Nous sommes allés à la mer en voiture",
+"aller → nous sommes allés (we went)"
+],
+[
+"Elle m'a écrit un long e-mail",
+"écrire → elle a écrit (she wrote)"
+],
+[
+"Il a pris le dernier bus",
+"prendre → il a pris (he took)"
+],
+[
+"J'ai rencontré ma femme en 2015",
+"rencontrer → j'ai rencontré (I met)"
+],
+[
+"Ils sont partis avant minuit",
+"partir → ils sont partis (they left)"
+],
+[
+"J'ai payé les billets",
+"payer → j'ai payé (I paid)"
+],
+[
+"Nous avons mangé dans un joli restaurant",
+"manger → nous avons mangé (we ate)"
+],
+[
+"J'ai fait une erreur",
+"faire → j'ai fait (I made)"
+],
+[
+"Elle a trouvé ses clés sous le canapé",
+"trouver → elle a trouvé (she found)"
+],
+[
+"Il m'a offert un cadeau",
+"offrir → il a offert (he gave)"
+],
+[
+"Je me suis senti mieux après une sieste",
+"se sentir → je me suis senti (I felt)"
+],
+[
+"Nous avons parlé pendant des heures",
+"parler → nous avons parlé (we talked)"
+],
+[
+"J'ai entendu un bruit bizarre",
+"entendre → j'ai entendu (I heard)"
+],
+[
+"Ils ont gagné le match",
+"gagner → ils ont gagné (they won)"
+],
+[
+"Je t'ai envoyé un message",
+"envoyer → j'ai envoyé (I sent)"
+],
+[
+"Elle a choisi la robe rouge",
+"choisir → elle a choisi (she chose)"
+],
+[
+"Nous avons passé une semaine en Italie",
+"passer → nous avons passé (we spent)"
+],
+[
+"Je n'ai pas pu trouver l'adresse",
+"pouvoir → je n'ai pas pu (I couldn't)"
+],
+[
+"Quand j'étais petit, j'habitais à Lyon",
+"être, habiter → imperfect (when I was little, I lived)"
+]
+]
+},
+"it": {
+"Basics": [
+[
+"A domani",
+"See you tomorrow"
+],
+[
+"Come va?",
+"How's it going?"
+],
+[
+"Bene, grazie. E tu?",
+"I'm fine, thanks. And you?"
+],
+[
+"Piacere mio",
+"Pleased to meet you too"
+],
+[
+"Scusa il ritardo",
+"Sorry I'm late"
+],
+[
+"Nessun problema",
+"No problem at all"
+],
+[
+"Me lo può scrivere, per favore?",
+"Could you write it down, please?"
+],
+[
+"Come si scrive?",
+"How do you spell that?"
+],
+[
+"Vivo con la mia famiglia",
+"I live with my family"
+],
+[
+"Lavoro in un ufficio",
+"I work in an office"
+],
+[
+"Sono qui in vacanza",
+"I'm here on holiday"
+],
+[
+"Che lavoro fai?",
+"What do you do for a living?"
+],
+[
+"Posso farle una domanda?",
+"Can I ask you a question?"
+],
+[
+"Non lo so",
+"I don't know"
+],
+[
+"È una buona idea",
+"That's a good idea"
+],
+[
+"Non sono sicuro",
+"I'm not sure"
+],
+[
+"Un attimo, per favore",
+"Just a moment, please"
+],
+[
+"Che ore sono?",
+"What time is it?"
+],
+[
+"Buon compleanno!",
+"Happy birthday!"
+],
+[
+"Stammi bene",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"Questo tavolo è libero?",
+"Is this table free?"
+],
+[
+"Possiamo sederci fuori?",
+"Could we sit outside?"
+],
+[
+"Siamo pronti per ordinare",
+"We're ready to order"
+],
+[
+"Vorrei la zuppa del giorno",
+"I'd like the soup of the day"
+],
+[
+"Cosa c'è in questo piatto?",
+"What's in this dish?"
+],
+[
+"È molto piccante?",
+"Is it very spicy?"
+],
+[
+"Me lo può fare senza cipolla?",
+"Could I have it without onions?"
+],
+[
+"Sono allergico alle arachidi",
+"I'm allergic to peanuts"
+],
+[
+"Posso avere un caffè nero?",
+"Could I have a black coffee?"
+],
+[
+"Un cappuccino con latte d'avena, per favore",
+"A cappuccino with oat milk, please"
+],
+[
+"Acqua frizzante, per favore",
+"Sparkling water, please"
+],
+[
+"Possiamo avere il menù dei dolci?",
+"Could we have the dessert menu?"
+],
+[
+"Possiamo pagare separatamente?",
+"Could we split the bill?"
+],
+[
+"Tenga il resto",
+"Keep the change"
+],
+[
+"Scusi, questo è freddo",
+"Excuse me, this is cold"
+],
+[
+"Posso avere una forchetta pulita?",
+"Could I have a clean fork, please?"
+],
+[
+"Dove sono i bagni?",
+"Where are the toilets?"
+],
+[
+"Era tutto ottimo, grazie",
+"Everything was lovely, thank you"
+],
+[
+"Vorremmo prenotare un tavolo per sabato",
+"We'd like to book a table for Saturday"
+],
+[
+"Avete un menù per bambini?",
+"Do you have a children's menu?"
+]
+],
+"Travel": [
+[
+"Un biglietto di sola andata, per favore",
+"A single ticket, please"
+],
+[
+"Questo treno va all'aeroporto?",
+"Does this train go to the airport?"
+],
+[
+"È occupato questo posto?",
+"Is this seat taken?"
+],
+[
+"Il treno è in ritardo",
+"The train is delayed"
+],
+[
+"Ho perso la coincidenza",
+"I've missed my connection"
+],
+[
+"Dove posso lasciare i bagagli?",
+"Where can I leave my luggage?"
+],
+[
+"La mia valigia non è arrivata",
+"My suitcase hasn't arrived"
+],
+[
+"Dov'è il controllo passaporti?",
+"Where is passport control?"
+],
+[
+"Resto qui due settimane",
+"I'm here for two weeks"
+],
+[
+"Posso avere un posto al finestrino?",
+"Can I have a window seat?"
+],
+[
+"Quanto ci vuole per arrivarci?",
+"How long does it take to get there?"
+],
+[
+"Me lo può indicare sulla mappa?",
+"Could you show me on the map?"
+],
+[
+"È a sinistra, accanto alla banca",
+"It's on the left, next to the bank"
+],
+[
+"Ci si può arrivare a piedi?",
+"Can I walk there?"
+],
+[
+"Mi può chiamare un taxi?",
+"Could you call me a taxi?"
+],
+[
+"Si fermi qui, per favore",
+"Please stop here"
+],
+[
+"La colazione è inclusa?",
+"Is breakfast included?"
+],
+[
+"L'aria condizionata non funziona",
+"The air conditioning isn't working"
+],
+[
+"Qual è la password del wifi?",
+"What's the Wi-Fi password?"
+],
+[
+"Vorrei noleggiare un'auto",
+"I'd like to hire a car"
+]
+],
+"Tricky sounds": [
+[
+"Trentatré trentini",
+"Thirty-three people from Trento (TR twister)"
+],
+[
+"Tigre contro tigre",
+"Tiger against tiger (TR / GR)"
+],
+[
+"Sciarpa e scarpa",
+"Scarf and shoe (SCI vs SC)"
+],
+[
+"Cielo e chiesa",
+"Sky and church (CIE vs CHIE)"
+],
+[
+"Gioco e ghiaccio",
+"Game and ice (GIO vs GHI)"
+],
+[
+"Figlio e filo",
+"Son and thread (GLI vs LI)"
+],
+[
+"Sonno e sono",
+"Sleep and I am (NN vs N)"
+],
+[
+"Fatto e fato",
+"Done and fate (TT vs T)"
+],
+[
+"Sette e sete",
+"Seven and thirst (TT vs T)"
+],
+[
+"Zio e zaino",
+"Uncle and backpack (Z)"
+],
+[
+"Uno gnomo in montagna",
+"A gnome in the mountains (GN)"
+],
+[
+"Aglio, olio e peperoncino",
+"Garlic, oil and chilli (GLI)"
+],
+[
+"Perché piove?",
+"Why is it raining? (open and closed E)"
+],
+[
+"Un uovo, due uova",
+"One egg, two eggs (UO)"
+],
+[
+"Quattro quadri",
+"Four paintings (QU)"
+],
+[
+"Chiara chiacchiera",
+"Chiara chats (CHI)"
+],
+[
+"Ragù e risotto",
+"Ragù and risotto (rolled R, stress)"
+],
+[
+"Buongiorno, signora Rossi",
+"Good morning, Mrs Rossi (GN, RR)"
+],
+[
+"Mamma mia, che caldo!",
+"My goodness, it's hot! (MM)"
+],
+[
+"Scendi le scale",
+"Go down the stairs (SCE / SCA)"
+]
+],
+"Past tense": [
+[
+"Mi sono svegliato presto stamattina",
+"svegliarsi → mi sono svegliato (I woke up)"
+],
+[
+"Siamo andati al mare in macchina",
+"andare → siamo andati (we went)"
+],
+[
+"Mi ha scritto una lunga email",
+"scrivere → ha scritto (she wrote)"
+],
+[
+"Ha preso l'ultimo autobus",
+"prendere → ha preso (he took)"
+],
+[
+"Ho conosciuto mia moglie nel 2015",
+"conoscere → ho conosciuto (I met)"
+],
+[
+"Sono partiti prima di mezzanotte",
+"partire → sono partiti (they left)"
+],
+[
+"Ho pagato i biglietti",
+"pagare → ho pagato (I paid)"
+],
+[
+"Abbiamo mangiato in un bel ristorante",
+"mangiare → abbiamo mangiato (we ate)"
+],
+[
+"Ho fatto un errore",
+"fare → ho fatto (I made)"
+],
+[
+"Ha trovato le chiavi sotto il divano",
+"trovare → ha trovato (she found)"
+],
+[
+"Mi ha regalato un libro",
+"regalare → ha regalato (he gave)"
+],
+[
+"Mi sono sentito meglio dopo un riposo",
+"sentirsi → mi sono sentito (I felt)"
+],
+[
+"Abbiamo parlato per ore",
+"parlare → abbiamo parlato (we talked)"
+],
+[
+"Ho sentito un rumore strano",
+"sentire → ho sentito (I heard)"
+],
+[
+"Hanno vinto la partita",
+"vincere → hanno vinto (they won)"
+],
+[
+"Ti ho mandato un messaggio",
+"mandare → ho mandato (I sent)"
+],
+[
+"Ha scelto il vestito rosso",
+"scegliere → ha scelto (she chose)"
+],
+[
+"Abbiamo passato una settimana in Spagna",
+"passare → abbiamo passato (we spent)"
+],
+[
+"Non sono riuscito a trovare l'indirizzo",
+"riuscire → non sono riuscito (I couldn't)"
+],
+[
+"Quando ero piccolo, abitavo a Roma",
+"essere, abitare → imperfect (when I was little, I lived)"
+]
+]
+},
+"de": {
+"Basics": [
+[
+"Bis morgen",
+"See you tomorrow"
+],
+[
+"Wie läuft's?",
+"How's it going?"
+],
+[
+"Gut, danke. Und dir?",
+"I'm fine, thanks. And you?"
+],
+[
+"Freut mich auch",
+"Pleased to meet you too"
+],
+[
+"Entschuldigung, dass ich zu spät bin",
+"Sorry I'm late"
+],
+[
+"Kein Problem",
+"No problem at all"
+],
+[
+"Können Sie das bitte aufschreiben?",
+"Could you write it down, please?"
+],
+[
+"Wie schreibt man das?",
+"How do you spell that?"
+],
+[
+"Ich wohne bei meiner Familie",
+"I live with my family"
+],
+[
+"Ich arbeite in einem Büro",
+"I work in an office"
+],
+[
+"Ich bin hier im Urlaub",
+"I'm here on holiday"
+],
+[
+"Was machst du beruflich?",
+"What do you do for a living?"
+],
+[
+"Darf ich Sie etwas fragen?",
+"Can I ask you a question?"
+],
+[
+"Ich weiß es nicht",
+"I don't know"
+],
+[
+"Das ist eine gute Idee",
+"That's a good idea"
+],
+[
+"Ich bin mir nicht sicher",
+"I'm not sure"
+],
+[
+"Einen Moment, bitte",
+"Just a moment, please"
+],
+[
+"Wie spät ist es?",
+"What time is it?"
+],
+[
+"Alles Gute zum Geburtstag!",
+"Happy birthday!"
+],
+[
+"Pass auf dich auf",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"Ist dieser Tisch frei?",
+"Is this table free?"
+],
+[
+"Können wir draußen sitzen?",
+"Could we sit outside?"
+],
+[
+"Wir möchten bestellen",
+"We're ready to order"
+],
+[
+"Ich hätte gern die Tagessuppe",
+"I'd like the soup of the day"
+],
+[
+"Was ist in diesem Gericht?",
+"What's in this dish?"
+],
+[
+"Ist es sehr scharf?",
+"Is it very spicy?"
+],
+[
+"Kann ich das ohne Zwiebeln haben?",
+"Could I have it without onions?"
+],
+[
+"Ich bin allergisch gegen Erdnüsse",
+"I'm allergic to peanuts"
+],
+[
+"Kann ich einen schwarzen Kaffee haben?",
+"Could I have a black coffee?"
+],
+[
+"Einen Cappuccino mit Hafermilch, bitte",
+"A cappuccino with oat milk, please"
+],
+[
+"Sprudelwasser, bitte",
+"Sparkling water, please"
+],
+[
+"Können wir die Dessertkarte haben?",
+"Could we have the dessert menu?"
+],
+[
+"Können wir getrennt zahlen?",
+"Could we split the bill?"
+],
+[
+"Stimmt so",
+"Keep the change"
+],
+[
+"Entschuldigung, das ist kalt",
+"Excuse me, this is cold"
+],
+[
+"Kann ich bitte eine saubere Gabel haben?",
+"Could I have a clean fork, please?"
+],
+[
+"Wo sind die Toiletten?",
+"Where are the toilets?"
+],
+[
+"Es war alles sehr gut, danke",
+"Everything was lovely, thank you"
+],
+[
+"Wir möchten einen Tisch für Samstag reservieren",
+"We'd like to book a table for Saturday"
+],
+[
+"Haben Sie eine Kinderkarte?",
+"Do you have a children's menu?"
+]
+],
+"Travel": [
+[
+"Eine einfache Fahrkarte, bitte",
+"A single ticket, please"
+],
+[
+"Fährt dieser Zug zum Flughafen?",
+"Does this train go to the airport?"
+],
+[
+"Ist dieser Platz besetzt?",
+"Is this seat taken?"
+],
+[
+"Der Zug hat Verspätung",
+"The train is delayed"
+],
+[
+"Ich habe meinen Anschluss verpasst",
+"I've missed my connection"
+],
+[
+"Wo kann ich mein Gepäck lassen?",
+"Where can I leave my luggage?"
+],
+[
+"Mein Koffer ist nicht angekommen",
+"My suitcase hasn't arrived"
+],
+[
+"Wo ist die Passkontrolle?",
+"Where is passport control?"
+],
+[
+"Ich bin zwei Wochen hier",
+"I'm here for two weeks"
+],
+[
+"Kann ich einen Fensterplatz haben?",
+"Can I have a window seat?"
+],
+[
+"Wie lange braucht man bis dorthin?",
+"How long does it take to get there?"
+],
+[
+"Können Sie es mir auf der Karte zeigen?",
+"Could you show me on the map?"
+],
+[
+"Es ist links, neben der Bank",
+"It's on the left, next to the bank"
+],
+[
+"Kann man zu Fuß hingehen?",
+"Can I walk there?"
+],
+[
+"Können Sie mir ein Taxi rufen?",
+"Could you call me a taxi?"
+],
+[
+"Halten Sie bitte hier",
+"Please stop here"
+],
+[
+"Ist das Frühstück inbegriffen?",
+"Is breakfast included?"
+],
+[
+"Die Klimaanlage funktioniert nicht",
+"The air conditioning isn't working"
+],
+[
+"Wie lautet das WLAN-Passwort?",
+"What's the Wi-Fi password?"
+],
+[
+"Ich möchte ein Auto mieten",
+"I'd like to hire a car"
+]
+],
+"Tricky sounds": [
+[
+"Milch und Kirche",
+"Milk and church (ICH after L and R)"
+],
+[
+"Buch, Tuch und Kuchen",
+"Book, cloth and cake (ACH after U)"
+],
+[
+"Hölle und Höhle",
+"Hell and cave (short vs long Ö)"
+],
+[
+"Müller mag Müsli",
+"Müller likes muesli (Ü)"
+],
+[
+"Schnee in Schweden",
+"Snow in Sweden (SCHN / SCHW)"
+],
+[
+"Spät am Sportplatz",
+"Late at the sports ground (SP = SHP)"
+],
+[
+"Wasser, Wein und Wurst",
+"Water, wine and sausage (W = V)"
+],
+[
+"Viele Vögel fliegen",
+"Many birds fly (V = F)"
+],
+[
+"Zug, Zoo und Zeit",
+"Train, zoo and time (Z = TS)"
+],
+[
+"Bett und Beet",
+"Bed and flowerbed (short vs long E)"
+],
+[
+"Stadt und Staat",
+"City and state (short vs long A)"
+],
+[
+"Ofen und offen",
+"Oven and open (long vs short O)"
+],
+[
+"Der Hund bellt laut",
+"The dog barks loudly (final D = T, AU)"
+],
+[
+"Tag, Weg und Berg",
+"Day, way and mountain (final G)"
+],
+[
+"Häuser und Bäume",
+"Houses and trees (ÄU)"
+],
+[
+"Brautkleid bleibt Brautkleid",
+"A wedding dress stays a wedding dress (twister)"
+],
+[
+"Ich ruhe mich aus",
+"I'm having a rest (ICH / R)"
+],
+[
+"Quark und Qualität",
+"Quark and quality (QU = KV)"
+],
+[
+"Tschüss, bis morgen",
+"Bye, see you tomorrow (TSCH / Ü)"
+],
+[
+"Röslein rot auf der Heide",
+"Little red rose on the heath (Ö / EI)"
+]
+],
+"Past tense": [
+[
+"Ich bin heute früh aufgewacht",
+"aufwachen → bin aufgewacht (I woke up)"
+],
+[
+"Wir sind ans Meer gefahren",
+"fahren → sind gefahren (we drove)"
+],
+[
+"Sie hat mir eine lange E-Mail geschrieben",
+"schreiben → hat geschrieben (she wrote)"
+],
+[
+"Er hat den letzten Bus genommen",
+"nehmen → hat genommen (he took)"
+],
+[
+"Ich habe meine Frau 2015 kennengelernt",
+"kennenlernen → habe kennengelernt (I met)"
+],
+[
+"Sie sind vor Mitternacht gegangen",
+"gehen → sind gegangen (they left)"
+],
+[
+"Ich habe die Karten bezahlt",
+"bezahlen → habe bezahlt (I paid)"
+],
+[
+"Wir haben in einem schönen Restaurant gegessen",
+"essen → haben gegessen (we ate)"
+],
+[
+"Ich habe einen Fehler gemacht",
+"machen → habe gemacht (I made)"
+],
+[
+"Sie hat ihre Schlüssel unter dem Sofa gefunden",
+"finden → hat gefunden (she found)"
+],
+[
+"Er hat mir ein Geschenk gegeben",
+"geben → hat gegeben (he gave)"
+],
+[
+"Nach einer Pause ging es mir besser",
+"gehen → ging (I felt better)"
+],
+[
+"Wir haben stundenlang geredet",
+"reden → haben geredet (we talked)"
+],
+[
+"Ich habe ein seltsames Geräusch gehört",
+"hören → habe gehört (I heard)"
+],
+[
+"Sie haben das Spiel gewonnen",
+"gewinnen → haben gewonnen (they won)"
+],
+[
+"Ich habe dir eine Nachricht geschickt",
+"schicken → habe geschickt (I sent)"
+],
+[
+"Sie hat das rote Kleid ausgesucht",
+"aussuchen → hat ausgesucht (she chose)"
+],
+[
+"Wir haben eine Woche in Italien verbracht",
+"verbringen → haben verbracht (we spent)"
+],
+[
+"Ich konnte die Adresse nicht finden",
+"können → konnte (I couldn't)"
+],
+[
+"Warst du gestern zu Hause?",
+"sein → warst (were you)"
+]
+]
+},
+"pt": {
+"Basics": [
+[
+"Até amanhã",
+"See you tomorrow"
+],
+[
+"Como estão as coisas?",
+"How's it going?"
+],
+[
+"Bem, obrigado. E tu?",
+"I'm fine, thanks. And you?"
+],
+[
+"O prazer é meu",
+"Pleased to meet you too"
+],
+[
+"Desculpa o atraso",
+"Sorry I'm late"
+],
+[
+"Não há problema nenhum",
+"No problem at all"
+],
+[
+"Pode escrever-mo, por favor?",
+"Could you write it down, please?"
+],
+[
+"Como se escreve?",
+"How do you spell that?"
+],
+[
+"Vivo com a minha família",
+"I live with my family"
+],
+[
+"Trabalho num escritório",
+"I work in an office"
+],
+[
+"Estou cá de férias",
+"I'm here on holiday"
+],
+[
+"O que fazes na vida?",
+"What do you do for a living?"
+],
+[
+"Posso fazer-lhe uma pergunta?",
+"Can I ask you a question?"
+],
+[
+"Não sei",
+"I don't know"
+],
+[
+"É uma boa ideia",
+"That's a good idea"
+],
+[
+"Não tenho a certeza",
+"I'm not sure"
+],
+[
+"Um momento, por favor",
+"Just a moment, please"
+],
+[
+"Que horas são?",
+"What time is it?"
+],
+[
+"Parabéns!",
+"Happy birthday!"
+],
+[
+"Cuida-te",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"Esta mesa está livre?",
+"Is this table free?"
+],
+[
+"Podemos sentar-nos lá fora?",
+"Could we sit outside?"
+],
+[
+"Já podemos pedir",
+"We're ready to order"
+],
+[
+"Queria a sopa do dia",
+"I'd like the soup of the day"
+],
+[
+"O que leva este prato?",
+"What's in this dish?"
+],
+[
+"É muito picante?",
+"Is it very spicy?"
+],
+[
+"Pode ser sem cebola?",
+"Could I have it without onions?"
+],
+[
+"Sou alérgico a amendoins",
+"I'm allergic to peanuts"
+],
+[
+"Um galão, por favor",
+"A milky coffee in a glass, please"
+],
+[
+"Um cappuccino com leite de aveia, por favor",
+"A cappuccino with oat milk, please"
+],
+[
+"Água com gás, por favor",
+"Sparkling water, please"
+],
+[
+"Pode trazer a carta de sobremesas?",
+"Could we have the dessert menu?"
+],
+[
+"Podemos pagar separadamente?",
+"Could we split the bill?"
+],
+[
+"Fique com o troco",
+"Keep the change"
+],
+[
+"Desculpe, isto está frio",
+"Excuse me, this is cold"
+],
+[
+"Pode trazer um garfo limpo, por favor?",
+"Could I have a clean fork, please?"
+],
+[
+"Onde fica a casa de banho?",
+"Where are the toilets?"
+],
+[
+"Estava tudo ótimo, obrigado",
+"Everything was lovely, thank you"
+],
+[
+"Queríamos reservar uma mesa para sábado",
+"We'd like to book a table for Saturday"
+],
+[
+"Têm menu infantil?",
+"Do you have a children's menu?"
+]
+],
+"Travel": [
+[
+"Um bilhete só de ida, por favor",
+"A single ticket, please"
+],
+[
+"Este comboio vai para o aeroporto?",
+"Does this train go to the airport?"
+],
+[
+"Este lugar está ocupado?",
+"Is this seat taken?"
+],
+[
+"O comboio está atrasado",
+"The train is delayed"
+],
+[
+"Perdi a ligação",
+"I've missed my connection"
+],
+[
+"Onde posso deixar a bagagem?",
+"Where can I leave my luggage?"
+],
+[
+"A minha mala não chegou",
+"My suitcase hasn't arrived"
+],
+[
+"Onde é o controlo de passaportes?",
+"Where is passport control?"
+],
+[
+"Fico cá duas semanas",
+"I'm here for two weeks"
+],
+[
+"Pode dar-me um lugar à janela?",
+"Can I have a window seat?"
+],
+[
+"Quanto tempo demora a chegar lá?",
+"How long does it take to get there?"
+],
+[
+"Pode mostrar-me no mapa?",
+"Could you show me on the map?"
+],
+[
+"Fica à esquerda, ao lado do banco",
+"It's on the left, next to the bank"
+],
+[
+"Dá para ir a pé?",
+"Can I walk there?"
+],
+[
+"Pode chamar-me um táxi?",
+"Could you call me a taxi?"
+],
+[
+"Pare aqui, por favor",
+"Please stop here"
+],
+[
+"O pequeno-almoço está incluído?",
+"Is breakfast included?"
+],
+[
+"O ar condicionado não funciona",
+"The air conditioning isn't working"
+],
+[
+"Qual é a palavra-passe do wi-fi?",
+"What's the Wi-Fi password?"
+],
+[
+"Queria alugar um carro",
+"I'd like to hire a car"
+]
+],
+"Tricky sounds": [
+[
+"Pão, mão e cão",
+"Bread, hand and dog (ÃO)"
+],
+[
+"A rã e a maçã",
+"The frog and the apple (Ã)"
+],
+[
+"Melhor e mulher",
+"Better and woman (LH)"
+],
+[
+"Vinho e caminho",
+"Wine and path (NH)"
+],
+[
+"Rua, rio e rei",
+"Street, river and king (initial R)"
+],
+[
+"Arroz e carro",
+"Rice and car (RR)"
+],
+[
+"Caro e cara",
+"Expensive and face (single R)"
+],
+[
+"Sapato e casa",
+"Shoe and house (S vs Z sound)"
+],
+[
+"Os amigos estão aqui",
+"The friends are here (final S sounds like SH)"
+],
+[
+"Gente e gato",
+"People and cat (two G sounds)"
+],
+[
+"Queijo e quiosque",
+"Cheese and kiosk (QU)"
+],
+[
+"Açúcar e cedo",
+"Sugar and early (Ç / C)"
+],
+[
+"Avó e avô",
+"Grandmother and grandfather (open Ó vs closed Ô)"
+],
+[
+"Pé e pêra",
+"Foot and pear (open É vs closed Ê)"
+],
+[
+"Leite e peixe",
+"Milk and fish (EI)"
+],
+[
+"Põe as botas",
+"Put on the boots (ÕE)"
+],
+[
+"Quatro quilos de queijo",
+"Four kilos of cheese (QU)"
+],
+[
+"Um, uma, algum",
+"One, one, some (nasal UM)"
+],
+[
+"O sabiá sabia assobiar",
+"The thrush knew how to whistle (twister)"
+],
+[
+"Fim de semana em Coimbra",
+"Weekend in Coimbra (nasal IM / OI)"
+]
+],
+"Past tense": [
+[
+"Acordei cedo esta manhã",
+"acordar → acordei (I woke up)"
+],
+[
+"Fomos de carro até à praia",
+"ir → fomos (we went)"
+],
+[
+"Ela escreveu-me um e-mail longo",
+"escrever → escreveu (she wrote)"
+],
+[
+"Ele apanhou o último autocarro",
+"apanhar → apanhou (he caught)"
+],
+[
+"Conheci a minha mulher em 2015",
+"conhecer → conheci (I met)"
+],
+[
+"Saíram antes da meia-noite",
+"sair → saíram (they left)"
+],
+[
+"Paguei os bilhetes",
+"pagar → paguei (I paid)"
+],
+[
+"Comemos num restaurante muito bonito",
+"comer → comemos (we ate)"
+],
+[
+"Cometi um erro",
+"cometer → cometi (I made)"
+],
+[
+"Ela encontrou as chaves debaixo do sofá",
+"encontrar → encontrou (she found)"
+],
+[
+"Ele deu-me um presente",
+"dar → deu (he gave)"
+],
+[
+"Senti-me melhor depois de descansar",
+"sentir-se → senti-me (I felt)"
+],
+[
+"Falámos durante horas",
+"falar → falámos (we talked)"
+],
+[
+"Ouvi um barulho estranho",
+"ouvir → ouvi (I heard)"
+],
+[
+"Ganharam o jogo",
+"ganhar → ganharam (they won)"
+],
+[
+"Mandei-te uma mensagem",
+"mandar → mandei (I sent)"
+],
+[
+"Ela escolheu o vestido vermelho",
+"escolher → escolheu (she chose)"
+],
+[
+"Passámos uma semana em Itália",
+"passar → passámos (we spent)"
+],
+[
+"Não consegui encontrar a morada",
+"conseguir → não consegui (I couldn't)"
+],
+[
+"Estiveste em casa ontem?",
+"estar → estiveste (were you)"
+]
+]
+},
+"nl": {
+"Basics": [
+[
+"Tot morgen",
+"See you tomorrow"
+],
+[
+"Hoe gaat het?",
+"How's it going?"
+],
+[
+"Goed, dank je. En met jou?",
+"I'm fine, thanks. And you?"
+],
+[
+"Insgelijks, leuk je te ontmoeten",
+"Pleased to meet you too"
+],
+[
+"Sorry dat ik te laat ben",
+"Sorry I'm late"
+],
+[
+"Helemaal geen probleem",
+"No problem at all"
+],
+[
+"Kunt u het opschrijven, alstublieft?",
+"Could you write it down, please?"
+],
+[
+"Hoe spel je dat?",
+"How do you spell that?"
+],
+[
+"Ik woon bij mijn familie",
+"I live with my family"
+],
+[
+"Ik werk op kantoor",
+"I work in an office"
+],
+[
+"Ik ben hier op vakantie",
+"I'm here on holiday"
+],
+[
+"Wat doe je voor werk?",
+"What do you do for a living?"
+],
+[
+"Mag ik u iets vragen?",
+"Can I ask you a question?"
+],
+[
+"Ik weet het niet",
+"I don't know"
+],
+[
+"Dat is een goed idee",
+"That's a good idea"
+],
+[
+"Ik weet het niet zeker",
+"I'm not sure"
+],
+[
+"Een ogenblikje, alstublieft",
+"Just a moment, please"
+],
+[
+"Hoe laat is het?",
+"What time is it?"
+],
+[
+"Gefeliciteerd met je verjaardag!",
+"Happy birthday!"
+],
+[
+"Pas goed op jezelf",
+"Take care"
+]
+],
+"Café & restaurant": [
+[
+"Is deze tafel vrij?",
+"Is this table free?"
+],
+[
+"Kunnen we buiten zitten?",
+"Could we sit outside?"
+],
+[
+"We willen graag bestellen",
+"We're ready to order"
+],
+[
+"Ik wil graag de soep van de dag",
+"I'd like the soup of the day"
+],
+[
+"Wat zit er in dit gerecht?",
+"What's in this dish?"
+],
+[
+"Is het erg pittig?",
+"Is it very spicy?"
+],
+[
+"Kan ik het zonder ui krijgen?",
+"Could I have it without onions?"
+],
+[
+"Ik ben allergisch voor pinda's",
+"I'm allergic to peanuts"
+],
+[
+"Mag ik een zwarte koffie?",
+"Could I have a black coffee?"
+],
+[
+"Een cappuccino met havermelk, alstublieft",
+"A cappuccino with oat milk, please"
+],
+[
+"Bruisend water, alstublieft",
+"Sparkling water, please"
+],
+[
+"Mogen we de dessertkaart?",
+"Could we have the dessert menu?"
+],
+[
+"Kunnen we apart betalen?",
+"Could we split the bill?"
+],
+[
+"Laat de rest maar zitten",
+"Keep the change"
+],
+[
+"Pardon, dit is koud",
+"Excuse me, this is cold"
+],
+[
+"Mag ik een schone vork?",
+"Could I have a clean fork, please?"
+],
+[
+"Waar zijn de toiletten?",
+"Where are the toilets?"
+],
+[
+"Alles was heerlijk, dank u",
+"Everything was lovely, thank you"
+],
+[
+"We willen graag een tafel reserveren voor zaterdag",
+"We'd like to book a table for Saturday"
+],
+[
+"Hebben jullie een kindermenu?",
+"Do you have a children's menu?"
+]
+],
+"Travel": [
+[
+"Een enkele reis, alstublieft",
+"A single ticket, please"
+],
+[
+"Gaat deze trein naar het vliegveld?",
+"Does this train go to the airport?"
+],
+[
+"Is deze plaats bezet?",
+"Is this seat taken?"
+],
+[
+"De trein heeft vertraging",
+"The train is delayed"
+],
+[
+"Ik heb mijn aansluiting gemist",
+"I've missed my connection"
+],
+[
+"Waar kan ik mijn bagage laten?",
+"Where can I leave my luggage?"
+],
+[
+"Mijn koffer is niet aangekomen",
+"My suitcase hasn't arrived"
+],
+[
+"Waar is de paspoortcontrole?",
+"Where is passport control?"
+],
+[
+"Ik ben hier twee weken",
+"I'm here for two weeks"
+],
+[
+"Mag ik een plaats bij het raam?",
+"Can I have a window seat?"
+],
+[
+"Hoe lang duurt het om daar te komen?",
+"How long does it take to get there?"
+],
+[
+"Kunt u het op de kaart laten zien?",
+"Could you show me on the map?"
+],
+[
+"Het is links, naast de bank",
+"It's on the left, next to the bank"
+],
+[
+"Kan ik er lopend heen?",
+"Can I walk there?"
+],
+[
+"Kunt u een taxi voor me bellen?",
+"Could you call me a taxi?"
+],
+[
+"Stopt u hier maar",
+"Please stop here"
+],
+[
+"Is het ontbijt inbegrepen?",
+"Is breakfast included?"
+],
+[
+"De airconditioning doet het niet",
+"The air conditioning isn't working"
+],
+[
+"Wat is het wifi-wachtwoord?",
+"What's the Wi-Fi password?"
+],
+[
+"Ik wil graag een auto huren",
+"I'd like to hire a car"
+]
+],
+"Tricky sounds": [
+[
+"Gezellig, gewoon goed",
+"Cosy, simply good (G)"
+],
+[
+"Acht lachende jongens",
+"Eight laughing boys (CH / G)"
+],
+[
+"Huis, muis en kruis",
+"House, mouse and cross (UI)"
+],
+[
+"IJs en ijzer",
+"Ice and iron (IJ)"
+],
+[
+"Kijken en koken",
+"Looking and cooking (IJ / OO)"
+],
+[
+"Eieren en meisjes",
+"Eggs and girls (EI)"
+],
+[
+"Deur en duur",
+"Door and expensive (EU vs UU)"
+],
+[
+"Boek en buik",
+"Book and belly (OE vs UI)"
+],
+[
+"Maan en man",
+"Moon and man (long AA vs short A)"
+],
+[
+"Been en ben",
+"Leg and am (long EE vs short E)"
+],
+[
+"Zoon en zon",
+"Son and sun (long OO vs short O)"
+],
+[
+"Muur en moer",
+"Wall and nut (UU vs OE)"
+],
+[
+"Schoenen en schapen",
+"Shoes and sheep (SCH)"
+],
+[
+"Fiets en vis",
+"Bike and fish (F vs V)"
+],
+[
+"Zes zwarte zwanen",
+"Six black swans (Z / ZW)"
+],
+[
+"Wortel en water",
+"Carrot and water (W)"
+],
+[
+"Brood met boter",
+"Bread with butter (OO / R)"
+],
+[
+"Duizend druiven",
+"A thousand grapes (UI)"
+],
+[
+"Oud en goud",
+"Old and gold (OU)"
+],
+[
+"Rood, rond en rustig",
+"Red, round and calm (R)"
+]
+],
+"Past tense": [
+[
+"Ik werd vanochtend vroeg wakker",
+"wakker worden → werd (I woke up)"
+],
+[
+"We zijn met de auto naar zee gegaan",
+"gaan → zijn gegaan (we went)"
+],
+[
+"Ze heeft me een lange e-mail geschreven",
+"schrijven → heeft geschreven (she wrote)"
+],
+[
+"Hij nam de laatste bus",
+"nemen → nam (he took)"
+],
+[
+"Ik heb mijn vrouw in 2015 ontmoet",
+"ontmoeten → heb ontmoet (I met)"
+],
+[
+"Ze vertrokken voor middernacht",
+"vertrekken → vertrokken (they left)"
+],
+[
+"Ik heb de kaartjes betaald",
+"betalen → heb betaald (I paid)"
+],
+[
+"We hebben in een leuk restaurant gegeten",
+"eten → hebben gegeten (we ate)"
+],
+[
+"Ik heb een fout gemaakt",
+"maken → heb gemaakt (I made)"
+],
+[
+"Ze vond haar sleutels onder de bank",
+"vinden → vond (she found)"
+],
+[
+"Hij gaf me een cadeau",
+"geven → gaf (he gave)"
+],
+[
+"Ik voelde me veel beter na een pauze",
+"voelen → voelde (I felt)"
+],
+[
+"We hebben samen gekookt",
+"koken → hebben gekookt (we cooked)"
+],
+[
+"Ik hoorde een vreemd geluid",
+"horen → hoorde (I heard)"
+],
+[
+"Zij hebben de wedstrijd gewonnen",
+"winnen → hebben gewonnen (they won)"
+],
+[
+"Ik heb je een bericht gestuurd",
+"sturen → heb gestuurd (I sent)"
+],
+[
+"Ze koos de rode jurk",
+"kiezen → koos (she chose)"
+],
+[
+"We hebben een week in Italië doorgebracht",
+"doorbrengen → hebben doorgebracht (we spent)"
+],
+[
+"Ik kon het adres niet vinden",
+"kunnen → kon (I couldn't)"
+],
+[
+"Was je gisteren thuis?",
+"zijn → was (were you)"
+]
+]
+}
+};
+for (const l in add) for (const s in add[l]) window.SIR_DATA[l].sets[s].push(...add[l][s]);
+})();
