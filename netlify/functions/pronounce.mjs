@@ -8,7 +8,7 @@
 import { getStore } from '@netlify/blobs';
 import { createHash } from 'node:crypto';
 
-const LOCALES = { en: 'en-GB', enus: 'en-US', es: 'es-ES', esmx: 'es-MX', fr: 'fr-FR', it: 'it-IT', de: 'de-DE', pt: 'pt-PT' };
+const LOCALES = { en: 'en-GB', enus: 'en-US', es: 'es-ES', esmx: 'es-MX', fr: 'fr-FR', it: 'it-IT', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL' };
 const FREE = Number(process.env.PRON_FREE_LIMIT || 3);
 const IP_CAP = Number(process.env.PRON_IP_LIMIT || 30);
 const ASSESS_FREE = Number(process.env.ASSESS_PRON_LIMIT || 9);

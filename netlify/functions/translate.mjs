@@ -11,7 +11,7 @@ const IP_CAP = Number(process.env.TRANSLATE_IP_LIMIT || 50);
 const hash = x => createHash('sha256').update('harley-says:' + x).digest('hex').slice(0, 24);
 
 const NAMES = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American, as spoken in Mexico)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
-const DEEPL_TARGET = { en: 'EN-GB', enus: 'EN-US', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT' };
+const DEEPL_TARGET = { en: 'EN-GB', enus: 'EN-US', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT', nl: 'NL' };
 const DEEPL_SOURCE = { en: 'EN', enus: 'EN', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT' };
 // Extra languages people can type in (translation source only)
 Object.assign(NAMES, { pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' });

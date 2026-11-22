@@ -172,7 +172,7 @@ const pesc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>
 
 
 // Azure only names sounds for US English, so label each sound with the letters that spell it.
-const PH_UNITS = ['sch','eau','tch','igh','dge','ção','ão','ões','sh','ch','th','ph','wh','ck','ng','qu','gu','gn','gl','gh','nh','lh','sc','ll','rr','ss','tt','nn','mm','pp','ff','dd','bb','cc','zz','ee','oo','ea','ai','ay','oa','ou','ow','oi','oy','au','aw','ie','ei','eu','äu','ue','ui','ey','ew','on','an','en','in','un'];
+const PH_UNITS = ['sch','ij','aa','uu','oe','eau','tch','igh','dge','ção','ão','ões','sh','ch','th','ph','wh','ck','ng','qu','gu','gn','gl','gh','nh','lh','sc','ll','rr','ss','tt','nn','mm','pp','ff','dd','bb','cc','zz','ee','oo','ea','ai','ay','oa','ou','ow','oi','oy','au','aw','ie','ei','eu','äu','ue','ui','ey','ew','on','an','en','in','un'];
 function phLabels(word, n){
   const src = String(word||'').replace(/[^\p{L}]/gu,'');
   if (!n) return [];

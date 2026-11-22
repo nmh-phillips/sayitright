@@ -11,7 +11,7 @@ const FREE = Number(process.env.COACH_FREE_LIMIT || 2);
 const IP_CAP = Number(process.env.COACH_IP_LIMIT || 20);
 const GLOBAL_CAP = Number(process.env.COACH_GLOBAL_LIMIT || 1000);
 const hash = x => createHash('sha256').update('harley-says-coach:' + x).digest('hex').slice(0, 24);
-const LANGS = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese' };
+const LANGS = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', nl: 'Dutch' };
 const UI = { en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' };
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 const clean = (s, n) => String(s == null ? '' : s).replace(/[\u0000-\u001f]/g, ' ').slice(0, n);

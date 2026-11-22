@@ -7,6 +7,7 @@ const ASSESS_PASSAGES = {
   fr: "L'été dernier, ma sœur et moi avons pris le train pour aller à la mer. Le voyage a été plus long que prévu, mais les paysages étaient magnifiques. Quand nous sommes arrivés, il faisait chaud et la plage était calme. Nous avons marché sur le sable, acheté une glace et regardé les bateaux rentrer au port. Le soir, nous avons trouvé un petit restaurant près de la gare. Le poisson était frais et le personnel très sympathique. C'était un voyage simple, mais c'est l'un de mes plus beaux souvenirs.",
   it: "L'estate scorsa, io e mia sorella abbiamo preso il treno per andare al mare. Il viaggio è stato più lungo del previsto, ma il paesaggio era bellissimo. Quando siamo arrivati, faceva caldo e la spiaggia era tranquilla. Abbiamo camminato sulla sabbia, comprato un gelato e guardato le barche tornare al porto. La sera abbiamo trovato un piccolo ristorante vicino alla stazione. Il pesce era fresco e il personale molto gentile. È stato un viaggio semplice, ma è uno dei miei ricordi più belli.",
   de: "Letzten Sommer sind meine Schwester und ich mit dem Zug ans Meer gefahren. Die Reise war länger als erwartet, aber die Landschaft war wunderschön. Als wir ankamen, war es warm und der Strand war ruhig. Wir sind am Strand entlanggelaufen, haben ein Eis gekauft und den Booten zugesehen, die in den Hafen zurückkamen. Am Abend haben wir ein kleines Restaurant in der Nähe des Bahnhofs gefunden. Der Fisch war frisch und das Personal sehr freundlich. Es war eine einfache Reise, aber sie ist eine meiner schönsten Erinnerungen.",
+  nl: "Afgelopen zomer zijn mijn zus en ik met de trein naar de kust gegaan. De reis duurde langer dan we hadden verwacht, maar het uitzicht was prachtig. Toen we aankwamen, was het warm en was het strand rustig. We liepen langs het water, kochten een ijsje en keken naar de boten die terugkwamen in de haven. 's Avonds vonden we een klein restaurant vlak bij het station. De vis was vers en het personeel was heel vriendelijk. Het was een eenvoudige reis, maar het is een van mijn mooiste herinneringen.",
   pt: "No verão passado, eu e a minha irmã fomos de comboio até à praia. A viagem foi mais longa do que esperávamos, mas a paisagem era linda. Quando chegámos, estava calor e a praia estava calma. Caminhámos pela areia, comprámos um gelado e vimos os barcos a voltar ao porto. À noite, encontrámos um pequeno restaurante perto da estação. O peixe estava fresco e o pessoal foi muito simpático. Foi uma viagem simples, mas é uma das minhas melhores memórias."
 };
 const ASSESS_MAX = { read: 180, speak: 300 };
@@ -37,7 +38,7 @@ function passageParts(){
 }
 // ---- streaming (Speech SDK): whole passage in one take, no 30-second limit ----
 const SDK_SRC = '/vendor/speech-sdk-1.53.0.min.js';
-const AZ_LOC = { en:'en-GB', enus:'en-US', es:'es-ES', esmx:'es-MX', fr:'fr-FR', it:'it-IT', de:'de-DE', pt:'pt-PT' };
+const AZ_LOC = { en:'en-GB', enus:'en-US', es:'es-ES', esmx:'es-MX', fr:'fr-FR', it:'it-IT', de:'de-DE', pt:'pt-PT', nl:'nl-NL' };
 function loadSDK(){
   if (window.SpeechSDK) return Promise.resolve();
   if (!A.sdkP) A.sdkP = new Promise((res, rej) => {

@@ -463,8 +463,8 @@ const store = {
   get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 };
-const ORDER = ['en','enus','es','esmx','fr','it','de','pt'];
-const FLAGS = {en:'🇬🇧',enus:'🇺🇸',es:'🇪🇸',esmx:'🇲🇽',fr:'🇫🇷',it:'🇮🇹',de:'🇩🇪',pt:'🇵🇹'};
+const ORDER = ['en','enus','es','esmx','fr','it','de','pt','nl'];
+const FLAGS = {en:'🇬🇧',enus:'🇺🇸',es:'🇪🇸',esmx:'🇲🇽',fr:'🇫🇷',it:'🇮🇹',de:'🇩🇪',pt:'🇵🇹',nl:'🇳🇱'};
 const UI = window.SIR_UI;
 const NAV = (navigator.languages&&navigator.languages[0]||navigator.language||'en-GB').toLowerCase();
 const IN_AMERICAS = (()=>{ const r=NAV.split('-')[1]||''; return ['us','ca','mx','br','ar','co','cl','pe','ve','419'].includes(r) || (Intl.DateTimeFormat().resolvedOptions().timeZone||'').startsWith('America/'); })();
@@ -852,7 +852,7 @@ els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; c
 
 // ---------- own phrase: input language, dictation, translation ----------
 const fromSel=$('fromLang'), trBtn=$('translateBtn'), trMsg=$('trMsg'), dictBtn=$('dictate');
-function fillFrom(){ const v=fromSel.value; fromSel.innerHTML=''; [...ORDER.filter(k=>DATA[k]), ...Object.keys(window.SIR_EXTRA)].forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=LN(k);fromSel.appendChild(o);}); if(v) fromSel.value=v; }
+function fillFrom(){ const v=fromSel.value; fromSel.innerHTML=''; [...new Set([...ORDER.filter(k=>DATA[k]), ...Object.keys(window.SIR_EXTRA)])].forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=LN(k);fromSel.appendChild(o);}); if(v) fromSel.value=v; }
 fillFrom();
 function syncFrom(){
   let f=store.get('sir_from',null);
