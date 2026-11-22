@@ -1,5 +1,5 @@
 // Netlify Function: POST /.netlify/functions/translate  { text, from, to }  ->  { translation }
-// Uses DeepL if DEEPL_API_KEY is set, otherwise Claude if ANTHROPIC_API_KEY is set.
+// Uses Claude (ANTHROPIC_API_KEY). Anthropic doesn't train on API data.
 // Set keys in Netlify: Project configuration -> Environment variables.
 // Free users get TRANSLATE_FREE_LIMIT translations a day per device (default 5),
 // with a backstop of TRANSLATE_IP_LIMIT per connection (default 50). Counts live in Netlify Blobs.
@@ -11,11 +11,10 @@ const IP_CAP = Number(process.env.TRANSLATE_IP_LIMIT || 50);
 const hash = x => createHash('sha256').update('harley-says:' + x).digest('hex').slice(0, 24);
 
 const NAMES = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American, as spoken in Mexico)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
-const DEEPL_TARGET = { en: 'EN-GB', enus: 'EN-US', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT-PT', nl: 'NL' };
-const DEEPL_SOURCE = { en: 'EN', enus: 'EN', es: 'ES', esmx: 'ES', fr: 'FR', it: 'IT', de: 'DE', pt: 'PT' };
+// Languages people can translate into (the languages being learnt)
+const TARGETS = new Set(['en', 'enus', 'es', 'esmx', 'fr', 'it', 'de', 'pt', 'nl']);
 // Extra languages people can type in (translation source only)
 Object.assign(NAMES, { pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' });
-Object.assign(DEEPL_SOURCE, { pl: 'PL', ro: 'RO', uk: 'UK', zh: 'ZH', ar: 'AR', nl: 'NL', tr: 'TR', ja: 'JA', ko: 'KO', vi: 'VI' });
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
@@ -31,9 +30,9 @@ export default async (req, context) => {
   const to = String(body.to || '');
   if (!text) return json({ error: 'No text' }, 400);
   if (text.length > 300) return json({ error: 'Text too long (max 300 characters)' }, 400);
-  if (!NAMES[to] || !NAMES[from] || !DEEPL_TARGET[to]) return json({ error: 'Unsupported language' }, 400);
+  if (!NAMES[to] || !NAMES[from] || !TARGETS.has(to)) return json({ error: 'Unsupported language' }, 400);
   if (from === to) return json({ translation: text });
-  if (!process.env.DEEPL_API_KEY && !process.env.ANTHROPIC_API_KEY) return json({ error: 'Translation not configured' }, 503);
+  if (!process.env.ANTHROPIC_API_KEY) return json({ error: 'Translation not configured' }, 503);
 
   // Daily free allowance (Pro accounts will skip this once logins and payments exist).
   const day = new Date().toISOString().slice(0, 10);
@@ -49,37 +48,13 @@ export default async (req, context) => {
   if (devUsed >= FREE || ipUsed >= IP_CAP) return json({ error: 'limit', limit: FREE, remaining: 0 }, 429);
 
   try {
-    let translation, via;
-    if (process.env.DEEPL_API_KEY) {
-      try { translation = await deepl(text, from, to); via = 'deepl'; }
-      catch (e) { if (!process.env.ANTHROPIC_API_KEY) throw e; translation = await claude(text, from, to); via = 'claude'; } // e.g. a source language DeepL doesn't support
-    }
-    else { translation = await claude(text, from, to); via = 'claude'; }
+    const translation = await claude(text, from, to), via = 'claude';
     if (store) { try { await store.set(devKey, String(devUsed + 1)); await store.set(ipKey, String(ipUsed + 1)); } catch {} }
     return json({ translation, via, limit: FREE, remaining: Math.max(0, FREE - devUsed - 1) });
   } catch (e) {
     return json({ error: e.message || 'Translation error' }, 502);
   }
 };
-
-async function deepl(text, from, to) {
-  const key = process.env.DEEPL_API_KEY;
-  // Free/Developer keys have used api-free.deepl.com; paid keys use api.deepl.com. Try the likely one first, then the other.
-  const hosts = key.endsWith(':fx') ? ['https://api-free.deepl.com', 'https://api.deepl.com'] : ['https://api.deepl.com', 'https://api-free.deepl.com'];
-  let last = 0;
-  for (const host of hosts) {
-    const r = await fetch(`${host}/v2/translate`, {
-      method: 'POST',
-      headers: { 'Authorization': `DeepL-Auth-Key ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: [text], source_lang: DEEPL_SOURCE[from], target_lang: DEEPL_TARGET[to] })
-    });
-    if (r.ok) { const j = await r.json(); return j.translations?.[0]?.text?.trim(); }
-    last = r.status;
-    if (r.status !== 403 && r.status !== 401) break; // only a wrong-host key error is worth retrying
-  }
-  if (last === 456) throw new Error('DeepL character allowance used up');
-  throw new Error(`DeepL error ${last}`);
-}
 
 async function claude(text, from, to) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {

@@ -48,7 +48,7 @@
 <p>To read a tip aloud, its text is sent to Microsoft Azure's text-to-speech service. Common phrases and Harley's barks are saved as audio so they load faster; these contain nothing about you.</p>
 
 <h3>Translations ("My phrase")</h3>
-<p>When you translate a phrase, the text is sent to <b>DeepL</b> (Germany) to translate it, or to Anthropic if DeepL isn't available.</p>
+<p>When you translate a phrase, the text is sent to <b>Anthropic</b> (Claude) to translate it.</p>
 
 <h3>Daily free allowances</h3>
 <p>To share the free daily allowances fairly and stop misuse, the app creates a random code stored in your browser (your "device ID"). Our server turns that code and your IP address into scrambled one-way codes (hashes) and counts how many times each is used per day. We can't work out who you are from them. Daily counts are deleted automatically within about a week.</p>
@@ -74,8 +74,7 @@
 <table>
 <tr><th>Provider</th><th>What for</th><th>Where</th></tr>
 <tr><td>Microsoft (Azure AI Speech)</td><td>Pronunciation scoring, Harley and Lilou's voices</td><td>UK data centre</td></tr>
-<tr><td>Anthropic (Claude)</td><td>"Assess me" feedback, coaching tips, backup translations</td><td>USA</td></tr>
-<tr><td>DeepL</td><td>Translations</td><td>EU (Germany)</td></tr>
+<tr><td>Anthropic (Claude)</td><td>"Assess me" feedback, coaching tips, translations</td><td>USA</td></tr>
 <tr><td>Netlify</td><td>Hosting, feedback and waitlist forms, usage counts</td><td>USA</td></tr>
 </table>
 <p>We don't sell or rent personal data, and we don't share it for advertising. We'd only disclose it otherwise if the law requires it.</p>
