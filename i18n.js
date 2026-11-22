@@ -580,7 +580,7 @@ const S={en:{q_label:'Quick check (less strict):'},es:{q_label:'Comprobación r�
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
 
-// Lilou, Harley's little sister (coach option)
+// Lilou, Harley's little cousin (coach option)
 (function(){
 const S={
  en:{c_btn_lilou:'🎀 Lilou explains',c_wait_lilou:'Lilou is thinking… 🎀',c_used_lilou:"You've used today's free tips. Unlimited coaching from Lilou and Harley is coming with Premium.",c_switch:'Switch coach to {name}'},
@@ -596,12 +596,12 @@ for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 // Story: Lilou
 (function(){
 const S={
- en:{cap3:'Harley and his little sister Lilou',story4:"Harley's little sister Lilou helps out too. Pick her as your coach and she'll explain your mistakes in her own voice."},
- es:{cap3:'Harley y su hermanita Lilou',story4:'Lilou, la hermanita de Harley, también ayuda. Elígela como tu coach y te explicará tus errores con su propia voz.'},
- fr:{cap3:'Harley et sa petite sœur Lilou',story4:'Lilou, la petite sœur de Harley, donne aussi un coup de patte. Choisissez-la comme coach et elle vous expliquera vos erreurs avec sa propre voix.'},
- it:{cap3:'Harley e la sua sorellina Lilou',story4:'Anche Lilou, la sorellina di Harley, dà una zampa. Sceglila come coach e ti spiegherà i tuoi errori con la sua voce.'},
- de:{cap3:'Harley und seine kleine Schwester Lilou',story4:'Harleys kleine Schwester Lilou hilft auch mit. Wähle sie als Coach, und sie erklärt dir deine Fehler mit ihrer eigenen Stimme.'},
- pt:{cap3:'O Harley e a irmãzinha Lilou',story4:'A Lilou, irmãzinha do Harley, também ajuda. Escolha-a como coach e ela explica os seus erros com a sua própria voz.'}
+ en:{cap3:'Harley and his little cousin Lilou',story4:"Harley's little cousin Lilou helps out too. Pick her as your coach and she'll explain your mistakes in her own voice."},
+ es:{cap3:'Harley y su primita Lilou',story4:'Lilou, la primita de Harley, también ayuda. Elígela como tu coach y te explicará tus errores con su propia voz.'},
+ fr:{cap3:'Harley et sa petite cousine Lilou',story4:'Lilou, la petite cousine de Harley, donne aussi un coup de patte. Choisissez-la comme coach et elle vous expliquera vos erreurs avec sa propre voix.'},
+ it:{cap3:'Harley e la sua cuginetta Lilou',story4:'Anche Lilou, la cuginetta di Harley, dà una zampa. Sceglila come coach e ti spiegherà i tuoi errori con la sua voce.'},
+ de:{cap3:'Harley und seine kleine Cousine Lilou',story4:'Harleys kleine Cousine Lilou hilft auch mit. Wähle sie als Coach, und sie erklärt dir deine Fehler mit ihrer eigenen Stimme.'},
+ pt:{cap3:'O Harley e a priminha Lilou',story4:'A Lilou, priminha do Harley, também ajuda. Escolha-a como coach e ela explica os seus erros com a sua própria voz.'}
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();

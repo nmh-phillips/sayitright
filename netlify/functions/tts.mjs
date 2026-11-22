@@ -14,7 +14,7 @@ const PRESETS = {
   B: { voice: 'en-US-BrianMultilingualNeural',  pitch: 14, rate: 10 },  // extra bouncy
   C: { voice: 'en-US-AndrewMultilingualNeural', pitch: 10, rate: 6  },  // warmer
   D: { voice: 'en-US-RyanMultilingualNeural',   pitch: 10, rate: 8  },
-  // Lilou (Harley's little sister)
+  // Lilou (Harley's little cousin)
   L1: { voice: 'en-US-AvaMultilingualNeural',  pitch: 10, rate: 6  },  // bright, friendly
   L2: { voice: 'en-US-EmmaMultilingualNeural', pitch: 12, rate: 6  },  // warm, cheerful
   L3: { voice: 'en-US-AvaMultilingualNeural',  pitch: 18, rate: 10 },  // younger, extra playful
