@@ -3,7 +3,7 @@
 // (localStorage 'sir_lang') with the Harley Says pronunciation app.
 (function () {
   'use strict';
-  const W = window.HG_WORDS, LANGS = window.HG_LANGS, TOPICS = window.HG_TOPICS;
+  const W = window.HG_WORDS, LANGS = window.HG_LANGS, TOPICS = window.HG_TOPICS, UI = window.HG_UI, GLOSS = window.HG_GLOSS;
   const $ = id => document.getElementById(id);
   const app = $('app');
   const store = {
@@ -31,11 +31,20 @@
   let topic = store.get('hs_games_topic', 'animals');
   if (!TOPICS.some(t => t.id === topic)) topic = 'animals';
   const prog = store.get('hs_games', { done: {} });
+  // Interface language: shared with Harley Says ('sir_ui').
+  let ui = (() => { const v = store.get('sir_ui', null); if (UI[v]) return v; const b = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase().split('-')[0]; return UI[b] ? b : 'en'; })();
+  function t(k, vars) { let v = (UI[ui] && UI[ui][k] !== undefined) ? UI[ui][k] : UI.en[k]; if (vars) for (const [a, b] of Object.entries(vars)) v = v.split('{' + a + '}').join(b); return v; }
+  const learnName = () => window.HG_LEARN_NAMES[lang] || LANGS[lang].name;
+  function applyStatic() {
+    document.documentElement.lang = ui;
+    document.documentElement.dir = window.HG_RTL[ui] ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  }
 
   function track(e) {
     try {
       if (location.protocol === 'file:') return;
-      fetch('/.netlify/functions/track', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ e, l: lang, u: 'games' }) }).catch(() => {});
+      fetch('/.netlify/functions/track', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ e, l: lang, u: ui }) }).catch(() => {});
     } catch (err) {}
   }
 
@@ -52,40 +61,49 @@
     speechSynthesis.cancel(); speechSynthesis.speak(u);
   }
 
-  const words = () => W[lang][topic].map(([w, c]) => ({ w: w.normalize('NFC'), clue: c, L: letters(w) }));
-  const topicName = () => (TOPICS.find(t => t.id === topic) || TOPICS[0]).name;
+  // Clues: English learners get English definitions (plus the meaning in their own language on the results screen).
+  // Everyone else gets the meaning in their interface language, unless that's the language being learnt.
+  function words() {
+    const off = TOPICS.findIndex(x => x.id === topic) * 12, en = lang === 'en' || lang === 'enus', base = lang === 'esmx' ? 'es' : lang;
+    const G = GLOSS[ui];
+    return W[lang][topic].map(([w, c], i) => {
+      let clue = c, tr = '';
+      if (en) { if (ui !== 'en' && G) tr = G[off + i]; }
+      else if (ui !== 'en' && ui !== base && G) clue = topic === 'past' ? c.replace(GLOSS.en[off + i], G[off + i]) : G[off + i];
+      return { w: w.normalize('NFC'), clue, tr, L: letters(w) };
+    });
+  }
+  const topicName = () => t('t_' + topic);
 
-  const GAMES = [
-    { id: 'wordsearch', name: 'Word search', ic: '🔎', desc: 'Find the hidden words in the grid.' },
-    { id: 'crossword', name: 'Crossword', ic: '✏️', desc: 'Fill the grid from the clues.' },
-    { id: 'match', name: 'Match pairs', ic: '🧩', desc: 'Pair each word with its meaning.' },
-    { id: 'unscramble', name: 'Unscramble', ic: '🔤', desc: 'Put the letters in the right order.' }
-  ];
+  const GAMES = [{ id: 'wordsearch', ic: '🔎' }, { id: 'crossword', ic: '✏️' }, { id: 'match', ic: '🧩' }, { id: 'unscramble', ic: '🔤' }];
+  GAMES.forEach(g => { Object.defineProperty(g, 'name', { get: () => t('g_' + g.id) }); Object.defineProperty(g, 'desc', { get: () => t('d_' + g.id) }); });
 
   // ---------- Harley ----------
   const HARLEY = '<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="10" y="10" width="280" height="280" rx="64" fill="#FF8A3D"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg>';
 
   // ---------- Hub ----------
   function hub() {
-    document.title = "Harley's Games — fun ways to learn vocabulary and verbs";
-    const langOpts = Object.entries(LANGS).map(([k, v]) => `<option value="${k}"${k === lang ? ' selected' : ''}>${esc(v.name)}</option>`).join('');
+    document.title = t('title');
+    const langOpts = Object.keys(LANGS).map(k => `<option value="${k}"${k === lang ? ' selected' : ''}>${esc(window.HG_LEARN_NAMES[k])}</option>`).join('');
+    const uiOpts = window.HG_UI_LANGS.map(([k, n]) => `<option value="${k}"${k === ui ? ' selected' : ''}>${esc(n)}</option>`).join('');
     app.innerHTML = `
       <section class="hero">
         <div class="hero-dog">${HARLEY}</div>
-        <div><h2>Fun ways to learn vocabulary and verbs</h2>
-        <p>Word searches, crosswords and quick puzzles in 7 languages. Free, no sign-up.</p></div>
+        <div><h2>${esc(t('heroH'))}</h2>
+        <p>${esc(t('heroP'))}</p></div>
       </section>
-      <div class="bar"><label>I'm learning <select id="hgLang">${langOpts}</select></label></div>
-      <nav class="chips" aria-label="Topics">${TOPICS.map(t => `<button type="button" data-topic="${t.id}" class="${t.id === topic ? 'on' : ''}"><span>${t.ic}</span> ${esc(t.name)}</button>`).join('')}</nav>
+      <div class="bar"><label>${esc(t('iSpeak'))} <select id="hgUi">${uiOpts}</select></label><label>${esc(t('learning'))} <select id="hgLang">${langOpts}</select></label></div>
+      <nav class="chips">${TOPICS.map(x => `<button type="button" data-topic="${x.id}" class="${x.id === topic ? 'on' : ''}"><span>${x.ic}</span> ${esc(t('t_' + x.id))}</button>`).join('')}</nav>
       <div class="cards">${GAMES.map(g => {
         const n = prog.done[g.id] || 0;
-        return `<a class="game" href="#${g.id}"><span class="ic">${g.ic}</span><b>${g.name}</b><span class="d">${g.desc}</span>${n ? `<span class="n">✓ Played ${n}×</span>` : ''}</a>`;
+        return `<a class="game" href="#${g.id}"><span class="ic">${g.ic}</span><b>${esc(g.name)}</b><span class="d">${esc(g.desc)}</span>${n ? `<span class="n">${esc(t('played', { n }))}</span>` : ''}</a>`;
       }).join('')}</div>
-      ${crossPromo('Can you say them too?', 'Harley Says listens to you and scores your pronunciation, sound by sound.')}
-      <section class="card about"><h3>How it works</h3>
-        <p>Pick the language you're learning and a topic, then choose a game. Tap any word you've found to hear it said out loud.</p>
-        <p>Verbs come as infinitives ("to eat") and in the past tense, so you practise the forms you'll actually use.</p></section>`;
+      ${crossPromo(t('promoH'), t('promoP'))}
+      <section class="card about"><h3>${esc(t('aboutH'))}</h3>
+        <p>${esc(t('about1'))}</p>
+        <p>${esc(t('about2'))}</p></section>`;
     $('hgLang').onchange = e => { lang = e.target.value; store.set('sir_lang', lang); };
+    $('hgUi').onchange = e => { ui = e.target.value; store.set('sir_ui', ui); applyStatic(); hub(); };
     app.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => {
       topic = b.dataset.topic; store.set('hs_games_topic', topic);
       app.querySelectorAll('[data-topic]').forEach(x => x.classList.toggle('on', x === b));
@@ -93,15 +111,15 @@
   }
 
   function crossPromo(h, p) {
-    return `<a class="promo" href="/?from=games"><span class="pic">🎙️</span><span><b>${esc(h)}</b><span>${esc(p)}</span></span><span class="go">Try Harley Says →</span></a>`;
+    return `<a class="promo" href="/?from=games"><span class="pic">🎙️</span><span><b>${esc(h)}</b><span>${esc(p)}</span></span><span class="go">${esc(t('promoGo'))}</span></a>`;
   }
 
-  function frame(game, inner, help) {
+  function frame(game, inner) {
     document.title = `${game.name} · ${topicName()} · Harley's Games`;
     app.innerHTML = `
-      <div class="ghead"><a href="#" class="back" aria-label="All games">←</a>
-        <div><h2>${game.ic} ${game.name}</h2><p class="sub">${esc(LANGS[lang].name)} · ${esc(topicName())}</p></div></div>
-      ${help ? `<p class="help">${help}</p>` : ''}
+      <div class="ghead"><a href="#" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
+        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${esc(learnName())} · ${esc(topicName())}</p></div></div>
+      <p class="help">${esc(t('h_' + game.id))}</p>
       <div id="game">${inner}</div>`;
   }
 
@@ -110,17 +128,17 @@
     const stars = mistakes === 0 ? 3 : mistakes <= 2 ? 2 : 1;
     prog.done[game.id] = (prog.done[game.id] || 0) + 1; store.set('hs_games', prog);
     track('game_done');
-    const msg = stars === 3 ? 'Woof woof! Perfect!' : stars === 2 ? 'Woof! Great job!' : 'Woof! You did it!';
+    const msg = t('done' + stars);
     $('game').innerHTML = `
       <section class="card done">
         <div class="done-dog">${HARLEY}</div>
         <h3>${msg}</h3>
         <div class="stars" aria-label="${stars} out of 3 stars">${'★'.repeat(stars)}<span>${'★'.repeat(3 - stars)}</span></div>
         ${extra ? `<p class="sub">${extra}</p>` : ''}
-        <div class="review">${list.map(x => `<button type="button" class="rw" data-say="${esc(x.w)}"><b>${esc(x.w)}</b><span>${esc(x.clue)}</span><i>🔊</i></button>`).join('')}</div>
-        <div class="row"><button type="button" class="btn primary" id="again">Play again</button><a class="btn" href="#">Other games</a></div>
+        <div class="review">${list.map(x => `<button type="button" class="rw" data-say="${esc(x.w)}"><b>${esc(x.w)}</b><span dir="auto">${esc(x.tr || x.clue)}</span><i>🔊</i></button>`).join('')}</div>
+        <div class="row"><button type="button" class="btn primary" id="again">${esc(t('again'))}</button><a class="btn" href="#">${esc(t('other'))}</a></div>
       </section>
-      ${crossPromo('Now say them out loud', "Practise your pronunciation with Harley Says. He'll tell you how you sounded.")}`;
+      ${crossPromo(t('promo2H'), t('promo2P'))}`;
     bindSay($('game'));
     $('again').onclick = () => route(true);
   }
@@ -159,12 +177,11 @@
         ${grid.map((row, r) => row.map((ch, c) => `<div class="c" data-r="${r}" data-c="${c}">${esc(ch)}</div>`).join('')).join('')}
       </div>
       <p class="count" id="wsCount"></p>
-      <ul class="wl" id="wl">${placed.map((x, i) => `<li data-i="${i}"><b>${esc(x.w)}</b> <span>${esc(x.clue)}</span></li>`).join('')}</ul>`,
-      'Drag across the letters (or tap the first and last letter) to find each word.');
+      <ul class="wl" id="wl">${placed.map((x, i) => `<li data-i="${i}"><b>${esc(x.w)}</b> <span><bdi>${esc(x.clue)}</bdi></span></li>`).join('')}</ul>`);
 
     const ws = $('ws'), cells = [...ws.children], cell = (r, c) => cells[r * size + c];
     let start = null, pending = null, cur = [], mistakes = 0, colour = 0;
-    const count = () => { $('wsCount').textContent = `${placed.filter(x => x.found).length} of ${placed.length} found`; };
+    const count = () => { $('wsCount').textContent = t('found', { n: placed.filter(x => x.found).length, m: placed.length }); };
     count();
     const at = e => { const el = document.elementFromPoint(e.clientX, e.clientY); return el && el.parentNode === ws ? { r: +el.dataset.r, c: +el.dataset.c } : null; };
     function line(a, b) {
@@ -183,7 +200,7 @@
       if (i < 0) return false;
       placed[i].found = true; colour = (colour % 6) + 1;
       path.forEach(p => cell(p.r, p.c).classList.add('f', 'k' + colour));
-      const li = $('wl').querySelector(`[data-i="${i}"]`); li.classList.add('got'); li.innerHTML += ' <button type="button" class="spk" aria-label="Listen">🔊</button>';
+      const li = $('wl').querySelector(`[data-i="${i}"]`); li.classList.add('got'); li.innerHTML += ` <button type="button" class="spk" aria-label="${esc(t('listen'))}">🔊</button>`;
       li.querySelector('.spk').onclick = () => say(placed[i].w);
       say(placed[i].w); count();
       if (placed.every(x => x.found)) setTimeout(() => finish(game, placed, mistakes), 700);
@@ -260,7 +277,7 @@
   function crossword(game) {
     const list = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= 11 && x.L.every(isLetter)));
     const cw = buildCrossword(list);
-    if (!cw) { frame(game, '<p class="count">Couldn\'t build a crossword for this topic. Try another one.</p>'); return; }
+    if (!cw) { frame(game, `<p class="count">${esc(t('noCw'))}</p>`); return; }
     const { minR, minC, h, w } = cw;
     const words2 = cw.placed.map(p => ({ x: p.x, r: p.r - minR, c: p.c - minC, d: p.d }));
     // Numbering, top-left to bottom-right.
@@ -269,17 +286,17 @@
     const ans = {}, num = {};
     words2.forEach(p => { p.cells.forEach(([r, c], i) => { ans[r + ',' + c] = p.x.L[i]; }); num[p.r + ',' + p.c] = p.num; });
     const clues = d => words2.filter(p => p.d === d).sort((a, b) => a.num - b.num)
-      .map(p => `<li data-w="${words2.indexOf(p)}"><b>${p.num}</b> ${esc(p.x.clue)} <span class="len">(${p.x.L.length})</span></li>`).join('');
+      .map(p => `<li data-w="${words2.indexOf(p)}"><b>${p.num}</b> <bdi>${esc(p.x.clue)}</bdi> <span class="len">(${p.x.L.length})</span></li>`).join('');
     let html = `<div class="cw" id="cw" style="grid-template-columns:repeat(${w},1fr);max-width:${Math.min(w * 44, 560)}px">`;
     for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) {
       const k = r + ',' + c;
       html += ans[k] ? `<div class="cc">${num[k] ? `<span class="no">${num[k]}</span>` : ''}<input data-k="${k}" maxlength="2" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Row ${r + 1}, column ${c + 1}"></div>` : '<div class="cc x"></div>';
     }
     html += `</div>
-      <div class="row"><button type="button" class="btn primary" id="cwCheck">Check</button><button type="button" class="btn" id="cwReveal">Reveal</button></div>
+      <div class="row"><button type="button" class="btn primary" id="cwCheck">${esc(t('check'))}</button><button type="button" class="btn" id="cwReveal">${esc(t('reveal'))}</button></div>
       <p class="count" id="cwMsg"></p>
-      <div class="clues"><div><h4>Across</h4><ol id="cwA">${clues('a')}</ol></div><div><h4>Down</h4><ol id="cwD">${clues('d')}</ol></div></div>`;
-    frame(game, html, 'Tap a square or a clue, then type. Accents are optional: "e" counts for "é".');
+      <div class="clues"><div><h4>${esc(t('across'))}</h4><ol id="cwA">${clues('a')}</ol></div><div><h4>${esc(t('down'))}</h4><ol id="cwD">${clues('d')}</ol></div></div>`;
+    frame(game, html);
 
     const inp = k => $('cw').querySelector(`[data-k="${k}"]`);
     let active = null, checks = 0;
@@ -329,11 +346,11 @@
       }
       if (right === total) {
         setTimeout(() => finish(game, words2.map(p => p.x), Math.max(0, checks - 1)), 600);
-      } else $('cwMsg').textContent = wrong ? `${wrong} letter${wrong > 1 ? 's' : ''} to fix (in red).` : `${total - right} squares to go.`;
+      } else $('cwMsg').textContent = wrong ? t('toFix', { n: wrong }) : t('toGo', { n: total - right });
     };
     $('cwReveal').onclick = () => {
       for (const k in ans) { const el = inp(k); el.value = ans[k]; el.parentNode.classList.remove('bad'); el.parentNode.classList.add('rev'); }
-      $('cwMsg').textContent = 'Answers revealed. Tap a clue to hear the word.';
+      $('cwMsg').textContent = t('revealed');
       app.querySelectorAll('.clues li').forEach(li => li.addEventListener('click', () => say(words2[+li.dataset.w].x.w)));
     };
   }
@@ -344,8 +361,8 @@
     const left = shuffle(pool.map((x, i) => ({ i, t: x.w }))), right = shuffle(pool.map((x, i) => ({ i, t: x.clue })));
     frame(game, `
       <div class="mp"><div id="mpL">${left.map(o => `<button type="button" data-i="${o.i}" class="mw">${esc(o.t)}</button>`).join('')}</div>
-      <div id="mpR">${right.map(o => `<button type="button" data-i="${o.i}" class="mm">${esc(o.t)}</button>`).join('')}</div></div>
-      <p class="count" id="mpMsg"></p>`, 'Tap a word, then its meaning.');
+      <div id="mpR">${right.map(o => `<button type="button" data-i="${o.i}" class="mm" dir="auto">${esc(o.t)}</button>`).join('')}</div></div>
+      <p class="count" id="mpMsg"></p>`);
     let selL = null, selR = null, done = 0, mistakes = 0;
     const t0 = Date.now();
     const tryPair = () => {
@@ -354,7 +371,7 @@
       if (a.dataset.i === b.dataset.i) {
         [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('ok'); x.disabled = true; });
         done++;
-        if (done === pool.length) { const s = Math.round((Date.now() - t0) / 1000); setTimeout(() => finish(game, pool, mistakes, `Time: ${s} seconds · ${mistakes} mistake${mistakes === 1 ? '' : 's'}`), 500); }
+        if (done === pool.length) { const s = Math.round((Date.now() - t0) / 1000); setTimeout(() => finish(game, pool, mistakes, t('time', { s, m: mistakes })), 500); }
       } else {
         mistakes++;
         [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('no'); setTimeout(() => x.classList.remove('no'), 400); });
@@ -368,18 +385,18 @@
   function unscramble(game) {
     const pool = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= 10)).slice(0, 8);
     let n = 0, mistakes = 0;
-    frame(game, '<div id="us"></div>', 'Tap the letters in the right order. Tap a placed letter to take it back.');
+    frame(game, '<div id="us"></div>');
     function round() {
       const x = pool[n];
       let tiles = x.L.map((ch, i) => ({ ch, id: i }));
       for (let t = 0; t < 10; t++) { tiles = shuffle(tiles); if (tiles.map(o => o.ch).join('') !== x.L.join('')) break; }
       const slots = Array(x.L.length).fill(null);
       $('us').innerHTML = `
-        <p class="count">Word ${n + 1} of ${pool.length}</p>
-        <div class="uclue">${esc(x.clue)}</div>
+        <p class="count">${esc(t('wordOf', { n: n + 1, m: pool.length }))}</p>
+        <div class="uclue" dir="auto">${esc(x.clue)}</div>
         <div class="slots" id="slots"></div>
         <div class="tiles" id="tiles"></div>
-        <div class="row"><button type="button" class="btn" id="usHint">💡 Hint</button><button type="button" class="btn" id="usSkip">Skip</button></div>`;
+        <div class="row"><button type="button" class="btn" id="usHint">${esc(t('hint'))}</button><button type="button" class="btn" id="usSkip">${esc(t('skip'))}</button></div>`;
       const draw = () => {
         $('slots').innerHTML = slots.map((s, i) => `<button type="button" class="slot${s ? ' full' : ''}" data-i="${i}">${s ? esc(s.ch) : ''}</button>`).join('');
         $('tiles').innerHTML = tiles.map(o => `<button type="button" class="tile" data-id="${o.id}"${slots.includes(o) ? ' disabled' : ''}>${esc(o.ch)}</button>`).join('');
@@ -423,6 +440,7 @@
     RUN[id](game);
   }
   window.addEventListener('hashchange', () => route());
+  applyStatic();
   route();
   try { if (!sessionStorage.getItem('hs_games_seen')) { sessionStorage.setItem('hs_games_seen', '1'); track('games'); } } catch (e) {}
 })();

@@ -33,8 +33,9 @@
   .hero p{margin:0;color:var(--muted)}
   .hero-dog{flex:0 0 72px;width:72px;animation:bob 3s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
-  .bar{margin-bottom:10px}
+  .bar{margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px 16px}
   .bar label{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+  .bar select{max-width:60vw}
   select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
   .chips button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 12px;border-radius:999px;font:600 13px Inter,sans-serif;cursor:pointer}
@@ -63,6 +64,7 @@
   .count{text-align:center;color:var(--muted);font-size:14px;margin:8px 0}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
   .shake{animation:shake .3s}
+  .ws,.cw,.slots,.tiles{direction:ltr}
   /* Word search */
   .ws{display:grid;gap:2px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;max-width:520px;margin:0 auto}
   .ws .c{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:700;border-radius:8px;cursor:pointer}
@@ -75,7 +77,7 @@
   .wl li b{filter:blur(4px);user-select:none}
   .wl li.got{background:var(--mintbg);border-color:#b7e4cc}
   .wl li.got b{filter:none;text-decoration:line-through;text-decoration-color:var(--mint)}
-  .spk{position:absolute;right:6px;top:6px;border:0;background:none;font-size:16px;cursor:pointer}
+  .spk{position:absolute;inset-inline-end:6px;top:6px;border:0;background:none;font-size:16px;cursor:pointer}
   /* Crossword */
   .cw{display:grid;gap:2px;margin:0 auto 4px}
   .cc{position:relative;aspect-ratio:1;background:#fff;border:1px solid #c9bda9;border-radius:4px}
@@ -116,25 +118,26 @@
   .done h3{margin:4px 0;font-size:22px}
   .stars{font-size:34px;color:#f5b301;letter-spacing:4px}
   .stars span{color:#e5dccd}
-  .review{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;text-align:left}
-  .rw{display:flex;flex-direction:column;gap:1px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 30px 8px 10px;cursor:pointer;position:relative;font:inherit;color:var(--ink);text-align:left}
+  .review{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px;text-align:start}
+  .rw{display:flex;flex-direction:column;gap:1px;border:1px solid var(--line);background:#fff;border-radius:12px;padding-block:8px;padding-inline:10px 30px;cursor:pointer;position:relative;font:inherit;color:var(--ink);text-align:start}
   .rw span{color:var(--muted);font-size:12.5px}
-  .rw i{position:absolute;right:8px;top:8px;font-style:normal}
+  .rw i{position:absolute;inset-inline-end:8px;top:8px;font-style:normal}
   footer{max-width:680px;margin:0 auto;padding:8px 16px 30px;color:var(--muted);font-size:13px;text-align:center}
   footer a{color:var(--muted);margin:0 6px}
 </style>
 </head>
 <body>
 <header>
-  <a class="brand" href="/games/"><svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="10" y="10" width="280" height="280" rx="64" fill="#FF8A3D"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg>Harley's <span>Games</span></a>
-  <a class="pron" href="/?from=games">🎙️ Pronunciation</a>
+  <a class="brand" href="/games/" dir="ltr"><svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="10" y="10" width="280" height="280" rx="64" fill="#FF8A3D"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg>Harley's <span>Games</span></a>
+  <a class="pron" href="/?from=games" data-t="pron">🎙️ Pronunciation</a>
 </header>
 <main id="app"></main>
 <footer>
-  <a href="/?from=games">Harley Says pronunciation</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a>
-  <p>For adults aged 18 and over.</p>
+  <a href="/?from=games" data-t="pronLink">Harley Says pronunciation</a><a href="/privacy.html" data-t="privacy">Privacy</a><a href="/terms.html" data-t="terms">Terms</a>
+  <p data-t="adults">For adults aged 18 and over.</p>
 </footer>
 <script src="/games/words.js"></script>
+<script src="/games/i18n.js"></script>
 <script src="/games/games.js"></script>
 </body>
 </html>

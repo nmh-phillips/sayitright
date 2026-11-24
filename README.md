@@ -68,5 +68,5 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - `games/index.html` (page and styles), `games/games.js` (Word search, Crossword, Match pairs, Unscramble), `games/words.js` (5 topics × 12 words × 9 learning languages; clues in English).
 - Shares the learning language with the pronunciation app (`sir_lang`), so switching between them keeps the language. Game progress is kept on the device (`hs_games`), not synced to accounts yet.
 - Cross-links both ways: games → "Try Harley Says" (`/?from=games`); app → "Harley's word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
-- Interface is English only for now. Stats events: `games`, `game_start`, `game_done`.
+- Interface in all 16 Harley Says interface languages (`games/i18n.js`: `HG_UI` screen text, `HG_GLOSS` word meanings in words.js order). Shares the "I speak" choice with the app (`sir_ui`). Clues show the meaning in the visitor's language; English learners get English definitions, with their own language on the results screen. AI-translated: get native speakers to check. Stats events: `games`, `game_start`, `game_done`.
 - To switch on `games.harleysays.com`: Netlify → Domain management → Add domain alias `games.harleysays.com`, then add the DNS record Netlify shows.
