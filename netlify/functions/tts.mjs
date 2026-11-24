@@ -3,6 +3,7 @@
 //   tip  : coaching tip; words in the language being learnt are wrapped in «» and read in that accent, same voice
 //   word : one word/phrase in the language being learnt
 //   clip : 'woof' | 'yay' | 'aww' — little doggy sounds for the end-of-section summary
+//   line : a whole sentence in the language being learnt, no bark first (Harley Chats)
 // Returns audio/mpeg. Clips are cached so repeats cost nothing.
 // Uses AZURE_SPEECH_KEY / AZURE_SPEECH_REGION. HARLEY_VOICE picks Harley's preset (default A); LILOU_VOICE picks Lilou's (L1-L4, default L1). Body may include persona: 'lilou'.
 // Budget: TTS_DAILY_CHARS across everyone (default 15000 ≈ 450k a month, inside Azure's free allowance), TTS_IP_LIMIT requests per connection (default 200).
@@ -37,7 +38,7 @@ export default async (req, context) => {
   if (!key || !region) return err('Voice not configured', 503);
   let b = {};
   try { b = await req.json(); } catch { return err('Bad JSON', 400); }
-  const kind = ['tip', 'word', 'clip'].includes(b.kind) ? b.kind : null;
+  const kind = ['tip', 'word', 'clip', 'line'].includes(b.kind) ? b.kind : null;
   const lilou = b.persona === 'lilou' || /^L\d$/.test(b.preset || '');
   const preset = PRESETS[b.preset] || (lilou ? (PRESETS[process.env.LILOU_VOICE] || PRESETS.L1) : (PRESETS[process.env.HARLEY_VOICE] || PRESETS.A));
   const clips = lilou ? LILOU_CLIPS : CLIPS;
@@ -52,6 +53,9 @@ export default async (req, context) => {
   if (kind === 'clip') {
     if (!clips[text]) return err('Unknown clip', 400);
     body = seg(...clips[text]);
+  } else if (kind === 'line') {
+    if (text.length > 400) return err('Too long', 400);
+    body = `<lang xml:lang="${target}">${seg(text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ''), 0, -6)}</lang>`;
   } else if (kind === 'word') {
     if (text.length > 120) return err('Too long', 400);
     body = foreign(text);

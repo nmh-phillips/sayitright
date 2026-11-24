@@ -3,7 +3,7 @@
 // The anonymous usage totals (usage-stats) and the shared audio cache (tts-cache) hold no personal data and are kept.
 import { getStore } from '@netlify/blobs';
 
-const STORES = ['pron-usage', 'ai-assess-usage', 'coach-usage', 'translate-usage', 'tts-usage'];
+const STORES = ['pron-usage', 'ai-assess-usage', 'coach-usage', 'translate-usage', 'tts-usage', 'chat-usage'];
 const KEEP_DAYS = 7;
 
 export default async () => {
