@@ -33,6 +33,7 @@
   if (!W[lang]) lang = defaultLang();
   let topic = store.get('hs_games_topic', 'animals');
   if (!TOPICS.some(t => t.id === topic)) topic = 'animals';
+  window.store = store; // account.js saves to the account whenever these change
   const prog = store.get('hs_games', { done: {} });
   const LEVELS = ['easy', 'medium', 'hard'];
   let level = store.get('hs_games_level', 'medium');
@@ -58,12 +59,15 @@
   const L3 = (e, m, h) => (level === 'easy' ? e : level === 'hard' ? h : m);
   // Interface language: shared with Harley Says ('sir_ui').
   let ui = (() => { const v = store.get('sir_ui', null); if (UI[v]) return v; const b = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase().split('-')[0]; return UI[b] ? b : 'en'; })();
-  function t(k, vars) { let v = (UI[ui] && UI[ui][k] !== undefined) ? UI[ui][k] : UI.en[k]; if (vars) for (const [a, b] of Object.entries(vars)) v = v.split('{' + a + '}').join(b); return v; }
+  const ACC = window.HG_ACC || {};
+  function t(k, vars) { let v = (UI[ui] && UI[ui][k] !== undefined) ? UI[ui][k] : UI.en[k] !== undefined ? UI.en[k] : (ACC[ui] && ACC[ui][k] !== undefined) ? ACC[ui][k] : (ACC.en || {})[k]; if (vars) for (const [a, b] of Object.entries(vars)) v = v.split('{' + a + '}').join(b); return v; }
   const learnName = () => window.HG_LEARN_NAMES[lang] || LANGS[lang].name;
+  window.t = (k, v) => t(k, v); // sign-in text (account.js)
   function applyStatic() {
     document.documentElement.lang = ui;
     document.documentElement.dir = window.HG_RTL[ui] ? 'rtl' : 'ltr';
-    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+    document.querySelectorAll('[data-t],[data-i18n]').forEach(el => { el.textContent = t(el.dataset.t || el.dataset.i18n); });
+    if (window.hsAccountRelabel) window.hsAccountRelabel();
   }
 
   function track(e) {
@@ -175,7 +179,8 @@
       const st = recordDaily();
       const shareTxt = `${t('dShareText')} 📅 ${dayKey()}\n${'⭐'.repeat(stars)} · ${t('dStreak', { n: st.streak })}\nhttps://harleysays.com/games/`;
       dailyBox = `<div class="dl-res"><b>${esc(t('dStreak', { n: st.streak }))}</b><span>${esc(t('dBack'))}</span>
-        <button type="button" class="btn" id="dShare" data-txt="${esc(shareTxt)}">📤 ${esc(t('dShare'))}</button></div>`;
+        <button type="button" class="btn" id="dShare" data-txt="${esc(shareTxt)}">📤 ${esc(t('dShare'))}</button>
+        ${window.hsAccount && window.hsAccount.ready() && !window.hsAccount.signedIn() ? `<button type="button" class="btn" id="dSave">👤 ${esc(t('acc_title'))}</button>` : ''}</div>`;
     }
     $('game').innerHTML = `
       <section class="card done">
@@ -190,6 +195,8 @@
       ${crossPromo(t('promo2H'), t('promo2P'))}`;
     bindSay($('game'));
     $('again').onclick = () => route(true);
+    const sv = $('dSave');
+    if (sv) sv.onclick = () => window.hsAccount.open();
     const sh = $('dShare');
     if (sh) sh.onclick = async () => {
       const txt = sh.dataset.txt;

@@ -1,11 +1,14 @@
 // Optional sign-in (email code or link, no password) so progress follows you across devices.
 // Uses Supabase. Hidden until SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY are set in Netlify (see README).
-// Synced: best scores, Assess me history and settings (languages, coach). Not synced: device ID and daily allowances.
+// Synced: best scores, Assess me history, settings (languages, coach) and Harley's Games progress
+// (games played, daily-puzzle streak, level and topic). Not synced: device ID and daily allowances.
+// Used on both the app page and the games page (games/).
 (function () {
   'use strict';
   const SCORE = 'sir_scores', HIST = 'sir_assess';
-  const PREFS = ['sir_lang', 'sir_from', 'sir_ui', 'sir_coach'];
-  const SYNC_KEYS = [SCORE, HIST].concat(PREFS);
+  const GAMES = 'hs_games', DAILY = 'hs_daily';
+  const PREFS = ['sir_lang', 'sir_from', 'sir_ui', 'sir_coach', 'hs_games_level', 'hs_games_topic'];
+  const SYNC_KEYS = [SCORE, HIST, GAMES, DAILY].concat(PREFS);
   const LIB = '/vendor/supabase-2.119.2.min.js';
   const AUTH_KEY = 'hs_auth';
   let cfg = null, sb = null, user = null, pushTimer = null, busy = false, email = '';
@@ -54,7 +57,19 @@
   // ---------- syncing ----------
   function localData() {
     const prefs = {}; PREFS.forEach(k => { const v = lsGet(k, undefined); if (v !== undefined) prefs[k] = v; });
-    return { v: 1, scores: lsGet(SCORE, {}), assess: lsGet(HIST, []), prefs };
+    return { v: 1, scores: lsGet(SCORE, {}), assess: lsGet(HIST, []), prefs, games: lsGet(GAMES, { done: {} }), daily: lsGet(DAILY, null) };
+  }
+  // Games: keep the higher play count per game; daily streak: the most recent day wins (ties: longer streak), best is the max.
+  function mergeGames(a, b) {
+    const done = Object.assign({}, (b && b.done) || {});
+    Object.entries((a && a.done) || {}).forEach(([k, v]) => { if (!(done[k] >= v)) done[k] = v; });
+    return { done };
+  }
+  function mergeDaily(a, b) {
+    if (!a || !a.last) return b || null;
+    if (!b || !b.last) return a;
+    const win = a.last > b.last ? a : b.last > a.last ? b : (a.streak >= b.streak ? a : b);
+    return { last: win.last, streak: win.streak, best: Math.max(a.best || 0, b.best || 0, win.streak || 0) };
   }
   function merge(local, remote, takeRemotePrefs) {
     const scores = Object.assign({}, remote.scores || {});
@@ -65,7 +80,7 @@
     });
     assess.sort((a, b) => String(b.date).localeCompare(String(a.date)));
     const prefs = takeRemotePrefs && remote.prefs && Object.keys(remote.prefs).length ? Object.assign({}, local.prefs, remote.prefs) : Object.assign({}, remote.prefs || {}, local.prefs);
-    return { v: 1, scores, assess: assess.slice(0, 10), prefs };
+    return { v: 1, scores, assess: assess.slice(0, 10), prefs, games: mergeGames(local.games, remote.games), daily: mergeDaily(local.daily, remote.daily) };
   }
   async function fetchRemote() {
     const { data, error } = await sb.from('progress').select('data').eq('user_id', user.id).maybeSingle();
@@ -86,9 +101,11 @@
       lsSet('hs_synced_uid', user.id);
       const changed = JSON.stringify(merged.scores) !== JSON.stringify(local.scores) ||
         JSON.stringify(merged.assess) !== JSON.stringify(local.assess) ||
+        JSON.stringify(merged.games) !== JSON.stringify(local.games) ||
+        JSON.stringify(merged.daily) !== JSON.stringify(local.daily) ||
         PREFS.some(k => JSON.stringify(merged.prefs[k]) !== JSON.stringify(local.prefs[k]));
       if (changed) {
-        lsSet(SCORE, merged.scores); lsSet(HIST, merged.assess);
+        lsSet(SCORE, merged.scores); lsSet(HIST, merged.assess); lsSet(GAMES, merged.games); if (merged.daily) lsSet(DAILY, merged.daily);
         PREFS.forEach(k => { if (merged.prefs[k] !== undefined) lsSet(k, merged.prefs[k]); });
         if (!dlgOpen()) location.reload(); else pendingReload = true;
       }
@@ -149,7 +166,7 @@
     const b = $('accSend'); b.disabled = true;
     try {
       await client();
-      const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + '/' } });
+      const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
       if (error) throw error;
       $('accSentTo').textContent = T('acc_sent', { e: email });
       $('accCode').value = ''; step('accStepCode'); setTimeout(() => $('accCode').focus(), 50);
@@ -203,6 +220,8 @@
 
   // Re-label the button when the interface language changes.
   window.hsAccountRelabel = () => { if (cfg) renderBtn(); };
+  // For the games page: offer sign-in after a daily puzzle.
+  window.hsAccount = { ready: () => !!cfg, signedIn: () => !!user, open: () => openDlg() };
 
   (async function init() {
     if (!btn() || !dlg()) return;
