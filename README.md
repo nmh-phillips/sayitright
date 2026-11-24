@@ -65,7 +65,11 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 
 ## Harley's Games (`/games/`)
 - Word games at `harleysays.com/games/`, a separate front door with its own look, same repo and same Netlify site. `games.harleysays.com` redirects there (see `netlify.toml`).
-- `games/index.html` (page and styles), `games/games.js` (Word search, Crossword, Match pairs, Unscramble), `games/words.js` (5 topics × 12 words × 9 learning languages; clues in English).
+- `games/index.html` (page and styles), `games/games.js` (Word search, Crossword, Match pairs, Unscramble), `games/words.js` (11 topics, 20–30 words each, 286 in all: one row per word with all learning languages and the meanings for every interface language; present and past tense rows use `infinitive>answer[>frame]`). `HG_SWAP` holds Latin American Spanish and US English swaps.
+- Difficulty (`hs_games_level`): Easy / Medium / Hard.
+  - Word search: 6 / 8 / 10 words; across and down only / plus diagonals / plus backwards.
+  - Crossword: 6 / 8 / 11 words; Easy shows each word's first letter; Hard hides word lengths and doesn't mark letters red (just says how many are wrong).
+  - Match pairs: 5 / 6 / 8 pairs. Unscramble: 6 / 8 / 10 words; Easy gives the first letter; Hard adds 2 decoy letters and has no hint.
 - Shares the learning language with the pronunciation app (`sir_lang`), so switching between them keeps the language. Game progress is kept on the device (`hs_games`), not synced to accounts yet.
 - Cross-links both ways: games → "Try Harley Says" (`/?from=games`); app → "Harley's word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
 - Interface in all 16 Harley Says interface languages (`games/i18n.js`: `HG_UI` screen text, `HG_GLOSS` word meanings in words.js order). Shares the "I speak" choice with the app (`sir_ui`). Clues show the meaning in the visitor's language; English learners get the meaning in their language plus a short English definition (English only if they speak English). AI-translated: get native speakers to check. Stats events: `games`, `game_start`, `game_done`.

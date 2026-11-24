@@ -37,9 +37,14 @@
   .bar label{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
   .bar select{max-width:60vw}
   select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
-  .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
   .chips button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 12px;border-radius:999px;font:600 13px Inter,sans-serif;cursor:pointer}
   .chips button.on{background:var(--sun);border-color:var(--sun);color:#fff}
+  .lvl{display:flex;align-items:center;gap:6px;margin:-2px 0 12px;flex-wrap:wrap}
+  .lvl span{font-weight:600;font-size:14px;margin-inline-end:4px}
+  .lvl button{border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:10px;font:600 13px Inter,sans-serif;cursor:pointer}
+  .lvl button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .cc input.given{color:var(--sun);background:#fff7f0}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
   .game{display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-decoration:none;color:var(--ink);box-shadow:0 2px 0 var(--line);transition:transform .1s}
   .game:active{transform:translateY(2px);box-shadow:none}

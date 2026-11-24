@@ -1,6 +1,5 @@
 // Harley's Games interface translations, in the same 16 interface languages as Harley Says.
-// HG_UI: screen text. HG_GLOSS: the meaning of each word, in the same order as games/words.js
-// (12 animals, 12 food, 12 town, 12 verbs, 12 past tense). AI-translated: get native speakers to check.
+// HG_UI: screen text. Word meanings live in games/words.js. AI-translated: get native speakers to check.
 window.HG_UI_LANGS = [['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['it', 'Italiano'], ['de', 'Deutsch'], ['pt', 'Português'], ['pl', 'Polski'], ['ro', 'Română'], ['uk', 'Українська'], ['zh', '中文（简体）'], ['ar', 'العربية'], ['nl', 'Nederlands'], ['tr', 'Türkçe'], ['ja', '日本語'], ['ko', '한국어'], ['vi', 'Tiếng Việt']];
 window.HG_RTL = { ar: true };
 window.HG_LEARN_NAMES = { en: 'English (UK)', enus: 'English (US)', es: 'Español (España)', esmx: 'Español (Latinoamérica)', fr: 'Français', it: 'Italiano', de: 'Deutsch', pt: 'Português', nl: 'Nederlands' };
@@ -264,23 +263,27 @@ window.HG_UI = {
   }
 };
 
-// Meanings, in words.js order: 12 animals | 12 food | 12 town | 12 verbs | 12 past tense (I ate … I opened).
-window.HG_GLOSS = {
-  en: 'dog|cat|horse|bird|fish|cow|pig|sheep|rabbit|mouse|duck|hen|bread|cheese|water|milk|apple|egg|rice|coffee|tea|sugar|salt|butter|street|station|airport|bridge|church|market|museum|hospital|park|shop|bank|square|to eat|to drink|to sleep|to walk|to speak|to read|to write|to buy|to open|to close|to sing|to dance|I ate|I drank|I slept|I walked|I spoke|I wrote|I bought|I went|I saw|I sang|I danced|I opened',
-  es: 'perro|gato|caballo|pájaro|pez|vaca|cerdo|oveja|conejo|ratón|pato|gallina|pan|queso|agua|leche|manzana|huevo|arroz|café|té|azúcar|sal|mantequilla|calle|estación|aeropuerto|puente|iglesia|mercado|museo|hospital|parque|tienda|banco|plaza|comer|beber|dormir|caminar|hablar|leer|escribir|comprar|abrir|cerrar|cantar|bailar|comí|bebí|dormí|caminé|hablé|escribí|compré|fui|vi|canté|bailé|abrí',
-  fr: "chien|chat|cheval|oiseau|poisson|vache|cochon|mouton|lapin|souris|canard|poule|pain|fromage|eau|lait|pomme|œuf|riz|café|thé|sucre|sel|beurre|rue|gare|aéroport|pont|église|marché|musée|hôpital|parc|magasin|banque|place|manger|boire|dormir|marcher|parler|lire|écrire|acheter|ouvrir|fermer|chanter|danser|j'ai mangé|j'ai bu|j'ai dormi|j'ai marché|j'ai parlé|j'ai écrit|j'ai acheté|je suis allé(e)|j'ai vu|j'ai chanté|j'ai dansé|j'ai ouvert",
-  it: 'cane|gatto|cavallo|uccello|pesce|mucca|maiale|pecora|coniglio|topo|anatra|gallina|pane|formaggio|acqua|latte|mela|uovo|riso|caffè|tè|zucchero|sale|burro|strada|stazione|aeroporto|ponte|chiesa|mercato|museo|ospedale|parco|negozio|banca|piazza|mangiare|bere|dormire|camminare|parlare|leggere|scrivere|comprare|aprire|chiudere|cantare|ballare|ho mangiato|ho bevuto|ho dormito|ho camminato|ho parlato|ho scritto|ho comprato|sono andato/a|ho visto|ho cantato|ho ballato|ho aperto',
-  de: 'Hund|Katze|Pferd|Vogel|Fisch|Kuh|Schwein|Schaf|Kaninchen|Maus|Ente|Huhn|Brot|Käse|Wasser|Milch|Apfel|Ei|Reis|Kaffee|Tee|Zucker|Salz|Butter|Straße|Bahnhof|Flughafen|Brücke|Kirche|Markt|Museum|Krankenhaus|Park|Laden|Bank|Platz|essen|trinken|schlafen|zu Fuß gehen|sprechen|lesen|schreiben|kaufen|öffnen|schließen|singen|tanzen|ich habe gegessen|ich habe getrunken|ich habe geschlafen|ich bin zu Fuß gegangen|ich habe gesprochen|ich habe geschrieben|ich habe gekauft|ich bin gegangen|ich habe gesehen|ich habe gesungen|ich habe getanzt|ich habe geöffnet',
-  pt: 'cão|gato|cavalo|pássaro|peixe|vaca|porco|ovelha|coelho|rato|pato|galinha|pão|queijo|água|leite|maçã|ovo|arroz|café|chá|açúcar|sal|manteiga|rua|estação|aeroporto|ponte|igreja|mercado|museu|hospital|parque|loja|banco|praça|comer|beber|dormir|caminhar|falar|ler|escrever|comprar|abrir|fechar|cantar|dançar|comi|bebi|dormi|caminhei|falei|escrevi|comprei|fui|vi|cantei|dancei|abri',
-  pl: 'pies|kot|koń|ptak|ryba|krowa|świnia|owca|królik|mysz|kaczka|kura|chleb|ser|woda|mleko|jabłko|jajko|ryż|kawa|herbata|cukier|sól|masło|ulica|dworzec|lotnisko|most|kościół|targ|muzeum|szpital|park|sklep|bank|plac|jeść|pić|spać|chodzić|mówić|czytać|pisać|kupować|otwierać|zamykać|śpiewać|tańczyć|jadłem/jadłam|piłem/piłam|spałem/spałam|chodziłem/chodziłam|mówiłem/mówiłam|pisałem/pisałam|kupiłem/kupiłam|poszedłem/poszłam|widziałem/widziałam|śpiewałem/śpiewałam|tańczyłem/tańczyłam|otworzyłem/otworzyłam',
-  ro: 'câine|pisică|cal|pasăre|pește|vacă|porc|oaie|iepure|șoarece|rață|găină|pâine|brânză|apă|lapte|măr|ou|orez|cafea|ceai|zahăr|sare|unt|stradă|gară|aeroport|pod|biserică|piață|muzeu|spital|parc|magazin|bancă|piață centrală|a mânca|a bea|a dormi|a merge pe jos|a vorbi|a citi|a scrie|a cumpăra|a deschide|a închide|a cânta|a dansa|am mâncat|am băut|am dormit|am mers pe jos|am vorbit|am scris|am cumpărat|am mers|am văzut|am cântat|am dansat|am deschis',
-  uk: 'собака|кіт|кінь|птах|риба|корова|свиня|вівця|кролик|миша|качка|курка|хліб|сир|вода|молоко|яблуко|яйце|рис|кава|чай|цукор|сіль|масло|вулиця|вокзал|аеропорт|міст|церква|ринок|музей|лікарня|парк|магазин|банк|площа|їсти|пити|спати|ходити пішки|говорити|читати|писати|купувати|відкривати|закривати|співати|танцювати|я їв/їла|я пив/пила|я спав/спала|я ходив/ходила пішки|я говорив/говорила|я писав/писала|я купив/купила|я пішов/пішла|я бачив/бачила|я співав/співала|я танцював/танцювала|я відкрив/відкрила',
-  zh: '狗|猫|马|鸟|鱼|奶牛|猪|羊|兔子|老鼠|鸭子|母鸡|面包|奶酪|水|牛奶|苹果|鸡蛋|米饭|咖啡|茶|糖|盐|黄油|街道|车站|机场|桥|教堂|市场|博物馆|医院|公园|商店|银行|广场|吃|喝|睡觉|走路|说话|读|写|买|打开|关上|唱歌|跳舞|我吃了|我喝了|我睡了|我走了路|我说了|我写了|我买了|我去了|我看见了|我唱了|我跳了舞|我打开了',
-  ar: 'كلب|قطة|حصان|طائر|سمكة|بقرة|خنزير|خروف|أرنب|فأر|بطة|دجاجة|خبز|جبن|ماء|حليب|تفاحة|بيضة|أرز|قهوة|شاي|سكر|ملح|زبدة|شارع|محطة|مطار|جسر|كنيسة|سوق|متحف|مستشفى|حديقة|متجر|بنك|ساحة|يأكل|يشرب|ينام|يمشي|يتكلم|يقرأ|يكتب|يشتري|يفتح|يغلق|يغني|يرقص|أكلتُ|شربتُ|نمتُ|مشيتُ|تكلمتُ|كتبتُ|اشتريتُ|ذهبتُ|رأيتُ|غنّيتُ|رقصتُ|فتحتُ',
-  nl: 'hond|kat|paard|vogel|vis|koe|varken|schaap|konijn|muis|eend|kip|brood|kaas|water|melk|appel|ei|rijst|koffie|thee|suiker|zout|boter|straat|station|vliegveld|brug|kerk|markt|museum|ziekenhuis|park|winkel|bank|plein|eten|drinken|slapen|lopen|spreken|lezen|schrijven|kopen|openen|sluiten|zingen|dansen|ik at|ik dronk|ik sliep|ik liep|ik sprak|ik schreef|ik kocht|ik ging|ik zag|ik zong|ik danste|ik opende',
-  tr: 'köpek|kedi|at|kuş|balık|inek|domuz|koyun|tavşan|fare|ördek|tavuk|ekmek|peynir|su|süt|elma|yumurta|pirinç|kahve|çay|şeker|tuz|tereyağı|sokak|istasyon|havalimanı|köprü|kilise|pazar|müze|hastane|park|dükkân|banka|meydan|yemek|içmek|uyumak|yürümek|konuşmak|okumak|yazmak|satın almak|açmak|kapatmak|şarkı söylemek|dans etmek|yedim|içtim|uyudum|yürüdüm|konuştum|yazdım|satın aldım|gittim|gördüm|şarkı söyledim|dans ettim|açtım',
-  ja: '犬|猫|馬|鳥|魚|牛|豚|羊|うさぎ|ねずみ|アヒル|めんどり|パン|チーズ|水|牛乳|りんご|卵|ご飯|コーヒー|お茶|砂糖|塩|バター|通り|駅|空港|橋|教会|市場|博物館|病院|公園|店|銀行|広場|食べる|飲む|寝る|歩く|話す|読む|書く|買う|開ける|閉める|歌う|踊る|食べた|飲んだ|寝た|歩いた|話した|書いた|買った|行った|見た|歌った|踊った|開けた',
-  ko: '개|고양이|말|새|물고기|소|돼지|양|토끼|쥐|오리|암탉|빵|치즈|물|우유|사과|달걀|쌀|커피|차|설탕|소금|버터|거리|역|공항|다리|교회|시장|박물관|병원|공원|가게|은행|광장|먹다|마시다|자다|걷다|말하다|읽다|쓰다|사다|열다|닫다|노래하다|춤추다|먹었어요|마셨어요|잤어요|걸었어요|말했어요|썼어요|샀어요|갔어요|봤어요|노래했어요|춤췄어요|열었어요',
-  vi: 'chó|mèo|ngựa|chim|cá|bò|lợn|cừu|thỏ|chuột|vịt|gà mái|bánh mì|phô mai|nước|sữa|táo|trứng|gạo|cà phê|trà|đường|muối|bơ|đường phố|nhà ga|sân bay|cây cầu|nhà thờ|chợ|bảo tàng|bệnh viện|công viên|cửa hàng|ngân hàng|quảng trường|ăn|uống|ngủ|đi bộ|nói|đọc|viết|mua|mở|đóng|hát|nhảy|tôi đã ăn|tôi đã uống|tôi đã ngủ|tôi đã đi bộ|tôi đã nói|tôi đã viết|tôi đã mua|tôi đã đi|tôi đã thấy|tôi đã hát|tôi đã nhảy|tôi đã mở'
-};
-Object.keys(window.HG_GLOSS).forEach(k => { window.HG_GLOSS[k] = window.HG_GLOSS[k].split('|'); });
+
+// Topics and difficulty levels added later.
+(function () {
+  const K = ["t_home", "t_body", "t_clothes", "t_family", "t_nature", "t_present", "level", "easy", "medium", "hard", "wrongHard"];
+  const S = {
+    en: ["At home", "Body", "Clothes", "Family & people", "Weather & nature", "Present tense", "Difficulty", "Easy", "Medium", "Hard", "Not quite: {n} letters are still wrong."],
+    es: ["En casa", "El cuerpo", "Ropa", "Familia y personas", "Tiempo y naturaleza", "Presente", "Dificultad", "Fácil", "Medio", "Difícil", "Casi: aún hay {n} letras mal."],
+    fr: ["À la maison", "Le corps", "Vêtements", "Famille et personnes", "Météo et nature", "Présent", "Difficulté", "Facile", "Moyen", "Difficile", "Presque : il reste {n} lettres fausses."],
+    it: ["In casa", "Il corpo", "Vestiti", "Famiglia e persone", "Meteo e natura", "Presente", "Difficoltà", "Facile", "Medio", "Difficile", "Quasi: ci sono ancora {n} lettere sbagliate."],
+    de: ["Zu Hause", "Der Körper", "Kleidung", "Familie & Menschen", "Wetter & Natur", "Gegenwart", "Schwierigkeit", "Leicht", "Mittel", "Schwer", "Fast: Noch {n} Buchstaben sind falsch."],
+    pt: ["Em casa", "O corpo", "Roupa", "Família e pessoas", "Tempo e natureza", "Presente", "Dificuldade", "Fácil", "Médio", "Difícil", "Quase: ainda há {n} letras erradas."],
+    pl: ["W domu", "Ciało", "Ubrania", "Rodzina i ludzie", "Pogoda i przyroda", "Czas teraźniejszy", "Poziom", "Łatwy", "Średni", "Trudny", "Prawie: wciąż błędne litery: {n}."],
+    ro: ["Acasă", "Corpul", "Haine", "Familie și oameni", "Vreme și natură", "Prezent", "Dificultate", "Ușor", "Mediu", "Greu", "Aproape: mai sunt {n} litere greșite."],
+    uk: ["Удома", "Тіло", "Одяг", "Родина й люди", "Погода й природа", "Теперішній час", "Складність", "Легко", "Середньо", "Складно", "Майже: ще неправильних літер: {n}."],
+    zh: ["家里", "身体", "衣服", "家人和人物", "天气和自然", "现在时", "难度", "简单", "中等", "困难", "差一点：还有 {n} 个字母不对。"],
+    ar: ["في البيت", "الجسم", "الملابس", "العائلة والناس", "الطقس والطبيعة", "المضارع", "الصعوبة", "سهل", "متوسط", "صعب", "اقتربت: ما زالت هناك {n} حروف خاطئة."],
+    nl: ["Thuis", "Lichaam", "Kleding", "Familie en mensen", "Weer en natuur", "Tegenwoordige tijd", "Moeilijkheid", "Makkelijk", "Gemiddeld", "Moeilijk", "Bijna: nog {n} letters fout."],
+    tr: ["Evde", "Vücut", "Giysiler", "Aile ve insanlar", "Hava ve doğa", "Geniş zaman", "Zorluk", "Kolay", "Orta", "Zor", "Az kaldı: hâlâ {n} harf yanlış."],
+    ja: ["家の中", "体", "服", "家族と人", "天気と自然", "現在形", "難易度", "かんたん", "ふつう", "むずかしい", "おしい！まだ{n}文字まちがっています。"],
+    ko: ["집에서", "몸", "옷", "가족과 사람", "날씨와 자연", "현재형", "난이도", "쉬움", "보통", "어려움", "아쉬워요! 아직 {n}글자가 틀렸어요."],
+    vi: ["Trong nhà", "Cơ thể", "Quần áo", "Gia đình và con người", "Thời tiết và thiên nhiên", "Thì hiện tại", "Độ khó", "Dễ", "Vừa", "Khó", "Gần đúng: vẫn còn {n} chữ sai."]
+  };
+  for (const l in S) K.forEach((k, i) => { window.HG_UI[l][k] = S[l][i]; });
+})();

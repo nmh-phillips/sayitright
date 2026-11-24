@@ -31,6 +31,10 @@
   let topic = store.get('hs_games_topic', 'animals');
   if (!TOPICS.some(t => t.id === topic)) topic = 'animals';
   const prog = store.get('hs_games', { done: {} });
+  const LEVELS = ['easy', 'medium', 'hard'];
+  let level = store.get('hs_games_level', 'medium');
+  if (!LEVELS.includes(level)) level = 'medium';
+  const L3 = (e, m, h) => (level === 'easy' ? e : level === 'hard' ? h : m);
   // Interface language: shared with Harley Says ('sir_ui').
   let ui = (() => { const v = store.get('sir_ui', null); if (UI[v]) return v; const b = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase().split('-')[0]; return UI[b] ? b : 'en'; })();
   function t(k, vars) { let v = (UI[ui] && UI[ui][k] !== undefined) ? UI[ui][k] : UI.en[k]; if (vars) for (const [a, b] of Object.entries(vars)) v = v.split('{' + a + '}').join(b); return v; }
@@ -64,12 +68,12 @@
   // Clues: English learners get the meaning in their own language plus a short English definition.
   // Everyone else gets the meaning in their interface language, unless that's the language being learnt.
   function words() {
-    const off = TOPICS.findIndex(x => x.id === topic) * 12, en = lang === 'en' || lang === 'enus', base = lang === 'esmx' ? 'es' : lang;
-    const G = GLOSS[ui];
+    const en = lang === 'en' || lang === 'enus', base = lang === 'esmx' ? 'es' : lang, form = TOPICS.find(x => x.id === topic).form;
+    const G = GLOSS[ui] && GLOSS[ui][topic], E = GLOSS.en[topic];
     return W[lang][topic].map(([w, c], i) => {
       let clue = c, tr = '';
-      if (en) { if (ui !== 'en' && G) { tr = G[off + i]; clue = `${tr} · ${c}`; } }
-      else if (ui !== 'en' && ui !== base && G) clue = topic === 'past' ? c.replace(GLOSS.en[off + i], G[off + i]) : G[off + i];
+      if (en) { if (ui !== 'en' && G) { tr = G[i]; clue = `${tr} · ${c}`; } }
+      else if (ui !== 'en' && ui !== base && G) clue = form ? c.replace(E[i], G[i]) : G[i];
       return { w: w.normalize('NFC'), clue, tr, L: letters(w) };
     });
   }
@@ -94,6 +98,7 @@
       </section>
       <div class="bar"><label>${esc(t('iSpeak'))} <select id="hgUi">${uiOpts}</select></label><label>${esc(t('learning'))} <select id="hgLang">${langOpts}</select></label></div>
       <nav class="chips">${TOPICS.map(x => `<button type="button" data-topic="${x.id}" class="${x.id === topic ? 'on' : ''}"><span>${x.ic}</span> ${esc(t('t_' + x.id))}</button>`).join('')}</nav>
+      <div class="lvl" role="group" aria-label="${esc(t('level'))}"><span>${esc(t('level'))}</span>${LEVELS.map(l => `<button type="button" data-level="${l}" class="${l === level ? 'on' : ''}">${esc(t(l))}</button>`).join('')}</div>
       <div class="cards">${GAMES.map(g => {
         const n = prog.done[g.id] || 0;
         return `<a class="game" href="#${g.id}"><span class="ic">${g.ic}</span><b>${esc(g.name)}</b><span class="d">${esc(g.desc)}</span>${n ? `<span class="n">${esc(t('played', { n }))}</span>` : ''}</a>`;
@@ -103,6 +108,10 @@
         <p>${esc(t('about1'))}</p>
         <p>${esc(t('about2'))}</p></section>`;
     $('hgLang').onchange = e => { lang = e.target.value; store.set('sir_lang', lang); };
+    app.querySelectorAll('[data-level]').forEach(b => b.onclick = () => {
+      level = b.dataset.level; store.set('hs_games_level', level);
+      app.querySelectorAll('[data-level]').forEach(x => x.classList.toggle('on', x === b));
+    });
     $('hgUi').onchange = e => { ui = e.target.value; store.set('sir_ui', ui); applyStatic(); hub(); };
     app.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => {
       topic = b.dataset.topic; store.set('hs_games_topic', topic);
@@ -118,7 +127,7 @@
     document.title = `${game.name} · ${topicName()} · Harley's Games`;
     app.innerHTML = `
       <div class="ghead"><a href="#" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
-        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${esc(learnName())} · ${esc(topicName())}</p></div></div>
+        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${esc(learnName())} · ${esc(topicName())} · ${esc(t(level))}</p></div></div>
       <p class="help">${esc(t('h_' + game.id))}</p>
       <div id="game">${inner}</div>`;
   }
@@ -146,10 +155,12 @@
 
   // ---------- Word search ----------
   function wordsearch(game) {
-    const pool = shuffle(words().filter(x => x.L.length >= 3)).slice(0, 8);
-    const size = Math.max(10, ...pool.map(x => x.L.length));
+    const maxLen = L3(9, 11, 13);
+    const pool = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= maxLen && x.L.every(isLetter))).slice(0, L3(6, 8, 10));
+    const size = Math.max(L3(9, 10, 12), ...pool.map(x => x.L.length));
     const grid = Array.from({ length: size }, () => Array(size).fill(''));
-    const DIRS = [[0, 1], [1, 0], [1, 1], [-1, 1]];
+    const FWD = [[0, 1], [1, 0], [1, 1], [-1, 1]];
+    const DIRS = L3([[0, 1], [1, 0]], FWD, FWD.concat(FWD.map(([a, b]) => [-a, -b])));
     const placed = [];
     for (const x of pool) {
       let ok = false;
@@ -157,7 +168,7 @@
         const [dr, dc] = rnd(DIRS), n = x.L.length;
         const r0 = Math.floor(Math.random() * size), c0 = Math.floor(Math.random() * size);
         const r1 = r0 + dr * (n - 1), c1 = c0 + dc * (n - 1);
-        if (r1 < 0 || r1 >= size || c1 >= size) continue;
+        if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
         let fit = true;
         for (let i = 0; i < n; i++) { const g = grid[r0 + dr * i][c0 + dc * i]; if (g && g !== x.L[i]) { fit = false; break; } }
         if (!fit) continue;
@@ -225,7 +236,7 @@
   }
 
   // ---------- Crossword ----------
-  function buildCrossword(list) {
+  function buildCrossword(list, maxWords) {
     const key = (r, c) => r + ',' + c;
     let best = null;
     for (let attempt = 0; attempt < 150; attempt++) {
@@ -250,7 +261,7 @@
       };
       put(order[0], 0, 0, 'a');
       for (const x of order.slice(1)) {
-        if (placed.length >= 8) break;
+        if (placed.length >= maxWords) break;
         const opts = [];
         for (const [k, g] of grid) {
           const [gr, gc] = k.split(',').map(Number);
@@ -275,8 +286,10 @@
   }
 
   function crossword(game) {
-    const list = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= 11 && x.L.every(isLetter)));
-    const cw = buildCrossword(list);
+    const list = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= L3(9, 11, 12) && x.L.every(isLetter)));
+    let cw = null;
+    for (let m = L3(6, 8, 11); !cw && m >= 4; m -= 2) cw = buildCrossword(list, m);
+    const showLen = level !== 'hard', strict = level === 'hard', givens = level === 'easy';
     if (!cw) { frame(game, `<p class="count">${esc(t('noCw'))}</p>`); return; }
     const { minR, minC, h, w } = cw;
     const words2 = cw.placed.map(p => ({ x: p.x, r: p.r - minR, c: p.c - minC, d: p.d }));
@@ -286,11 +299,13 @@
     const ans = {}, num = {};
     words2.forEach(p => { p.cells.forEach(([r, c], i) => { ans[r + ',' + c] = p.x.L[i]; }); num[p.r + ',' + p.c] = p.num; });
     const clues = d => words2.filter(p => p.d === d).sort((a, b) => a.num - b.num)
-      .map(p => `<li data-w="${words2.indexOf(p)}"><b>${p.num}</b> <bdi>${esc(p.x.clue)}</bdi> <span class="len">(${p.x.L.length})</span></li>`).join('');
+      .map(p => `<li data-w="${words2.indexOf(p)}"><b>${p.num}</b> <bdi>${esc(p.x.clue)}</bdi>${showLen ? ` <span class="len">(${p.x.L.length})</span>` : ''}</li>`).join('');
+    const given = {};
+    if (givens) words2.forEach(p => { given[p.cells[0].join(',')] = true; });
     let html = `<div class="cw" id="cw" style="grid-template-columns:repeat(${w},1fr);max-width:${Math.min(w * 44, 560)}px">`;
     for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) {
       const k = r + ',' + c;
-      html += ans[k] ? `<div class="cc">${num[k] ? `<span class="no">${num[k]}</span>` : ''}<input data-k="${k}" maxlength="2" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Row ${r + 1}, column ${c + 1}"></div>` : '<div class="cc x"></div>';
+      html += ans[k] ? `<div class="cc">${num[k] ? `<span class="no">${num[k]}</span>` : ''}<input data-k="${k}" maxlength="2" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Row ${r + 1}, column ${c + 1}"${given[k] ? ` value="${esc(ans[k])}" readonly class="given"` : ''}></div>` : '<div class="cc x"></div>';
     }
     html += `</div>
       <div class="row"><button type="button" class="btn primary" id="cwCheck">${esc(t('check'))}</button><button type="button" class="btn" id="cwReveal">${esc(t('reveal'))}</button></div>
@@ -322,13 +337,13 @@
         el.parentNode.classList.remove('bad', 'ok');
         if (ch && active) {
           const i = active.cells.findIndex(([r, c]) => r + ',' + c === k);
-          const nx = active.cells[i + 1];
+          const nx = active.cells.slice(i + 1).find(([r, c]) => !inp(r + ',' + c).readOnly);
           if (nx) inp(nx[0] + ',' + nx[1]).focus();
         }
       });
       el.addEventListener('keydown', e => {
         if (e.key === 'Backspace' && !el.value && active) {
-          const i = active.cells.findIndex(([r, c]) => r + ',' + c === k), pv = active.cells[i - 1];
+          const i = active.cells.findIndex(([r, c]) => r + ',' + c === k), pv = active.cells.slice(0, i).reverse().find(([r, c]) => !inp(r + ',' + c).readOnly);
           if (pv) { e.preventDefault(); const p = inp(pv[0] + ',' + pv[1]); p.value = ''; p.focus(); }
         }
       });
@@ -341,12 +356,14 @@
       for (const k in ans) {
         total++; const el = inp(k), v = el.value;
         if (!v) continue;
-        if (plain(v) === plain(ans[k])) { el.value = ans[k]; el.parentNode.classList.add('ok'); right++; }
-        else { el.parentNode.classList.add('bad'); wrong++; }
+        const okL = plain(v) === plain(ans[k]); // accents optional at every level
+        if (okL) { right++; if (!strict) { el.value = ans[k]; el.parentNode.classList.add('ok'); } }
+        else { wrong++; if (!strict) el.parentNode.classList.add('bad'); }
       }
       if (right === total) {
+        $('cw').querySelectorAll('input').forEach(el => { el.value = ans[el.dataset.k]; el.parentNode.classList.add('ok'); });
         setTimeout(() => finish(game, words2.map(p => p.x), Math.max(0, checks - 1)), 600);
-      } else $('cwMsg').textContent = wrong ? t('toFix', { n: wrong }) : t('toGo', { n: total - right });
+      } else $('cwMsg').textContent = wrong ? t(strict ? 'wrongHard' : 'toFix', { n: wrong }) : t('toGo', { n: total - right });
     };
     $('cwReveal').onclick = () => {
       for (const k in ans) { const el = inp(k); el.value = ans[k]; el.parentNode.classList.remove('bad'); el.parentNode.classList.add('rev'); }
@@ -357,7 +374,7 @@
 
   // ---------- Match pairs ----------
   function match(game) {
-    const pool = shuffle(words()).slice(0, 6);
+    const pool = shuffle(words()).slice(0, L3(5, 6, 8));
     const left = shuffle(pool.map((x, i) => ({ i, t: x.w }))), right = shuffle(pool.map((x, i) => ({ i, t: x.clue })));
     frame(game, `
       <div class="mp"><div id="mpL">${left.map(o => `<button type="button" data-i="${o.i}" class="mw">${esc(o.t)}</button>`).join('')}</div>
@@ -383,12 +400,14 @@
 
   // ---------- Unscramble ----------
   function unscramble(game) {
-    const pool = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= 10)).slice(0, 8);
+    const pool = shuffle(words().filter(x => x.L.length >= 3 && x.L.length <= L3(8, 10, 12) && x.L.every(isLetter))).slice(0, L3(6, 8, 10));
+    const all = [...new Set(pool.flatMap(x => x.L))];
     let n = 0, mistakes = 0;
     frame(game, '<div id="us"></div>');
     function round() {
       const x = pool[n];
       let tiles = x.L.map((ch, i) => ({ ch, id: i }));
+      if (level === 'hard') for (let d = 0; d < 2; d++) tiles.push({ ch: rnd(all), id: 100 + d }); // two decoy letters
       for (let t = 0; t < 10; t++) { tiles = shuffle(tiles); if (tiles.map(o => o.ch).join('') !== x.L.join('')) break; }
       const slots = Array(x.L.length).fill(null);
       $('us').innerHTML = `
@@ -396,7 +415,7 @@
         <div class="uclue" dir="auto">${esc(x.clue)}</div>
         <div class="slots" id="slots"></div>
         <div class="tiles" id="tiles"></div>
-        <div class="row"><button type="button" class="btn" id="usHint">${esc(t('hint'))}</button><button type="button" class="btn" id="usSkip">${esc(t('skip'))}</button></div>`;
+        <div class="row">${level === 'hard' ? '' : `<button type="button" class="btn" id="usHint">${esc(t('hint'))}</button>`}<button type="button" class="btn" id="usSkip">${esc(t('skip'))}</button></div>`;
       const draw = () => {
         $('slots').innerHTML = slots.map((s, i) => `<button type="button" class="slot${s ? ' full' : ''}" data-i="${i}">${s ? esc(s.ch) : ''}</button>`).join('');
         $('tiles').innerHTML = tiles.map(o => `<button type="button" class="tile" data-id="${o.id}"${slots.includes(o) ? ' disabled' : ''}>${esc(o.ch)}</button>`).join('');
@@ -410,8 +429,9 @@
           }
         });
       };
+      if (level === 'easy') { const o = tiles.find(t => t.ch === x.L[0]); o.locked = true; slots[0] = o; }
       draw();
-      $('usHint').onclick = () => {
+      if ($('usHint')) $('usHint').onclick = () => {
         mistakes++;
         const k = slots.findIndex((s, i) => !s || s.ch !== x.L[i]);
         if (k < 0) return;
