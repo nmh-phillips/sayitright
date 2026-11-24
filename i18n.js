@@ -721,3 +721,16 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Harley Chats: hands-free mode and tips at the end
+(function(){
+const S={
+ en:{ch_intro:'Have a real conversation in {lang}. {name} plays the barista, the waiter or your new neighbour. Just talk: {name} listens when it\'s your turn, and you get your tips at the end.',ch_auto:'Hands-free: the mic opens when {name} finishes talking',ch_tipsLive:'Show tips after each reply',ch_yourTurn:'Your turn, just talk',ch_speaking:'{name} is talking…',ch_tapTalk:'Tap to talk',ch_pause:'⏸ Pause',ch_review:'Your replies'},
+ es:{ch_intro:'Ten una conversación real en {lang}. {name} hace de camarero, dependiente o tu nuevo vecino. Solo habla: {name} te escucha cuando te toca, y al final recibes los consejos.',ch_auto:'Manos libres: el micro se abre cuando {name} termina de hablar',ch_tipsLive:'Ver consejos después de cada respuesta',ch_yourTurn:'Te toca, habla',ch_speaking:'{name} está hablando…',ch_tapTalk:'Toca para hablar',ch_pause:'⏸ Pausa',ch_review:'Tus respuestas'},
+ fr:{ch_intro:'Faites une vraie conversation en {lang}. {name} joue le serveur, le vendeur ou votre nouveau voisin. Parlez simplement : {name} vous écoute quand c\'est votre tour, et les conseils arrivent à la fin.',ch_auto:'Mains libres : le micro s\'ouvre quand {name} a fini de parler',ch_tipsLive:'Voir les conseils après chaque réponse',ch_yourTurn:'À vous, parlez',ch_speaking:'{name} parle…',ch_tapTalk:'Touchez pour parler',ch_pause:'⏸ Pause',ch_review:'Vos réponses'},
+ it:{ch_intro:'Fai una vera conversazione in {lang}. {name} fa il barista, il commesso o il tuo nuovo vicino. Parla e basta: {name} ti ascolta quando tocca a te, e i consigli arrivano alla fine.',ch_auto:'Mani libere: il microfono si apre quando {name} finisce di parlare',ch_tipsLive:'Mostra i consigli dopo ogni risposta',ch_yourTurn:'Tocca a te, parla',ch_speaking:'{name} sta parlando…',ch_tapTalk:'Tocca per parlare',ch_pause:'⏸ Pausa',ch_review:'Le tue risposte'},
+ de:{ch_intro:'Führe ein echtes Gespräch auf {lang}. {name} spielt den Kellner, die Verkäuferin oder deinen neuen Nachbarn. Sprich einfach: {name} hört zu, wenn du dran bist, und die Tipps gibt es am Ende.',ch_auto:'Freihändig: das Mikro geht an, wenn {name} fertig gesprochen hat',ch_tipsLive:'Tipps nach jeder Antwort zeigen',ch_yourTurn:'Du bist dran, sprich einfach',ch_speaking:'{name} spricht…',ch_tapTalk:'Tippen zum Sprechen',ch_pause:'⏸ Pause',ch_review:'Deine Antworten'},
+ pt:{ch_intro:'Tenha uma conversa a sério em {lang}. {name} faz de empregado de mesa, vendedor ou novo vizinho. Basta falar: {name} ouve quando é a sua vez, e as dicas chegam no fim.',ch_auto:'Mãos livres: o microfone abre quando {name} acaba de falar',ch_tipsLive:'Ver dicas depois de cada resposta',ch_yourTurn:'É a sua vez, fale',ch_speaking:'{name} está a falar…',ch_tapTalk:'Toque para falar',ch_pause:'⏸ Pausa',ch_review:'As suas respostas'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();
