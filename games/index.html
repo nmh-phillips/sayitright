@@ -45,6 +45,17 @@
   .lvl button{border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:10px;font:600 13px Inter,sans-serif;cursor:pointer}
   .lvl button.on{background:var(--ink);border-color:var(--ink);color:#fff}
   .cc input.given{color:var(--sun);background:#fff7f0}
+  .daily{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;background:linear-gradient(135deg,#FF8A3D,#FF6F61);color:#fff;border-radius:18px;padding:14px 16px;margin-bottom:14px;text-decoration:none;box-shadow:0 3px 0 #d96a22}
+  .daily .dl-top{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;opacity:.95}
+  .daily .dl-top b{font-size:16px}
+  .daily .dl-what{font-weight:700;font-size:18px}
+  .daily .dl-streak{grid-column:1;font-size:14px;opacity:.95}
+  .daily .dl-go{grid-row:2/4;grid-column:2;background:#fff;color:#d9531e;font-weight:800;font-size:14px;padding:10px 14px;border-radius:999px;text-align:center;max-width:150px}
+  .daily.done-today{background:linear-gradient(135deg,#1f9d62,#178a55);box-shadow:0 3px 0 #10683f}
+  .daily.done-today .dl-go{color:#178a55}
+  .dl-res{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--sun2);border-radius:14px;padding:12px;margin-top:12px}
+  .dl-res b{font-size:18px}
+  .dl-res span{color:var(--muted);font-size:14px}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
   .game{display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-decoration:none;color:var(--ink);box-shadow:0 2px 0 var(--line);transition:transform .1s}
   .game:active{transform:translateY(2px);box-shadow:none}

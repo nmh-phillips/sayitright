@@ -287,3 +287,27 @@ window.HG_UI = {
   };
   for (const l in S) K.forEach((k, i) => { window.HG_UI[l][k] = S[l][i]; });
 })();
+
+// Daily puzzle.
+(function () {
+  const K = ["dTitle", "dPlay", "dDone", "dStreak", "dStart", "dBest", "dShare", "dCopied", "dShareText", "dBack"];
+  const S = {
+    en: ["Daily puzzle", "Play today's →", "Done ✓", "🔥 {n}-day streak", "Play every day to build a streak", "best {n}", "Share", "Copied", "I solved today's Harley's Games puzzle!", "New puzzle tomorrow. See you then!"],
+    es: ["Reto del día", "Jugar el de hoy →", "Hecho ✓", "🔥 Racha de {n} días", "Juega cada día para hacer una racha", "récord {n}", "Compartir", "Copiado", "¡He resuelto el reto de hoy de Harley's Games!", "Mañana hay uno nuevo. ¡Hasta mañana!"],
+    fr: ["Défi du jour", "Jouer au défi →", "Terminé ✓", "🔥 Série de {n} jours", "Jouez chaque jour pour lancer une série", "record {n}", "Partager", "Copié", "J'ai résolu le défi du jour de Harley's Games !", "Nouveau défi demain. À demain !"],
+    it: ["Sfida del giorno", "Gioca quella di oggi →", "Fatto ✓", "🔥 Serie di {n} giorni", "Gioca ogni giorno per fare una serie", "record {n}", "Condividi", "Copiato", "Ho risolto la sfida di oggi di Harley's Games!", "Domani una nuova sfida. A domani!"],
+    de: ["Tagesrätsel", "Heutiges spielen →", "Erledigt ✓", "🔥 {n} Tage in Folge", "Spiel jeden Tag für eine Serie", "Rekord {n}", "Teilen", "Kopiert", "Ich habe das heutige Rätsel von Harley's Games gelöst!", "Morgen gibt's ein neues. Bis morgen!"],
+    pt: ["Desafio do dia", "Jogar o de hoje →", "Feito ✓", "🔥 {n} dias seguidos", "Jogue todos os dias para fazer uma sequência", "recorde {n}", "Partilhar", "Copiado", "Resolvi o desafio de hoje do Harley's Games!", "Amanhã há um novo. Até amanhã!"],
+    pl: ["Zagadka dnia", "Zagraj w dzisiejszą →", "Gotowe ✓", "🔥 Seria: {n} dni", "Graj codziennie, by zbudować serię", "rekord {n}", "Udostępnij", "Skopiowano", "Rozwiązałem dzisiejszą zagadkę Harley's Games!", "Jutro nowa zagadka. Do jutra!"],
+    ro: ["Provocarea zilei", "Joacă provocarea de azi →", "Gata ✓", "🔥 {n} zile la rând", "Joacă zilnic ca să faci o serie", "record {n}", "Distribuie", "Copiat", "Am rezolvat provocarea de azi din Harley's Games!", "Mâine vine una nouă. Pe mâine!"],
+    uk: ["Завдання дня", "Грати сьогоднішнє →", "Готово ✓", "🔥 {n} днів поспіль", "Грай щодня, щоб почати серію", "рекорд {n}", "Поділитися", "Скопійовано", "Я розв'язав сьогоднішнє завдання Harley's Games!", "Завтра буде нове. До завтра!"],
+    zh: ["每日一题", "玩今天的 →", "已完成 ✓", "🔥 连续 {n} 天", "每天玩一次，累积连续天数", "最佳 {n}", "分享", "已复制", "我完成了今天的 Harley's Games 每日一题！", "明天有新题，明天见！"],
+    ar: ["لغز اليوم", "العب لغز اليوم ←", "تم ✓", "🔥 {n} أيام متتالية", "العب كل يوم لتبدأ سلسلة", "الأفضل {n}", "مشاركة", "تم النسخ", "حللت لغز اليوم في Harley's Games!", "لغز جديد غدًا. نراك غدًا!"],
+    nl: ["Puzzel van de dag", "Speel die van vandaag →", "Klaar ✓", "🔥 {n} dagen op rij", "Speel elke dag voor een reeks", "record {n}", "Delen", "Gekopieerd", "Ik heb de puzzel van vandaag van Harley's Games opgelost!", "Morgen een nieuwe. Tot morgen!"],
+    tr: ["Günün bulmacası", "Bugünküyü oyna →", "Tamam ✓", "🔥 {n} günlük seri", "Seri yapmak için her gün oyna", "en iyi {n}", "Paylaş", "Kopyalandı", "Harley's Games'in bugünkü bulmacasını çözdüm!", "Yarın yeni bulmaca var. Yarın görüşürüz!"],
+    ja: ["今日のパズル", "今日のパズルで遊ぶ →", "クリア ✓", "🔥 {n}日連続", "毎日遊んで連続記録を作ろう", "最高 {n}", "シェア", "コピーしました", "Harley's Games の今日のパズルを解きました！", "また明日、新しいパズルで会おう！"],
+    ko: ["오늘의 퍼즐", "오늘 퍼즐 하기 →", "완료 ✓", "🔥 {n}일 연속", "매일 해서 연속 기록을 만드세요", "최고 {n}", "공유", "복사됨", "Harley's Games 오늘의 퍼즐을 풀었어요!", "내일 새 퍼즐이 나와요. 내일 만나요!"],
+    vi: ["Câu đố hôm nay", "Chơi câu đố hôm nay →", "Xong ✓", "🔥 Chuỗi {n} ngày", "Chơi mỗi ngày để tạo chuỗi", "cao nhất {n}", "Chia sẻ", "Đã sao chép", "Mình đã giải câu đố hôm nay của Harley's Games!", "Mai có câu đố mới. Hẹn gặp lại!"]
+  };
+  for (const l in S) K.forEach((k, i) => { window.HG_UI[l][k] = S[l][i]; });
+})();

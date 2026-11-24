@@ -11,8 +11,11 @@
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-  const rnd = a => a[Math.floor(Math.random() * a.length)];
+  // Random numbers: normal play uses Math.random; the daily puzzle uses a seeded generator so everyone gets the same one.
+  let R = Math.random;
+  const seeded = str => { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); } let a = h >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let x = Math.imul(a ^ (a >>> 15), 1 | a); x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; }; };
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const rnd = a => a[Math.floor(R() * a.length)];
 
   // Letters: one grid cell per character; German ß becomes capital ẞ so it stays one cell.
   const up = ch => (ch === 'ß' ? 'ẞ' : ch.toUpperCase());
@@ -34,6 +37,24 @@
   const LEVELS = ['easy', 'medium', 'hard'];
   let level = store.get('hs_games_level', 'medium');
   if (!LEVELS.includes(level)) level = 'medium';
+  // Daily puzzle: one per day per learning language, same for everyone; game type rotates, topic picked by the date.
+  let daily = false;
+  const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const dayNum = () => Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 864e5);
+  const dailyPlan = () => { const pick = seeded('topic|' + dayKey() + '|' + lang); return { game: ['crossword', 'wordsearch', 'unscramble', 'match'][dayNum() % 4], topic: window.HG_TOPICS[Math.floor(pick() * window.HG_TOPICS.length)].id }; };
+  const streakInfo = () => {
+    const d = store.get('hs_daily', { last: '', streak: 0, best: 0 });
+    const y = new Date(); y.setDate(y.getDate() - 1);
+    const alive = d.last === dayKey() || d.last === dayKey(y);
+    return { last: d.last, streak: alive ? d.streak : 0, best: d.best || 0, today: d.last === dayKey() };
+  };
+  function recordDaily() {
+    const s = streakInfo();
+    if (s.today) return s;
+    const n = { last: dayKey(), streak: s.streak + 1, best: Math.max(s.best, s.streak + 1) };
+    store.set('hs_daily', n); track('daily_done');
+    return Object.assign(n, { today: true });
+  }
   const L3 = (e, m, h) => (level === 'easy' ? e : level === 'hard' ? h : m);
   // Interface language: shared with Harley Says ('sir_ui').
   let ui = (() => { const v = store.get('sir_ui', null); if (UI[v]) return v; const b = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase().split('-')[0]; return UI[b] ? b : 'en'; })();
@@ -97,6 +118,7 @@
         <p>${esc(t('heroP'))}</p></div>
       </section>
       <div class="bar"><label>${esc(t('iSpeak'))} <select id="hgUi">${uiOpts}</select></label><label>${esc(t('learning'))} <select id="hgLang">${langOpts}</select></label></div>
+      ${dailyCard()}
       <nav class="chips">${TOPICS.map(x => `<button type="button" data-topic="${x.id}" class="${x.id === topic ? 'on' : ''}"><span>${x.ic}</span> ${esc(t('t_' + x.id))}</button>`).join('')}</nav>
       <div class="lvl" role="group" aria-label="${esc(t('level'))}"><span>${esc(t('level'))}</span>${LEVELS.map(l => `<button type="button" data-level="${l}" class="${l === level ? 'on' : ''}">${esc(t(l))}</button>`).join('')}</div>
       <div class="cards">${GAMES.map(g => {
@@ -107,7 +129,7 @@
       <section class="card about"><h3>${esc(t('aboutH'))}</h3>
         <p>${esc(t('about1'))}</p>
         <p>${esc(t('about2'))}</p></section>`;
-    $('hgLang').onchange = e => { lang = e.target.value; store.set('sir_lang', lang); };
+    $('hgLang').onchange = e => { lang = e.target.value; store.set('sir_lang', lang); const dc = $('dailyCard'); if (dc) dc.outerHTML = dailyCard(); };
     app.querySelectorAll('[data-level]').forEach(b => b.onclick = () => {
       level = b.dataset.level; store.set('hs_games_level', level);
       app.querySelectorAll('[data-level]').forEach(x => x.classList.toggle('on', x === b));
@@ -119,6 +141,16 @@
     });
   }
 
+  function dailyCard() {
+    const plan = dailyPlan(), g = GAMES.find(x => x.id === plan.game), s = streakInfo();
+    const date = new Date().toLocaleDateString(ui === 'zh' ? 'zh-CN' : ui === 'en' ? 'en-GB' : ui, { weekday: 'long', day: 'numeric', month: 'long' });
+    return `<a class="daily${s.today ? ' done-today' : ''}" id="dailyCard" href="#daily">
+      <span class="dl-top"><b>📅 ${esc(t('dTitle'))}</b><span>${esc(date)}</span></span>
+      <span class="dl-what">${g.ic} ${esc(g.name)} · ${esc(t('t_' + plan.topic))}</span>
+      <span class="dl-streak">${s.streak ? esc(t('dStreak', { n: s.streak })) : esc(t('dStart'))}${s.best > 1 ? ` · ${esc(t('dBest', { n: s.best }))}` : ''}</span>
+      <span class="dl-go">${esc(s.today ? t('dDone') : t('dPlay'))}</span></a>`;
+  }
+
   function crossPromo(h, p) {
     return `<a class="promo" href="/?from=games"><span class="pic">🎙️</span><span><b>${esc(h)}</b><span>${esc(p)}</span></span><span class="go">${esc(t('promoGo'))}</span></a>`;
   }
@@ -127,7 +159,7 @@
     document.title = `${game.name} · ${topicName()} · Harley's Games`;
     app.innerHTML = `
       <div class="ghead"><a href="#" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
-        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${esc(learnName())} · ${esc(topicName())} · ${esc(t(level))}</p></div></div>
+        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())} · ${esc(topicName())}${daily ? '' : ` · ${esc(t(level))}`}</p></div></div>
       <p class="help">${esc(t('h_' + game.id))}</p>
       <div id="game">${inner}</div>`;
   }
@@ -138,18 +170,32 @@
     prog.done[game.id] = (prog.done[game.id] || 0) + 1; store.set('hs_games', prog);
     track('game_done');
     const msg = t('done' + stars);
+    let dailyBox = '';
+    if (daily) {
+      const st = recordDaily();
+      const shareTxt = `${t('dShareText')} 📅 ${dayKey()}\n${'⭐'.repeat(stars)} · ${t('dStreak', { n: st.streak })}\nhttps://harleysays.com/games/`;
+      dailyBox = `<div class="dl-res"><b>${esc(t('dStreak', { n: st.streak }))}</b><span>${esc(t('dBack'))}</span>
+        <button type="button" class="btn" id="dShare" data-txt="${esc(shareTxt)}">📤 ${esc(t('dShare'))}</button></div>`;
+    }
     $('game').innerHTML = `
       <section class="card done">
         <div class="done-dog">${HARLEY}</div>
         <h3>${msg}</h3>
         <div class="stars" aria-label="${stars} out of 3 stars">${'★'.repeat(stars)}<span>${'★'.repeat(3 - stars)}</span></div>
         ${extra ? `<p class="sub">${extra}</p>` : ''}
+        ${dailyBox}
         <div class="review">${list.map(x => `<button type="button" class="rw" data-say="${esc(x.w)}"><b>${esc(x.w)}</b><span dir="auto">${esc(x.tr || x.clue)}</span><i>🔊</i></button>`).join('')}</div>
         <div class="row"><button type="button" class="btn primary" id="again">${esc(t('again'))}</button><a class="btn" href="#">${esc(t('other'))}</a></div>
       </section>
       ${crossPromo(t('promo2H'), t('promo2P'))}`;
     bindSay($('game'));
     $('again').onclick = () => route(true);
+    const sh = $('dShare');
+    if (sh) sh.onclick = async () => {
+      const txt = sh.dataset.txt;
+      try { if (navigator.share) { await navigator.share({ text: txt }); return; } } catch (e) { return; }
+      try { await navigator.clipboard.writeText(txt); sh.textContent = '✓ ' + t('dCopied'); } catch (e) {}
+    };
   }
   function bindSay(root) { root.querySelectorAll('[data-say]').forEach(b => b.addEventListener('click', () => say(b.dataset.say))); }
 
@@ -166,7 +212,7 @@
       let ok = false;
       for (let t = 0; t < 300 && !ok; t++) {
         const [dr, dc] = rnd(DIRS), n = x.L.length;
-        const r0 = Math.floor(Math.random() * size), c0 = Math.floor(Math.random() * size);
+        const r0 = Math.floor(R() * size), c0 = Math.floor(R() * size);
         const r1 = r0 + dr * (n - 1), c1 = c0 + dc * (n - 1);
         if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
         let fit = true;
@@ -452,11 +498,16 @@
   // ---------- Routing ----------
   const RUN = { wordsearch, crossword, match, unscramble };
   function route(again) {
-    const id = location.hash.slice(1), game = GAMES.find(g => g.id === id);
+    let id = location.hash.slice(1);
     if ('speechSynthesis' in window) speechSynthesis.cancel();
+    daily = id === 'daily'; R = Math.random;
+    topic = store.get('hs_games_topic', 'animals'); if (!TOPICS.some(x => x.id === topic)) topic = 'animals';
+    level = store.get('hs_games_level', 'medium'); if (!LEVELS.includes(level)) level = 'medium';
+    if (daily) { const plan = dailyPlan(); id = plan.game; topic = plan.topic; level = 'medium'; R = seeded('daily|' + dayKey() + '|' + lang); }
+    const game = GAMES.find(g => g.id === id);
     if (!game) { hub(); window.scrollTo(0, 0); return; }
     if (!again) window.scrollTo(0, 0);
-    track('game_start');
+    track(daily ? 'daily_start' : 'game_start');
     RUN[id](game);
   }
   window.addEventListener('hashchange', () => route());
