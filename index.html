@@ -41,13 +41,16 @@
   select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   header select{border-color:transparent}
   main{max-width:680px;margin:0 auto;padding:16px}
-  .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+  .groups{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:10px}
+  @media (max-width:420px){ .groups{grid-template-columns:repeat(3,1fr);gap:6px} .groups button{flex-direction:row;gap:6px;padding:9px 4px;font-size:12.5px} .groups button .ic{font-size:18px} }
   .groups button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;padding:9px 2px 8px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--muted);font:600 12px/1.15 Inter,sans-serif;cursor:pointer;text-align:center}
   .groups button .ic{font-size:21px;line-height:1}
   .groups button span:last-child{max-width:100%;overflow-wrap:anywhere}
   .groups button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .groups button.g-focus{background:#f1e9fb;border-color:#dccaf3;color:#5a2d91} .groups button.g-focus.on{background:#6b3fa0;color:#fff;border-color:#6b3fa0}
   .groups button.g-assess{background:#e3f6ec;border-color:#b7e4cc;color:#0b5d3b} .groups button.g-assess.on{background:#1a7f37;color:#fff;border-color:#1a7f37}
+  .groups button.g-chats{background:#eef1ff;border-color:#c7d0fb;color:#2a3aa8;position:relative} .groups button.g-chats.on{background:#3346C8;color:#fff;border-color:#3346C8}
+  .groups button.g-chats::after{content:'NEW';position:absolute;top:-6px;right:-3px;background:#FF8A3D;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px}
   .groups button.g-premium{background:#fff8e1;border-color:#f3dfa0;color:#8a6d00} .groups button.g-premium.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
   .tabs:empty{display:none}
   .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
@@ -361,6 +364,7 @@
   </section>
 
   <section class="card" id="assessCard" style="display:none"></section>
+  <section class="card" id="chatCard" style="display:none" aria-live="polite"></section>
 
   <section class="card">
     <div class="progress"><span id="progText">0 of 10 phrases mastered (80%+)</span></div>
@@ -518,6 +522,7 @@ const DATA = window.SIR_DATA;
 function track(e){ try{ if(location.protocol==='file:') return; fetch('/.netlify/functions/track',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({e,l:typeof lang!=='undefined'?lang:'',u:typeof ui!=='undefined'?ui:''})}).catch(()=>{}); }catch(err){} }
 const CUSTOM = 'My phrase';
 const ASSESS = 'Assess me';
+const CHATS = 'Chats';
 const FOCUS = 'Focus packs';
 const FOCUS_SETS = ['Past tense'];
 const FOCUS_LOCKED = [['f_future','f_futureD'],['f_irregular','f_irregularD'],['f_questions','f_questionsD'],['f_numbers','f_numbersD'],['f_polite','f_politeD'],['f_vocab','f_vocabD']];
@@ -599,7 +604,7 @@ function lev(x,y){
 }
 
 // ---------- current phrase ----------
-function list(){ if(isLocked(set) || set===ASSESS || set===FOCUS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
+function list(){ if(isLocked(set) || set===ASSESS || set===FOCUS || set===CHATS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
 function current(){ return list()[idx]; }
 function key(p){ return lang+'|'+p[0]; }
 
@@ -630,13 +635,14 @@ function renderFocus(){
 document.addEventListener('click',e=>{ if(e.target.closest('[data-fback]')){ set=FOCUS; idx=0; render(); } });
 // Two-level menu: 5 section buttons, then the topics of the chosen section (Phrases / Premium) underneath.
 let lastPhraseSet=null;
-function groupOf(s){ return s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
+function groupOf(s){ return s===CHATS?'chats': s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
 function renderTabs(){
   const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n));
   const g = groupOf(set);
   if(g==='phrases') lastPhraseSet=set;
   const groups = [
     ['phrases','📚','g_phrases', ()=>{ set = free.includes(lastPhraseSet) ? lastPhraseSet : free[0]; }],
+    ['chats','💬','g_chats', ()=>{ set=CHATS; }],
     ['mine','✏️','g_mine', ()=>{ set=CUSTOM; }],
     ['focus','🎯','g_focus', ()=>{ set=FOCUS; }],
     ['assess','📊','g_assess', ()=>{ set=ASSESS; }],
@@ -682,7 +688,9 @@ function render(){
   renderTabs();
   els.customCard.style.display = set===CUSTOM ? 'block':'none';
   const locked = isLocked(set);
-  els.practice.style.display = (locked || set===ASSESS || set===FOCUS) ? 'none':'block';
+  els.practice.style.display = (locked || set===ASSESS || set===FOCUS || set===CHATS) ? 'none':'block';
+  $('chatCard').style.display = set===CHATS ? 'block':'none';
+  if(set===CHATS && window.renderChat) window.renderChat();
   $('focusCard').style.display = set===FOCUS ? 'block':'none';
   if(set===FOCUS) renderFocus();
   const inFocus = FOCUS_SETS.includes(set);
@@ -882,7 +890,7 @@ function applyUI(){
 applyUI();
 uiSel.onchange=async()=>{ const v=uiSel.value; await loadUILang(v); ui=window.SIR_UI[v]?v:'en'; store.set('sir_ui',ui); applyUI(); if(typeof fillFrom==='function'){ fillFrom(); } render(); if(typeof syncFrom==='function') syncFrom(); };
 els.lang.value=lang;
-els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(set!==ASSESS && set!==FOCUS && !FOCUS_SETS.includes(set)) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
+els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(window.chatLangChanged) window.chatLangChanged(); if(set!==ASSESS && set!==FOCUS && set!==CHATS && !FOCUS_SETS.includes(set)) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
 els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
@@ -1061,6 +1069,7 @@ render();
 <script src="assess.js"></script>
 <script src="pron.js"></script>
 <script src="lesson.js"></script>
+<script src="chat.js"></script>
 <script src="account.js"></script>
 </body>
 </html>
