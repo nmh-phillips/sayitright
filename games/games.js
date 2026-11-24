@@ -61,14 +61,14 @@
     speechSynthesis.cancel(); speechSynthesis.speak(u);
   }
 
-  // Clues: English learners get English definitions (plus the meaning in their own language on the results screen).
+  // Clues: English learners get the meaning in their own language plus a short English definition.
   // Everyone else gets the meaning in their interface language, unless that's the language being learnt.
   function words() {
     const off = TOPICS.findIndex(x => x.id === topic) * 12, en = lang === 'en' || lang === 'enus', base = lang === 'esmx' ? 'es' : lang;
     const G = GLOSS[ui];
     return W[lang][topic].map(([w, c], i) => {
       let clue = c, tr = '';
-      if (en) { if (ui !== 'en' && G) tr = G[off + i]; }
+      if (en) { if (ui !== 'en' && G) { tr = G[off + i]; clue = `${tr} · ${c}`; } }
       else if (ui !== 'en' && ui !== base && G) clue = topic === 'past' ? c.replace(GLOSS.en[off + i], G[off + i]) : G[off + i];
       return { w: w.normalize('NFC'), clue, tr, L: letters(w) };
     });
