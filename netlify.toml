@@ -2,6 +2,19 @@
   publish = "."
   command = ""
 
+# games.harleysays.com is a short address for the word games at harleysays.com/games/
+[[redirects]]
+  from = "https://games.harleysays.com/*"
+  to = "https://harleysays.com/games/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://games.harleysays.com/*"
+  to = "https://harleysays.com/games/:splat"
+  status = 301
+  force = true
+
 # Send every other address to the main domain, keeping the page path.
 [[redirects]]
   from = "https://harleysays.co.uk/*"

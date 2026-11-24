@@ -62,3 +62,11 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - `lesson.js`: tapping a topic or focus pack opens a full-screen, colour-coded lesson (one phrase at a time, big animated Harley/Lilou, progress bar, swipe left/right or Next/Back). It reuses the normal practice card, so scoring, coaching and "Each sound" are unchanged.
 - Every 10 phrases a round summary shows that round's score (this session's attempts), stars, Harley's reaction and the weakest phrases, with Continue / Practise again. After the last round the full topic summary appears.
 - Close with ✕, Esc or the phone's Back button. "▶ Start lesson" on the normal card re-enters. Stats events: `lesson`, `lesson_round`. Strings `ls_*` in all 16 languages.
+
+## Harley's Games (`/games/`)
+- Word games at `harleysays.com/games/`, a separate front door with its own look, same repo and same Netlify site. `games.harleysays.com` redirects there (see `netlify.toml`).
+- `games/index.html` (page and styles), `games/games.js` (Word search, Crossword, Match pairs, Unscramble), `games/words.js` (5 topics × 12 words × 9 learning languages; clues in English).
+- Shares the learning language with the pronunciation app (`sir_lang`), so switching between them keeps the language. Game progress is kept on the device (`hs_games`), not synced to accounts yet.
+- Cross-links both ways: games → "Try Harley Says" (`/?from=games`); app → "Harley's word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
+- Interface is English only for now. Stats events: `games`, `game_start`, `game_done`.
+- To switch on `games.harleysays.com`: Netlify → Domain management → Add domain alias `games.harleysays.com`, then add the DNS record Netlify shows.

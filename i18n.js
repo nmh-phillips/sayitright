@@ -671,3 +671,16 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Harley's Games link (games/)
+(function(){
+const S={
+ en:{gm_h:"🎮 Harley's word games",gm_p:"Learn vocabulary and verbs with word searches, crosswords and quick puzzles.",gm_btn:"Play the games →",gm_foot:"🎮 Word games"},
+ es:{gm_h:"🎮 Los juegos de palabras de Harley",gm_p:"Aprende vocabulario y verbos con sopas de letras, crucigramas y pasatiempos rápidos.",gm_btn:"Jugar →",gm_foot:"🎮 Juegos de palabras"},
+ fr:{gm_h:"🎮 Les jeux de mots de Harley",gm_p:"Apprenez du vocabulaire et des verbes avec des mots mêlés, des mots croisés et des petits jeux.",gm_btn:"Jouer →",gm_foot:"🎮 Jeux de mots"},
+ it:{gm_h:"🎮 I giochi di parole di Harley",gm_p:"Impara vocaboli e verbi con crucipuzzle, cruciverba e giochi veloci.",gm_btn:"Gioca →",gm_foot:"🎮 Giochi di parole"},
+ de:{gm_h:"🎮 Harleys Wortspiele",gm_p:"Lerne Wörter und Verben mit Suchrätseln, Kreuzworträtseln und kurzen Spielen.",gm_btn:"Jetzt spielen →",gm_foot:"🎮 Wortspiele"},
+ pt:{gm_h:"🎮 Os jogos de palavras do Harley",gm_p:"Aprenda vocabulário e verbos com sopas de letras, palavras cruzadas e jogos rápidos.",gm_btn:"Jogar →",gm_foot:"🎮 Jogos de palavras"}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

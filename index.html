@@ -276,6 +276,11 @@
   .ph.ok{background:var(--goodbg);color:var(--good)} .ph.mid{background:var(--midbg);color:var(--mid)} .ph.bad{background:var(--badbg);color:var(--bad)}
   .pron-tip{font-size:14px;margin:10px 0 0}
   @keyframes flash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px #f5c542}}
+  .games-link{display:flex;align-items:center;gap:12px;flex-wrap:wrap;text-decoration:none;color:var(--ink);background:#FFF8EF;border-color:#f3dcc4}
+  .games-link .gl-ic{font-size:30px}
+  .games-link .gl-t{flex:1 1 200px;display:flex;flex-direction:column;gap:2px}
+  .games-link .gl-t span{color:var(--muted);font-size:14px;line-height:1.4}
+  .games-link .gl-go{background:#FF8A3D;color:#fff;font-weight:700;font-size:14px;padding:9px 14px;border-radius:999px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -362,6 +367,11 @@
     <div class="bar"><i id="progBar"></i></div>
   </section>
 
+  <a class="card games-link" href="/games/?from=app" id="gamesLink">
+    <span class="gl-t"><b data-i18n="gm_h">🎮 Harley's word games</b><span data-i18n="gm_p">Learn vocabulary and verbs with word searches, crosswords and quick puzzles.</span></span>
+    <span class="gl-go" data-i18n="gm_btn">Play the games →</span>
+  </a>
+
   <section class="card premium" id="premiumCard">
     <span class="badge" data-i18n="comingSoon">Coming soon</span>
     <h2 data-i18n="premTitle">⭐ Harley Says Premium</h2>
@@ -420,7 +430,7 @@
   </details>
 </main>
 <footer>
-  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
+  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/games/" data-i18n="gm_foot">🎮 Word games</a><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
   <p class="adult" data-i18n="lg_adult">For adults aged 18 and over.</p>
   <span data-i18n="footer"></span>
 </footer>
