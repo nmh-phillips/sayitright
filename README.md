@@ -57,3 +57,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Meanings for the new English Basics/Café/Travel phrases are in all 15 other interface languages (`SIR_MEANINGS`, appended to `i18n.js` and `i18n/*.js`).
 - French, Italian, German, Portuguese and Dutch also have 40 per topic (second batch appended after the first).
 - Premium copy now says "five times the free library".
+
+## Lesson mode
+- `lesson.js`: tapping a topic or focus pack opens a full-screen, colour-coded lesson (one phrase at a time, big animated Harley/Lilou, progress bar, swipe left/right or Next/Back). It reuses the normal practice card, so scoring, coaching and "Each sound" are unchanged.
+- Every 10 phrases a round summary shows that round's score (this session's attempts), stars, Harley's reaction and the weakest phrases, with Continue / Practise again. After the last round the full topic summary appears.
+- Close with ✕, Esc or the phone's Back button. "▶ Start lesson" on the normal card re-enters. Stats events: `lesson`, `lesson_round`. Strings `ls_*` in all 16 languages.
