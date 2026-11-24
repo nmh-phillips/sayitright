@@ -7,6 +7,9 @@
 //   end   : { score, summary, practise: [{ p, m }] }
 // The conversation is stateless: the page sends the history each time. Scenes are fixed here, so the page can't change the prompt.
 // Needs ANTHROPIC_API_KEY. Optional CHAT_MODEL (default claude-haiku-5-5, chosen for speed in a spoken back-and-forth).
+// Who can use it: CHAT_BETA_EMAILS, a comma-separated list of signed-in Harley Says account emails (default neil@harleysays.com).
+// Set it to * to open Chats to everyone. Each request must carry the person's sign-in token (Authorization: Bearer …),
+// checked with Supabase (SUPABASE_URL + SUPABASE_PUBLISHABLE_KEY). action 'access' just answers { ok } so the page knows whether to show Chats.
 // Limits: CHAT_FREE_LIMIT new chats per device per day (default 2), CHAT_TURNS learner replies per chat (default 8),
 // CHAT_IP_LIMIT calls per connection per day (default 120), CHAT_GLOBAL_LIMIT calls across everyone per day (default 3000).
 import { getStore } from '@netlify/blobs';
@@ -16,6 +19,7 @@ const FREE = Number(process.env.CHAT_FREE_LIMIT || 2);
 const TURNS = Number(process.env.CHAT_TURNS || 8);
 const IP_CAP = Number(process.env.CHAT_IP_LIMIT || 120);
 const GLOBAL_CAP = Number(process.env.CHAT_GLOBAL_LIMIT || 3000);
+const BETA = String(process.env.CHAT_BETA_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 const DEV_CALLS = FREE * (TURNS + 2) + 4; // calls per device per day (stops replies being sent without starting a chat)
 
 const LANGS = {
@@ -130,10 +134,27 @@ export function shape(action, j) {
   return { score, summary, practise };
 }
 
+// Is this request from an account allowed to use Chats?
+export async function allowed(req, beta = BETA) {
+  if (beta.includes('*')) return true;
+  const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  const base = (process.env.SUPABASE_URL || '').replace(/\/+$/, ''), pub = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!token || !base || !pub || !beta.length) return false;
+  try {
+    const r = await fetch(`${base}/auth/v1/user`, { headers: { apikey: pub, Authorization: `Bearer ${token}` } });
+    if (!r.ok) return false;
+    const u = await r.json();
+    return !!(u && u.email && beta.includes(String(u.email).toLowerCase()));
+  } catch { return false; }
+}
+
 export default async (req, context) => {
   if (req.method !== 'POST') return json({ error: 'Use POST' }, 405);
   let b;
   try { b = await req.json(); } catch { return json({ error: 'Bad JSON' }, 400); }
+  const ok = await allowed(req);
+  if (b.action === 'access') return json({ ok });
+  if (!ok) return json({ error: 'Chat not configured' }, 403);
   const action = ['start', 'reply', 'end'].includes(b.action) ? b.action : null;
   const lang = String(b.lang || ''), ui = UI[b.ui] ? b.ui : 'en';
   const scene = Object.prototype.hasOwnProperty.call(SCENES, b.scene) ? b.scene : null;

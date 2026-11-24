@@ -47,6 +47,7 @@
       const u = (session && session.user) || null;
       const was = user; user = u;
       renderBtn(); if (dlgOpen()) renderDlg();
+      if (!was || !u || was.id !== u.id) window.dispatchEvent(new CustomEvent('hs-auth', { detail: { email: u ? u.email || '' : '' } }));
       if (u && (!was || was.id !== u.id)) setTimeout(() => sync(), 0);
     });
     return sb;
@@ -222,6 +223,8 @@
   window.hsAccountRelabel = () => { if (cfg) renderBtn(); };
   // For the games page: offer sign-in after a daily puzzle.
   window.hsAccount = { ready: () => !!cfg, signedIn: () => !!user, open: () => openDlg() };
+  // Current sign-in token (or null), for features limited to some accounts (Harley Chats beta).
+  window.hsAuthToken = async () => { try { if (!cfg || !hasSession()) return null; const c = await client(); const { data } = await c.auth.getSession(); return (data && data.session && data.session.access_token) || null; } catch (e) { return null; } };
 
   (async function init() {
     if (!btn() || !dlg()) return;

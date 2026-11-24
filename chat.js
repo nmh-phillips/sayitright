@@ -97,8 +97,14 @@ function errMsg(status, j){
   if (/not configured/i.test(j.error || '')) return esc(t('ch_off'));
   return esc(t('ch_err')) + ` <button class="linkbtn" data-chretry>${esc(t('ch_retry'))}</button>`;
 }
+async function headers(){
+  const h = {'Content-Type':'application/json'};
+  const tok = window.hsAuthToken ? await window.hsAuthToken() : null;
+  if (tok) h.Authorization = 'Bearer ' + tok;
+  return h;
+}
 async function call(action){
-  const r = await fetch('/.netlify/functions/chat', { method:'POST', headers:{'Content-Type':'application/json'},
+  const r = await fetch('/.netlify/functions/chat', { method:'POST', headers: await headers(),
     body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: S.scene, level: S.level, persona: coachId(), history: S.history }) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || j.error) { const e = new Error(j.error || 'HTTP ' + r.status); e.status = r.status; e.j = j; throw e; }
@@ -246,5 +252,19 @@ const css = `
 `;
 const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
-if (typeof set !== 'undefined' && set === CHATS) draw();
+// Chats is in a private beta: only show it to accounts the server allows (CHAT_BETA_EMAILS).
+let checking = 0;
+async function checkAccess(){
+  const n = ++checking; let on = false;
+  try {
+    const r = await fetch('/.netlify/functions/chat', { method:'POST', headers: await headers(), body: JSON.stringify({ action:'access' }) });
+    on = r.ok && !!(await r.json()).ok;
+  } catch(e){}
+  if (n !== checking || on === !!window.hsChatsOn) return;
+  window.hsChatsOn = on;
+  if (!on && set === CHATS){ stopListening(); set = Object.keys(DATA[lang].sets)[0]; idx = 0; }
+  render();
+}
+window.addEventListener('hs-auth', checkAccess);
+if (location.protocol !== 'file:') checkAccess();
 })();

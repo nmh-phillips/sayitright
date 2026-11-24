@@ -41,8 +41,9 @@
   select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}
   header select{border-color:transparent}
   main{max-width:680px;margin:0 auto;padding:16px}
-  .groups{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:10px}
-  @media (max-width:420px){ .groups{grid-template-columns:repeat(3,1fr);gap:6px} .groups button{flex-direction:row;gap:6px;padding:9px 4px;font-size:12.5px} .groups button .ic{font-size:18px} }
+  .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+  .groups.has6{grid-template-columns:repeat(6,1fr);gap:5px}
+  @media (max-width:420px){ .groups.has6{grid-template-columns:repeat(3,1fr);gap:6px} .groups.has6 button{padding:9px 4px;font-size:12.5px} .groups.has6 button .ic{font-size:18px} }
   .groups button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;padding:9px 2px 8px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--muted);font:600 12px/1.15 Inter,sans-serif;cursor:pointer;text-align:center}
   .groups button .ic{font-size:21px;line-height:1}
   .groups button span:last-child{max-width:100%;overflow-wrap:anywhere}
@@ -642,13 +643,13 @@ function renderTabs(){
   if(g==='phrases') lastPhraseSet=set;
   const groups = [
     ['phrases','📚','g_phrases', ()=>{ set = free.includes(lastPhraseSet) ? lastPhraseSet : free[0]; }],
-    ['chats','💬','g_chats', ()=>{ set=CHATS; }],
+    ...(window.hsChatsOn ? [['chats','💬','g_chats', ()=>{ set=CHATS; }]] : []),
     ['mine','✏️','g_mine', ()=>{ set=CUSTOM; }],
     ['focus','🎯','g_focus', ()=>{ set=FOCUS; }],
     ['assess','📊','g_assess', ()=>{ set=ASSESS; }],
     ['premium','⭐','g_premium', ()=>{ set=PREMIUM_TOPICS[0]; }]
   ];
-  const G=$('groups'); G.innerHTML='';
+  const G=$('groups'); G.innerHTML=''; G.classList.toggle('has6', groups.length===6);
   groups.forEach(([id,ic,label,go])=>{
     const b=document.createElement('button');
     b.className='g-'+id+(g===id?' on':''); b.setAttribute('aria-pressed', g===id);
