@@ -52,3 +52,6 @@ Object.assign(window.SIR_UI.uk, {ls_start:"Почати урок",ls_round:"Ра
 
 // Assess me: test picker cards
 Object.assign(window.SIR_UI.uk, {a_pickRead:"Прочитай уголос короткий текст і дізнайся свій рівень вимови",a_pickSpeak:"Говори на будь-яку тему і дізнайся свій рівень мовлення",a_pickWrite:"Напиши кілька речень і дізнайся свій рівень письма"});
+
+// Story page (story.html)
+Object.assign(window.SIR_UI.uk, {st_real:"Знайомтеся: справжні Гарлі та Лілу",st_cta:"Почни тренуватися з Гарлі",st_swipe:"Гортай, щоб прочитати нашу історію",st_link:"🐶 Чому ми створили Harley Says"});

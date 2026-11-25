@@ -52,3 +52,6 @@ Object.assign(window.SIR_UI.ja, {ls_start:"レッスンを始める",ls_round:"�
 
 // Assess me: test picker cards
 Object.assign(window.SIR_UI.ja, {a_pickRead:"短い文章を音読して、発音レベルを確認",a_pickSpeak:"好きな話題で話して、スピーキングレベルを確認",a_pickWrite:"いくつか文を書いて、ライティングレベルを確認"});
+
+// Story page (story.html)
+Object.assign(window.SIR_UI.ja, {st_real:"本物のハーレーとリルーをご紹介",st_cta:"ハーレーと練習を始めよう",st_swipe:"スワイプして私たちのストーリーを読む",st_link:"🐶 Harley Says を作った理由"});

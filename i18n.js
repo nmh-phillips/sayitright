@@ -779,3 +779,16 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Story page (story.html)
+(function(){
+const S={
+ en:{st_real:"Meet the real Harley and Lilou",st_cta:"Start practising with Harley",st_swipe:"Swipe to read our story",st_link:"🐶 Why we built Harley Says"},
+ es:{st_real:"Conoce a los verdaderos Harley y Lilou",st_cta:"Empieza a practicar con Harley",st_swipe:"Desliza para leer nuestra historia",st_link:"🐶 Por qué creamos Harley Says"},
+ fr:{st_real:"Voici les vrais Harley et Lilou",st_cta:"Commencez à vous entraîner avec Harley",st_swipe:"Faites glisser pour lire notre histoire",st_link:"🐶 Pourquoi nous avons créé Harley Says"},
+ it:{st_real:"Ecco i veri Harley e Lilou",st_cta:"Inizia a esercitarti con Harley",st_swipe:"Scorri per leggere la nostra storia",st_link:"🐶 Perché abbiamo creato Harley Says"},
+ de:{st_real:"Das sind die echten Harley und Lilou",st_cta:"Jetzt mit Harley üben",st_swipe:"Wische, um unsere Geschichte zu lesen",st_link:"🐶 Warum wir Harley Says gebaut haben"},
+ pt:{st_real:"Conheça os verdadeiros Harley e Lilou",st_cta:"Comece a praticar com o Harley",st_swipe:"Deslize para ler a nossa história",st_link:"🐶 Porque criámos o Harley Says"}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

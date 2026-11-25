@@ -117,6 +117,9 @@
   .heard em{color:var(--ink);font-style:normal;font-weight:600}
   .tip{font-size:14px;margin-top:8px}
   .nav{display:flex;justify-content:space-between;margin-top:14px}
+  .story-link{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);background:linear-gradient(135deg,#fff7ef,#ffe9f1);border:1px solid #f6d9e4}
+  .story-link .sl-pics{display:flex;flex:none} .story-link .sl-pics img{width:48px;height:48px;object-fit:cover;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.12)} .story-link .sl-pics img+img{margin-left:-14px}
+  .story-link b{flex:1;font-size:15.5px} .story-link .sl-go{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#E0457B;color:#fff;font-weight:800;animation:lhNudge 1.6s ease-in-out infinite}
   .custom textarea{width:100%;font:500 17px Inter,sans-serif;padding:14px;border-radius:14px;border:2px solid #f3c3d5;resize:vertical;min-height:80px;transition:border-color .2s,box-shadow .2s;animation:lhIn .45s ease backwards .1s}
   .custom textarea:focus{outline:0;border-color:#E0457B;box-shadow:0 0 0 4px rgba(224,69,123,.15)}
   .a-st-mine{--g:linear-gradient(150deg,#E0457B,#FF8FB1)} .mine-stage label{cursor:text}
@@ -409,18 +412,7 @@
 
   <section class="card" id="assessCard" style="display:none"></section>
   <section class="card" id="chatCard" style="display:none" aria-live="polite"></section>
-
-  <section class="card">
-    <div class="progress"><span id="progText">0 of 10 phrases mastered (80%+)</span></div>
-    <div class="bar"><i id="progBar"></i></div>
-  </section>
-
-  <a class="card games-link" href="/games/?from=app" id="gamesLink">
-    <span class="gl-t"><b data-i18n="gm_h">🎮 Harley's word games</b><span data-i18n="gm_p">Learn vocabulary and verbs with word searches, crosswords and quick puzzles.</span></span>
-    <span class="gl-go" data-i18n="gm_btn">Play the games →</span>
-  </a>
-
-  <section class="card premium" id="premiumCard">
+  <section class="card premium" id="premiumCard" style="display:none">
     <span class="badge" data-i18n="comingSoon">Coming soon</span>
     <h2 data-i18n="premTitle">⭐ Harley Says Premium</h2>
     <ul class="feat" id="feats"></ul>
@@ -439,6 +431,17 @@
     <div class="done" id="wlDone" style="display:none" data-i18n="wlDone">✓ You're on the list. We'll let you know when Premium launches.</div>
   </section>
 
+  <section class="card">
+    <div class="progress"><span id="progText">0 of 10 phrases mastered (80%+)</span></div>
+    <div class="bar"><i id="progBar"></i></div>
+  </section>
+
+  <a class="card games-link" href="/games/?from=app" id="gamesLink">
+    <span class="gl-t"><b data-i18n="gm_h">🎮 Harley's word games</b><span data-i18n="gm_p">Learn vocabulary and verbs with word searches, crosswords and quick puzzles.</span></span>
+    <span class="gl-go" data-i18n="gm_btn">Play the games →</span>
+  </a>
+
+
   <section class="card install" id="installBar" aria-live="polite">
     <img src="icons/icon-192.png" alt="" width="48" height="48">
     <div class="grow"><b data-i18n="inst_title">Add Harley Says to your home screen</b><p id="instHow"></p></div>
@@ -446,29 +449,10 @@
     <button class="btn" id="instClose" data-i18n="inst_close">Not now</button>
   </section>
 
-  <section class="card story">
-    <h2 style="margin:0 0 8px;font-size:18px" data-i18n="storyH">Why we built Harley Says</h2>
-    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story1">My wife lives in the UK and is always looking for ways to practise her pronunciation. Classes help, but in between it's hard to find someone patient enough to listen, say it back properly, and tell you honestly how you sounded.</p>
-    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story2">So we built the tool we wished existed: free, no sign-up, and ready whenever you are.</p>
-    <h3 style="margin:14px 0 6px;font-size:16px" data-i18n="whyH">Why Harley?</h3>
-    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:4px 0 10px">
-      <figure style="margin:0">
-        <img src="harley.jpg" width="560" height="420" loading="lazy" alt="Harley, a white bichon frise, running happily across a grassy field" style="width:100%;height:190px;object-fit:cover;border-radius:14px;display:block">
-        <figcaption style="font-size:13px;color:var(--muted);margin-top:6px" data-i18n="cap1">In full flight</figcaption>
-      </figure>
-      <figure style="margin:0">
-        <img src="harley-ball.jpg" width="420" height="492" loading="lazy" alt="Harley, a fluffy white bichon frise, looking up with a tennis ball in his mouth" style="width:100%;height:190px;object-fit:cover;object-position:50% 30%;border-radius:14px;display:block">
-        <figcaption style="font-size:13px;color:var(--muted);margin-top:6px" data-i18n="cap2">Ready to play</figcaption>
-      </figure>
-    </div>
-    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story3">The app is named after Harley, our much-loved bichon frise. In the app, he's learning to talk too, so every time you practise, you're practising together.</p>
-    <figure style="margin:10px 0">
-      <img src="harley-lilou.jpg" width="380" height="285" loading="lazy" alt="Two white bichon frises, Harley and his little cousin Lilou, side by side in a dog buggy in the park" style="width:100%;max-height:260px;object-fit:cover;border-radius:14px;display:block">
-      <figcaption style="font-size:13px;color:var(--muted);margin-top:6px" data-i18n="cap3">Harley and his little cousin Lilou</figcaption>
-    </figure>
-    <p style="margin:0 0 8px;line-height:1.6" data-i18n="story4">Harley's little cousin Lilou helps out too. Pick her as your coach and she'll explain your mistakes in her own voice.</p>
-    <p style="margin:0;color:var(--muted);font-style:italic">Neil</p>
-  </section>
+  <a class="card story-link" href="/story.html" id="storyLink">
+    <span class="sl-pics" aria-hidden="true"><img src="harley.jpg" alt="" width="56" height="56" loading="lazy"><img src="harley-lilou.jpg" alt="" width="56" height="56" loading="lazy"></span>
+    <b data-i18n="st_link">🐶 Why we built Harley Says</b><span class="sl-go" aria-hidden="true">→</span>
+  </a>
 
   <details class="card">
     <summary data-i18n="howH">How it works &amp; tips</summary>
@@ -564,6 +548,7 @@ function loadUILang(k){ return new Promise(function(res){ if(window.SIR_UI[k] ||
 const DATA = window.SIR_DATA;
 // Privacy-friendly usage counts (daily totals only, see netlify/functions/track.mjs and /stats.html).
 function track(e){ try{ if(location.protocol==='file:') return; fetch('/.netlify/functions/track',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({e,l:typeof lang!=='undefined'?lang:'',u:typeof ui!=='undefined'?ui:''})}).catch(()=>{}); }catch(err){} }
+var premOpen = false; // Premium box shows only in the Premium section or after tapping a Premium button
 const CUSTOM = 'My phrase';
 const ASSESS = 'Assess me';
 const CHATS = 'Chats';
@@ -707,7 +692,7 @@ function renderTabs(){
     b.className='g-'+id+(g===id?' on':'')+(renderTabs.popped===id?' pop':''); b.setAttribute('aria-pressed', g===id);
     b.style.setProperty('--i', i);
     b.innerHTML=`<span class="ic" aria-hidden="true">${ic}</span><span>${t(label).replace(/[&<>]/g,'')}</span>`;
-    b.onclick=()=>{ renderTabs.popped=id; go(); idx=0; render(); renderTabs.popped=null; };
+    b.onclick=()=>{ renderTabs.popped=id; premOpen=false; go(); idx=0; render(); renderTabs.popped=null; };
     G.appendChild(b);
   });
   els.tabs.innerHTML='';
@@ -742,6 +727,7 @@ function render(){
   renderTabs();
   if(window.renderDaily5Banner) window.renderDaily5Banner();
   els.customCard.style.display = set===CUSTOM ? 'block':'none';
+  $('premiumCard').style.display = (premOpen || groupOf(set)==='premium') ? 'block':'none';
   const locked = isLocked(set);
   els.practice.style.display = (locked || set===ASSESS || set===FOCUS || set===CHATS) ? 'none':'block';
   $('chatCard').style.display = set===CHATS ? 'block':'none';
@@ -1063,7 +1049,8 @@ if(!Rec){
 }
 // ---------- premium preview + waitlist ----------
 function goPremium(){
-  const c=$('premiumCard'); c.scrollIntoView({behavior:'smooth',block:'start'});
+  premOpen=true;
+  const c=$('premiumCard'); c.style.display='block'; c.scrollIntoView({behavior:'smooth',block:'start'});
   c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
   setTimeout(()=>{ const e=$('wlEmail'); if(e && e.offsetParent) e.focus({preventScroll:true}); },600);
 }

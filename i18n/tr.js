@@ -52,3 +52,6 @@ Object.assign(window.SIR_UI.tr, {ls_start:"Derse başla",ls_round:"Tur {n}/{m}",
 
 // Assess me: test picker cards
 Object.assign(window.SIR_UI.tr, {a_pickRead:"Kısa bir metni sesli oku, telaffuz seviyeni öğren",a_pickSpeak:"İstediğin bir konuda konuş, konuşma seviyeni öğren",a_pickWrite:"Birkaç cümle yaz, yazma seviyeni öğren"});
+
+// Story page (story.html)
+Object.assign(window.SIR_UI.tr, {st_real:"Gerçek Harley ve Lilou ile tanışın",st_cta:"Harley ile pratik yapmaya başla",st_swipe:"Hikâyemizi okumak için kaydır",st_link:"🐶 Harley Says'i neden yaptık"});

@@ -52,3 +52,6 @@ Object.assign(window.SIR_UI.ro, {ls_start:"Începe lecția",ls_round:"Runda {n} 
 
 // Assess me: test picker cards
 Object.assign(window.SIR_UI.ro, {a_pickRead:"Citește cu voce tare un text scurt și află-ți nivelul de pronunție",a_pickSpeak:"Vorbește despre orice și află-ți nivelul de exprimare orală",a_pickWrite:"Scrie câteva propoziții și află-ți nivelul de scriere"});
+
+// Story page (story.html)
+Object.assign(window.SIR_UI.ro, {st_real:"Cunoaște-i pe adevărații Harley și Lilou",st_cta:"Începe să exersezi cu Harley",st_swipe:"Glisează ca să citești povestea noastră",st_link:"🐶 De ce am creat Harley Says"});

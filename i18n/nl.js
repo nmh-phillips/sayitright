@@ -52,3 +52,6 @@ Object.assign(window.SIR_UI.nl, {ls_start:"Start de les",ls_round:"Ronde {n} van
 
 // Assess me: test picker cards
 Object.assign(window.SIR_UI.nl, {a_pickRead:"Lees een korte tekst hardop en ontdek je uitspraakniveau",a_pickSpeak:"Praat over wat je wilt en ontdek je spreekniveau",a_pickWrite:"Schrijf een paar zinnen en ontdek je schrijfniveau"});
+
+// Story page (story.html)
+Object.assign(window.SIR_UI.nl, {st_real:"Maak kennis met de echte Harley en Lilou",st_cta:"Begin met oefenen met Harley",st_swipe:"Veeg om ons verhaal te lezen",st_link:"🐶 Waarom we Harley Says hebben gemaakt"});

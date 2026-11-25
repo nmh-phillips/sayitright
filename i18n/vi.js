@@ -52,3 +52,6 @@ Object.assign(window.SIR_UI.vi, {ls_start:"Bắt đầu bài học",ls_round:"V�
 
 // Assess me: test picker cards
 Object.assign(window.SIR_UI.vi, {a_pickRead:"Đọc to một đoạn văn ngắn và biết trình độ phát âm của bạn",a_pickSpeak:"Nói về bất cứ chủ đề nào và biết trình độ nói của bạn",a_pickWrite:"Viết vài câu và biết trình độ viết của bạn"});
+
+// Story page (story.html)
+Object.assign(window.SIR_UI.vi, {st_real:"Gặp Harley và Lilou thật",st_cta:"Bắt đầu luyện tập cùng Harley",st_swipe:"Vuốt để đọc câu chuyện của chúng tôi",st_link:"🐶 Vì sao chúng tôi tạo ra Harley Says"});

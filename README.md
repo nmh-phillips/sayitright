@@ -128,3 +128,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Assess me: the three tests show first as colourful animated cards (Read / Speak freely / Write). The passage or writing box only appears after you pick one, under a coloured header with Harley reacting (bobbing, listening while recording, thinking while assessing, jumping/wagging/tilting at the result) and a ← back to the cards. The passage fades in word by word; the record button pulses while recording; results count up, bars grow and confetti falls for 76+.
 - My phrase: pink header with Harley, glowing text box, pulsing Translate button once you've typed; Translate & practise (or Practise as written) opens the phrase in lesson mode. ✕ returns to the input card.
 - Games hub (`/games/`): the four game cards are colourful gradients (Word search blue, Crossword pink, Match pairs teal, Unscramble purple) with floating icons, a pulsing ▶, shine and a staggered pop-in on first load; the chosen topic chip pops; the daily puzzle card has a shine and a pulsing Play button.
+
+## Story page and Premium box
+- `story.html` + `story.js`: "Why we built Harley Says" as 5 swipeable, animated slides (floating "hello"s, mic and sound waves, Harley and Lilou drawn with `talkhead.js` faces), ending with the real photos dropping in as polaroids and a "Start practising" button. Uses the existing `story*`, `whyH` and `cap*` strings plus `st_*` (16 languages). Stats event `story`.
+- The home page shows a small "🐶 Why we built Harley Says" card linking to it instead of the full story.
+- The Premium box (`#premiumCard`) is hidden by default and only shows in the Premium section or after tapping a Premium button (⭐ in the header, "Get notified", locked topics).
