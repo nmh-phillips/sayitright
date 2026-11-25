@@ -117,7 +117,15 @@
   .heard em{color:var(--ink);font-style:normal;font-weight:600}
   .tip{font-size:14px;margin-top:8px}
   .nav{display:flex;justify-content:space-between;margin-top:14px}
-  .custom textarea{width:100%;font:500 16px Inter,sans-serif;padding:12px;border-radius:12px;border:1px solid var(--line);resize:vertical;min-height:60px}
+  .custom textarea{width:100%;font:500 17px Inter,sans-serif;padding:14px;border-radius:14px;border:2px solid #f3c3d5;resize:vertical;min-height:80px;transition:border-color .2s,box-shadow .2s;animation:lhIn .45s ease backwards .1s}
+  .custom textarea:focus{outline:0;border-color:#E0457B;box-shadow:0 0 0 4px rgba(224,69,123,.15)}
+  .a-st-mine{--g:linear-gradient(150deg,#E0457B,#FF8FB1)} .mine-stage label{cursor:text}
+  .custom .mine-go{position:relative;overflow:hidden;border:0;color:#fff;font-weight:800;background:linear-gradient(150deg,#E0457B,#FF6FA0);box-shadow:0 3px 0 #a82d5a;padding:12px 16px}
+  .custom .mine-go::before{content:'';position:absolute;top:-30%;left:-60%;width:35%;height:160%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:rotate(20deg);animation:gShine 5s ease-in-out 1s infinite;pointer-events:none}
+  .custom.has-text .mine-go{animation:mineReady 1.6s ease-in-out infinite}
+  .custom .mine-go:active{transform:translateY(2px);box-shadow:0 1px 0 #a82d5a}
+  @keyframes mineReady{0%,100%{box-shadow:0 3px 0 #a82d5a,0 0 0 0 rgba(224,69,123,.45)}50%{box-shadow:0 3px 0 #a82d5a,0 0 0 9px rgba(224,69,123,0)}}
+  @media (prefers-reduced-motion:reduce){.custom textarea,.custom .mine-go,.custom .mine-go::before{animation:none!important}}
   .progress{font-size:13px;color:var(--muted)}
   .bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
   .bar i{display:block;height:100%;background:var(--good);width:0;transition:width .3s}
@@ -382,7 +390,8 @@
   </section>
 
   <section class="card custom" id="customCard" style="display:none">
-    <label for="customText" style="font-weight:600;display:block;margin-bottom:4px" data-i18n="ownTitle">Your own phrase</label>
+    <div class="a-stage a-st-mine mine-stage"><div class="a-dog idle" id="mineDog" aria-hidden="true"></div>
+      <div class="a-st-t"><small data-i18n="g_mine">My phrase</small><b><label for="customText" data-i18n="ownTitle">Your own phrase</label></b></div></div>
     <p class="heard" style="margin:0 0 10px" data-i18n="ownSub"></p>
     <div class="row" style="align-items:center;margin-bottom:8px">
       <span style="font-size:14px;color:var(--muted)" data-i18n="writingIn">I'm writing in</span>
@@ -391,7 +400,7 @@
     </div>
     <textarea id="customText" dir="auto" placeholder="e.g. Could you recommend a good restaurant nearby?"></textarea>
     <div class="row" style="margin-top:10px">
-      <button class="btn" id="translateBtn" style="background:var(--ink);color:#fff;border-color:var(--ink)">🌍 Translate &amp; practise</button>
+      <button class="btn mine-go" id="translateBtn">🌍 Translate &amp; practise</button>
       <button class="btn" id="useCustom" data-i18n="asWritten">Practise as written</button>
     </div>
     <div class="heard" id="trMsg" style="margin-top:8px"></div>
@@ -989,7 +998,7 @@ document.addEventListener('click', ev=>{
   render();
   (set===FOCUS?$('focusCard'):set===ASSESS?$('assessCard'):els.practice).scrollIntoView({behavior:'smooth',block:'start'});
 });
-els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; custom=[t,'']; idx=0; render(); els.practice.scrollIntoView({behavior:'smooth'});};
+els.useCustom.onclick=()=>{const t=els.customText.value.trim(); if(!t) return; custom=[t,'']; idx=0; render(); if(window.hsStartLesson) hsStartLesson(); else els.practice.scrollIntoView({behavior:'smooth'});};
 
 // ---------- own phrase: input language, dictation, translation ----------
 const fromSel=$('fromLang'), trBtn=$('translateBtn'), trMsg=$('trMsg'), dictBtn=$('dictate');
@@ -1038,7 +1047,7 @@ trBtn.onclick=async()=>{
     }
     if(!r.ok||!j.translation) throw new Error(j.error||('HTTP '+r.status));
     custom=[j.translation, text]; idx=0; trMsg.textContent=''; showTrLeft(j.remaining); track('translate');
-    render(); els.practice.scrollIntoView({behavior:'smooth'}); speak(j.translation,0.95);
+    render(); if(window.hsStartLesson) hsStartLesson(); else els.practice.scrollIntoView({behavior:'smooth'}); speak(j.translation,0.95);
   }catch(err){
     trMsg.textContent = /not configured/i.test(err.message) ? t('trOff') : t('trFail')+err.message;
   }finally{trBtn.disabled=false;}

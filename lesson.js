@@ -108,9 +108,10 @@
     'linear-gradient(160deg,#7B2FD0,#D06CF0)',   // Tricky sounds: purple
     'linear-gradient(160deg,#D93A7A,#FF8FB1)'    // extra topics: pink
   ];
-  const lessonable = () => set !== CUSTOM && set !== ASSESS && set !== FOCUS && !isLocked(set) && list().length > 1;
+  const lessonable = () => set === CUSTOM ? list().length >= 1 : (set !== ASSESS && set !== FOCUS && !isLocked(set) && list().length > 1);
   function colour() {
     if (typeof DAILY5 !== 'undefined' && set === DAILY5) return 'linear-gradient(160deg,#FF7A2F,#FFB547)';
+    if (set === CUSTOM) return 'linear-gradient(160deg,#E0457B,#FF8FB1)';
     if (FOCUS_SETS.includes(set)) return 'linear-gradient(160deg,#2E9E4F,#9BE15D)';
     const free = Object.keys(DATA[lang].sets).filter(n => !FOCUS_SETS.includes(n));
     const i = free.indexOf(set);
@@ -135,6 +136,7 @@
     title.textContent = (FOCUS_SETS.includes(set) ? '🎯 ' : '') + setName(set);
     $('lsClose').setAttribute('aria-label', t('ls_close'));
     hint.textContent = t('ls_swipe');
+    const one = L.length <= 1; $('lsProg').style.visibility = one ? 'hidden' : ''; $('lsRoundLbl').style.visibility = one ? 'hidden' : ''; hint.style.display = one ? 'none' : '';
   }
 
   // ---------- enter / exit ----------
@@ -164,6 +166,12 @@
 
   // Home screen: no practice card until you start. A colourful card shows the topic, your progress and a Start button.
   function renderHome(can) {
+    if (set === CUSTOM) { // My phrase: just the input card; practice opens as a lesson after Translate / Practise
+      home.style.display = 'none';
+      if (!on && !summaryOn) practice.style.display = 'none';
+      const md = $('mineDog'), cid = typeof coachId === 'function' ? coachId() : 'harley'; if (md && md.dataset.c !== cid) { md.innerHTML = coachFace('happy'); md.dataset.c = cid; }
+      return;
+    }
     const show = !on && can && !summaryOn;
     home.style.display = show ? 'block' : 'none';
     if (!show) return;
@@ -292,6 +300,10 @@
     if (!e.target.closest('#d5Banner')) return;
     setTimeout(() => { if (lessonable()) enter(false); }, 0);
   }, true); // capture: the tab buttons are rebuilt during their own click
+
+  // My phrase: the Translate button pulses once there's something to translate.
+  const ct = $('customText');
+  if (ct) { const f = () => $('customCard').classList.toggle('has-text', !!ct.value.trim()); ct.addEventListener('input', f); f(); }
 
   render();
 })();
