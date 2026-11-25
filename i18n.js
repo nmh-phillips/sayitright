@@ -740,3 +740,29 @@ for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 const S={en:{ch_ivLink:"Harley's Interview Coach",ch_ivSub:'Practise a job interview out loud →'},es:{ch_ivLink:'Entrevistas con Harley',ch_ivSub:'Practica una entrevista de trabajo en voz alta →'},fr:{ch_ivLink:"Le coach d'entretien de Harley",ch_ivSub:"Entraînez-vous à un entretien d'embauche →"},it:{ch_ivLink:'Il coach dei colloqui di Harley',ch_ivSub:'Esercitati per un colloquio ad alta voce →'},de:{ch_ivLink:'Harleys Interview-Coach',ch_ivSub:'Übe ein Vorstellungsgespräch laut →'},pt:{ch_ivLink:'O treinador de entrevistas do Harley',ch_ivSub:'Pratique uma entrevista de emprego em voz alta →'}};
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Daily 5 (daily5.js)
+(function(){
+const S={
+ en:{d5_title:'Daily 5',d5_sub:'5 phrases picked for you · about 2 minutes',d5_done:'Done for today! New phrases tomorrow',d5_streak:'🔥 {n}-day streak',d5_progress:'{n} of {m} done',d5_start:'Start',d5_cont:'Continue'},
+ es:{d5_title:'Tus 5 del día',d5_sub:'5 frases elegidas para ti · unos 2 minutos',d5_done:'¡Hecho por hoy! Mañana, frases nuevas',d5_streak:'🔥 Racha de {n} días',d5_progress:'{n} de {m} hechas',d5_start:'Empezar',d5_cont:'Seguir'},
+ fr:{d5_title:'Les 5 du jour',d5_sub:'5 phrases choisies pour vous · environ 2 minutes',d5_done:"C'est fait pour aujourd'hui ! Nouvelles phrases demain",d5_streak:'🔥 Série de {n} jours',d5_progress:'{n} sur {m} faites',d5_start:'Commencer',d5_cont:'Continuer'},
+ it:{d5_title:'Le 5 del giorno',d5_sub:'5 frasi scelte per te · circa 2 minuti',d5_done:'Fatto per oggi! Domani frasi nuove',d5_streak:'🔥 {n} giorni di fila',d5_progress:'{n} di {m} fatte',d5_start:'Inizia',d5_cont:'Continua'},
+ de:{d5_title:'Deine 5 am Tag',d5_sub:'5 Sätze für dich ausgewählt · etwa 2 Minuten',d5_done:'Für heute erledigt! Morgen gibt es neue Sätze',d5_streak:'🔥 {n} Tage in Folge',d5_progress:'{n} von {m} geschafft',d5_start:'Los',d5_cont:'Weiter'},
+ pt:{d5_title:'As 5 do dia',d5_sub:'5 frases escolhidas para si · cerca de 2 minutos',d5_done:'Feito por hoje! Amanhã há frases novas',d5_streak:'🔥 {n} dias seguidos',d5_progress:'{n} de {m} feitas',d5_start:'Começar',d5_cont:'Continuar'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();
+
+// Harley Chats: pause setting
+(function(){
+const S={
+ en:{ch_pauseL:'Pause before sending',ch_pz_short:'Short',ch_pz_normal:'Normal',ch_pz_long:'Long'},
+ es:{ch_pauseL:'Pausa antes de enviar',ch_pz_short:'Corta',ch_pz_normal:'Normal',ch_pz_long:'Larga'},
+ fr:{ch_pauseL:"Pause avant l'envoi",ch_pz_short:'Courte',ch_pz_normal:'Normale',ch_pz_long:'Longue'},
+ it:{ch_pauseL:"Pausa prima dell'invio",ch_pz_short:'Breve',ch_pz_normal:'Normale',ch_pz_long:'Lunga'},
+ de:{ch_pauseL:'Pause vor dem Senden',ch_pz_short:'Kurz',ch_pz_normal:'Normal',ch_pz_long:'Lang'},
+ pt:{ch_pauseL:'Pausa antes de enviar',ch_pz_short:'Curta',ch_pz_normal:'Normal',ch_pz_long:'Longa'}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

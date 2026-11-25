@@ -6,8 +6,22 @@
 const SCENES = [['cafe','☕'],['restaurant','🍝'],['directions','🗺️'],['shop','👕'],['hotel','🏨'],['pharmacy','💊'],['neighbour','🏠'],['party','🎉']];
 const LEVELS = ['easy','normal','hard'];
 const MAX_TURNS = 8;          // matches CHAT_TURNS on the server (the server has the final say)
-const PAUSE_MS = 1800;        // hands-free: this much quiet after speaking sends the reply
+const PAUSE_BASE = 1800;      // hands-free: this much quiet after speaking sends the reply (× the person's pause setting)
 const WAIT_MS = 9000;         // hands-free: stop listening if nothing is said for this long
+// Join speech results into one text. iPhone Safari often repeats the whole sentence so far in each new result,
+// so a result that starts with what we already have replaces it instead of being added on.
+function joinResults(results){
+  let acc = '';
+  for (const x of results) {
+    const tr = String(x[0].transcript || '').trim(); if (!tr) continue;
+    const a = acc.toLowerCase(), b = tr.toLowerCase();
+    if (b.startsWith(a)) acc = tr; else if (!a.endsWith(b)) acc = acc ? acc + ' ' + tr : tr;
+  }
+  return acc;
+}
+// How long a pause sends the answer: the person's setting (Short / Normal / Long), shared by Chats and Interview Coach.
+const PAUSES = { short: 0.65, normal: 1, long: 1.6 };
+const pauseMs = () => PAUSE_BASE * (PAUSES[S.pause] || 1);
 const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const coachName = () => coachId() === 'lilou' ? 'Lilou' : 'Harley';
@@ -15,7 +29,8 @@ const card = () => document.getElementById('chatCard');
 
 const S = { view:'pick', scene:null, level: store.get('hs_chat_level','normal'), history:[], items:[], hint:'', busy:false, error:'', ended:false, sum:null,
   typing: !Rec, interim:'', listening:false, talking:false, paused:false,
-  auto: !!Rec && store.get('hs_chat_auto', true), live: store.get('hs_chat_live', false) };
+  auto: !!Rec && store.get('hs_chat_auto', true), live: store.get('hs_chat_live', false), pause: store.get('hs_pause', 'normal'),
+  autoBlocked: false }; // autoBlocked: this phone won't let the mic open by itself (iPhone), so we ask for a tap instead
 if (!LEVELS.includes(S.level)) S.level = 'normal';
 function leftToday(){ const v = store.get('hs_chat_left', null); return v && v.day === today() ? v.n : null; }
 const inChat = () => S.view === 'chat' && set === CHATS;
@@ -64,7 +79,7 @@ function hush(){ sayId++; try { AU.pause(); } catch(e){} if ('speechSynthesis' i
 function afterLine(){
   if (!inChat()) return;
   if (S.ended) return finish();
-  if (S.auto && !S.typing && !S.paused) setTimeout(() => { if (inChat() && !S.busy && !S.talking && !S.listening && !S.ended) listen(); }, 250);
+  if (S.auto && !S.typing && !S.paused && !S.autoBlocked) setTimeout(() => { if (inChat() && !S.busy && !S.talking && !S.listening && !S.ended) listen(false); }, 250);
 }
 
 // ---------- views ----------
@@ -77,6 +92,7 @@ function renderPick(c){
       ${Rec ? `<label><input type="checkbox" data-chopt="auto" ${S.auto?'checked':''}> ${esc(t('ch_auto',{name:coachName()}))}</label>` : ''}
       <label><input type="checkbox" data-chopt="live" ${S.live?'checked':''}> ${esc(t('ch_tipsLive'))}</label>
     </div>
+    ${Rec ? `<div class="ch-lvl" role="group" aria-label="${esc(t('ch_pauseL'))}"><span>${esc(t('ch_pauseL'))}</span>${Object.keys(PAUSES).map(k => `<button data-chpz="${k}" class="${S.pause===k?'on':''}" aria-pressed="${S.pause===k}">${esc(t('ch_pz_'+k))}</button>`).join('')}</div>` : ''}
     <h3 class="ch-h3">${esc(t('ch_pick'))}</h3>
     <div class="ch-scenes">${SCENES.map(([id,ic]) => `<button class="ch-scene" data-chscene="${id}"><span class="ic" aria-hidden="true">${ic}</span><b>${esc(t('ch_s_'+id))}</b><small>${esc(t('ch_d_'+id))}</small></button>`).join('')}</div>`;
   h += `<a class="ch-iv" href="/interview/">💼 <b>${esc(t('ch_ivLink'))}</b><span>${esc(t('ch_ivSub'))}</span></a>`;
@@ -115,7 +131,7 @@ function renderChat(c){
       h += `<form class="ch-type" data-chform><input id="chInput" autocomplete="off" maxlength="300" placeholder="${esc(t('ch_placeholder',{lang:LN(lang)}))}" lang="${esc(DATA[lang].code)}"><button class="btn primary" type="submit">${esc(t('ch_send'))}</button></form>`;
       h += `<div class="ch-ctl">${Rec ? `<button class="linkbtn" data-chmode>${esc(t('ch_speak'))}</button>` : ''}`;
     } else if (S.auto) {
-      const st = S.listening ? ['on', t('ch_yourTurn')] : S.talking ? ['', t('ch_speaking',{name:coachName()})] : ['', t('ch_tapTalk')];
+      const st = S.listening ? ['on', t('ch_yourTurn')] : S.talking ? ['', t('ch_speaking',{name:coachName()})] : ['tap', t('ch_tapTalk')];
       h += `<button class="ch-status ${st[0]}" data-chmic>${S.listening ? '<span class="ch-pulse"></span>' : S.talking ? '🔊' : '🎙️'} ${esc(st[1])}</button>`;
       h += `<div class="ch-ctl">${S.listening || S.talking ? `<button class="linkbtn" data-chpause>${esc(t('ch_pause'))}</button>` : ''}<button class="linkbtn" data-chmode>${esc(t('ch_type'))}</button>`;
     } else {
@@ -227,12 +243,12 @@ async function finish(){
 let rec = null, quietT = null, waitT = null;
 function clearTimers(){ clearTimeout(quietT); clearTimeout(waitT); quietT = waitT = null; }
 function stopListening(){ clearTimers(); if (rec) { const r = rec; rec = null; try { r.onend = null; r.abort(); } catch(e){} } S.listening = false; S.interim = ''; }
-function listen(){
+function listen(tap){
   if (S.listening) { if (rec) rec.stop(); return; }
   if (!Rec) { S.typing = true; draw(); return; }
   hush();
   const r = rec = new Rec(); r.lang = DATA[lang].code; r.interimResults = true; r.continuous = !!S.auto; r.maxAlternatives = 1;
-  let finalTxt = '', heard = '', failed = '';
+  let heard = '', failed = '';
   r.onstart = () => {
     if (rec !== r) return;
     S.listening = true; S.interim = ''; S.error = ''; S.paused = false; draw();
@@ -240,24 +256,23 @@ function listen(){
   };
   r.onresult = e => {
     if (rec !== r) return;
-    let all = ''; finalTxt = '';
-    for (const x of e.results) { all += x[0].transcript; if (x.isFinal) finalTxt += x[0].transcript; }
-    heard = all.trim(); S.interim = heard;
+    heard = joinResults(e.results); S.interim = heard;
     const b = card().querySelector('.ch-live'); if (b) b.textContent = heard; else draw();
-    if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(() => { if (rec === r) r.stop(); }, PAUSE_MS); }
+    if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(() => { if (rec === r) r.stop(); }, pauseMs()); }
   };
   r.onerror = e => { failed = e.error || 'error'; };
   r.onend = () => {
     if (rec !== r) return;
     clearTimers(); rec = null; S.listening = false; S.interim = '';
-    const said = (finalTxt.trim().length >= heard.length ? finalTxt : heard).trim();
+    const said = heard.trim();
     if (said) return reply(said);
-    if (failed === 'not-allowed' || failed === 'service-not-allowed') { S.error = esc(t('micBlocked')); S.paused = true; }
+    if ((failed === 'not-allowed' || failed === 'service-not-allowed') && !tap) { S.autoBlocked = true; S.paused = true; } // the phone wants a tap: ask for one, no error
+    else if (failed === 'not-allowed' || failed === 'service-not-allowed') { S.error = esc(t('micBlocked')); S.paused = true; }
     else if (S.auto) S.paused = true;           // nothing said: wait for a tap rather than listening for ever
     else S.error = esc(t('ch_noCatch'));
     draw();
   };
-  try { r.start(); } catch(err){ rec = null; S.listening = false; S.paused = true; draw(); }
+  try { r.start(); } catch(err){ rec = null; S.listening = false; S.paused = true; if (!tap) S.autoBlocked = true; draw(); }
 }
 
 // ---------- clicks ----------
@@ -270,14 +285,15 @@ document.addEventListener('click', e => {
   const b = e.target.closest('#chatCard button'); if (!b) return;
   const d = b.dataset;
   if (d.chlvl){ S.level = d.chlvl; store.set('hs_chat_level', S.level); draw(); return; }
+  if (d.chpz){ S.pause = d.chpz; store.set('hs_pause', S.pause); draw(); return; }
   if (d.chscene){ unlock(); start(d.chscene); return; }
   if (d.chw !== undefined){ if (window.harleySay) harleySay('word', d.chw, () => speak(d.chw, 0.8), coachId()); else speak(d.chw, 0.8); return; }
   if (d.chline !== undefined){ unlock(); S.paused = true; say(d.chline); return; }
   if (d.chsay !== undefined){ unlock(); say(S.items[+d.chsay].line, afterLine); return; }
   if (d.chtr !== undefined){ const it = S.items[+d.chtr]; it.showTr = !it.showTr; draw(); return; }
-  if (b.hasAttribute('data-chmic')){ unlock(); if (S.talking) { hush(); } S.paused = false; listen(); return; }
+  if (b.hasAttribute('data-chmic')){ unlock(); if (S.talking) { hush(); } S.paused = false; listen(true); return; }
   if (b.hasAttribute('data-chpause')){ hush(); stopListening(); S.paused = true; draw(); return; }
-  if (b.hasAttribute('data-chmode')){ hush(); stopListening(); S.typing = !S.typing; S.focusInput = S.typing; if (!S.typing) S.paused = false; draw(); if (!S.typing && S.auto) listen(); return; }
+  if (b.hasAttribute('data-chmode')){ hush(); stopListening(); S.typing = !S.typing; S.focusInput = S.typing; if (!S.typing) S.paused = false; draw(); if (!S.typing && S.auto) listen(true); return; }
   if (b.hasAttribute('data-chend')){ unlock(); finish(); return; }
   if (b.hasAttribute('data-chretry')){ S.error = ''; if (pending) pending(); return; }
   if (b.hasAttribute('data-chagain')){ unlock(); start(S.scene); return; }
@@ -338,6 +354,8 @@ const css = `
 #chatCard .ch-w{border:0;background:none;padding:0;font:inherit;color:#3346C8;font-weight:600;cursor:pointer;text-align:left;text-decoration:underline dotted}
 #chatCard .ch-type{display:flex;gap:8px;margin:8px 0} #chatCard .ch-type input{flex:1;min-width:0;padding:12px;border:1px solid var(--line);border-radius:12px;font:16px Inter,sans-serif}
 #chatCard .ch-status{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;margin:8px 0 4px;border-radius:16px;border:2px dashed #c7d0fb;background:#f3f5ff;color:#2a3aa8;font:700 16px Inter,sans-serif;cursor:pointer}
+#chatCard .ch-status.tap{border-style:solid;border-color:#3346C8;animation:chNudge 1.6s ease-in-out infinite}
+@keyframes chNudge{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
 #chatCard .ch-status.on{border-style:solid;border-color:#3346C8;background:#3346C8;color:#fff}
 #chatCard .ch-pulse{width:12px;height:12px;border-radius:50%;background:#ff5a5f;box-shadow:0 0 0 0 rgba(255,90,95,.7);animation:chPulse 1.2s infinite}
 @keyframes chPulse{70%{box-shadow:0 0 0 12px rgba(255,90,95,0)}100%{box-shadow:0 0 0 0 rgba(255,90,95,0)}}

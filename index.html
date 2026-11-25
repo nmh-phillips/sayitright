@@ -303,6 +303,7 @@
 <main>
   <div class="warn" id="warn"></div>
 
+  <div id="d5Banner" role="button" tabindex="0"></div>
   <nav class="groups" id="groups" aria-label="Sections"></nav>
   <div class="tabs" id="tabs"></div>
 
@@ -524,6 +525,7 @@ function track(e){ try{ if(location.protocol==='file:') return; fetch('/.netlify
 const CUSTOM = 'My phrase';
 const ASSESS = 'Assess me';
 const CHATS = 'Chats';
+const DAILY5 = 'Daily 5';
 const FOCUS = 'Focus packs';
 const FOCUS_SETS = ['Past tense'];
 const FOCUS_LOCKED = [['f_future','f_futureD'],['f_irregular','f_irregularD'],['f_questions','f_questionsD'],['f_numbers','f_numbersD'],['f_polite','f_politeD'],['f_vocab','f_vocabD']];
@@ -544,7 +546,7 @@ const IN_AMERICAS = (()=>{ const r=NAV.split('-')[1]||''; return ['us','ca','mx'
 let ui = (()=>{ try{ const v=localStorage.getItem('sir_ui'); if(v && UI[JSON.parse(v)]) return JSON.parse(v); }catch(e){} const b=NAV.split('-')[0]; return UI[b] ? b : 'en'; })();
 function t(k, vars){ let v=(UI[ui]&&UI[ui][k]!==undefined)?UI[ui][k]:UI.en[k]; if(typeof v==='string'&&vars) for(const [a,b] of Object.entries(vars)) v=v.split('{'+a+'}').join(b); return v; }
 const LN = k => (window.SIR_LANG_NAMES[ui]||window.SIR_LANG_NAMES.en)[k] || (window.SIR_LANG_NAMES.en)[k] || (window.SIR_EXTRA[k]&&window.SIR_EXTRA[k].name) || k;
-const setName = n => (t('sets')||{})[n] || n;
+const setName = n => n===DAILY5 ? t('d5_title') : (t('sets')||{})[n] || n;
 const base = l => l==='enus' ? 'en' : l==='esmx' ? 'es' : l;
 function detectLang(){
   if(ui==='en') return IN_AMERICAS ? 'esmx' : 'es';
@@ -605,7 +607,7 @@ function lev(x,y){
 }
 
 // ---------- current phrase ----------
-function list(){ if(isLocked(set) || set===ASSESS || set===FOCUS || set===CHATS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
+function list(){ if(set===DAILY5) return window.daily5List ? window.daily5List() : []; if(isLocked(set) || set===ASSESS || set===FOCUS || set===CHATS) return []; return set===CUSTOM ? (custom?[custom]:[]) : DATA[lang].sets[set]; }
 function current(){ return list()[idx]; }
 function key(p){ return lang+'|'+p[0]; }
 
@@ -636,7 +638,7 @@ function renderFocus(){
 document.addEventListener('click',e=>{ if(e.target.closest('[data-fback]')){ set=FOCUS; idx=0; render(); } });
 // Two-level menu: 5 section buttons, then the topics of the chosen section (Phrases / Premium) underneath.
 let lastPhraseSet=null;
-function groupOf(s){ return s===CHATS?'chats': s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
+function groupOf(s){ return s===DAILY5?'daily': s===CHATS?'chats': s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
 function renderTabs(){
   const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n));
   const g = groupOf(set);
@@ -687,6 +689,7 @@ function renderPhrase(hits){
 }
 function render(){
   renderTabs();
+  if(window.renderDaily5Banner) window.renderDaily5Banner();
   els.customCard.style.display = set===CUSTOM ? 'block':'none';
   const locked = isLocked(set);
   els.practice.style.display = (locked || set===ASSESS || set===FOCUS || set===CHATS) ? 'none':'block';
@@ -835,6 +838,7 @@ function gradeAzure(j){
   const target = tokens(p[0]); let ptr=0;
   const hits = target.map(tk=>{ const n=normTok(tk); for(let i=ptr;i<said.length;i++){ if(said[i].x===n){ ptr=i+1; return said[i].ok; } } return false; });
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
+  if(window.daily5Scored) window.daily5Scored(p,pct);
   const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
   els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad'); els.next.classList.toggle('next-go', pct>=70 && !els.next.disabled);
   els.pct.textContent=pct+'%';
@@ -855,6 +859,7 @@ function grade(b){
   const pct = Math.round(s*100);
   const p=current(); const k=key(p);
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
+  if(window.daily5Scored) window.daily5Scored(p,pct);
   const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
   els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad'); els.next.classList.toggle('next-go', pct>=70 && !els.next.disabled);
   els.pct.textContent=pct+'%';
@@ -891,7 +896,7 @@ function applyUI(){
 applyUI();
 uiSel.onchange=async()=>{ const v=uiSel.value; await loadUILang(v); ui=window.SIR_UI[v]?v:'en'; store.set('sir_ui',ui); applyUI(); if(typeof fillFrom==='function'){ fillFrom(); } render(); if(typeof syncFrom==='function') syncFrom(); };
 els.lang.value=lang;
-els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(window.chatLangChanged) window.chatLangChanged(); if(set!==ASSESS && set!==FOCUS && set!==CHATS && !FOCUS_SETS.includes(set)) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
+els.lang.onchange=()=>{lang=els.lang.value;store.set('sir_lang',lang);if(window.assessLangChanged) window.assessLangChanged(); if(window.chatLangChanged) window.chatLangChanged(); if(set!==ASSESS && set!==FOCUS && set!==CHATS && set!==DAILY5 && !FOCUS_SETS.includes(set)) set=Object.keys(DATA[lang].sets)[0];idx=0;custom=null;render()};
 els.play.onclick=()=>current()&&speak(current()[0],0.95);
 els.slow.onclick=()=>current()&&speak(current()[0],0.6);
 els.mic.onclick=startListening;
@@ -936,7 +941,7 @@ document.addEventListener('click', ev=>{
   else {
     const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n));
     const i = free.indexOf(set);
-    set = FOCUS_SETS.includes(set) ? FOCUS : (i>=0 && i<free.length-1 ? free[i+1] : ASSESS);
+    set = set===DAILY5 ? free[0] : FOCUS_SETS.includes(set) ? FOCUS : (i>=0 && i<free.length-1 ? free[i+1] : ASSESS);
     idx=0;
   }
   render();
@@ -1071,6 +1076,7 @@ render();
 <script src="pron.js"></script>
 <script src="lesson.js"></script>
 <script src="chat.js"></script>
+<script src="daily5.js"></script>
 <script src="account.js"></script>
 </body>
 </html>

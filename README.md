@@ -99,3 +99,13 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 ## Free limits (Chats and Interview Coach)
 - Free: **1 chat and 1 interview per person per day** (`CHAT_FREE_LIMIT`, `INTERVIEW_FREE_LIMIT`; set either to another number in Netlify). Counted per signed-in account and per device (both, so signing out or switching device doesn't reset it), with a backstop of `CHAT_IP_SESSIONS` (default 6) new sessions per connection per day.
 - `CHAT_NOLIMIT_EMAILS` (default `neil@harleysays.com`): accounts with no daily limit, for testing now and Premium later.
+
+## Daily 5 (daily5.js)
+- Banner above the sections: five phrases a day, picked in this order: phrases from Harley Chats summaries not yet mastered (`hs_chat_review`, up to 3), phrases tried but under 80%, then new phrases from the free topics. Same five all day per language (`hs_d5`); new ones tomorrow.
+- Practice uses the normal phrase card (set `DAILY5`), with the usual end-of-set summary. Done = all five tried today; streak = days in a row done (`hs_d5_streak`, kept on the device, not yet synced to accounts).
+- Strings `d5_*` in en/es/fr/it/de/pt (others show English). Stats events `d5_start`, `d5_done`.
+
+## Hands-free listening: pause setting and iPhone
+- "Pause before sending": Short / Normal / Long (`hs_pause`, shared by Chats and Interview Coach) = 0.65× / 1× / 1.6× of the base pause (Chats 1.8 s, interviews 2.5 s).
+- iPhone Safari often repeats the sentence so far in each new speech result; `joinResults` keeps the latest version instead of adding repeats.
+- If the phone won't let the mic open by itself (no recent tap), there's no error: the button changes to a gently pulsing "Tap to answer" for the rest of that chat or interview.
