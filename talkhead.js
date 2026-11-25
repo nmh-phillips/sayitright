@@ -16,7 +16,68 @@ function puffs(cx, cy, R, r, n, fill, extra) {
   for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2; s += `<circle cx="${(cx + Math.cos(a) * R).toFixed(1)}" cy="${(cy + Math.sin(a) * R).toFixed(1)}" r="${r}" fill="${fill}"${extra || ''}/>`; }
   return s;
 }
+// Human interviewers (Interview Coach): illustrated, based on the founders' photo. Same class names as the dogs so the
+// same animation drives them: .hd (whole head), .eye (blink), .brows, .open/.teeth/.tongue (mouth), .smile.
+const HUMAN = { man: 1, woman: 1 };
+function humanSvg(who) {
+  const ink = '#1C2563';
+  if (who === 'man') {
+    const skin = '#F0C2A2', skin2 = '#DFA787', hair = '#6B472F', hairHi = '#93694A';
+    return `<svg viewBox="0 0 300 300" xmlns="${NS}" aria-hidden="true">
+  <defs><clipPath id="hsFaceM"><ellipse cx="150" cy="142" rx="60" ry="71"/></clipPath></defs>
+  <path d="M34 300 C40 246 88 228 120 224 L180 224 C212 228 260 246 266 300 Z" fill="#283044"/>
+  <path d="M128 192 L128 228 Q150 242 172 228 L172 192 Z" fill="${skin2}"/>
+  <path d="M120 224 Q150 252 180 224" fill="none" stroke="#1B2131" stroke-width="5"/>
+  <g class="hd">
+    <ellipse class="ear l" cx="91" cy="150" rx="11" ry="17" fill="${skin}"/><ellipse class="ear r" cx="209" cy="150" rx="11" ry="17" fill="${skin}"/>
+    <ellipse cx="150" cy="142" rx="60" ry="71" fill="${skin}"/>
+    <g clip-path="url(#hsFaceM)">
+      <path d="M86 150 C100 168 122 174 150 172 C178 174 200 168 214 150 L214 230 L86 230 Z" fill="#9C8474" opacity=".42"/>
+      <path d="M112 196 C128 212 172 212 188 196 L190 230 L110 230 Z" fill="#B7A79C" opacity=".35"/>
+    </g>
+    <path d="M124 177 Q150 165 176 177 Q150 172 124 177 Z" fill="#7F6656" opacity=".75"/>
+    <path d="M88 142 C82 92 104 62 150 58 C198 58 218 90 212 140 C208 116 200 102 190 96 C172 86 138 84 118 94 C102 102 94 118 88 142 Z" fill="${hair}"/>
+    <path d="M102 100 C122 70 182 66 204 98 C184 82 150 80 128 90 C118 94 110 97 102 100 Z" fill="${hairHi}"/>
+    <path d="M130 76 C150 68 176 70 192 80" stroke="#A97F5E" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+    <g class="brows"><path d="M115 121 q13 -7 26 -1" stroke="#5A3C2A" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M159 120 q13 -6 26 1" stroke="#5A3C2A" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+    <g class="eye l"><ellipse cx="129" cy="140" rx="9.5" ry="6" fill="#fff"/><circle cx="130" cy="140" r="4.8" fill="#6C9BD2"/><circle cx="130" cy="140" r="2.2" fill="${ink}"/><circle cx="131.5" cy="138.5" r="1.2" fill="#fff"/></g>
+    <g class="eye r"><ellipse cx="171" cy="140" rx="9.5" ry="6" fill="#fff"/><circle cx="170" cy="140" r="4.8" fill="#6C9BD2"/><circle cx="170" cy="140" r="2.2" fill="${ink}"/><circle cx="171.5" cy="138.5" r="1.2" fill="#fff"/></g>
+    <path d="M112 145 q-5 4 -9 2 M188 145 q5 4 9 2" stroke="${skin2}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M150 142 Q147 160 141 165 Q150 170 159 165" stroke="#C48A6C" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="116" cy="166" r="9" fill="#F29C94" opacity=".28"/><circle cx="184" cy="166" r="9" fill="#F29C94" opacity=".28"/>
+    <g class="mouth"><ellipse class="open" cx="150" cy="185" rx="13" ry="1" fill="#6B2B2B"/><ellipse class="teeth" cx="150" cy="182" rx="10" ry="0" fill="#fff"/><ellipse class="tongue" cx="150" cy="190" rx="8" ry="0" fill="#E0757F"/></g>
+    <path class="smile" d="M132 182 Q150 195 168 182" fill="none" stroke="#8A4B3E" stroke-width="4" stroke-linecap="round"/>
+  </g></svg>`;
+  }
+  const skin = '#ECBC9A', skin2 = '#D9A27E', hair = '#2E1A15', hairHi = '#4A2B22';
+  const curls = [[74, 196, 24], [226, 196, 24], [70, 228, 20], [230, 228, 20], [84, 252, 16], [216, 252, 16], [84, 160, 22], [216, 160, 22]]
+    .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${hair}"/>`).join('');
+  return `<svg viewBox="0 0 300 300" xmlns="${NS}" aria-hidden="true">
+  <g class="hd">
+    <path d="M84 150 C70 84 108 50 150 50 C192 50 230 84 216 150 C226 190 236 220 226 246 L74 246 C64 220 74 190 84 150 Z" fill="${hair}"/>${curls}
+    <path d="M86 200 q8 14 0 28 M214 200 q-8 14 0 28" stroke="${hairHi}" stroke-width="3" fill="none"/>
+  </g>
+  <path d="M42 300 C48 252 92 232 122 228 L178 228 C208 232 252 252 258 300 Z" fill="#17171F"/>
+  <path d="M131 188 L131 230 Q150 240 169 230 L169 188 Z" fill="${skin2}"/>
+  <g class="hd">
+    <ellipse cx="150" cy="140" rx="52" ry="64" fill="${skin}"/>
+    <path d="M150 70 C118 70 96 96 96 142 C104 112 122 90 150 84 Z" fill="${hair}"/><path d="M150 70 C182 70 204 96 204 142 C196 112 178 90 150 84 Z" fill="${hair}"/>
+    <path d="M101 116 C86 150 86 190 100 222 C106 196 104 166 112 136 Z" fill="${hair}"/><path d="M199 116 C214 150 214 190 200 222 C194 196 196 166 188 136 Z" fill="${hair}"/>
+    <path d="M128 78 Q140 72 150 72" stroke="${hairHi}" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="103" cy="170" r="5" fill="none" stroke="#C9CCD6" stroke-width="2.5"/><circle cx="197" cy="170" r="5" fill="none" stroke="#C9CCD6" stroke-width="2.5"/>
+    <g class="brows"><path d="M118 119 q12 -7 24 -2" stroke="${hair}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M158 117 q12 -5 24 2" stroke="${hair}" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="eye l"><ellipse cx="130" cy="137" rx="9" ry="6.2" fill="#fff"/><circle cx="131" cy="137" r="4.8" fill="#5B3A26"/><circle cx="131" cy="137" r="2.2" fill="#1a0f0b"/><circle cx="132.5" cy="135.5" r="1.2" fill="#fff"/><path d="M121 132 l-4 -3 M124 130 l-2 -4" stroke="${hair}" stroke-width="2" stroke-linecap="round"/></g>
+    <g class="eye r"><ellipse cx="170" cy="137" rx="9" ry="6.2" fill="#fff"/><circle cx="169" cy="137" r="4.8" fill="#5B3A26"/><circle cx="169" cy="137" r="2.2" fill="#1a0f0b"/><circle cx="170.5" cy="135.5" r="1.2" fill="#fff"/><path d="M179 132 l4 -3 M176 130 l2 -4" stroke="${hair}" stroke-width="2" stroke-linecap="round"/></g>
+    <path d="M150 140 Q148 155 143 160 Q150 164 157 160" stroke="#C28562" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="121" cy="161" r="10" fill="#F28CA0" opacity=".32"/><circle cx="179" cy="161" r="10" fill="#F28CA0" opacity=".32"/>
+    <g class="mouth"><ellipse class="open" cx="150" cy="180" rx="13" ry="1" fill="#6B2B3B" stroke="#E0478F" stroke-width="3.5"/><ellipse class="teeth" cx="150" cy="177" rx="10" ry="0" fill="#fff"/><ellipse class="tongue" cx="150" cy="185" rx="8" ry="0" fill="#E0757F"/></g>
+    <g class="smile"><path d="M128 174 Q150 200 172 174 Q150 180 128 174 Z" fill="#E0478F"/><path d="M133 176.5 Q150 190 167 176.5 Q150 180 133 176.5 Z" fill="#fff"/></g>
+  </g></svg>`;
+}
+const MOUTH_Y = { man: 185, woman: 180 };
+
 function svg(persona) {
+  if (HUMAN[persona]) return humanSvg(persona);
   const lilou = persona === 'lilou';
   const fur = lilou ? '#FFF8F0' : '#FFFFFF', shade = lilou ? '#F1E2D3' : '#E4E7F5', ink = '#1C2563';
   const ear = side => {
@@ -74,7 +135,7 @@ window.HSTalk = function (opts) {
     if (drawnFor === p) return;
     drawnFor = p; headBox.innerHTML = svg(p);
     const q = s => headBox.querySelector(s);
-    parts = { hd: q('.hd'), open: q('.open'), tongue: q('.tongue'), eyes: headBox.querySelectorAll('.eye'), earL: q('.ear.l'), earR: q('.ear.r'), brows: q('.brows'), smile: q('.smile') };
+    parts = { human: !!HUMAN[p], my: MOUTH_Y[p] || 184, hds: headBox.querySelectorAll('.hd'), teeth: q('.teeth'), hd: q('.hd'), open: q('.open'), tongue: q('.tongue'), eyes: headBox.querySelectorAll('.eye'), earL: q('.ear.l'), earR: q('.ear.r'), brows: q('.brows'), smile: q('.smile') };
   }
   build();
 
@@ -102,24 +163,36 @@ window.HSTalk = function (opts) {
       }
     }
     open += (target - open) * .45;
-    parts.open.setAttribute('ry', (1 + open * 18).toFixed(2));
-    parts.open.setAttribute('rx', (14 + open * 3).toFixed(2));
-    parts.open.setAttribute('cy', (184 + open * 8).toFixed(2));
-    parts.tongue.setAttribute('ry', (open * 6).toFixed(2));
-    parts.tongue.setAttribute('cy', (186 + open * 17).toFixed(2));
+    if (parts.human) {
+      const ry = 1 + open * 11, my = parts.my;
+      parts.open.setAttribute('ry', ry.toFixed(2)); parts.open.setAttribute('rx', (12 + open * 3).toFixed(2)); parts.open.setAttribute('cy', (my + open * 3).toFixed(2));
+      parts.teeth.setAttribute('ry', (open * 3.2).toFixed(2)); parts.teeth.setAttribute('cy', (my + open * 3 - ry + 3).toFixed(2));
+      parts.tongue.setAttribute('ry', (open * 4).toFixed(2)); parts.tongue.setAttribute('cy', (my + open * 3 + ry - 3).toFixed(2));
+      parts.smile.style.opacity = open > .18 ? 0 : 1;
+    } else {
+      parts.open.setAttribute('ry', (1 + open * 18).toFixed(2));
+      parts.open.setAttribute('rx', (14 + open * 3).toFixed(2));
+      parts.open.setAttribute('cy', (184 + open * 8).toFixed(2));
+      parts.tongue.setAttribute('ry', (open * 6).toFixed(2));
+      parts.tongue.setAttribute('cy', (186 + open * 17).toFixed(2));
+    }
     // blink every few seconds
     if (now > blinkAt) { blinkT = now; blinkAt = now + 2200 + Math.random() * 3200; }
     const b = now - blinkT < 140 ? .12 : 1;
-    parts.eyes.forEach(e => e.setAttribute('transform', `translate(0 ${(140 * (1 - b)).toFixed(1)}) scale(1 ${b})`));
+    const ey = parts.human ? (parts.my === 180 ? 137 : 140) : 140;
+    parts.eyes.forEach(e => e.setAttribute('transform', `translate(0 ${(ey * (1 - b)).toFixed(1)}) scale(1 ${b})`));
     // head and ears by mode
     let rot = Math.sin(t * .9) * 1.5, dy = Math.sin(t * 1.6) * 2, earL = 0, earR = 0, brow = 0;
     if (mode === 'talk') { dy += open * -3; rot += Math.sin(t * 2.3) * 2; earL = -4 - open * 4; earR = 4 + open * 4; brow = -2 - open * 2; }
     if (mode === 'listen') { rot = Math.sin(t * .8) * 2; dy = Math.max(0, Math.sin(t * 2.4)) * 5; earL = -16; earR = 16; brow = -5; }
     if (mode === 'think') { rot = -9 + Math.sin(t * 1.2) * 1.5; earL = 6; earR = -2; brow = -3; }
     if (mode === 'happy') { dy = -Math.abs(Math.sin(t * 5)) * 8; earL = -12 + Math.sin(t * 10) * 6; earR = 12 - Math.sin(t * 10) * 6; brow = -6; }
-    parts.hd.setAttribute('transform', `translate(0 ${dy.toFixed(1)}) rotate(${rot.toFixed(1)} 150 160)`);
-    parts.earL.setAttribute('transform', `rotate(${earL.toFixed(1)} 84 140)`);
-    parts.earR.setAttribute('transform', `rotate(${earR.toFixed(1)} 216 140)`);
+    if (parts.human) { rot *= .6; dy *= .6; earL = earR = 0; } // people move less than dogs, and their ears stay put
+    parts.hds.forEach(g => g.setAttribute('transform', `translate(0 ${dy.toFixed(1)}) rotate(${rot.toFixed(1)} 150 ${parts.human ? 200 : 160})`));
+    if (!parts.human) {
+      parts.earL.setAttribute('transform', `rotate(${earL.toFixed(1)} 84 140)`);
+      parts.earR.setAttribute('transform', `rotate(${earR.toFixed(1)} 216 140)`);
+    }
     parts.brows.setAttribute('transform', `translate(0 ${brow.toFixed(1)})`);
     requestAnimationFrame(frame);
   }
@@ -254,4 +327,5 @@ const css = `
 `;
 const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 window.HSTalk.timeline = timeline;
+window.HSTalk.face = svg; // still picture, e.g. for the small avatars in the transcript
 })();

@@ -42,3 +42,25 @@ const P={
 };
 for (const k in P) Object.assign(window.IV_UI[k], P[k]);
 })();
+// Human interviewers (man / woman)
+(function(){
+const H={
+ en:{who:'Your interviewer',who_man:'Man',who_woman:'Woman',heroP2:'Your interviewer asks you real interview questions. Just answer out loud, and at the end you get a report with tips and stronger answers.',Ivr_man:'The interviewer',Ivr_woman:'The interviewer',ivr_man:'the interviewer',ivr_woman:'the interviewer'},
+ es:{who:'Quién te entrevista',who_man:'Hombre',who_woman:'Mujer',heroP2:'Te harán preguntas de entrevista reales. Responde en voz alta y al final recibes un informe con consejos y respuestas mejores.',Ivr_man:'El entrevistador',Ivr_woman:'La entrevistadora',ivr_man:'el entrevistador',ivr_woman:'la entrevistadora'},
+ fr:{who:'Votre recruteur',who_man:'Homme',who_woman:'Femme',heroP2:"On vous pose de vraies questions d'entretien. Répondez à voix haute : à la fin, vous recevez un bilan avec des conseils et de meilleures réponses.",Ivr_man:'Le recruteur',Ivr_woman:'La recruteuse',ivr_man:'le recruteur',ivr_woman:'la recruteuse'},
+ it:{who:'Chi ti intervista',who_man:'Uomo',who_woman:'Donna',heroP2:'Ti fanno vere domande da colloquio. Rispondi ad alta voce: alla fine ricevi un resoconto con consigli e risposte migliori.',Ivr_man:'Il selezionatore',Ivr_woman:'La selezionatrice',ivr_man:'il selezionatore',ivr_woman:'la selezionatrice'},
+ de:{who:'Wer dich interviewt',who_man:'Mann',who_woman:'Frau',heroP2:'Dir werden echte Fragen aus Vorstellungsgesprächen gestellt. Antworte einfach laut – am Ende bekommst du einen Bericht mit Tipps und besseren Antworten.',Ivr_man:'Der Interviewer',Ivr_woman:'Die Interviewerin',ivr_man:'der Interviewer',ivr_woman:'die Interviewerin'},
+ pt:{who:'Quem o entrevista',who_man:'Homem',who_woman:'Mulher',heroP2:'Vão fazer-lhe perguntas reais de entrevista. Responda em voz alta e, no fim, recebe um relatório com dicas e respostas melhores.',Ivr_man:'O entrevistador',Ivr_woman:'A entrevistadora',ivr_man:'o entrevistador',ivr_woman:'a entrevistadora'},
+ pl:{who:'Kto prowadzi rozmowę',who_man:'Mężczyzna',who_woman:'Kobieta',heroP2:'Usłyszysz prawdziwe pytania z rozmów kwalifikacyjnych. Odpowiadaj na głos, a na koniec dostaniesz raport z radami i lepszymi odpowiedziami.',Ivr_man:'Rekruter',Ivr_woman:'Rekruterka',ivr_man:'rekruter',ivr_woman:'rekruterka'},
+ ro:{who:'Cine te intervievează',who_man:'Bărbat',who_woman:'Femeie',heroP2:'Primești întrebări reale de interviu. Răspunde cu voce tare, iar la final primești un raport cu sfaturi și răspunsuri mai bune.',Ivr_man:'Intervievatorul',Ivr_woman:'Intervievatoarea',ivr_man:'intervievatorul',ivr_woman:'intervievatoarea'},
+ uk:{who:'Хто проводить співбесіду',who_man:'Чоловік',who_woman:'Жінка',heroP2:'Вам ставитимуть справжні запитання зі співбесід. Відповідайте вголос, а наприкінці отримаєте звіт із порадами та сильнішими відповідями.',Ivr_man:'Інтерв’юер',Ivr_woman:'Інтерв’юерка',ivr_man:'інтерв’юер',ivr_woman:'інтерв’юерка'},
+ zh:{who:'面试官',who_man:'男',who_woman:'女',heroP2:'面试官会问你真实的面试问题。你只需大声回答，结束时会得到一份包含建议和更好回答的报告。',Ivr_man:'面试官',Ivr_woman:'面试官',ivr_man:'面试官',ivr_woman:'面试官'},
+ ar:{who:'من يجري المقابلة',who_man:'رجل',who_woman:'امرأة',heroP2:'ستُطرح عليك أسئلة مقابلات حقيقية. أجب بصوت عالٍ، وفي النهاية تحصل على تقرير فيه نصائح وإجابات أقوى.',Ivr_man:'المُحاوِر',Ivr_woman:'المُحاوِرة',ivr_man:'المُحاوِر',ivr_woman:'المُحاوِرة'},
+ nl:{who:'Wie je interviewt',who_man:'Man',who_woman:'Vrouw',heroP2:'Je krijgt echte sollicitatievragen. Antwoord gewoon hardop, en aan het eind krijg je een verslag met tips en sterkere antwoorden.',Ivr_man:'De interviewer',Ivr_woman:'De interviewer',ivr_man:'de interviewer',ivr_woman:'de interviewer'},
+ tr:{who:'Görüşmeci',who_man:'Erkek',who_woman:'Kadın',heroP2:'Sana gerçek mülakat soruları sorulur. Sesli cevap ver; sonunda ipuçları ve daha güçlü cevaplar içeren bir rapor alırsın.',Ivr_man:'Görüşmeci',Ivr_woman:'Görüşmeci',ivr_man:'görüşmeci',ivr_woman:'görüşmeci'},
+ ja:{who:'面接官',who_man:'男性',who_woman:'女性',heroP2:'面接官が本番さながらの質問をします。声に出して答えるだけ。最後にアドバイスとより良い答え方のレポートが届きます。',Ivr_man:'面接官',Ivr_woman:'面接官',ivr_man:'面接官',ivr_woman:'面接官'},
+ ko:{who:'면접관',who_man:'남성',who_woman:'여성',heroP2:'면접관이 실제 면접 질문을 합니다. 소리 내어 답하기만 하면 마지막에 팁과 더 좋은 답변이 담긴 리포트를 받아요.',Ivr_man:'면접관',Ivr_woman:'면접관',ivr_man:'면접관',ivr_woman:'면접관'},
+ vi:{who:'Người phỏng vấn',who_man:'Nam',who_woman:'Nữ',heroP2:'Người phỏng vấn sẽ hỏi bạn những câu hỏi phỏng vấn thật. Chỉ cần trả lời to, cuối buổi bạn nhận được báo cáo với lời khuyên và câu trả lời tốt hơn.',Ivr_man:'Người phỏng vấn',Ivr_woman:'Người phỏng vấn',ivr_man:'người phỏng vấn',ivr_woman:'người phỏng vấn'}
+};
+for (const k in H) Object.assign(window.IV_UI[k], H[k]);
+})();

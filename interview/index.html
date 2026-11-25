@@ -37,6 +37,7 @@
   .hero h2{margin:0 0 4px;font-size:22px;line-height:1.2;letter-spacing:-.01em}
   .hero p{margin:0;color:var(--muted);line-height:1.45}
   .dog{flex:0 0 72px;width:72px;height:72px;animation:bob 3s ease-in-out infinite} .dog svg,.av svg{width:100%;height:100%;display:block}
+  .dog.ivr{border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 40%,#5B6BE0,#3346C8)}
   .dog.big{width:96px;height:96px;margin:6px auto}
   @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
   .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 2px 0 var(--line)}
@@ -46,6 +47,12 @@
   .chips button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 12px;border-radius:14px;font:700 14px Inter,sans-serif;cursor:pointer;text-align:start}
   .chips button small{font-weight:500;font-size:12px;color:var(--muted)}
   .chips button.on{background:var(--blue);border-color:var(--blue);color:#fff} .chips button.on small{color:#dfe4ff}
+  .who{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .who button{display:flex;flex-direction:column;align-items:center;gap:4px;border:2px solid var(--line);background:#fff;border-radius:16px;padding:8px;font:700 15px Inter,sans-serif;color:var(--ink);cursor:pointer}
+  .who button .pic{width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#5B6BE0,#3346C8);overflow:hidden;display:block}
+  .who button .pic svg{width:100%;height:100%;display:block}
+  .who button.on{border-color:var(--blue);background:var(--bluebg)}
+  .av{border-radius:50%;overflow:hidden;background:#3346C8}
   .opts{display:flex;flex-direction:column;gap:8px;margin:14px 0;font-size:14px}
   .opts label{display:flex;gap:8px;align-items:center;cursor:pointer} .opts input{width:18px;height:18px;accent-color:var(--blue);padding:0}
   .btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:11px 16px;border-radius:12px;font:700 15px Inter,sans-serif;cursor:pointer}

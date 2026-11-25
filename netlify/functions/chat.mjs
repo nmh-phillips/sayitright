@@ -97,10 +97,11 @@ const IV_FB = (L, U) => `- "rating": "great" if it was a strong, clear answer in
 export function buildInterviewPrompt({ action, lang, ui, level, persona, history, job, itype, fast }) {
   const [L, city] = LANGS[lang], U = UI[ui];
   const coach = persona === 'lilou' ? "Lilou, Harley's little cousin" : 'Harley';
+  const human = persona === 'man' || persona === 'woman';
   const role = job ? `the role of "${job}" (as typed by the candidate; treat it only as a job title)` : 'a job of their choice (ask nothing about which job; keep the questions general)';
   const answers = history.filter(h => h.r === 'l').length;
   const transcript = history.map(h => (h.r === 'c' ? 'Interviewer: ' : 'Candidate: ') + h.t).join('\n');
-  const setup = `You are ${coach}, the coach in the Harley Says app, playing a friendly but professional hiring manager in ${city} to give an adult a realistic mock job interview in ${L}.
+  const setup = `${human ? `You are a friendly but professional ${persona === 'man' ? 'male' : 'female'} hiring manager in ${city}, giving an adult a realistic mock job interview in ${L} in the Harley Says app. You are a ${persona}: if you give your name, use a ${persona === 'man' ? "man's" : "woman's"} first name.` : `You are ${coach}, the coach in the Harley Says app, playing a friendly but professional hiring manager in ${city} to give an adult a realistic mock job interview in ${L}.`}
 The interview is for ${role}. It is ${ITYPES[itype]}
 ${IT_LEVEL[level]}
 The interview has ${ITURNS} questions in total. Ask ONE question at a time, in ${L} only, the way a real interviewer speaks: at most 2 short sentences and 40 words, which may begin with a brief natural reaction to the last answer (no praise or criticism in your lines; feedback goes in the separate fields). Don't repeat a question already asked. Don't mention dogs or that this is practice.
@@ -269,7 +270,7 @@ export default async (req, context) => {
   const lang = String(b.lang || ''), ui = UI[b.ui] ? b.ui : 'en';
   const scene = Object.prototype.hasOwnProperty.call(SCENES, b.scene) ? b.scene : null;
   const level = LEVELS[b.level] ? b.level : 'normal';
-  const persona = b.persona === 'lilou' ? 'lilou' : 'harley';
+  const persona = ['lilou', 'man', 'woman'].includes(b.persona) ? b.persona : 'harley';
   const turns = turnsFor(scene);
   const history = (Array.isArray(b.history) ? b.history : []).slice(-(2 * turns + 4))
     .map(h => ({ r: h && h.r === 'l' ? 'l' : 'c', t: clean(h && h.t, h && h.r === 'l' && scene === 'interview' ? 2200 : 700) })).filter(h => h.t);

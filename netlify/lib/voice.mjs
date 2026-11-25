@@ -13,7 +13,10 @@ export const PRESETS = {
   L1: { voice: 'en-US-AvaMultilingualNeural',  pitch: 10, rate: 6  },  // bright, friendly
   L2: { voice: 'en-US-EmmaMultilingualNeural', pitch: 12, rate: 6  },  // warm, cheerful
   L3: { voice: 'en-US-AvaMultilingualNeural',  pitch: 18, rate: 10 },  // younger, extra playful
-  L4: { voice: 'en-US-EmmaMultilingualNeural', pitch: 20, rate: 10 }
+  L4: { voice: 'en-US-EmmaMultilingualNeural', pitch: 20, rate: 10 },
+  // Human interviewers (Interview Coach): natural adult voices, no pitch change
+  M: { voice: 'en-US-AndrewMultilingualNeural', pitch: 0, rate: 4 },
+  W: { voice: 'en-US-EmmaMultilingualNeural',   pitch: 0, rate: 4 }
 };
 export const DAILY_CHARS = Number(process.env.TTS_DAILY_CHARS || 15000);
 export const IP_CAP = Number(process.env.TTS_IP_LIMIT || 200);
@@ -24,6 +27,8 @@ export const sha = x => createHash('sha256').update(x).digest('hex');
 export const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu;
 
 export function pickPreset(persona, preset) {
+  if (persona === 'man') return { lilou: false, preset: PRESETS[process.env.MAN_VOICE] || PRESETS.M };
+  if (persona === 'woman') return { lilou: true, preset: PRESETS[process.env.WOMAN_VOICE] || PRESETS.W };
   const lilou = persona === 'lilou' || /^L\d$/.test(preset || '');
   return { lilou, preset: PRESETS[preset] || (lilou ? (PRESETS[process.env.LILOU_VOICE] || PRESETS.L1) : (PRESETS[process.env.HARLEY_VOICE] || PRESETS.A)) };
 }

@@ -115,3 +115,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Faster turns: with tips at the end (the default), `chat.mjs` gets `tips: 'end'` and only writes Harley's next line (no feedback, max 500 tokens); the tips for every reply come in the end report (`turns`). `voice: true` makes `chat.mjs` send Harley's voice (base64 mp3) with the line, saving a second request. Default pauses are shorter: Chats 1.4 s, interviews 2.1 s (× the Short/Normal/Long setting).
 - Voice code is shared in `netlify/lib/voice.mjs` (used by `tts.mjs` and `chat.mjs`); the audio requests are byte-for-byte the same as before, so the cache still works.
 - Note: `TTS_DAILY_CHARS` (default 15,000 across everyone) also covers Chats and interviews, about 1,000-1,500 characters each. When it runs out, Harley falls back to the phone's voice for the rest of the day.
+
+## Interview Coach: human interviewers
+- The interviewer is a person, not Harley: an illustrated **man** or **woman** (picked on the setup screen, `hs_iv_who`, default man), drawn as SVG in `talkhead.js` (`humanSvg`) from the founders' photo. The photo itself is not in the repo. Same animation as the dogs (mouth with teeth and tongue, blinking, nodding), with calmer movement.
+- Voices: `M` = Andrew, `W` = Emma (Azure multilingual, natural pitch) in `netlify/lib/voice.mjs`; change with `MAN_VOICE` / `WOMAN_VOICE` (any preset key).
+- `chat.mjs` gets `persona: 'man'|'woman'`: the prompt plays a male or female hiring manager (a matching first name if they give one). The report is still written by Harley the coach.

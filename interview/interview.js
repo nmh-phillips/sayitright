@@ -57,6 +57,7 @@ const face = () => coach() === 'lilou' ? LILOU : FACE;
 
 // ---------- state ----------
 const S = {
+  who: store.get('hs_iv_who', 'man') === 'woman' ? 'woman' : 'man', // the interviewer: an illustrated man or woman
   view: 'setup', access: null, job: store.get('hs_iv_job', ''), kind: store.get('hs_iv_kind', 'general'), level: store.get('hs_iv_level', 'normal'),
   history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null,
   typing: !Rec, interim: '', listening: false, talking: false, paused: false,
@@ -70,7 +71,7 @@ if (!LEVELS.includes(S.level)) S.level = 'normal';
 const rich = text => esc(text).replace(/«([^»]+)»/g, (m, w) => `<button class="w" data-line="${w}">${w}</button>`);
 
 // ---------- voice and face (/talkhead.js: big animated head, mouth moves with the words) ----------
-const stage = window.HSTalk({ persona: () => coach(), code: () => code() });
+const stage = window.HSTalk({ persona: () => S.who, code: () => code() });
 function unlock() { stage.unlock(); } // inside a tap (iPhone)
 // Say a line; done() runs when finished (not if interrupted). b64: his voice, sent with the line.
 function say(text, done, b64) {
@@ -137,7 +138,7 @@ async function headers() {
 }
 async function call(action) {
   const r = await fetch('/.netlify/functions/chat', { method: 'POST', headers: await headers(),
-    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: 'interview', level: S.level, persona: coach(), job: S.job, itype: S.kind, history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end' }) });
+    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: 'interview', level: S.level, persona: S.who, job: S.job, itype: S.kind, history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end' }) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || j.error) { const e = new Error(j.error || 'HTTP ' + r.status); e.status = r.status; e.j = j; throw e; }
   return j;
@@ -198,7 +199,7 @@ async function finish() {
 // ---------- views ----------
 function vGate() {
   const signedIn = window.hsAccount && window.hsAccount.signedIn();
-  return `<div class="hero"><div class="dog">${face()}</div><div><h2>${esc(t('heroH'))}</h2><p>${esc(t('heroP', { name: coachName() }))}</p></div></div>
+  return `<div class="hero"><div class="dog">${face()}</div><div><h2>${esc(t('heroH'))}</h2><p>${esc(t('heroP2'))}</p></div></div>
     <div class="card"><p>${esc(t(S.access === false ? 'beta' : 'wait', { name: coachName() }))}</p>
     ${S.access === false && !signedIn && window.hsAccount && window.hsAccount.ready() ? `<button class="btn primary" data-signin>👤 ${esc(t('acc_signin'))}</button>` : ''}</div>`;
 }
@@ -206,8 +207,10 @@ function chips(name, list, cur, label) {
   return `<div class="chips" role="group" aria-label="${esc(label)}">${list.map(([v, txt, sub]) => `<button data-${name}="${v}" class="${cur === v ? 'on' : ''}" aria-pressed="${cur === v}">${esc(txt)}${sub ? `<small>${esc(sub)}</small>` : ''}</button>`).join('')}</div>`;
 }
 function vSetup() {
-  return `<div class="hero"><div class="dog">${face()}</div><div><h2>${esc(t('heroH'))}</h2><p>${esc(t('heroP', { name: coachName() }))}</p></div></div>
+  return `<div class="hero"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('heroH'))}</h2><p>${esc(t('heroP2'))}</p></div></div>
   <div class="card">
+    <div class="lbl" style="margin-top:0">${esc(t('who'))}</div>
+    <div class="who">${['man', 'woman'].map(w => `<button data-who="${w}" class="${S.who === w ? 'on' : ''}" aria-pressed="${S.who === w}"><span class="pic">${window.HSTalk.face(w)}</span>${esc(t('who_' + w))}</button>`).join('')}</div>
     <label class="lbl" for="ivJob">${esc(t('job'))}</label>
     <input id="ivJob" maxlength="60" autocomplete="off" value="${esc(S.job)}" placeholder="${esc(t('jobPh'))}">
     <div class="lbl">${esc(t('kind'))}</div>
@@ -217,7 +220,7 @@ function vSetup() {
     <label class="lbl" for="ivLang">${esc(t('ivIn'))}</label>
     <select id="ivLang">${Object.keys(LANGS).map(k => `<option value="${k}" ${k === lang ? 'selected' : ''}>${LANGS[k][1]} ${esc(langName(k))}</option>`).join('')}</select>
     <div class="opts">
-      ${Rec ? `<label><input type="checkbox" data-opt="auto" ${S.auto ? 'checked' : ''}> ${esc(t('auto', { name: coachName() }))}</label>` : ''}
+      ${Rec ? `<label><input type="checkbox" data-opt="auto" ${S.auto ? 'checked' : ''}> ${esc(t('auto', { name: t('ivr_' + S.who) }))}</label>` : ''}
       <label><input type="checkbox" data-opt="live" ${S.live ? 'checked' : ''}> ${esc(t('tipsLive'))}</label>
     </div>
     ${Rec ? `<div class="lbl">${esc(t('pauseL'))}</div>${chips('pz', Object.keys(PAUSES).map(k => [k, t('pz_' + k)]), S.pause, t('pauseL'))}<div style="height:14px"></div>` : ''}
@@ -234,7 +237,7 @@ function vInterview() {
     <div class="trrow"><label><input type="checkbox" data-opt="tr" ${S.showTr ? 'checked' : ''}> ${esc(t('showTr'))}</label></div><div class="log" id="ivLog">`;
   S.items.forEach((it, i) => {
     if (it.r === 'c') {
-      h += `<div class="row c"><div class="av${S.talking && i === S.items.length - 1 ? ' talk' : ''}">${face()}</div><div class="bub c"><div class="line">${esc(it.line)}</div>${it.showTr && it.translation ? `<div class="tr">${esc(it.translation)}</div>` : ''}<div class="tools"><button class="link" data-say="${i}">🔊</button>${it.translation ? `<button class="link" data-tr="${i}">${esc(t(it.showTr ? 'hideTr' : 'showTr'))}</button>` : ''}</div></div></div>`;
+      h += `<div class="row c"><div class="av">${window.HSTalk.face(S.who)}</div><div class="bub c"><div class="line">${esc(it.line)}</div>${it.showTr && it.translation ? `<div class="tr">${esc(it.translation)}</div>` : ''}<div class="tools"><button class="link" data-say="${i}">🔊</button>${it.translation ? `<button class="link" data-tr="${i}">${esc(t(it.showTr ? 'hideTr' : 'showTr'))}</button>` : ''}</div></div></div>`;
     } else {
       h += `<div class="row l"><div class="bub l">${esc(it.text)}</div></div>`;
       if (it.fb && S.live) h += `<div class="fb ${it.fb.rating}">${fbHtml(it.fb)}</div>`;
@@ -248,7 +251,7 @@ function vInterview() {
     if (S.typing) {
       h += `<form class="type" data-form><textarea id="ivInput" rows="3" maxlength="${MAX_CHARS}" placeholder="${esc(t('placeholder'))}" lang="${esc(code())}"></textarea><button class="btn primary" type="submit">${esc(t('send'))}</button></form><div class="ctl">${Rec ? `<button class="link" data-mode>${esc(t('speakIn'))}</button>` : ''}`;
     } else if (S.auto) {
-      const st = S.listening ? ['on', t('yourTurn')] : S.talking ? ['', t('speaking', { name: coachName() })] : ['tap', t('tapTalk')];
+      const st = S.listening ? ['on', t('yourTurn')] : S.talking ? ['', t('speaking', { name: t('Ivr_' + S.who) })] : ['tap', t('tapTalk')];
       h += `<button class="status ${st[0]}" data-mic>${S.listening ? '<span class="pulse"></span>' : S.talking ? '🔊' : '🎙️'} ${esc(st[1])}</button><div class="ctl">${S.listening || S.talking ? `<button class="link" data-pause>${esc(t('pause'))}</button>` : ''}<button class="link" data-mode>${esc(t('typeIn'))}</button>`;
     } else {
       h += `<button class="btn mic${S.listening ? ' rec' : ''}" data-mic>${esc(S.listening ? t('listening') : t('tap'))}</button><div class="ctl"><button class="link" data-mode>${esc(t('typeIn'))}</button>`;
@@ -303,6 +306,7 @@ document.addEventListener('change', e => {
 document.addEventListener('click', e => {
   const b = e.target.closest('#app button'); if (!b) return;
   const d = b.dataset;
+  if (d.who) { S.who = d.who; store.set('hs_iv_who', S.who); draw(); return; }
   if (d.kind) { S.kind = d.kind; store.set('hs_iv_kind', S.kind); draw(); return; }
   if (d.level) { S.level = d.level; store.set('hs_iv_level', S.level); draw(); return; }
   if (d.pz) { S.pause = d.pz; store.set('hs_pause', S.pause); draw(); return; }
