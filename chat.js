@@ -6,7 +6,7 @@
 const SCENES = [['cafe','☕'],['restaurant','🍝'],['directions','🗺️'],['shop','👕'],['hotel','🏨'],['pharmacy','💊'],['neighbour','🏠'],['party','🎉']];
 const LEVELS = ['easy','normal','hard'];
 const MAX_TURNS = 8;          // matches CHAT_TURNS on the server (the server has the final say)
-const PAUSE_BASE = 1800;      // hands-free: this much quiet after speaking sends the reply (× the person's pause setting)
+const PAUSE_BASE = 1400;      // hands-free: this much quiet after speaking sends the reply (× the person's pause setting)
 const WAIT_MS = 9000;         // hands-free: stop listening if nothing is said for this long
 // Join speech results into one text. iPhone Safari often repeats the whole sentence so far in each new result,
 // so a result that starts with what we already have replaces it instead of being added on.
@@ -30,6 +30,7 @@ const card = () => document.getElementById('chatCard');
 const S = { view:'pick', scene:null, level: store.get('hs_chat_level','normal'), history:[], items:[], hint:'', busy:false, error:'', ended:false, sum:null,
   typing: !Rec, interim:'', listening:false, talking:false, paused:false,
   auto: !!Rec && store.get('hs_chat_auto', true), live: store.get('hs_chat_live', false), pause: store.get('hs_pause', 'normal'),
+  showTr: store.get('hs_chat_tr', false),
   autoBlocked: false }; // autoBlocked: this phone won't let the mic open by itself (iPhone), so we ask for a tap instead
 if (!LEVELS.includes(S.level)) S.level = 'normal';
 function leftToday(){ const v = store.get('hs_chat_left', null); return v && v.day === today() ? v.n : null; }
@@ -40,41 +41,19 @@ function rich(text){
   return esc(text).replace(/«([^»]+)»/g, (m, w) => `<button class="ch-w" data-chw="${w}">${w}</button>`);
 }
 
-// ---------- Harley's voice (own audio element, so we know when he has finished) ----------
-const AU = new Audio(); AU.preload = 'auto';
-const SILENT = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
-function unlock(){ try { if (!S.talking){ AU.src = SILENT; const p = AU.play(); if (p) p.catch(()=>{}); } } catch(e){} if (window.haUnlock) haUnlock(); } // inside a tap (iPhone)
-const audioCache = {};
-let sayId = 0;
-async function say(text, done){
-  const id = ++sayId; done = done || (()=>{});
-  const fin = () => { if (id !== sayId) return; S.talking = false; draw(); done(); };
+// ---------- Harley's voice and face (talkhead.js: big animated head, mouth moves with the words) ----------
+const stage = HSTalk({ persona: () => coachId(), code: () => DATA[lang].code });
+function unlock(){ stage.unlock(); if (window.haUnlock) haUnlock(); } // inside a tap (iPhone)
+// Say a line; done() runs when he has finished (not if he was interrupted). b64: his voice, sent with the line.
+function say(text, done, b64){
   stopListening(); S.talking = true; draw();
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
-  try {
-    const k = coachId() + '|' + DATA[lang].code + '|' + text;
-    let url = audioCache[k];
-    if (!url){
-      const r = await fetch('/.netlify/functions/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ kind:'line', text, target: DATA[lang].code, persona: coachId() }) });
-      if (!r.ok || !(r.headers.get('content-type') || '').includes('audio')) throw new Error('tts');
-      url = audioCache[k] = URL.createObjectURL(await r.blob());
-    }
-    if (id !== sayId) return;
-    AU.onended = fin; AU.onerror = () => browserSay(text, id, fin);
-    AU.src = url; AU.currentTime = 0; await AU.play();
-  } catch(e){ if (id === sayId) browserSay(text, id, fin); }
+  const it = S.items.filter(x => x.r === 'c' && x.line === text).pop();
+  stage.say(text, { b64, translation: S.showTr && it ? it.translation : '' }).then(ok => {
+    S.talking = stage.talking; draw();
+    if (ok && done) done();
+  });
 }
-function browserSay(text, id, fin){
-  if (!('speechSynthesis' in window)) return fin();
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang = DATA[lang].code; u.rate = 0.95;
-  const v = window.bestVoice && window.bestVoice(DATA[lang].code); if (v) u.voice = v;
-  let doneOnce = false; const end = () => { if (!doneOnce){ doneOnce = true; fin(); } };
-  u.onend = end; u.onerror = end;
-  setTimeout(end, 1500 + text.length * 120); // some phones never fire onend
-  speechSynthesis.speak(u);
-}
-function hush(){ sayId++; try { AU.pause(); } catch(e){} if ('speechSynthesis' in window) speechSynthesis.cancel(); S.talking = false; }
+function hush(){ stage.hush(); S.talking = false; }
 // After Harley's line: hands-free opens the mic; at the end of the scene, go straight to the summary.
 function afterLine(){
   if (!inChat()) return;
@@ -108,7 +87,8 @@ function fbHtml(f){
 function renderChat(c){
   const [, ic] = SCENES.find(s => s[0] === S.scene) || ['', '💬'];
   const learnerTurns = S.history.filter(h => h.r === 'l').length;
-  let h = `<div class="ch-top"><b>${ic} ${esc(t('ch_s_'+S.scene))}</b><span class="a-meta">${esc(t('ch_turns',{n:Math.min(learnerTurns+(S.ended?0:1),MAX_TURNS),m:MAX_TURNS}))}</span><button class="linkbtn" data-chquit aria-label="${esc(t('ch_other'))}">✕</button></div><div class="ch-log" id="chLog">`;
+  let h = `<div class="ch-top"><b>${ic} ${esc(t('ch_s_'+S.scene))}</b><span class="a-meta">${esc(t('ch_turns',{n:Math.min(learnerTurns+(S.ended?0:1),MAX_TURNS),m:MAX_TURNS}))}</span><button class="linkbtn" data-chquit aria-label="${esc(t('ch_other'))}">✕</button></div><div class="ch-stage-slot"></div>
+    <div class="ch-trrow"><label><input type="checkbox" data-chopt="tr" ${S.showTr?'checked':''}> ${esc(t('ch_showTr'))}</label></div><div class="ch-log" id="chLog">`;
   S.items.forEach((it, i) => {
     if (it.r === 'c') {
       h += `<div class="ch-row c"><div class="ch-face sm${S.talking && i === S.items.length-1 ? ' talk' : ''}" aria-hidden="true">${coachFace('happy')}</div><div class="ch-bub c"><div class="ch-line">${esc(it.line)}</div>
@@ -119,8 +99,6 @@ function renderChat(c){
       if (it.fb && S.live) h += `<div class="ch-fb ${it.fb.rating}">${fbHtml(it.fb)}</div>`;
     }
   });
-  if (S.listening) h += `<div class="ch-row l"><div class="ch-bub l ch-live">${S.interim ? esc(S.interim) : '<span class="ch-dots"><i></i><i></i><i></i></span>'}</div></div>`;
-  if (S.busy) h += `<div class="ch-row c"><div class="ch-face sm" aria-hidden="true">${coachFace('puzzled')}</div><div class="ch-bub c ch-wait">${esc(t('ch_wait',{name:coachName()}))}</div></div>`;
   h += `</div>`;
   if (S.error) h += `<p class="ch-err">${S.error}</p>`;
   if (S.ended && !S.busy && !S.talking) {
@@ -142,6 +120,10 @@ function renderChat(c){
     h += `</div>`;
   }
   c.innerHTML = h;
+  const slot = c.querySelector('.ch-stage-slot'); if (slot) slot.replaceWith(stage.el);
+  if (S.listening) stage.listening(S.interim);
+  else if (S.busy) stage.thinking();
+  else if (!S.talking) stage.mode(S.ended ? 'happy' : 'idle');
   const log = document.getElementById('chLog'); if (log) log.scrollTop = log.scrollHeight;
   const inp = document.getElementById('chInput'); if (inp && S.focusInput){ S.focusInput = false; inp.focus(); }
 }
@@ -181,7 +163,7 @@ async function headers(){
 }
 async function call(action){
   const r = await fetch('/.netlify/functions/chat', { method:'POST', headers: await headers(),
-    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: S.scene, level: S.level, persona: coachId(), history: S.history }) });
+    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: S.scene, level: S.level, persona: coachId(), history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end' }) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || j.error) { const e = new Error(j.error || 'HTTP ' + r.status); e.status = r.status; e.j = j; throw e; }
   return j;
@@ -196,8 +178,8 @@ async function start(scene){
     S.history.push({ r:'c', t:j.line }); S.items.push({ r:'c', line:j.line, translation:j.translation });
     S.hint = j.hint || '';
     if (typeof j.remaining === 'number') store.set('hs_chat_left', j.remaining < 50 ? {day:today(), n:j.remaining} : null);
-    track('chat_start');
-    S.busy = false; say(j.line, afterLine);
+    track('chat_start'); stage.prefetchAcks();
+    S.busy = false; say(j.line, afterLine, j.audio);
   } catch(e){
     S.error = errMsg(e.status, e.j || {});
     if (!S.items.length) S.view = 'pick';
@@ -212,13 +194,15 @@ async function reply(text){
   S.busy = true; S.error = ''; S.hint = ''; S.interim = '';
   pending = () => { S.history.pop(); S.items.pop(); reply(text); };
   draw();
+  const ack = stage.ack(); // a quick "mm-hm" while Harley thinks
   try {
     const j = await call('reply');
-    item.fb = j.feedback;
+    if (j.feedback) item.fb = j.feedback;
     S.history.push({ r:'c', t:j.line }); S.items.push({ r:'c', line:j.line, translation:j.translation });
     S.hint = j.hint || ''; S.ended = !!j.end;
     track('chat_turn');
-    S.busy = false; if (inChat()) say(j.line, afterLine);
+    await Promise.race([ack, new Promise(r => setTimeout(r, 1500))]);
+    S.busy = false; if (inChat()) say(j.line, afterLine, j.audio);
   } catch(e){ S.error = errMsg(e.status, e.j || {}); S.busy = false; }
   draw();
 }
@@ -228,6 +212,8 @@ async function finish(){
   S.busy = true; S.error = ''; pending = finish; draw();
   try {
     const j = await call('end');
+    // tips for each reply come with the report (unless they were shown during the chat)
+    let k = 0; S.items.forEach(it => { if (it.r === 'l') { if (!it.fb && j.turns && j.turns[k]) it.fb = j.turns[k]; k++; } });
     S.sum = j; S.view = 'sum'; track('chat_done');
     // keep the phrases for later practice (Daily 5)
     const rev = store.get('hs_chat_review', []).filter(x => !j.practise.some(p => p.p === x.p));
@@ -257,7 +243,7 @@ function listen(tap){
   r.onresult = e => {
     if (rec !== r) return;
     heard = joinResults(e.results); S.interim = heard;
-    const b = card().querySelector('.ch-live'); if (b) b.textContent = heard; else draw();
+    stage.listening(heard);
     if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(() => { if (rec === r) r.stop(); }, pauseMs()); }
   };
   r.onerror = e => { failed = e.error || 'error'; };
@@ -278,6 +264,7 @@ function listen(tap){
 // ---------- clicks ----------
 document.addEventListener('change', e => {
   const o = e.target.closest('#chatCard [data-chopt]'); if (!o) return;
+  if (o.dataset.chopt === 'tr') { S.showTr = o.checked; store.set('hs_chat_tr', S.showTr); return; }
   if (o.dataset.chopt === 'auto') { S.auto = o.checked; store.set('hs_chat_auto', S.auto); }
   else { S.live = o.checked; store.set('hs_chat_live', S.live); }
 });
@@ -332,7 +319,8 @@ const css = `
 #chatCard .ch-scene:hover{border-color:#3346C8}
 #chatCard .ch-scene .ic{font-size:24px} #chatCard .ch-scene small{color:var(--muted);line-height:1.35}
 #chatCard .ch-top{display:flex;align-items:center;gap:10px;margin-bottom:8px} #chatCard .ch-top b{flex:1}
-#chatCard .ch-log{max-height:56vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 8px}
+#chatCard .ch-trrow{display:flex;justify-content:flex-end;font-size:13px;margin:-4px 0 6px} #chatCard .ch-trrow label{display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--muted)}
+#chatCard .ch-log{max-height:30vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 8px}
 #chatCard .ch-row{display:flex;gap:8px;align-items:flex-end} #chatCard .ch-row.l{justify-content:flex-end}
 #chatCard .ch-bub{max-width:82%;padding:10px 12px;border-radius:16px;line-height:1.45}
 #chatCard .ch-bub.c{background:#eef1ff;border-bottom-left-radius:4px}

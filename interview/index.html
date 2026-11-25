@@ -56,7 +56,8 @@
   .meta{color:var(--muted);font-size:13px;text-align:center;margin:8px 0 0}
   .err{color:var(--bad);margin:8px 0}
   .top{display:flex;align-items:center;gap:10px;margin-bottom:8px} .top b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .top .meta{margin:0}
-  .log{max-height:58vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 8px}
+  .trrow{display:flex;justify-content:flex-end;font-size:13px;margin:-4px 0 6px} .trrow label{display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--muted)} .trrow input{width:16px;height:16px;padding:0}
+  .log{max-height:30vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 8px}
   .row{display:flex;gap:8px;align-items:flex-end} .row.l{justify-content:flex-end}
   .av{width:34px;height:34px;flex:0 0 auto} .av.talk{animation:talk .5s ease-in-out infinite alternate}
   @keyframes talk{from{transform:translateY(0)}to{transform:translateY(-4px) rotate(-3deg)}}
@@ -163,6 +164,7 @@
 
 <script src="/interview/i18n.js"></script>
 <script src="/games/acc-i18n.js"></script>
+<script src="/talkhead.js"></script>
 <script src="/interview/interview.js"></script>
 <script src="/account.js"></script>
 </body>
