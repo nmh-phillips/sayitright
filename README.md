@@ -87,3 +87,11 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Uses `ANTHROPIC_API_KEY` (already set). Optional: `CHAT_MODEL` (default `claude-haiku-5-5`, for speed), `CHAT_FREE_LIMIT` new chats per device per day (default 2), `CHAT_TURNS` replies per chat (default 8), `CHAT_IP_LIMIT` (default 120 calls), `CHAT_GLOBAL_LIMIT` (default 3000 calls a day across everyone).
 - Phrases to practise are kept on the device (`hs_chat_review`, last 30) for the planned Daily 5.
 - Stats events: `chat_start`, `chat_turn`, `chat_done`. Daily counters (store `chat-usage`) are deleted after 7 days by `cleanup.mjs`.
+
+## Harley's Interview Coach (/interview/)
+- Spoken mock job interviews: Harley (or Lilou) plays a hiring manager and asks 6 questions (`INTERVIEW_TURNS`) for the job the person types, in one of three styles: General, Competency (STAR) or Customer-facing, at Beginner/Intermediate/Advanced language level, in any of the 9 learning languages (default English).
+- Same hands-free loop as Harley Chats (mic opens after each question; 2.5 s pause sends the answer; 12 s of nothing waits for a tap; typing allowed). Feedback is on content (examples, STAR, relevance) and language; tips are kept for the end by default.
+- Report: score /100, summary, strongest answer, the one thing to work on, every question with the answer given, its tip and a stronger version (tap to hear), and useful phrases.
+- Files: `interview/index.html`, `interview/interview.js`, `interview/i18n.js` (16 interface languages, AI-translated). Sign-in uses `/account.js` with the text in `/games/acc-i18n.js`. Back end: `chat.mjs` scene `interview` with `job` and `itype`; the end-of-chat report (Chats and Interview Coach) uses `CHAT_REPORT_MODEL` (default `claude-sonnet-5-5`).
+- Private beta: same `CHAT_BETA_EMAILS` list as Chats. The page has `noindex` while in beta: remove it at launch. Chats links to it; interview.harleysays.com redirects to it (add the subdomain in Netlify → Domain management, like games.harleysays.com).
+- Stats events: `interview`, `iv_start`, `iv_answer`, `iv_done`.

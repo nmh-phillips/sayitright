@@ -15,6 +15,19 @@
   status = 301
   force = true
 
+# interview.harleysays.com is a short address for Harley's Interview Coach at harleysays.com/interview/
+[[redirects]]
+  from = "https://interview.harleysays.com/*"
+  to = "https://harleysays.com/interview/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://interview.harleysays.com/*"
+  to = "https://harleysays.com/interview/:splat"
+  status = 301
+  force = true
+
 # Send every other address to the main domain, keeping the page path.
 [[redirects]]
   from = "https://harleysays.co.uk/*"

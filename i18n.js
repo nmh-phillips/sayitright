@@ -734,3 +734,9 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Harley Chats → Interview Coach link
+(function(){
+const S={en:{ch_ivLink:"Harley's Interview Coach",ch_ivSub:'Practise a job interview out loud →'},es:{ch_ivLink:'Entrevistas con Harley',ch_ivSub:'Practica una entrevista de trabajo en voz alta →'},fr:{ch_ivLink:"Le coach d'entretien de Harley",ch_ivSub:"Entraînez-vous à un entretien d'embauche →"},it:{ch_ivLink:'Il coach dei colloqui di Harley',ch_ivSub:'Esercitati per un colloquio ad alta voce →'},de:{ch_ivLink:'Harleys Interview-Coach',ch_ivSub:'Übe ein Vorstellungsgespräch laut →'},pt:{ch_ivLink:'O treinador de entrevistas do Harley',ch_ivSub:'Pratique uma entrevista de emprego em voz alta →'}};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

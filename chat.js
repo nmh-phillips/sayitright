@@ -79,6 +79,7 @@ function renderPick(c){
     </div>
     <h3 class="ch-h3">${esc(t('ch_pick'))}</h3>
     <div class="ch-scenes">${SCENES.map(([id,ic]) => `<button class="ch-scene" data-chscene="${id}"><span class="ic" aria-hidden="true">${ic}</span><b>${esc(t('ch_s_'+id))}</b><small>${esc(t('ch_d_'+id))}</small></button>`).join('')}</div>`;
+  h += `<a class="ch-iv" href="/interview/">💼 <b>${esc(t('ch_ivLink'))}</b><span>${esc(t('ch_ivSub'))}</span></a>`;
   if (left !== null) h += `<p class="a-meta">${esc(t('ch_left',{n:left}))}</p>`;
   if (!Rec) h += `<p class="a-meta">${esc(t('ch_noMic'))}</p>`;
   if (S.error) h += `<p class="ch-err">${S.error}</p>`;
@@ -345,6 +346,8 @@ const css = `
 #chatCard .ch-prac,#chatCard .ch-rev{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;text-align:left}
 #chatCard .ch-p{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:10px;border:1px solid var(--line);border-radius:12px}
 #chatCard .ch-p small{flex:1 1 100%;color:var(--muted)} #chatCard .ch-p .btn{margin-left:auto}
+#chatCard .ch-iv{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center;margin-top:10px;padding:12px;border-radius:14px;background:#1C2563;color:#fff;text-decoration:none;font-size:20px}
+#chatCard .ch-iv b{font-size:15px} #chatCard .ch-iv span{grid-column:2;font-size:13px;opacity:.85}
 #chatCard .ch-said{font-style:italic;margin-bottom:4px} #chatCard .ch-rev .ch-fb{max-width:none}
 `;
 const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
