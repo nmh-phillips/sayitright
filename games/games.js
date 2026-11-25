@@ -125,14 +125,15 @@
       ${dailyCard()}
       <nav class="chips">${TOPICS.map(x => `<button type="button" data-topic="${x.id}" class="${x.id === topic ? 'on' : ''}"><span>${x.ic}</span> ${esc(t('t_' + x.id))}</button>`).join('')}</nav>
       <div class="lvl" role="group" aria-label="${esc(t('level'))}"><span>${esc(t('level'))}</span>${LEVELS.map(l => `<button type="button" data-level="${l}" class="${l === level ? 'on' : ''}">${esc(t(l))}</button>`).join('')}</div>
-      <div class="cards">${GAMES.map(g => {
+      <div class="cards${hub.introDone ? '' : ' intro'}">${GAMES.map((g, i) => {
         const n = prog.done[g.id] || 0;
-        return `<a class="game" href="#${g.id}"><span class="ic">${g.ic}</span><b>${esc(g.name)}</b><span class="d">${esc(g.desc)}</span>${n ? `<span class="n">${esc(t('played', { n }))}</span>` : ''}</a>`;
+        return `<a class="game g-${g.id}" style="--i:${i}" href="#${g.id}"><span class="ic">${g.ic}</span><b>${esc(g.name)}</b><span class="d">${esc(g.desc)}</span>${n ? `<span class="n">${esc(t('played', { n }))}</span>` : ''}</a>`;
       }).join('')}</div>
       ${crossPromo(t('promoH'), t('promoP'))}
       <section class="card about"><h3>${esc(t('aboutH'))}</h3>
         <p>${esc(t('about1'))}</p>
         <p>${esc(t('about2'))}</p></section>`;
+    hub.introDone = true;
     $('hgLang').onchange = e => { lang = e.target.value; store.set('sir_lang', lang); const dc = $('dailyCard'); if (dc) dc.outerHTML = dailyCard(); };
     app.querySelectorAll('[data-level]').forEach(b => b.onclick = () => {
       level = b.dataset.level; store.set('hs_games_level', level);
