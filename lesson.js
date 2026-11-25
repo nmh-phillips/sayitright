@@ -160,6 +160,7 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && on) { if (roundEl.classList.contains('show')) roundEl.classList.remove('show'); else exit(); } });
   $('lsClose').onclick = () => exit();
   home.addEventListener('click', e => { if (e.target.closest('.lh-go')) enter(true); });
+  window.hsStartLesson = () => enter(true);
 
   // Home screen: no practice card until you start. A colourful card shows the topic, your progress and a Start button.
   function renderHome(can) {

@@ -124,3 +124,4 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 ## Home screen
 - The practice card no longer shows on the home screen for topics, focus packs and Daily 5. Instead a colourful "start" card (`#lsHome`, built in `lesson.js`) shows the topic, progress and a big "▶ Start lesson" button; the practice itself happens in lesson mode. Topic chips just select the topic. The Daily 5 banner opens straight into lesson mode. My phrase still shows the practice card inline.
 - The section tiles (`#groups`) are colourful gradients with a floating icon bubble, a staggered pop-in on first load, a shine sweep, press/hover effects and a pop when tapped. Reduced-motion is respected.
+- Focus packs: the free pack(s) are big green animated cards (floating icon, progress bar, pulsing ▶, shine, FREE badge) that start the lesson in one tap; Premium packs are soft cards with their own icons and a 🔒 Premium tag.
