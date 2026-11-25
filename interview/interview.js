@@ -7,6 +7,7 @@
 const TURNS = 6;            // matches INTERVIEW_TURNS on the server (the server has the final say)
 const PAUSE_MS = 2500;      // quiet after speaking that sends the answer (longer than Chats: interview answers need thinking time)
 const WAIT_MS = 12000;      // stop listening if nothing is said for this long
+const MAX_CHARS = 2200;     // longest answer kept (about 3 minutes of speech)
 const KINDS = ['general', 'competency', 'customer'];
 const LEVELS = ['easy', 'normal', 'hard'];
 const LANGS = { en: ['en-GB', '🇬🇧'], enus: ['en-US', '🇺🇸'], es: ['es-ES', '🇪🇸'], esmx: ['es-MX', '🇲🇽'], fr: ['fr-FR', '🇫🇷'], it: ['it-IT', '🇮🇹'], de: ['de-DE', '🇩🇪'], pt: ['pt-PT', '🇵🇹'], nl: ['nl-NL', '🇳🇱'] };
@@ -95,33 +96,38 @@ function afterLine() {
 }
 
 // ---------- listening ----------
-let rec = null, quietT = null, waitT = null;
+let rec = null, quietT = null, waitT = null, stopRec = null; // stopRec: finish the answer now (tap)
 function clearTimers() { clearTimeout(quietT); clearTimeout(waitT); quietT = waitT = null; }
 function stopListening() { clearTimers(); if (rec) { const r = rec; rec = null; try { r.onend = null; r.abort(); } catch (e) {} } S.listening = false; S.interim = ''; }
-function listen() {
-  if (S.listening) { if (rec) rec.stop(); return; }
+// prefix: what was already said, when the phone's recogniser stopped by itself mid-answer and we carry on listening.
+function listen(prefix) {
+  prefix = prefix || '';
+  if (S.listening && !prefix) { if (stopRec) stopRec(); return; }
   if (!Rec) { S.typing = true; draw(); return; }
   hush();
   const r = rec = new Rec(); r.lang = code(); r.interimResults = true; r.continuous = !!S.auto; r.maxAlternatives = 1;
-  let finalTxt = '', heard = '', failed = '';
+  let finalTxt = '', heard = '', failed = '', ours = false, lastAt = 0;
+  const stop = () => { ours = true; r.stop(); }; stopRec = stop;
   r.onstart = () => {
     if (rec !== r) return;
-    S.listening = true; S.interim = ''; S.error = ''; S.paused = false; draw();
-    if (S.auto) waitT = setTimeout(() => { if (rec === r && !heard) r.stop(); }, WAIT_MS);
+    S.listening = true; S.interim = prefix; S.error = ''; S.paused = false; draw();
+    if (S.auto) waitT = setTimeout(() => { if (rec === r && !heard) stop(); }, prefix ? PAUSE_MS : WAIT_MS);
   };
   r.onresult = e => {
     if (rec !== r) return;
     let all = ''; finalTxt = '';
     for (const x of e.results) { all += x[0].transcript; if (x.isFinal) finalTxt += x[0].transcript + ' '; }
-    heard = all.trim(); S.interim = heard;
-    const b = document.querySelector('#app .live'); if (b) b.textContent = heard; else draw();
-    if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(() => { if (rec === r) r.stop(); }, PAUSE_MS); }
+    heard = all.trim(); lastAt = Date.now(); S.interim = (prefix + ' ' + heard).trim();
+    const b = document.querySelector('#app .live'); if (b) b.textContent = S.interim; else draw();
+    if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(() => { if (rec === r) stop(); }, PAUSE_MS); }
   };
   r.onerror = e => { failed = e.error || 'error'; };
   r.onend = () => {
     if (rec !== r) return;
     clearTimers(); rec = null; S.listening = false; S.interim = '';
-    const said = (finalTxt.trim().length >= heard.length ? finalTxt : heard).replace(/\s+/g, ' ').trim();
+    const said = (prefix + ' ' + (finalTxt.trim().length >= heard.length ? finalTxt : heard)).replace(/\s+/g, ' ').trim();
+    // The phone stopped listening by itself while they were still talking: carry on, keeping what they said.
+    if (said && S.auto && !ours && !failed && Date.now() - lastAt < PAUSE_MS && said.length < MAX_CHARS) return listen(said);
     if (said) return answer(said);
     if (failed === 'not-allowed' || failed === 'service-not-allowed') { S.error = esc(t('micBlocked')); S.paused = true; }
     else if (S.auto) S.paused = true;
@@ -167,7 +173,7 @@ async function start() {
   draw();
 }
 async function answer(text) {
-  text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 700);
+  text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, MAX_CHARS);
   if (!text || S.busy || S.ended) return;
   S.history.push({ r: 'l', t: text }); const item = { r: 'l', text }; S.items.push(item);
   S.busy = true; S.error = ''; S.hint = ''; S.interim = '';
@@ -244,7 +250,7 @@ function vInterview() {
   else if (S.items.length && !S.busy && !S.ended) {
     if (S.hint) h += `<div class="hint"><span>${esc(t('startWith'))}</span> <button class="w" data-line="${esc(S.hint)}">🔊 ${esc(S.hint)}</button></div>`;
     if (S.typing) {
-      h += `<form class="type" data-form><textarea id="ivInput" rows="3" maxlength="700" placeholder="${esc(t('placeholder'))}" lang="${esc(code())}"></textarea><button class="btn primary" type="submit">${esc(t('send'))}</button></form><div class="ctl">${Rec ? `<button class="link" data-mode>${esc(t('speakIn'))}</button>` : ''}`;
+      h += `<form class="type" data-form><textarea id="ivInput" rows="3" maxlength="${MAX_CHARS}" placeholder="${esc(t('placeholder'))}" lang="${esc(code())}"></textarea><button class="btn primary" type="submit">${esc(t('send'))}</button></form><div class="ctl">${Rec ? `<button class="link" data-mode>${esc(t('speakIn'))}</button>` : ''}`;
     } else if (S.auto) {
       const st = S.listening ? ['on', t('yourTurn')] : S.talking ? ['', t('speaking', { name: coachName() })] : ['', t('tapTalk')];
       h += `<button class="status ${st[0]}" data-mic>${S.listening ? '<span class="pulse"></span>' : S.talking ? '🔊' : '🎙️'} ${esc(st[1])}</button><div class="ctl">${S.listening || S.talking ? `<button class="link" data-pause>${esc(t('pause'))}</button>` : ''}<button class="link" data-mode>${esc(t('typeIn'))}</button>`;
@@ -305,7 +311,7 @@ document.addEventListener('click', e => {
   if (d.line !== undefined) { unlock(); S.paused = true; say(d.line); return; }
   if (d.say !== undefined) { unlock(); say(S.items[+d.say].line, afterLine); return; }
   if (d.tr !== undefined) { const it = S.items[+d.tr]; it.showTr = !it.showTr; draw(); return; }
-  if (b.hasAttribute('data-mic')) { unlock(); if (S.talking) hush(); S.paused = false; listen(); return; }
+  if (b.hasAttribute('data-mic')) { unlock(); if (S.talking) hush(); S.paused = false; if (S.listening && stopRec) stopRec(); else listen(); return; }
   if (b.hasAttribute('data-pause')) { hush(); stopListening(); S.paused = true; draw(); return; }
   if (b.hasAttribute('data-mode')) { hush(); stopListening(); S.typing = !S.typing; S.focusInput = S.typing; if (!S.typing) S.paused = false; draw(); if (!S.typing && S.auto) listen(); return; }
   if (b.hasAttribute('data-end')) { unlock(); finish(); return; }

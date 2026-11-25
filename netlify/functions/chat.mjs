@@ -232,7 +232,7 @@ export default async (req, context) => {
   const persona = b.persona === 'lilou' ? 'lilou' : 'harley';
   const turns = turnsFor(scene);
   const history = (Array.isArray(b.history) ? b.history : []).slice(-(2 * turns + 4))
-    .map(h => ({ r: h && h.r === 'l' ? 'l' : 'c', t: clean(h && h.t, 700) })).filter(h => h.t);
+    .map(h => ({ r: h && h.r === 'l' ? 'l' : 'c', t: clean(h && h.t, h && h.r === 'l' && scene === 'interview' ? 2200 : 700) })).filter(h => h.t);
   const job = clean(b.job, 60).replace(/[<>{}\[\]"`\\]/g, '');
   const itype = ITYPES[b.itype] ? b.itype : 'general';
   if (!action || !LANGS[lang] || !scene) return json({ error: 'Bad request' }, 400);
