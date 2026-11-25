@@ -179,7 +179,7 @@ async function start(scene){
     const j = await call('start');
     S.history.push({ r:'c', t:j.line }); S.items.push({ r:'c', line:j.line, translation:j.translation });
     S.hint = j.hint || '';
-    if (typeof j.remaining === 'number') store.set('hs_chat_left', {day:today(), n:j.remaining});
+    if (typeof j.remaining === 'number') store.set('hs_chat_left', j.remaining < 50 ? {day:today(), n:j.remaining} : null);
     track('chat_start');
     S.busy = false; say(j.line, afterLine);
   } catch(e){

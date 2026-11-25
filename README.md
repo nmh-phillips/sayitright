@@ -95,3 +95,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Files: `interview/index.html`, `interview/interview.js`, `interview/i18n.js` (16 interface languages, AI-translated). Sign-in uses `/account.js` with the text in `/games/acc-i18n.js`. Back end: `chat.mjs` scene `interview` with `job` and `itype`; the end-of-chat report (Chats and Interview Coach) uses `CHAT_REPORT_MODEL` (default `claude-sonnet-5-5`).
 - Private beta: same `CHAT_BETA_EMAILS` list as Chats. The page has `noindex` while in beta: remove it at launch. Chats links to it; interview.harleysays.com redirects to it (add the subdomain in Netlify → Domain management, like games.harleysays.com).
 - Stats events: `interview`, `iv_start`, `iv_answer`, `iv_done`.
+
+## Free limits (Chats and Interview Coach)
+- Free: **1 chat and 1 interview per person per day** (`CHAT_FREE_LIMIT`, `INTERVIEW_FREE_LIMIT`; set either to another number in Netlify). Counted per signed-in account and per device (both, so signing out or switching device doesn't reset it), with a backstop of `CHAT_IP_SESSIONS` (default 6) new sessions per connection per day.
+- `CHAT_NOLIMIT_EMAILS` (default `neil@harleysays.com`): accounts with no daily limit, for testing now and Premium later.

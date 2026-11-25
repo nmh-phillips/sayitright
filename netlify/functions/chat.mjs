@@ -11,12 +11,19 @@
 // Who can use it: CHAT_BETA_EMAILS, a comma-separated list of signed-in Harley Says account emails (default neil@harleysays.com).
 // Set it to * to open Chats to everyone. Each request must carry the person's sign-in token (Authorization: Bearer …),
 // checked with Supabase (SUPABASE_URL + SUPABASE_PUBLISHABLE_KEY). action 'access' just answers { ok } so the page knows whether to show Chats.
-// Limits: CHAT_FREE_LIMIT new chats per device per day (default 2), CHAT_TURNS learner replies per chat (default 8),
-// CHAT_IP_LIMIT calls per connection per day (default 120), CHAT_GLOBAL_LIMIT calls across everyone per day (default 3000).
+// Free limits, per person per day: CHAT_FREE_LIMIT chats (default 1) and INTERVIEW_FREE_LIMIT interviews (default 1), counted
+// separately. "Per person" = per signed-in account AND per device (both are counted, so signing out or switching device doesn't reset it),
+// plus CHAT_IP_SESSIONS new sessions per connection (default 6, a backstop against clearing the browser; homes and offices share one).
+// CHAT_NOLIMIT_EMAILS (default neil@harleysays.com): accounts with no daily limit (testing; later, Premium).
+// Also: CHAT_TURNS replies per chat (default 8), CHAT_IP_LIMIT calls per connection per day (default 120),
+// CHAT_GLOBAL_LIMIT calls across everyone per day (default 3000).
 import { getStore } from '@netlify/blobs';
 import { createHash } from 'node:crypto';
 
-const FREE = Number(process.env.CHAT_FREE_LIMIT || 2);
+const FREE = Number(process.env.CHAT_FREE_LIMIT ?? 1);
+const FREE_IV = Number(process.env.INTERVIEW_FREE_LIMIT ?? 1);
+const IP_SESSIONS = Number(process.env.CHAT_IP_SESSIONS || 6);
+const NOLIMIT = String(process.env.CHAT_NOLIMIT_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 const TURNS = Number(process.env.CHAT_TURNS || 8);
 const ITURNS = Number(process.env.INTERVIEW_TURNS || 6); // answers per mock interview (Interview Coach, /interview)
 const turnsFor = scene => scene === 'interview' ? ITURNS : TURNS;
@@ -25,7 +32,7 @@ const REPORT_MODEL = process.env.CHAT_REPORT_MODEL || 'claude-sonnet-5-5';
 const IP_CAP = Number(process.env.CHAT_IP_LIMIT || 120);
 const GLOBAL_CAP = Number(process.env.CHAT_GLOBAL_LIMIT || 3000);
 const BETA = String(process.env.CHAT_BETA_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
-const DEV_CALLS = FREE * (Math.max(TURNS, ITURNS) + 2) + 4; // calls per device per day (stops replies being sent without starting a chat)
+const DEV_CALLS = FREE * (TURNS + 2) + FREE_IV * (ITURNS + 2) + 6; // calls per person per day (stops replies being sent without starting a session)
 
 const LANGS = {
   en: ['English (British)', 'London'], enus: ['English (American)', 'New York'], es: ['Spanish (Spain)', 'Madrid'],
@@ -204,25 +211,30 @@ export function shape(action, j, scene) {
   return out;
 }
 
-// Is this request from an account allowed to use Chats?
-export async function allowed(req, beta = BETA) {
-  if (beta.includes('*')) return true;
+let testStore = null; export const _useStoreForTests = st => { testStore = st; };
+
+// Who is signed in (checked with Supabase), or null.
+export async function whoIs(req) {
   const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
   const base = (process.env.SUPABASE_URL || '').replace(/\/+$/, ''), pub = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
-  if (!token || !base || !pub || !beta.length) return false;
+  if (!token || !base || !pub) return null;
   try {
     const r = await fetch(`${base}/auth/v1/user`, { headers: { apikey: pub, Authorization: `Bearer ${token}` } });
-    if (!r.ok) return false;
+    if (!r.ok) return null;
     const u = await r.json();
-    return !!(u && u.email && beta.includes(String(u.email).toLowerCase()));
-  } catch { return false; }
+    return u && u.id ? { id: String(u.id), email: String(u.email || '').toLowerCase() } : null;
+  } catch { return null; }
 }
+// Is this person allowed to use Chats / Interview Coach (private beta list, or * for everyone)?
+export function allowedFor(u, beta = BETA) { return beta.includes('*') || !!(u && u.email && beta.includes(u.email)); }
+export async function allowed(req, beta = BETA) { return allowedFor(await whoIs(req), beta); }
 
 export default async (req, context) => {
   if (req.method !== 'POST') return json({ error: 'Use POST' }, 405);
   let b;
   try { b = await req.json(); } catch { return json({ error: 'Bad JSON' }, 400); }
-  const ok = await allowed(req);
+  const me = await whoIs(req);
+  const ok = allowedFor(me);
   if (b.action === 'access') return json({ ok });
   if (!ok) return json({ error: 'Chat not configured' }, 403);
   const action = ['start', 'reply', 'end'].includes(b.action) ? b.action : null;
@@ -243,11 +255,17 @@ export default async (req, context) => {
   const day = new Date().toISOString().slice(0, 10);
   const dev = hash(clean(b.device || 'none', 64));
   const ipKey = `${day}/ip/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
-  const keys = { chats: `${day}/d/${dev}/chats`, calls: `${day}/d/${dev}/calls`, ip: ipKey, all: `${day}/all` };
-  const used = { chats: 0, calls: 0, ip: 0, all: 0 };
+  const kind = scene === 'interview' ? 'iv' : 'chats', limit = kind === 'iv' ? FREE_IV : FREE;
+  const nolimit = !!(me && me.email && NOLIMIT.includes(me.email));
+  const usr = me ? hash('u:' + me.id) : null;
+  const keys = { dev: `${day}/d/${dev}/${kind}`, calls: `${day}/d/${dev}/calls`, ipS: `${ipKey}/sessions`, ip: ipKey, all: `${day}/all` };
+  if (usr) { keys.usr = `${day}/u/${usr}/${kind}`; keys.ucalls = `${day}/u/${usr}/calls`; }
+  const used = {}; for (const k in keys) used[k] = 0;
   let store = null;
-  try { store = getStore('chat-usage'); for (const k in keys) used[k] = Number(await store.get(keys[k])) || 0; } catch { store = null; }
-  if ((action === 'start' && used.chats >= FREE) || used.calls >= DEV_CALLS || used.ip >= IP_CAP) return json({ error: 'limit', limit: FREE, remaining: 0 }, 429);
+  try { store = testStore || getStore('chat-usage'); for (const k in keys) used[k] = Number(await store.get(keys[k])) || 0; } catch { store = null; }
+  const sessions = Math.max(used.dev, used.usr || 0), calls = Math.max(used.calls, used.ucalls || 0);
+  if (!nolimit && ((action === 'start' && (sessions >= limit || used.ipS >= IP_SESSIONS)) || calls >= DEV_CALLS || used.ip >= IP_CAP))
+    return json({ error: 'limit', limit, remaining: 0 }, 429);
   if (used.all >= GLOBAL_CAP) return json({ error: 'Chat not configured' }, 503);
 
   const { system, user } = buildPrompt({ action, lang, ui, scene, level, persona, history, job, itype });
@@ -264,11 +282,11 @@ export default async (req, context) => {
     if (!out) return json({ error: `No reply (${j.stop_reason || 'empty'})` }, 502);
     if (store) {
       try {
-        if (action === 'start') await store.set(keys.chats, String(used.chats + 1));
-        await store.set(keys.calls, String(used.calls + 1)); await store.set(keys.ip, String(used.ip + 1)); await store.set(keys.all, String(used.all + 1));
+        const bump = ['calls', 'ip', 'all'].concat(usr ? ['ucalls'] : [], action === 'start' ? ['dev', 'ipS'].concat(usr ? ['usr'] : []) : []);
+        for (const k of bump) await store.set(keys[k], String(used[k] + 1));
       } catch {}
     }
-    if (action === 'start') out.remaining = Math.max(0, FREE - used.chats - 1);
+    if (action === 'start') out.remaining = nolimit ? 99 : Math.max(0, limit - sessions - 1);
     if (action === 'reply' && history.filter(h => h.r === 'l').length >= turns) out.end = true;
     return json(out);
   } catch (e) {
