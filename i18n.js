@@ -766,3 +766,16 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Assess me: test picker cards
+(function(){
+const S={
+ en:{a_pickRead:"Read a short text aloud and get a pronunciation level",a_pickSpeak:"Talk about anything and get a speaking level",a_pickWrite:"Write a few sentences and get a writing level"},
+ es:{a_pickRead:"Lee un texto corto en voz alta y obtén tu nivel de pronunciación",a_pickSpeak:"Habla de lo que quieras y obtén tu nivel oral",a_pickWrite:"Escribe unas frases y obtén tu nivel de escritura"},
+ fr:{a_pickRead:"Lisez un court texte à voix haute et obtenez votre niveau de prononciation",a_pickSpeak:"Parlez de ce que vous voulez et obtenez votre niveau à l'oral",a_pickWrite:"Écrivez quelques phrases et obtenez votre niveau à l'écrit"},
+ it:{a_pickRead:"Leggi ad alta voce un breve testo e scopri il tuo livello di pronuncia",a_pickSpeak:"Parla di quello che vuoi e scopri il tuo livello di espressione orale",a_pickWrite:"Scrivi qualche frase e scopri il tuo livello di scrittura"},
+ de:{a_pickRead:"Lies einen kurzen Text laut vor und erhalte dein Aussprache-Niveau",a_pickSpeak:"Sprich über ein beliebiges Thema und erhalte dein Sprech-Niveau",a_pickWrite:"Schreib ein paar Sätze und erhalte dein Schreib-Niveau"},
+ pt:{a_pickRead:"Leia um texto curto em voz alta e descubra o seu nível de pronúncia",a_pickSpeak:"Fale sobre o que quiser e descubra o seu nível de oralidade",a_pickWrite:"Escreva algumas frases e descubra o seu nível de escrita"}
+};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

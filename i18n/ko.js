@@ -49,3 +49,6 @@ Object.assign(window.SIR_MEANINGS.ko, {"See you tomorrow": "내일 봐요", "How
 
 // Lesson mode (lesson.js)
 Object.assign(window.SIR_UI.ko, {ls_start:"레슨 시작",ls_round:"라운드 {n}/{m}",ls_done:"라운드 {n} 완료!",ls_cont:"계속",ls_again:"이 라운드 다시 연습",ls_swipe:"왼쪽으로 밀어 다음 표현으로",ls_close:"레슨 닫기"});
+
+// Assess me: test picker cards
+Object.assign(window.SIR_UI.ko, {a_pickRead:"짧은 글을 소리 내어 읽고 발음 수준을 확인하세요",a_pickSpeak:"아무 주제로나 말하고 말하기 수준을 확인하세요",a_pickWrite:"몇 문장을 쓰고 쓰기 수준을 확인하세요"});

@@ -49,3 +49,6 @@ Object.assign(window.SIR_MEANINGS.uk, {"See you tomorrow": "До завтра", 
 
 // Lesson mode (lesson.js)
 Object.assign(window.SIR_UI.uk, {ls_start:"Почати урок",ls_round:"Раунд {n} з {m}",ls_done:"Раунд {n} пройдено!",ls_cont:"Далі",ls_again:"Повторити цей раунд",ls_swipe:"Проведи вліво, щоб перейти до наступної фрази",ls_close:"Закрити урок"});
+
+// Assess me: test picker cards
+Object.assign(window.SIR_UI.uk, {a_pickRead:"Прочитай уголос короткий текст і дізнайся свій рівень вимови",a_pickSpeak:"Говори на будь-яку тему і дізнайся свій рівень мовлення",a_pickWrite:"Напиши кілька речень і дізнайся свій рівень письма"});

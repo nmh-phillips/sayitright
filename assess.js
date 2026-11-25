@@ -17,7 +17,7 @@ const cefrFor = s => CEFR_BANDS.find(([m]) => s <= m)[1];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const wc = s => (s.trim().match(/\S+/g) || []).length;
 
-const A = { mode:'read', state:'idle', result:null, error:'', finals:[], confs:[], interim:'', start:0, timer:null, rec:null, writeText:'',
+const A = { started:false, revealed:false, mode:'read', state:'idle', result:null, error:'', finals:[], confs:[], interim:'', start:0, timer:null, rec:null, writeText:'',
   az:null, quick:false, offerQuick:false, part:0, st:[], res:[], jobs:[], secs:[], wav:null };
 // Azure's scores bunch up near the top (learners often get 85-95), so stretch them before showing a level.
 // 98 → ~95 (C2), 95 → ~87 (C1), 90 → ~75 (B2), 80 → ~52 (B1), 70 → ~33 (A2). Tweak AZ_CURVE to make it stricter or kinder.
@@ -218,7 +218,7 @@ function heardText(){ return (A.finals.join(' ') + ' ' + A.interim).trim(); }
 function elapsed(){ return A.start ? (Date.now()-A.start)/1000 : 0; }
 function fmt(sec){ sec=Math.max(0,Math.round(sec)); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
 
-function setMode(m){ if(A.state==='recording') return; A.mode=m; A.state='idle'; A.result=null; A.error=''; A.offerQuick=false; renderAssess(); }
+function setMode(m){ if(A.state==='recording') return; A.mode=m; A.state='idle'; A.result=null; A.error=''; A.offerQuick=false; A.revealed=false; renderAssess(); }
 
 function startRec(){
   if(!Rec){ A.error=t('voiceNeeds'); renderAssess(); return; }
@@ -319,7 +319,20 @@ function renderAssess(){
   let h = `<div class="a-head"><h2>${esc(t('a_title'))}</h2><span class="a-free">${esc(t('a_free'))}</span></div>
   <p class="a-intro">${esc(t('a_intro',{lang:LN(lang)}))}</p>`;
   if(last) h += `<p class="a-last">${esc(t('a_last',{score:last.score,level:last.cefr,date:new Date(last.date).toLocaleDateString(ui==='en' ? (IN_AMERICAS?'en-US':'en-GB') : ui)}))}</p>`;
-  h += `<div class="a-modes" role="tablist">${modes.map(([m,k])=>`<button class="btn${A.mode===m?' on':''}" data-amode="${m}" role="tab" aria-selected="${A.mode===m}">${esc(t(k))}</button>`).join('')}</div>`;
+  // Step 1: pick a test (colourful cards). Nothing else shows until you start one.
+  if(!A.started && !A.result && A.state==='idle'){
+    const desc = { read:'a_pickRead', speak:'a_pickSpeak', write:'a_pickWrite' };
+    h += `<div class="a-pick">${modes.map(([m,k],i)=>{ const lbl=t(k), ic=(lbl.match(/^\S+/)||[''])[0], name=lbl.replace(/^\S+\s*/,'');
+      return `<button class="a-pk a-pk-${m}" data-apick="${m}" style="--i:${i}" type="button"><span class="a-pk-ic" aria-hidden="true">${ic}</span><span class="a-pk-t"><b>${esc(name)}</b><small>${esc(t(desc[m]))}</small></span><span class="a-pk-go" aria-hidden="true"><span>▶</span></span></button>`; }).join('')}</div>`;
+    card.innerHTML = h; return;
+  }
+  // Step 2: the test itself, under a colourful header with Harley reacting.
+  { const look = A.state==='recording' ? ['happy','listen'] : (A.state==='finishing'||A.state==='assessing'||A.state==='preparing') ? ['puzzled','think']
+      : (A.state==='done'&&A.result) ? (A.result.score>=76?['celebrate','jump']:A.result.score>=41?['happy','wag']:['puzzled','tilt']) : ['happy','idle'];
+    const lbl = t(modes.find(x=>x[0]===A.mode)[1]);
+    h += `<div class="a-stage a-st-${A.mode}"><button class="a-back" type="button" data-aback aria-label="${esc(t('back').replace(/^\W+/,''))}">←</button>
+      <div class="a-dog ${look[1]}" aria-hidden="true">${typeof coachFace==='function'?coachFace(look[0]):HARLEY[look[0]]}</div>
+      <div class="a-st-t"><small>${esc(t('a_title'))}</small><b>${esc(lbl)}</b></div></div>`; }
 
   if(A.state==='done' && A.result){
     const r = A.result, mood = r.score>=76?'celebrate':r.score>=41?'happy':'puzzled';
@@ -346,7 +359,7 @@ function renderAssess(){
     const parted = A.mode==='read' && A.az && !A.quick && A.noStream;
     h += `<p class="a-how">${esc(parted ? t('a_readHowParts',{m:PART_COUNT}) : t(A.mode==='read'?'a_readHow':'a_speakHow'))}</p>`;
     if(parted) h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${passageParts().map((p,i)=>`<span class="pt${i===A.part?' cur':A.st[i]?' done':''}">${esc(p)}</span>`).join(' ')}</blockquote>`;
-    else if(A.mode==='read') h += `<blockquote class="a-passage" lang="${esc(DATA[lang].code)}">${esc(ASSESS_PASSAGES[lang])}</blockquote>`;
+    else if(A.mode==='read') h += `<blockquote class="a-passage${A.revealed?'':' reveal'}" lang="${esc(DATA[lang].code)}">${ASSESS_PASSAGES[lang].split(/(\s+)/).map((w,i)=>/^\s+$/.test(w)?w:`<span style="--w:${i>>1}">${esc(w)}</span>`).join('')}</blockquote>`;
     if(parted && A.state==='recording'){
       h += `<button class="btn mic rec" data-astop>${esc(t('a_partStop',{n:A.part+1}))}</button><p class="a-meta" id="aTime"></p>`;
     } else if(parted && A.state==='idle'){
@@ -367,13 +380,30 @@ function renderAssess(){
   }
   if(A.error) h += `<p class="a-error" role="alert">${esc(A.error)}</p>`;
   if(A.offerQuick && A.state==='idle' && !A.result) h += `<button class="linkbtn" data-aquick>${esc(t('a_quickBtn'))}</button>`;
+  if(A.state==='done' && A.result && A.result.score>=76 && !A.result.shown) h = h.replace('<div class="a-result">','<div class="a-result"><div class="confetti" aria-hidden="true">'+Array.from({length:26},(_,i)=>`<i style="left:${Math.random()*100}%;background:${['#FFD166','#7FE0C9','#F7B8C4','#3346C8','#F5C542'][i%5]};animation-duration:${1.8+Math.random()*1.6}s;animation-delay:${Math.random()*.8}s"></i>`).join('')+'</div>');
   card.innerHTML = h;
+  if(A.mode==='read') A.revealed = true;
+  if(A.state==='done' && A.result && !A.result.shown){
+    A.result.shown = true;
+    const num = card.querySelector('.a-num'); const target = A.result.score;
+    if(num && !matchMedia('(prefers-reduced-motion: reduce)').matches){ const small = num.querySelector('small'); const t0 = performance.now();
+      const step = now => { const k = Math.min(1,(now-t0)/1100), v = Math.round(target*(1-Math.pow(1-k,3))); num.firstChild.nodeValue = v; if(k<1) requestAnimationFrame(step); };
+      num.firstChild.nodeValue = 0; requestAnimationFrame(step); }
+    card.querySelectorAll('.a-bar i').forEach((b,i)=>{ const w=b.style.width; b.style.width='0'; setTimeout(()=>{ b.style.width=w; }, 150+i*120); });
+    card.scrollIntoView({behavior:'smooth',block:'start'});
+  }
   updateLive();
   if (A.result && A.result.cw && $('aCoach')) aCoachRender();
   if (A.az && A.mode==='read' && !A.noStream && card.offsetParent !== null) loadSDK().catch(()=>{}); // fetch the speech script only once Assess me is open
   const ta = $('aWrite'); if(ta) ta.oninput = () => { A.writeText = ta.value; const w=$('aWc'); if(w) w.textContent=t('a_words',{n:wc(ta.value)}); };
 }
 document.addEventListener('click', e => {
+  const pk = e.target.closest('#assessCard [data-apick],#assessCard [data-aback]');
+  if(pk){
+    if(pk.hasAttribute('data-aback')){ if(A.state==='recording'||A.state==='finishing'||A.state==='assessing') return; A.started=false; A.result=null; A.state='idle'; A.error=''; renderAssess(); }
+    else { A.started=true; if(window.haUnlock) haUnlock(); setMode(pk.dataset.apick); $('assessCard').scrollIntoView({behavior:'smooth',block:'start'}); }
+    return;
+  }
   const b = e.target.closest('#assessCard [data-amode],#assessCard [data-astart],#assessCard [data-astop],#assessCard [data-awrite],#assessCard [data-aagain],#assessCard [data-aquick]');
   if(!b) return;
   if(b.dataset.amode) setMode(b.dataset.amode);
@@ -426,3 +456,33 @@ window.assessLangChanged = () => { if(A.state==='recording'){ clearInterval(A.ti
 function cefrRange(s){ const a = cefrFor(Math.max(0,s-8)), b = cefrFor(Math.min(100,s+8)); return a===b ? a : a+'–'+b; }
 azOn().then(() => { if (A.mode==='read' && A.state==='idle' && !A.result) renderAssess(); });
 if(typeof render==='function') render();
+
+// Styles for the test picker and the animated test screen
+(function(){ const css = `
+.a-pick{display:grid;gap:10px;margin:12px 0 4px}
+.a-pk{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:16px;padding:15px 14px;text-align:left;color:#fff;font:inherit;cursor:pointer;background:var(--g);box-shadow:0 4px 0 var(--gs),0 10px 22px rgba(28,37,99,.15);transition:transform .15s,box-shadow .15s;animation:fpIn .5s cubic-bezier(.2,.9,.3,1.2) backwards;animation-delay:calc(var(--i)*80ms)}
+.a-pk-read{--g:linear-gradient(150deg,#3346C8,#6C7BFF);--gs:#22308f} .a-pk-speak{--g:linear-gradient(150deg,#0E9F9A,#2DD4BF);--gs:#0a7370} .a-pk-write{--g:linear-gradient(150deg,#E0457B,#FF8FB1);--gs:#a82d5a}
+.a-pk-ic{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.25);font-size:26px;animation:gFloat 3s ease-in-out infinite;animation-delay:calc(var(--i)*-.8s)}
+.a-pk-t{flex:1;min-width:0} .a-pk-t b{display:block;font-size:18px;text-shadow:0 1px 1px rgba(0,0,0,.12)} .a-pk-t small{display:block;font-size:13.5px;opacity:.95;margin-top:2px}
+.a-pk-go{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff;color:var(--gs);font-weight:800;font-size:17px;animation:fpPulse 2s ease-in-out infinite}
+.a-pk::before{content:'';position:absolute;top:-30%;left:-60%;width:35%;height:160%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);transform:rotate(20deg);animation:gShine 6s ease-in-out infinite;animation-delay:calc(var(--i)*1.2s + 1s);pointer-events:none}
+.a-pk:hover{transform:translateY(-2px)} .a-pk:active{transform:translateY(3px) scale(.98);box-shadow:0 1px 0 var(--gs),0 4px 10px rgba(28,37,99,.15)}
+.a-stage{position:relative;display:flex;align-items:center;gap:12px;margin:12px 0 10px;padding:12px;border-radius:18px;color:#fff;background:var(--g);box-shadow:0 8px 20px rgba(28,37,99,.15);animation:lhIn .45s cubic-bezier(.2,.8,.2,1)}
+.a-st-read{--g:linear-gradient(150deg,#3346C8,#6C7BFF)} .a-st-speak{--g:linear-gradient(150deg,#0E9F9A,#2DD4BF)} .a-st-write{--g:linear-gradient(150deg,#E0457B,#FF8FB1)}
+.a-back{flex:none;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.22);color:#fff;font-size:18px;cursor:pointer}
+.a-dog{flex:none;width:70px;height:70px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18))} .a-dog svg{width:100%;height:100%;display:block}
+.a-dog.idle svg{animation:hbob 2.4s ease-in-out infinite} .a-dog.listen svg{animation:hlisten .9s ease-in-out infinite} .a-dog.think svg{animation:htilt 1.4s ease-in-out infinite}
+.a-dog.jump svg{animation:hjump .8s ease-in-out 3} .a-dog.wag svg{animation:hwag .5s ease-in-out 4} .a-dog.tilt svg{animation:htilt 1.4s ease-in-out 2}
+.a-st-t small{display:block;font-size:12px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.04em} .a-st-t b{font-size:19px}
+.a-passage.reveal span{display:inline-block;animation:aWord .45s ease backwards;animation-delay:calc(var(--w)*45ms + 200ms)}
+@keyframes aWord{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#assessCard .btn.mic{animation:lhIn .4s ease backwards .3s}
+#assessCard .btn.mic.rec{animation:aRec 1.4s ease-in-out infinite}
+@keyframes aRec{0%,100%{box-shadow:0 0 0 0 rgba(217,48,37,.45)}50%{box-shadow:0 0 0 12px rgba(217,48,37,0)}}
+#assessCard .a-wait{font-weight:700;text-align:center;animation:aBlink 1.2s ease-in-out infinite}
+@keyframes aBlink{50%{opacity:.45}}
+#assessCard .a-result{position:relative;overflow:hidden;animation:lhIn .5s cubic-bezier(.2,.8,.2,1)}
+#assessCard .a-bar i{transition:width .9s cubic-bezier(.2,.8,.2,1)}
+#assessCard textarea{animation:lhIn .45s ease backwards .15s}
+@media (prefers-reduced-motion:reduce){.a-pk,.a-pk *,.a-pk::before,.a-stage,.a-dog svg,.a-passage.reveal span,#assessCard .btn.mic,#assessCard .a-wait,#assessCard .a-result{animation:none!important}}
+`; const el=document.createElement('style'); el.textContent=css; document.head.appendChild(el); })();

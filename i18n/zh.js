@@ -49,3 +49,6 @@ Object.assign(window.SIR_MEANINGS.zh, {"See you tomorrow": "明天见", "How's i
 
 // Lesson mode (lesson.js)
 Object.assign(window.SIR_UI.zh, {ls_start:"开始课程",ls_round:"第 {n} 轮，共 {m} 轮",ls_done:"第 {n} 轮完成！",ls_cont:"继续",ls_again:"再练一遍这一轮",ls_swipe:"向左滑动进入下一个短语",ls_close:"关闭课程"});
+
+// Assess me: test picker cards
+Object.assign(window.SIR_UI.zh, {a_pickRead:"朗读一段短文，了解你的发音水平",a_pickSpeak:"随便聊点什么，了解你的口语水平",a_pickWrite:"写几句话，了解你的写作水平"});

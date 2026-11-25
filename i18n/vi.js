@@ -49,3 +49,6 @@ Object.assign(window.SIR_MEANINGS.vi, {"See you tomorrow": "Hẹn gặp lại ng
 
 // Lesson mode (lesson.js)
 Object.assign(window.SIR_UI.vi, {ls_start:"Bắt đầu bài học",ls_round:"Vòng {n}/{m}",ls_done:"Hoàn thành vòng {n}!",ls_cont:"Tiếp tục",ls_again:"Luyện lại vòng này",ls_swipe:"Vuốt sang trái để sang câu tiếp theo",ls_close:"Đóng bài học"});
+
+// Assess me: test picker cards
+Object.assign(window.SIR_UI.vi, {a_pickRead:"Đọc to một đoạn văn ngắn và biết trình độ phát âm của bạn",a_pickSpeak:"Nói về bất cứ chủ đề nào và biết trình độ nói của bạn",a_pickWrite:"Viết vài câu và biết trình độ viết của bạn"});

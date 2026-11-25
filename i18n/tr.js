@@ -49,3 +49,6 @@ Object.assign(window.SIR_MEANINGS.tr, {"See you tomorrow": "Yarın görüşürü
 
 // Lesson mode (lesson.js)
 Object.assign(window.SIR_UI.tr, {ls_start:"Derse başla",ls_round:"Tur {n}/{m}",ls_done:"{n}. tur tamam!",ls_cont:"Devam",ls_again:"Bu turu tekrar çalış",ls_swipe:"Sonraki ifade için sola kaydır",ls_close:"Dersi kapat"});
+
+// Assess me: test picker cards
+Object.assign(window.SIR_UI.tr, {a_pickRead:"Kısa bir metni sesli oku, telaffuz seviyeni öğren",a_pickSpeak:"İstediğin bir konuda konuş, konuşma seviyeni öğren",a_pickWrite:"Birkaç cümle yaz, yazma seviyeni öğren"});

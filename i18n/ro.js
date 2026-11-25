@@ -49,3 +49,6 @@ Object.assign(window.SIR_MEANINGS.ro, {"See you tomorrow": "Pe mâine", "How's i
 
 // Lesson mode (lesson.js)
 Object.assign(window.SIR_UI.ro, {ls_start:"Începe lecția",ls_round:"Runda {n} din {m}",ls_done:"Runda {n} gata!",ls_cont:"Continuă",ls_again:"Repetă runda aceasta",ls_swipe:"Glisează la stânga pentru expresia următoare",ls_close:"Închide lecția"});
+
+// Assess me: test picker cards
+Object.assign(window.SIR_UI.ro, {a_pickRead:"Citește cu voce tare un text scurt și află-ți nivelul de pronunție",a_pickSpeak:"Vorbește despre orice și află-ți nivelul de exprimare orală",a_pickWrite:"Scrie câteva propoziții și află-ți nivelul de scriere"});
