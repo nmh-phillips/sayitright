@@ -12,7 +12,24 @@
 
   // ---------- styles ----------
   const css = `
-  .ls-bar,.ls-dog,.ls-title,.ls-start-wrap{display:none}
+  .ls-bar,.ls-dog,.ls-title{display:none}
+  .ls-home{position:relative;overflow:hidden;border:0;color:#fff;background:var(--ls-bg,linear-gradient(160deg,#3346C8,#6C7BFF));box-shadow:0 10px 26px rgba(28,37,99,.18);padding:16px;animation:lhIn .45s cubic-bezier(.2,.8,.2,1)}
+  .ls-home .lh-top{display:flex;align-items:center;gap:12px}
+  .ls-home .lh-dog{flex:none;width:64px;height:64px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18))}
+  .ls-home .lh-dog svg{width:100%;height:100%;display:block;animation:hbob 2.4s ease-in-out infinite}
+  .ls-home .lh-k{font-size:12px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.04em}
+  .ls-home h3{margin:2px 0 2px;font-size:22px;line-height:1.15;color:#fff}
+  .ls-home p{margin:0;font-size:13.5px;opacity:.95}
+  .ls-home .lh-bar{height:8px;border-radius:8px;background:rgba(255,255,255,.3);margin:12px 0 12px;overflow:hidden}
+  .ls-home .lh-bar i{display:block;height:100%;background:#fff;border-radius:8px;transition:width .6s}
+  .ls-home .lh-go{width:100%;border:0;border-radius:14px;padding:15px;font:800 17px Inter,sans-serif;background:#fff;color:var(--ink);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.15);transition:transform .12s}
+  .ls-home .lh-go:active{transform:translateY(2px) scale(.98);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+  .ls-home .lh-go span{animation:lhNudge 1.6s ease-in-out infinite;display:inline-block}
+  .ls-home .lh-sub{display:block;text-align:center;margin-top:7px;font-size:12.5px;opacity:.9}
+  .ls-home::after{content:'';position:absolute;top:-40%;left:-60%;width:40%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transform:rotate(18deg);animation:lhShine 5s ease-in-out 1.2s infinite;pointer-events:none}
+  @keyframes lhIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes lhNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  @keyframes lhShine{0%{left:-60%}35%,100%{left:130%}}
   body.lesson-on #practice .ls-title{display:block;text-align:center;color:#fff;font-weight:800;font-size:17px;margin:2px 0 0;text-shadow:0 1px 2px rgba(0,0,0,.15)}
   .ls-start-wrap{margin:-4px 0 10px}
   .ls-start-wrap.show{display:block}
@@ -61,7 +78,7 @@
   body.lesson-on #summaryCard{position:fixed;inset:0;z-index:65;margin:0;border:0;border-radius:0;overflow-y:auto;padding:calc(env(safe-area-inset-top) + 18px) 16px 32px;background:var(--ls-bg,linear-gradient(160deg,#3346C8,#6C7BFF))}
   body.lesson-on #summaryCard > *{max-width:520px;margin-left:auto;margin-right:auto}
   body.lesson-on #summaryCard .sum-set,body.lesson-on #summaryCard .sum-msg,body.lesson-on #summaryCard .a-num,body.lesson-on #summaryCard .a-num small,body.lesson-on #summaryCard .a-meta,body.lesson-on #summaryCard h3{color:#fff}
-  @media (prefers-reduced-motion:reduce){.ls-dog svg,#lsRound .box,body.lesson-on #practice .ls-panel{animation:none!important}}
+  @media (prefers-reduced-motion:reduce){.ls-home,.ls-home *,.ls-home::after,.ls-dog svg,#lsRound .box,body.lesson-on #practice .ls-panel{animation:none!important}}
   `;
   document.head.insertAdjacentHTML('beforeend', '<style id="lessonCss">' + css + '</style>');
 
@@ -71,13 +88,12 @@
   const title = document.createElement('div'); title.className = 'ls-title'; title.id = 'lsTitle';
   const dog = document.createElement('div'); dog.className = 'ls-dog idle'; dog.id = 'lsDog'; dog.setAttribute('aria-hidden', 'true');
   const panel = document.createElement('div'); panel.className = 'ls-panel';
-  const startWrap = document.createElement('div'); startWrap.className = 'ls-start-wrap';
-  startWrap.innerHTML = '<button class="btn primary ls-start" type="button" id="lsStart"></button>';
+  const home = document.createElement('section'); home.className = 'card ls-home'; home.id = 'lsHome'; home.style.display = 'none';
+  practice.parentNode.insertBefore(home, practice);
   const hint = document.createElement('p'); hint.className = 'ls-hint'; hint.id = 'lsHint';
   const meta = practice.querySelector('.meta');
   [...practice.children].filter(el => !el.classList.contains('f-bar')).forEach(el => panel.appendChild(el));
   practice.appendChild(bar); practice.appendChild(title); practice.appendChild(dog); practice.appendChild(panel); practice.appendChild(hint);
-  panel.insertBefore(startWrap, meta);
   const roundEl = document.createElement('section'); roundEl.id = 'lsRound'; roundEl.setAttribute('aria-live', 'polite');
   document.body.appendChild(roundEl);
 
@@ -94,6 +110,7 @@
   ];
   const lessonable = () => set !== CUSTOM && set !== ASSESS && set !== FOCUS && !isLocked(set) && list().length > 1;
   function colour() {
+    if (typeof DAILY5 !== 'undefined' && set === DAILY5) return 'linear-gradient(160deg,#FF7A2F,#FFB547)';
     if (FOCUS_SETS.includes(set)) return 'linear-gradient(160deg,#2E9E4F,#9BE15D)';
     const free = Object.keys(DATA[lang].sets).filter(n => !FOCUS_SETS.includes(n));
     const i = free.indexOf(set);
@@ -142,15 +159,33 @@
   window.addEventListener('popstate', () => { if (on) exit(true); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && on) { if (roundEl.classList.contains('show')) roundEl.classList.remove('show'); else exit(); } });
   $('lsClose').onclick = () => exit();
-  $('lsStart').onclick = () => enter(true);
+  home.addEventListener('click', e => { if (e.target.closest('.lh-go')) enter(true); });
+
+  // Home screen: no practice card until you start. A colourful card shows the topic, your progress and a Start button.
+  function renderHome(can) {
+    const show = !on && can && !summaryOn;
+    home.style.display = show ? 'block' : 'none';
+    if (!show) return;
+    practice.style.display = 'none';
+    const L = list(), done = L.filter(p => (scores[key(p)] || 0) >= 80).length;
+    const first = L.findIndex(p => (scores[key(p)] || 0) < 80), r = first < 0 ? 0 : roundOf(first);
+    const kind = (typeof DAILY5 !== 'undefined' && set === DAILY5) ? '☀️ ' + t('d5_title') : FOCUS_SETS.includes(set) ? '🎯 ' + t('g_focus') : '📚 ' + t('g_phrases');
+    home.style.setProperty('--ls-bg', colour());
+    const sig = [lang, set, done, ui].join('|');
+    if (home.dataset.sig === sig) return; home.dataset.sig = sig;
+    home.innerHTML = `<div class="lh-top"><div class="lh-dog" aria-hidden="true">${coachFace('happy')}</div>
+      <div style="min-width:0"><div class="lh-k">${esc(kind.replace(/[&<>]/g, ''))}</div><h3>${esc(setName(set))}</h3><p>${esc(t('s_mastered', { n: done, m: L.length }))}</p></div></div>
+      <div class="lh-bar"><i style="width:${L.length ? Math.round(done / L.length * 100) : 0}%"></i></div>
+      <button class="lh-go" type="button"><span>▶</span> ${esc(t('ls_start'))}</button>
+      ${r > 0 ? `<span class="lh-sub">${esc(t('ls_round', { n: r + 1, m: rounds() }))}</span>` : ''}`;
+  }
 
   // ---------- hook into render ----------
   const baseRender = render;
   render = function () { // eslint-disable-line no-global-assign
     baseRender.apply(this, arguments);
     const can = lessonable();
-    startWrap.classList.toggle('show', !on && can);
-    $('lsStart').textContent = '▶ ' + t('ls_start');
+    renderHome(can);
     if (on && !can && !summaryOn) { exit(); return; }
     if (!on) return;
     const bg = colour(); [practice, roundEl, $('summaryCard')].forEach(el => el.style.setProperty('--ls-bg', bg));
@@ -250,12 +285,11 @@
     else if (dx > 0 && !els.prev.disabled) els.prev.click();
   }, { passive: true });
 
-  // Tapping a topic (or a focus pack) starts the lesson straight away.
+  // The Daily 5 banner is its own Start button: open it straight in lesson mode.
   document.addEventListener('click', e => {
     if (on) return;
-    const topic = e.target.closest('#tabs button:not(.locked), #focusCard button.f-pack');
-    if (!topic) return;
-    setTimeout(() => { if (lessonable()) { idx = 0; enter(true); } }, 0);
+    if (!e.target.closest('#d5Banner')) return;
+    setTimeout(() => { if (lessonable()) enter(false); }, 0);
   }, true); // capture: the tab buttons are rebuilt during their own click
 
   render();

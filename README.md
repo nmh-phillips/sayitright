@@ -120,3 +120,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - The interviewer is a person, not Harley: an illustrated **man** or **woman** (picked on the setup screen, `hs_iv_who`, default man), drawn as SVG in `talkhead.js` (`humanSvg`) from the founders' photo. The photo itself is not in the repo. Same animation as the dogs (mouth with teeth and tongue, blinking, nodding), with calmer movement.
 - Voices: `M` = Andrew, `W` = Emma (Azure multilingual, natural pitch) in `netlify/lib/voice.mjs`; change with `MAN_VOICE` / `WOMAN_VOICE` (any preset key).
 - `chat.mjs` gets `persona: 'man'|'woman'`: the prompt plays a male or female hiring manager (a matching first name if they give one). The report is still written by Harley the coach.
+
+## Home screen
+- The practice card no longer shows on the home screen for topics, focus packs and Daily 5. Instead a colourful "start" card (`#lsHome`, built in `lesson.js`) shows the topic, progress and a big "▶ Start lesson" button; the practice itself happens in lesson mode. Topic chips just select the topic. The Daily 5 banner opens straight into lesson mode. My phrase still shows the practice card inline.
+- The section tiles (`#groups`) are colourful gradients with a floating icon bubble, a staggered pop-in on first load, a shine sweep, press/hover effects and a pop when tapped. Reduced-motion is respected.

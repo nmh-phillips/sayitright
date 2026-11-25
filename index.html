@@ -43,16 +43,31 @@
   main{max-width:680px;margin:0 auto;padding:16px}
   .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
   .groups.has6{grid-template-columns:repeat(6,1fr);gap:5px}
-  @media (max-width:420px){ .groups.has6{grid-template-columns:repeat(3,1fr);gap:6px} .groups.has6 button{padding:9px 4px;font-size:12.5px} .groups.has6 button .ic{font-size:18px} }
-  .groups button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;padding:9px 2px 8px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--muted);font:600 12px/1.15 Inter,sans-serif;cursor:pointer;text-align:center}
-  .groups button .ic{font-size:21px;line-height:1}
-  .groups button span:last-child{max-width:100%;overflow-wrap:anywhere}
-  .groups button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .groups button.g-focus{background:#f1e9fb;border-color:#dccaf3;color:#5a2d91} .groups button.g-focus.on{background:#6b3fa0;color:#fff;border-color:#6b3fa0}
-  .groups button.g-assess{background:#e3f6ec;border-color:#b7e4cc;color:#0b5d3b} .groups button.g-assess.on{background:#1a7f37;color:#fff;border-color:#1a7f37}
-  .groups button.g-chats{background:#eef1ff;border-color:#c7d0fb;color:#2a3aa8;position:relative} .groups button.g-chats.on{background:#3346C8;color:#fff;border-color:#3346C8}
-  .groups button.g-chats::after{content:'NEW';position:absolute;top:-6px;right:-3px;background:#FF8A3D;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px}
-  .groups button.g-premium{background:#fff8e1;border-color:#f3dfa0;color:#8a6d00} .groups button.g-premium.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
+  @media (max-width:420px){ .groups.has6{grid-template-columns:repeat(3,1fr);gap:9px} .groups.has6 button{padding:11px 4px 9px;font-size:12.5px} .groups.has6 button .ic{font-size:19px} }
+  .groups button{--g:linear-gradient(150deg,#3346C8,#5B6CFF);--gs:#22308f;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;padding:11px 3px 9px;border-radius:16px;border:0;background:var(--g);color:#fff;font:700 12.5px/1.15 Inter,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--gs),0 6px 14px rgba(28,37,99,.12);transition:transform .15s ease,box-shadow .15s ease;-webkit-tap-highlight-color:transparent}
+  .groups button .ic{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.24);font-size:20px;line-height:1;animation:gFloat 3.2s ease-in-out infinite;animation-delay:calc(var(--i,0) * -.5s)}
+  .groups button span:last-child{max-width:100%;overflow-wrap:anywhere;text-shadow:0 1px 1px rgba(0,0,0,.12)}
+  .groups button::before{content:'';position:absolute;top:-30%;left:-70%;width:45%;height:160%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);transform:rotate(20deg);animation:gShine 7s ease-in-out infinite;animation-delay:calc(var(--i,0) * .9s + 1s);pointer-events:none}
+  .groups button:hover{transform:translateY(-2px)} .groups button:hover .ic{animation:gWiggle .6s ease}
+  .groups button:active{transform:translateY(2px) scale(.96);box-shadow:0 1px 0 var(--gs),0 3px 8px rgba(28,37,99,.12)}
+  .groups button.on{transform:translateY(-2px);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--gs),0 8px 18px rgba(28,37,99,.22)}
+  .groups button.on .ic{background:rgba(255,255,255,.4)}
+  .groups button.pop .ic{animation:gPop .55s cubic-bezier(.3,1.6,.5,1)}
+  .groups.intro button{animation:gIn .5s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:calc(var(--i,0) * 70ms)}
+  .groups button.g-phrases{--g:linear-gradient(150deg,#3346C8,#5B6CFF);--gs:#22308f}
+  .groups button.g-chats{--g:linear-gradient(150deg,#0E9F9A,#2DD4BF);--gs:#0a7370}
+  .groups button.g-chats::after{content:'NEW';position:absolute;top:4px;right:4px;background:#FF8A3D;color:#fff;font-size:8.5px;font-weight:800;padding:1px 5px;border-radius:999px;animation:gBadge 1.8s ease-in-out infinite}
+  .groups button.g-mine{--g:linear-gradient(150deg,#E0457B,#FF8FB1);--gs:#a82d5a}
+  .groups button.g-focus{--g:linear-gradient(150deg,#7B2FD0,#B66CF0);--gs:#55209a}
+  .groups button.g-assess{--g:linear-gradient(150deg,#1E9E62,#46C98A);--gs:#147047}
+  .groups button.g-premium{--g:linear-gradient(150deg,#F5B700,#FFD966);--gs:#b98a00;color:#3a2c00} .groups button.g-premium span:last-child{text-shadow:none}
+  @keyframes gIn{from{opacity:0;transform:translateY(14px) scale(.85)}to{opacity:1;transform:none}}
+  @keyframes gFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes gWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+  @keyframes gPop{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+  @keyframes gShine{0%{left:-70%}22%,100%{left:140%}}
+  @keyframes gBadge{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  @media (prefers-reduced-motion:reduce){.groups button,.groups button .ic,.groups button::before,.groups button::after{animation:none!important;transition:none}}
   .tabs:empty{display:none}
   .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
   .tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 12px;border-radius:999px;font:500 13px Inter,sans-serif;cursor:pointer}
@@ -652,11 +667,13 @@ function renderTabs(){
     ['premium','⭐','g_premium', ()=>{ set=PREMIUM_TOPICS[0]; }]
   ];
   const G=$('groups'); G.innerHTML=''; G.classList.toggle('has6', groups.length===6);
-  groups.forEach(([id,ic,label,go])=>{
+  if(!renderTabs.introDone){ renderTabs.introDone=true; G.classList.add('intro'); setTimeout(()=>G.classList.remove('intro'), 1200); }
+  groups.forEach(([id,ic,label,go],i)=>{
     const b=document.createElement('button');
-    b.className='g-'+id+(g===id?' on':''); b.setAttribute('aria-pressed', g===id);
+    b.className='g-'+id+(g===id?' on':'')+(renderTabs.popped===id?' pop':''); b.setAttribute('aria-pressed', g===id);
+    b.style.setProperty('--i', i);
     b.innerHTML=`<span class="ic" aria-hidden="true">${ic}</span><span>${t(label).replace(/[&<>]/g,'')}</span>`;
-    b.onclick=()=>{ go(); idx=0; render(); };
+    b.onclick=()=>{ renderTabs.popped=id; go(); idx=0; render(); renderTabs.popped=null; };
     G.appendChild(b);
   });
   els.tabs.innerHTML='';
