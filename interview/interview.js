@@ -74,7 +74,8 @@ const S = {
 const pauseMs = () => PAUSE_BASE * (PAUSES[S.pause] || 1);
 if (!KINDS.includes(S.kind)) S.kind = 'general';
 // Opened from Harley Citizen (/interview/?kind=selt): straight to the English speaking test, in English.
-try { const k = new URLSearchParams(location.search).get('kind'); if (KINDS.includes(k)) { S.kind = k; S.intro = false; S.mode = 'iv'; if (k === 'selt' && lang !== 'en' && lang !== 'enus') lang = 'en'; } } catch (e) {}
+try { const k = new URLSearchParams(location.search).get('kind'); if (KINDS.includes(k)) { S.kind = k; S.intro = false; S.mode = 'iv'; if (k === 'selt' && lang !== 'en' && lang !== 'enus') lang = 'en'; }
+  const jb = new URLSearchParams(location.search).get('job'); if (jb) { S.job = jb.slice(0, 60); if (!new URLSearchParams(location.search).get('lang') && lang !== 'en' && lang !== 'enus') lang = 'en'; } } catch (e) {}
 if (!LEVELS.includes(S.level)) S.level = 'normal';
 const rich = text => esc(text).replace(/«([^»]+)»/g, (m, w) => `<button class="w" data-line="${w}">${w}</button>`);
 

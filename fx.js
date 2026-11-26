@@ -205,6 +205,7 @@ function toast(text, kind) {
 }
 function confetti() {
   addCss();
+  window.dispatchEvent(new CustomEvent('hs-celebrate')); // friends.js may suggest inviting a friend
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const box = document.createElement('div'); box.className = 'hsx-conf';
   const cols = ['#FF8A3D', '#3346C8', '#22C55E', '#E0457B', '#FFD166', '#38BDF8'];

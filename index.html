@@ -43,6 +43,10 @@
   main{max-width:680px;margin:0 auto;padding:16px}
   .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
   .groups.has6{grid-template-columns:repeat(6,1fr);gap:5px}
+  .groups.has7{grid-template-columns:repeat(4,1fr);gap:8px}
+  .groups button.g-work{--g:linear-gradient(150deg,#0369A1,#38BDF8);--gs:#024a73}
+  .groups button.g-work::after{content:"NEW";position:absolute;top:4px;right:4px;background:#FF8A3D;color:#fff;font:800 9px Inter,sans-serif;padding:2px 5px;border-radius:6px}
+  .tabs .work-iv{display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;background:#1C2563;color:#fff;font:700 13px Inter,sans-serif;text-decoration:none}
   @media (max-width:420px){ .groups.has6{grid-template-columns:repeat(3,1fr);gap:9px} .groups.has6 button{padding:11px 4px 9px;font-size:12.5px} .groups.has6 button .ic{font-size:19px} }
   .groups button{--g:linear-gradient(150deg,#3346C8,#5B6CFF);--gs:#22308f;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;padding:11px 3px 9px;border-radius:16px;border:0;background:var(--g);color:#fff;font:700 12.5px/1.15 Inter,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--gs),0 6px 14px rgba(28,37,99,.12);transition:transform .15s ease,box-shadow .15s ease;-webkit-tap-highlight-color:transparent}
   .groups button .ic{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.24);font-size:20px;line-height:1;animation:gFloat 3.2s ease-in-out infinite;animation-delay:calc(var(--i,0) * -.5s)}
@@ -580,6 +584,7 @@
 })();
 function loadUILang(k){ return new Promise(function(res){ if(window.SIR_UI[k] || !window.SIR_EXTRA[k]) return res(); var s=document.createElement('script'); s.src='i18n/'+k+'.js'; s.onload=res; s.onerror=res; document.head.appendChild(s); }); }
 </script>
+<script src="work.js"></script>
 <script>
 const DATA = window.SIR_DATA;
 // Privacy-friendly usage counts (daily totals only, see netlify/functions/track.mjs and /stats.html).
@@ -611,7 +616,7 @@ const IN_AMERICAS = (()=>{ const r=NAV.split('-')[1]||''; return ['us','ca','mx'
 let ui = (()=>{ try{ const v=localStorage.getItem('sir_ui'); if(v && UI[JSON.parse(v)]) return JSON.parse(v); }catch(e){} const b=NAV.split('-')[0]; return UI[b] ? b : 'en'; })();
 function t(k, vars){ let v=(UI[ui]&&UI[ui][k]!==undefined)?UI[ui][k]:UI.en[k]; if(typeof v==='string'&&vars) for(const [a,b] of Object.entries(vars)) v=v.split('{'+a+'}').join(b); return v; }
 const LN = k => (window.SIR_LANG_NAMES[ui]||window.SIR_LANG_NAMES.en)[k] || (window.SIR_LANG_NAMES.en)[k] || (window.SIR_EXTRA[k]&&window.SIR_EXTRA[k].name) || k;
-const setName = n => n===DAILY5 ? t('d5_title') : (t('sets')||{})[n] || n;
+const setName = n => n===DAILY5 ? t('d5_title') : (window.HS_WORK && HS_WORK.name(n)) || (t('sets')||{})[n] || n;
 const base = l => l==='enus' ? 'en' : l==='esmx' ? 'es' : l;
 function detectLang(){
   if(ui==='en') return IN_AMERICAS ? 'esmx' : 'es';
@@ -709,32 +714,36 @@ function renderFocus(){
 }
 document.addEventListener('click',e=>{ if(e.target.closest('[data-fback]')){ set=FOCUS; idx=0; render(); } });
 // Two-level menu: 5 section buttons, then the topics of the chosen section (Phrases / Premium) underneath.
-let lastPhraseSet=null;
-function groupOf(s){ return s===DAILY5?'daily': s===CHATS?'chats': s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
+let lastPhraseSet=null, lastWorkSet=null;
+const isWork = s => !!(window.HS_WORK && HS_WORK.sets.includes(s));
+function groupOf(s){ return s===DAILY5?'daily': isWork(s)?'work': s===CHATS?'chats': s===CUSTOM?'mine': (s===FOCUS||FOCUS_SETS.includes(s))?'focus': s===ASSESS?'assess': PREMIUM_TOPICS.includes(s)?'premium':'phrases'; }
 function renderTabs(){
-  const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n));
+  const free = Object.keys(DATA[lang].sets).filter(n=>!FOCUS_SETS.includes(n) && !isWork(n));
+  const work = window.HS_WORK && HS_WORK.on(lang) ? HS_WORK.sets.filter(n=>DATA[lang].sets[n]) : [];
+  if(isWork(set)) lastWorkSet=set;
   const g = groupOf(set);
   if(g==='phrases') lastPhraseSet=set;
   const groups = [
     ['phrases','📚','g_phrases', ()=>{ set = free.includes(lastPhraseSet) ? lastPhraseSet : free[0]; }],
     ...(window.hsChatsOn ? [['chats','💬','g_chats', ()=>{ set=CHATS; }]] : []),
+    ...(work.length ? [['work','💼', HS_WORK.label(), ()=>{ set = work.includes(lastWorkSet) ? lastWorkSet : work[0]; }]] : []),
     ['mine','✏️','g_mine', ()=>{ set=CUSTOM; }],
     ['focus','🎯','g_focus', ()=>{ set=FOCUS; }],
     ['assess','📊','g_assess', ()=>{ set=ASSESS; }],
     ['premium','⭐','g_premium', ()=>{ set=PREMIUM_TOPICS[0]; }]
   ];
-  const G=$('groups'); G.innerHTML=''; G.classList.toggle('has6', groups.length===6);
+  const G=$('groups'); G.innerHTML=''; G.classList.toggle('has6', groups.length===6); G.classList.toggle('has7', groups.length>=7);
   if(!renderTabs.introDone){ renderTabs.introDone=true; G.classList.add('intro'); setTimeout(()=>G.classList.remove('intro'), 1200); }
   groups.forEach(([id,ic,label,go],i)=>{
     const b=document.createElement('button');
     b.className='g-'+id+(g===id?' on':'')+(renderTabs.popped===id?' pop':''); b.setAttribute('aria-pressed', g===id);
     b.style.setProperty('--i', i);
-    b.innerHTML=`<span class="ic" aria-hidden="true">${ic}</span><span>${t(label).replace(/[&<>]/g,'')}</span>`;
+    b.innerHTML=`<span class="ic" aria-hidden="true">${ic}</span><span>${(id==='work'?label:t(label)).replace(/[&<>]/g,'')}</span>`;
     b.onclick=()=>{ renderTabs.popped=id; premOpen=false; go(); idx=0; render(); renderTabs.popped=null; };
     G.appendChild(b);
   });
   els.tabs.innerHTML='';
-  const sub = g==='phrases' ? free : g==='premium' ? PREMIUM_TOPICS : [];
+  const sub = g==='phrases' ? free : g==='premium' ? PREMIUM_TOPICS : g==='work' ? work : [];
   sub.forEach(name=>{
     const b=document.createElement('button');
     const lockedTopic = PREMIUM_TOPICS.includes(name);
@@ -743,6 +752,8 @@ function renderTabs(){
     b.onclick=()=>{set=name;idx=0;render()};
     els.tabs.appendChild(b);
   });
+  // Harley Work: practise a job interview for this kind of job
+  if(g==='work' && isWork(set)){ const a=document.createElement('a'); a.className='work-iv'; a.href='/interview/?kind=customer&job='+encodeURIComponent(HS_WORK.job(set)); a.textContent='💼 '+HS_WORK.interview()+' →'; els.tabs.appendChild(a); }
 }
 function renderPhrase(hits){
   const p=current();

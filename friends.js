@@ -96,6 +96,17 @@ const css = `
 .hsf-l{display:block;font-weight:800;font-size:13px;color:#667;margin:14px 0 2px}
 .hsf-msg{min-height:18px;color:#E0457B;font-weight:700;text-align:center;margin:6px 0 0}
 .hsf-foot{padding:4px 16px 16px}
+.hsf-home{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:0 0 12px;padding:14px;border:0;border-radius:18px;color:#fff;cursor:pointer;font-family:inherit;background:linear-gradient(135deg,#3346C8,#0E9F9A);box-shadow:0 4px 0 #22308f,0 10px 22px rgba(28,37,99,.14)}
+.hsf-home .hf-ic{display:grid;place-items:center;width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:rgba(255,255,255,.22);font-size:24px;animation:hsfBob 2.8s ease-in-out infinite}
+.hsf-home .hf-t{flex:1;display:flex;flex-direction:column;gap:2px}.hsf-home .hf-t b{font-size:16px}.hsf-home .hf-t span{font-size:13px;opacity:.92}
+.hsf-home .hf-go{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;font-size:18px;animation:hsfPulse 2.2s ease-in-out infinite}
+.hsf-nudge{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9997;display:flex;align-items:center;gap:10px;width:min(94vw,440px);padding:12px 12px 12px 14px;border-radius:18px;background:#fff;color:#1C2563;font:600 14px/1.35 Inter,system-ui,sans-serif;box-shadow:0 14px 40px rgba(28,37,99,.3);animation:hsfUp .45s cubic-bezier(.2,.9,.3,1.3)}
+.hsf-nudge .hn-ic{font-size:26px}.hsf-nudge .hn-t{flex:1}
+.hsf-nudge .hn-go{border:0;border-radius:12px;padding:10px 14px;background:#FF8A3D;color:#fff;font:800 14px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 #d96a22}
+.hsf-nudge .hn-x{border:0;background:none;color:#9aa0b8;font-size:16px;cursor:pointer}
+@keyframes hsfBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes hsfPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.6)}50%{box-shadow:0 0 0 8px rgba(255,255,255,0)}}
+@keyframes hsfUp{from{opacity:0;transform:translate(-50%,30px)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes hsfIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.hsf *{animation:none!important}}`;
 let dlg = null, sure = null;
@@ -181,6 +192,33 @@ function open() {
   try { if (!dlg.open) dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); }
   fill();
 }
+
+// ---------- easy to find: a home-page button, and a gentle prompt after good moments (at most once a day) ----------
+const X = {"en": ["👥 Invite a friend", "Practise together and compete on weekly XP", "Enjoying Harley Says? Invite a friend and see who earns more XP this week!", "Invite"], "es": ["👥 Invita a un amigo", "Practicad juntos y competid por los XP semanales", "¿Te gusta Harley Says? ¡Invita a un amigo y mirad quién gana más XP esta semana!", "Invitar"], "fr": ["👥 Invite un ami", "Entraînez-vous ensemble et comparez vos XP de la semaine", "Tu aimes Harley Says ? Invite un ami et voyez qui gagne le plus d’XP cette semaine !", "Inviter"], "it": ["👥 Invita un amico", "Esercitatevi insieme e sfidatevi sugli XP settimanali", "Ti piace Harley Says? Invita un amico e guardate chi guadagna più XP questa settimana!", "Invita"], "de": ["👥 Freund einladen", "Übt zusammen und vergleicht eure Wochen-XP", "Gefällt dir Harley Says? Lade einen Freund ein und seht, wer diese Woche mehr XP holt!", "Einladen"], "pt": ["👥 Convida um amigo", "Pratiquem juntos e comparem os XP da semana", "Gostas do Harley Says? Convida um amigo e vejam quem ganha mais XP esta semana!", "Convidar"], "pl": ["👥 Zaproś znajomego", "Ćwiczcie razem i rywalizujcie o tygodniowe XP", "Podoba ci się Harley Says? Zaproś znajomego i sprawdźcie, kto zdobędzie więcej XP!", "Zaproś"], "ro": ["👥 Invită un prieten", "Exersați împreună și concurați la XP-ul săptămânal", "Îți place Harley Says? Invită un prieten și vedeți cine câștigă mai mult XP săptămâna asta!", "Invită"], "uk": ["👥 Запроси друга", "Тренуйтеся разом і змагайтеся за тижневі XP", "Подобається Harley Says? Запроси друга й подивіться, хто набере більше XP цього тижня!", "Запросити"], "zh": ["👥 邀请好友", "一起练习，比比每周经验值", "喜欢 Harley Says 吗？邀请好友，看看本周谁的经验值更多！", "邀请"], "ar": ["👥 ادعُ صديقًا", "تدرّبوا معًا وتنافسوا على نقاط الأسبوع", "هل يعجبك Harley Says؟ ادعُ صديقًا وشاهدوا من يجمع نقاطًا أكثر هذا الأسبوع!", "دعوة"], "nl": ["👥 Nodig een vriend uit", "Oefen samen en strijd om week-XP", "Vind je Harley Says leuk? Nodig een vriend uit en kijk wie deze week de meeste XP haalt!", "Uitnodigen"], "tr": ["👥 Arkadaş davet et", "Birlikte çalışın, haftalık XP’de yarışın", "Harley Says hoşuna gitti mi? Bir arkadaşını davet et, bu hafta kim daha çok XP kazanacak görün!", "Davet et"], "ja": ["👥 フレンドを招待", "一緒に練習して今週のXPを競おう", "Harley Says を楽しんでいますか？フレンドを招待して、今週のXPを競おう！", "招待"], "ko": ["👥 친구 초대", "함께 연습하고 주간 XP로 겨뤄요", "Harley Says가 마음에 드나요? 친구를 초대해 이번 주 누가 XP를 더 모으는지 겨뤄 보세요!", "초대"], "vi": ["👥 Mời bạn bè", "Luyện tập cùng nhau và thi đua XP mỗi tuần", "Bạn thích Harley Says chứ? Mời bạn bè và xem ai kiếm nhiều XP hơn tuần này!", "Mời"]};
+const x = i => (X[get('sir_ui', 'en')] || X.en)[i];
+function homeBtn() {
+  const anchor = document.getElementById('gamesLink'); if (!anchor || document.getElementById('inviteCard')) return;
+  addCss();
+  const el = document.createElement('button'); el.type = 'button'; el.id = 'inviteCard'; el.className = 'hsf-home';
+  el.innerHTML = `<span class="hf-ic">👥</span><span class="hf-t"><b>${esc(x(0))}</b><span>${esc(x(1))}</span></span><span class="hf-go">💌</span>`;
+  el.onclick = open; anchor.parentNode.insertBefore(el, anchor);
+}
+function relabel() { const el = document.getElementById('inviteCard'); if (el) { el.querySelector('b').textContent = x(0); el.querySelector('.hf-t span').textContent = x(1); } }
+const today = () => new Date().toISOString().slice(0, 10);
+function nudge() {
+  if (get('hs_nudge', '') === today() || document.querySelector('dialog[open]') || document.querySelector('.hsf-nudge')) return;
+  addCss(); put('hs_nudge', today());
+  const n = document.createElement('div'); n.className = 'hsf-nudge'; n.setAttribute('role', 'status');
+  n.innerHTML = `<span class="hn-ic">👥</span><span class="hn-t">${esc(x(2))}</span><button type="button" class="hn-go">${esc(x(3))}</button><button type="button" class="hn-x" aria-label="✕">✕</button>`;
+  n.querySelector('.hn-go').onclick = () => { n.remove(); open(); };
+  n.querySelector('.hn-x').onclick = () => n.remove();
+  document.body.appendChild(n); setTimeout(() => n.remove(), 12000);
+}
+// good moments: confetti (perfect game, passed mock test, interview report, daily goal…), a lesson round with 2+ stars
+window.addEventListener('hs-celebrate', () => setTimeout(nudge, 3500));
+window.addEventListener('hs-round', e => { if ((e.detail || {}).stars >= 2) setTimeout(nudge, 3500); });
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', homeBtn); else homeBtn();
+document.addEventListener('change', e => { if (e.target && e.target.id === 'ui') setTimeout(relabel, 300); });
 
 window.HSFriends = { open, title: () => t('title') };
 window.addEventListener('hs-xp', pushSoon);

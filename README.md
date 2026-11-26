@@ -193,3 +193,11 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Question bank `citizen/questions.js`: ~150 questions written from the 3rd-edition handbook, each with an explanation. Facts that changed after the handbook (current office-holders, member counts) are left out. Practice only, not official; check new questions against the handbook.
 - English speaking test: `/interview/?kind=selt` opens the Interview Coach with the new "English speaking test (B1)" type (`ITYPES.selt` in chat.mjs): a friendly examiner asks everyday questions, in English.
 - Stats: `citizen`, `ct_test`, `ct_pass`, `ct_fail`, `ct_practice`. Linked from the main app's footer.
+
+### Harley Work (work.js)
+- 8 workplace phrase packs (20 each) added to the English (UK and US) library: care, nursing, hotels and restaurants, shop work, warehouse and delivery, cleaning, customer service, building. Shown under a "💼 Work" tile only when learning English; everything else (lesson mode, scoring, rounds) works as for other topics. Pack names in 16 languages (`HS_WORK.name`). Hints are in English for now.
+- A "💼 Job interview →" chip opens the Interview Coach with the job filled in (`/interview/?kind=customer&job=Nurse`).
+
+### Invite a friend, easier to find
+- "👥 Invite a friend" card on the home page (above the games card).
+- After a good moment (any confetti: perfect game, passed mock test, interview report, daily goal; or a lesson round with 2+ stars) a small prompt suggests inviting a friend, at most once a day (`hs_nudge`), never over an open dialog.
