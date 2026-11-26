@@ -44,15 +44,18 @@ function t(k, vars) {
 const rtl = () => ['ar'].includes(get('sir_ui', ''));
 
 // ---------- sound and vibration ----------
-let ac = null;
+let ac = null, idleT = null;
 const soundOn = () => get('hs_sound', true) !== false;
+// The audio is only switched on while a sound plays, then suspended again: an always-running Web Audio context can
+// stop the microphone / speech recognition from hearing anything (especially on iPhone).
 function ctx() {
   if (!ac) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; try { ac = new A(); } catch (e) { return null; } }
   if (ac.state === 'suspended') ac.resume().catch(() => {});
   return ac;
 }
-// iPhone only allows sound once the page has been tapped: wake the audio on the first tap.
-['pointerdown', 'keydown'].forEach(ev => window.addEventListener(ev, () => { if (soundOn()) ctx(); }, { once: true, capture: true }));
+function idle(ms) { clearTimeout(idleT); idleT = setTimeout(() => { if (ac && ac.state === 'running') ac.suspend().catch(() => {}); }, ms); }
+// iPhone only allows sound once the page has been tapped: unlock the audio on the first tap, then suspend it straight away.
+['pointerdown', 'keydown'].forEach(ev => window.addEventListener(ev, () => { if (soundOn() && !ac) { ctx(); idle(300); } }, { once: true, capture: true }));
 function note(c, f, at, len, vol, type) {
   const o = c.createOscillator(), g = c.createGain();
   o.type = type || 'sine'; o.frequency.setValueAtTime(f, at);
@@ -70,8 +73,10 @@ const TUNES = {
 };
 function sound(name) {
   if (!soundOn()) return; const c = ctx(); if (!c) return;
-  const now = c.currentTime + 0.01;
-  for (const [f, d, len, vol] of TUNES[name] || []) note(c, f, now + d, len, vol || 0.09, name === 'try' ? 'triangle' : 'sine');
+  const now = c.currentTime + 0.02, tune = TUNES[name] || [];
+  for (const [f, d, len, vol] of tune) note(c, f, now + d, len, vol || 0.09, name === 'try' ? 'triangle' : 'sine');
+  const end = tune.reduce((m, x) => Math.max(m, x[1] + x[2]), 0);
+  idle(Math.round(end * 1000) + 400);
 }
 function buzz(ms) { if (soundOn() && navigator.vibrate) try { navigator.vibrate(ms); } catch (e) {} }
 
