@@ -24,7 +24,7 @@ const PAUSES = { short: 0.65, normal: 1, long: 1.6 };
 const pauseMs = () => PAUSE_BASE * (PAUSES[S.pause] || 1);
 const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const coachName = () => coachId() === 'lilou' ? 'Lilou' : 'Harley';
+const coachName = () => window.HSDog && HSDog.active() ? HSDog.name() : coachId() === 'lilou' ? 'Lilou' : 'Harley';
 const card = () => document.getElementById('chatCard');
 
 const S = { view:'pick', scene:null, level: store.get('hs_chat_level','normal'), history:[], items:[], hint:'', busy:false, error:'', ended:false, sum:null,

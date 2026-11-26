@@ -78,8 +78,9 @@ const MOUTH_Y = { man: 185, woman: 180 };
 
 function svg(persona) {
   if (HUMAN[persona]) return humanSvg(persona);
-  const lilou = persona === 'lilou';
-  const fur = lilou ? '#FFF8F0' : '#FFFFFF', shade = lilou ? '#F1E2D3' : '#E4E7F5', ink = '#1C2563';
+  const my = window.HSDog && window.HSDog.active() ? window.HSDog.talkParts(window.HSDog.cfg()) : null; // your own dog (dog.js)
+  const lilou = persona === 'lilou' && !my;
+  const fur = my ? my.fur : lilou ? '#FFF8F0' : '#FFFFFF', shade = my ? my.shade : lilou ? '#F1E2D3' : '#E4E7F5', ink = '#1C2563';
   const ear = side => {
     const x = side < 0 ? 56 : 244;
     return `<g class="ear ${side < 0 ? 'l' : 'r'}">${puffs(x, 188, 22, 22, 7, shade)}${puffs(x, 186, 16, 20, 7, fur)}<circle cx="${x}" cy="186" r="24" fill="${fur}"/></g>`;
@@ -88,8 +89,8 @@ function svg(persona) {
   const bow = lilou ? `<g class="bow" transform="translate(205 82) rotate(-14)"><path d="M0 0 L-30 -18 Q-36 0 -30 18 Z" fill="#FF8CC2"/><path d="M0 0 L30 -18 Q36 0 30 18 Z" fill="#FF8CC2"/><circle r="9" fill="#FF4F9A"/></g>` : '';
   return `<svg viewBox="0 0 300 300" xmlns="${NS}" aria-hidden="true">
   <g class="hd">
-    ${ear(-1)}${ear(1)}
-    <g class="fluff">${puffs(150, 150, 66, 34, 12, shade)}${puffs(150, 146, 62, 33, 12, fur)}<circle cx="150" cy="150" r="74" fill="${fur}"/></g>
+    ${my ? `<g class="ear l">${my.earL}</g><g class="ear r">${my.earR}</g>` : ear(-1) + ear(1)}
+    <g class="fluff">${my ? my.coat + my.patch : `${puffs(150, 150, 66, 34, 12, shade)}${puffs(150, 146, 62, 33, 12, fur)}<circle cx="150" cy="150" r="74" fill="${fur}"/>`}</g>
     <circle cx="112" cy="176" r="12" fill="#FF9DB5" opacity="${lilou ? .55 : .35}"/><circle cx="188" cy="176" r="12" fill="#FF9DB5" opacity="${lilou ? .55 : .35}"/>
     <g class="brows"><path d="M112 118 q12 -8 24 0" stroke="${shade}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M164 118 q12 -8 24 0" stroke="${shade}" stroke-width="6" fill="none" stroke-linecap="round"/></g>
     <g class="eye l"><circle cx="124" cy="140" r="11" fill="${ink}"/><circle cx="127.5" cy="136.5" r="3.8" fill="#fff"/></g>
@@ -102,7 +103,7 @@ function svg(persona) {
     </g>
     <path class="smile" d="M150 172 q-10 13 -21 4 M150 172 q10 13 21 4" fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
     ${bow}
-    ${window.HSDress ? window.HSDress.layer(persona) : ''}
+    ${window.HSDress ? window.HSDress.layer(my ? 'mydog' : persona) : ''}
   </g></svg>`;
 }
 
@@ -131,7 +132,8 @@ window.HSTalk = function (opts) {
   el.innerHTML = `<div class="hs-head"></div><div class="hs-cap" aria-live="polite"></div>`;
   const headBox = el.querySelector('.hs-head'), cap = el.querySelector('.hs-cap');
   let drawnFor = null, parts = null;
-  window.addEventListener('hs-dress', () => { drawnFor = null; try { build(); } catch (e) {} }); // new outfit from the shop
+  window.addEventListener('hs-dress', () => { drawnFor = null; // and a new or changed own dog
+    try { build(); } catch (e) {} }); // new outfit from the shop
   function build() {
     const p = persona();
     if (drawnFor === p) return;

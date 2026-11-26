@@ -570,6 +570,7 @@
 
 <script src="phrases.js"></script>
 <script src="i18n.js"></script>
+<script src="dog.js"></script>
 <script src="dress.js"></script>
 <script>
 // Load an extra interface language before the app starts, if that's the visitor's choice or browser language.
@@ -890,13 +891,15 @@ const LILOU = Object.fromEntries(Object.entries(HARLEY).map(([m,svg])=>{
   return [m, s.replace(/<\/svg>$/, '</g>' + LILOU_BOW + '</svg>')];
 }));
 { const l=document.querySelector('header h1 .logo'); if(l) l.insertAdjacentHTML('afterend', `<span class="logo logo-lilou" aria-hidden="true">${LILOU.happy.replace('<svg ','<svg width="22" height="22" ')}</span>`); }
-function coachId(){ return store.get('sir_coach','harley')==='lilou' ? 'lilou' : 'harley'; }
+// Your own dog (dog.js) speaks with Harley's or Lilou's voice: coachId() is the voice; the drawing and name come from HSDog.
+const myDog = () => !!(window.HSDog && HSDog.active());
+function coachId(){ if(myDog()) return HSDog.cfg().voice==='lilou' ? 'lilou' : 'harley'; return store.get('sir_coach','harley')==='lilou' ? 'lilou' : 'harley'; }
 window.addEventListener('hs-dress', () => { try { render(); } catch (e) {} });
-function coachFace(m){ const s=(coachId()==='lilou' ? LILOU : HARLEY)[m]; return window.HSDress ? HSDress(s, coachId()==='lilou'?'lilou':'harley') : s; }
+function coachFace(m){ if(myDog()) return window.HSDress ? HSDress(HSDog.face(m),'mydog') : HSDog.face(m); const s=(coachId()==='lilou' ? LILOU : HARLEY)[m]; return window.HSDress ? HSDress(s, coachId()==='lilou'?'lilou':'harley') : s; }
 function ct(k, vars){ const lk = k + '_lilou'; return coachId()==='lilou' && ((UI[ui]||{})[lk]!==undefined || UI.en[lk]!==undefined) ? t(lk, vars) : t(k, vars); }
 function setCoach(id){ store.set('sir_coach', id); if(typeof coachRender==='function') coachRender(); if(typeof aCoachRender==='function' && document.getElementById('aCoach')) aCoachRender(); }
 function setMood(m){
-  const el=$('mood'); el.className='mood m-'+m; el.innerHTML=window.HSDress ? HSDress(HARLEY[m],'harley') : HARLEY[m];
+  const el=$('mood'); el.className='mood m-'+m; el.innerHTML=myDog() ? coachFace(m) : window.HSDress ? HSDress(HARLEY[m],'harley') : HARLEY[m];
   if(m==='celebrate'){ const cols=['#FFD166','#7FE0C9','#F7B8C4','#F5C542','#fff'];
     el.insertAdjacentHTML('beforeend', Array.from({length:12},(_,i)=>{ const a=i/12*Math.PI*2, r=38+Math.random()*18; return `<i class="spark" style="background:${cols[i%5]};--dx:${Math.round(Math.cos(a)*r)}px;--dy:${Math.round(Math.sin(a)*r)}px;animation-delay:${(Math.random()*.15).toFixed(2)}s"></i>`; }).join('')); }
 }
@@ -993,7 +996,7 @@ function renderSummary(){
   const weak = L.map((p,i)=>({p,i,b:best[i]})).filter(x=>x.b===undefined||x.b<80).sort((a,b)=>(a.b??999)-(b.b??999)).slice(0,3);
   const e = s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   let h = `<div class="sum-set">${e(setName(set))} · ${e(t('s_title'))}</div>
-    <div class="sum-dog anim-${look[1]}" aria-hidden="true">${window.HSDress ? HSDress(HARLEY[look[0]],'harley') : HARLEY[look[0]]}</div>`;
+    <div class="sum-dog anim-${look[1]}" aria-hidden="true">${myDog() ? coachFace(look[0]) : window.HSDress ? HSDress(HARLEY[look[0]],'harley') : HARLEY[look[0]]}</div>`;
   if(tried){
     h += `<div class="a-num">${overall}<small>/100</small></div>
       <div class="sum-stars" aria-label="${stars}/3">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`;

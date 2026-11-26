@@ -70,14 +70,14 @@ function t(k, vars) {
 }
 
 // ---------- state ----------
-function state() { const s = get('hs_shop', null) || {}; s.spent = s.spent || 0; s.owned = s.owned || []; s.wear = s.wear || {}; s.wear.harley = s.wear.harley || {}; s.wear.lilou = s.wear.lilou || {}; return s; }
+function state() { const s = get('hs_shop', null) || {}; s.spent = s.spent || 0; s.owned = s.owned || []; s.wear = s.wear || {}; s.wear.harley = s.wear.harley || {}; s.wear.lilou = s.wear.lilou || {}; s.wear.mydog = s.wear.mydog || {}; return s; }
 const total = () => { const x = get('hs_xp', { total: 0 }); return (x && x.total) || 0; };
 const balance = () => Math.max(0, total() - state().spent);
 
 // ---------- dressing a drawing ----------
 // Hair goes under the hat; the order is hair, neck, eyes, hat.
 function layer(who) {
-  const w = state().wear[who === 'lilou' ? 'lilou' : 'harley'] || {};
+  const w = state().wear[who === 'lilou' || who === 'mydog' ? who : 'harley'] || {};
   return ['hair', 'neck', 'eyes', 'hat'].map(s => w[s] && ITEMS[w[s]] ? ITEMS[w[s]].svg : '').join('');
 }
 function dress(svg, who) {
@@ -94,7 +94,9 @@ window.HSDress = dress;
 const FACE = '<svg viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><circle cx="150" cy="150" r="150" fill="{bg}"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/>{bow}{items}</svg>';
 const BOW = '<g transform="translate(212 78) rotate(-16)"><path d="M0 0 L-34 -20 Q-40 0 -34 20 Z" fill="#FF8CC2"/><path d="M0 0 L34 -20 Q40 0 34 20 Z" fill="#FF8CC2"/><circle r="10" fill="#FF4F9A"/></g>';
 function faceWith(who, items) { return FACE.replace('{bg}', who === 'lilou' ? '#B9478A' : '#3346C8').replace('{bow}', who === 'lilou' ? BOW : '').replace('{items}', items); }
-function previewFor(who, wear) { return faceWith(who, ['hair', 'neck', 'eyes', 'hat'].map(s => wear[s] && ITEMS[wear[s]] ? ITEMS[wear[s]].svg : '').join('')); }
+function previewFor(who, wear) {
+  if (who === 'mydog') { const f = window.HSDog ? HSDog.face('happy') : faceWith('harley', ''); return f.replace(/<\/svg>$/, ['hair', 'neck', 'eyes', 'hat'].map(s => wear[s] && ITEMS[wear[s]] ? ITEMS[wear[s]].svg : '').join('') + '</svg>'); }
+  return faceWith(who, ['hair', 'neck', 'eyes', 'hat'].map(s => wear[s] && ITEMS[wear[s]] ? ITEMS[wear[s]].svg : '').join('')); }
 const css = `
 .hss{border:0;border-radius:24px;padding:0;width:100%;max-width:min(94vw,440px);max-height:92vh;box-shadow:0 20px 50px rgba(28,37,99,.35)}
 .hss::backdrop{background:rgba(20,26,70,.5)}
@@ -108,6 +110,9 @@ const css = `
 .hss-dog.on{opacity:1;border-color:#fff;transform:scale(1.06)}
 .hss-dog svg{width:92px;height:92px;display:block}
 .hss-dog.on svg{animation:hssBob 2.4s ease-in-out infinite}
+.hss-new{width:92px;height:92px;align-self:flex-start;background:rgba(255,255,255,.18)!important;opacity:1!important;border:3px dashed rgba(255,255,255,.7)!important;color:#fff;font-size:30px}
+.hss-new small{font-size:11px;line-height:1.1}
+.hss-dogs{flex-wrap:wrap}
 .hss-dog small{display:block;font-weight:800;color:#fff;margin-top:2px}
 .hss-tip{margin:10px 14px 4px;font-size:13px;color:#667;text-align:center}
 .hss-tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;scrollbar-width:none}
@@ -148,7 +153,7 @@ function fill(msg, bump) {
   }
   dlg.dir = get('sir_ui', '') === 'ar' ? 'rtl' : 'ltr';
   dlg.innerHTML = `<div class="hss-p"><div class="hss-top"><h3>🛍️ ${esc(t('title'))}</h3><span class="hss-bal${bump ? ' bump' : ''}">⭐ ${esc(t('toSpend', { n: bal.toLocaleString() }))}</span>
-    <div class="hss-dogs">${['harley', 'lilou'].map(d => `<button type="button" class="hss-dog${d === who ? ' on' : ''}" data-dog="${d}">${previewFor(d, s.wear[d])}<small>${d === 'lilou' ? 'Lilou' : 'Harley'}</small></button>`).join('')}</div></div>
+    <div class="hss-dogs">${['harley', 'lilou'].concat(window.HSDog && HSDog.cfg() ? ['mydog'] : []).map(d => `<button type="button" class="hss-dog${d === who ? ' on' : ''}" data-dog="${d}">${previewFor(d, s.wear[d])}<small>${esc(d === 'lilou' ? 'Lilou' : d === 'mydog' ? HSDog.name() : 'Harley')}</small></button>`).join('')}${window.HSDog ? `<button type="button" class="hss-dog hss-new" data-mydog>${HSDog.cfg() ? '✏️' : '＋'}<small>${esc(HSDog.cfg() ? HSDog.name() : HSDog.label())}</small></button>` : ''}</div></div>
     <p class="hss-tip">${esc(t('tip'))}</p>
     <div class="hss-tabs">${TABS.map(([k, ic]) => `<button type="button" data-tab="${k}" class="${k === tab ? 'on' : ''}">${ic} ${esc(t(k))}</button>`).join('')}</div>
     <p class="hss-msg">${esc(msg || '')}</p>
@@ -162,6 +167,7 @@ function onClick(e) {
   const d = b.dataset, s = state();
   if (d.close !== undefined) return close();
   if (d.dog) { who = d.dog; sfx('tick'); return fill(); }
+  if (d.mydog !== undefined) { close(); window.HSDog.open(); return; }
   if (d.tab) { tab = d.tab; sfx('tick'); return fill(); }
   if (d.item) {
     const it = ITEMS[d.item], wear = s.wear[who];
@@ -194,7 +200,7 @@ function close() { try { dlg.close(); } catch (e) { dlg.removeAttribute('open');
 function open(dog) {
   addCss();
   if (!dlg) { dlg = document.createElement('dialog'); dlg.className = 'hss'; document.body.appendChild(dlg); dlg.addEventListener('click', onClick); dlg.addEventListener('close', () => { if (changed) { changed = false; window.dispatchEvent(new CustomEvent('hs-dress')); } }); }
-  who = dog || (get('sir_coach', 'harley') === 'lilou' ? 'lilou' : 'harley');
+  who = dog || (window.HSDog && HSDog.active() ? 'mydog' : get('sir_coach', 'harley') === 'lilou' ? 'lilou' : 'harley');
   fill();
   try { dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); }
 }

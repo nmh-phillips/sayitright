@@ -171,3 +171,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Spend XP (balance = total XP − spent, `hs_shop`) on outfits for Harley and Lilou: 8 hats, 4 glasses, 5 neck items, 4 hairstyles; or treats (streak freeze 150 XP, max 2; biscuit 20 XP).
 - `HSDress(svg, who)` adds the outfit to any 300×300 face drawing (main app moods, coach faces, summary dog, games Harley, Interview Coach report); `HSDress.layer(who)` is used inside the animated talking head (talkhead.js). A change fires `hs-dress` so pages redraw.
 - Open from the 🛍️ button on the home progress card or from the XP ring panel.
+
+### Build your own dog (dog.js)
+- Builder (from the shop's ＋/✏️ tile): name, coat (fluffy/smooth/curly), ears (floppy/pointy/long), fur and ear colours, markings, background, voice (Harley's or Lilou's). Stored in `hs_mydog`.
+- "Use as my tutor" (`on`): the dog replaces Harley/Lilou in drawings (coachFace, score dog, summary, games, interview report) and in the animated talking head (talkhead.js); its name replaces the coach's name in Chats. `coachId()` returns the chosen voice, so the server is unchanged.
+- It has its own wardrobe in the shop (`wear.mydog`).
