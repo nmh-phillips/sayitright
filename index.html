@@ -332,6 +332,8 @@
   /* Home: livelier progress, games and tips cards */
   .prog-card{position:relative;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;border:0;color:#fff;background:linear-gradient(140deg,#1C2563,#3346C8);box-shadow:0 4px 0 #11183f}
   .prog-card .pc-ic{grid-row:1/3;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);font-size:24px;animation:hcBob 3s ease-in-out infinite}
+  .prog-card .pc-shop{position:absolute;top:10px;inset-inline-end:10px;width:40px;height:40px;border-radius:50%;border:0;background:linear-gradient(135deg,#7B2FD0,#E0457B);font-size:19px;cursor:pointer;box-shadow:0 3px 0 #55209a;animation:hcBob 3s ease-in-out infinite}
+  .prog-card{padding-inline-end:60px}
   .prog-card .progress{color:#fff;font-weight:600;font-size:14px}
   .prog-card .bar{height:10px;background:rgba(255,255,255,.2);border-radius:999px;margin-top:2px}
   .prog-card .bar i{background:linear-gradient(90deg,#FFB37A,#FF8A3D,#FFD166);background-size:200% 100%;border-radius:999px;min-width:10px;animation:hcShimmer 2.5s linear infinite;transition:width .9s cubic-bezier(.2,.9,.3,1.2)}
@@ -462,6 +464,7 @@
 
   <section class="card prog-card" id="progCard">
     <span class="pc-ic" aria-hidden="true">🏆</span>
+    <button type="button" class="pc-shop" id="shopBtn" onclick="window.HSShop&&HSShop.open()">🛍️</button>
     <div class="progress"><span id="progText">0 of 10 phrases mastered (80%+)</span></div>
     <div class="bar"><i id="progBar"></i></div>
   </section>
@@ -567,6 +570,7 @@
 
 <script src="phrases.js"></script>
 <script src="i18n.js"></script>
+<script src="dress.js"></script>
 <script>
 // Load an extra interface language before the app starts, if that's the visitor's choice or browser language.
 (function(){ var pick; try{ pick = JSON.parse(localStorage.getItem('sir_ui')||'null'); }catch(e){}
@@ -887,11 +891,12 @@ const LILOU = Object.fromEntries(Object.entries(HARLEY).map(([m,svg])=>{
 }));
 { const l=document.querySelector('header h1 .logo'); if(l) l.insertAdjacentHTML('afterend', `<span class="logo logo-lilou" aria-hidden="true">${LILOU.happy.replace('<svg ','<svg width="22" height="22" ')}</span>`); }
 function coachId(){ return store.get('sir_coach','harley')==='lilou' ? 'lilou' : 'harley'; }
-function coachFace(m){ return (coachId()==='lilou' ? LILOU : HARLEY)[m]; }
+window.addEventListener('hs-dress', () => { try { render(); } catch (e) {} });
+function coachFace(m){ const s=(coachId()==='lilou' ? LILOU : HARLEY)[m]; return window.HSDress ? HSDress(s, coachId()==='lilou'?'lilou':'harley') : s; }
 function ct(k, vars){ const lk = k + '_lilou'; return coachId()==='lilou' && ((UI[ui]||{})[lk]!==undefined || UI.en[lk]!==undefined) ? t(lk, vars) : t(k, vars); }
 function setCoach(id){ store.set('sir_coach', id); if(typeof coachRender==='function') coachRender(); if(typeof aCoachRender==='function' && document.getElementById('aCoach')) aCoachRender(); }
 function setMood(m){
-  const el=$('mood'); el.className='mood m-'+m; el.innerHTML=HARLEY[m];
+  const el=$('mood'); el.className='mood m-'+m; el.innerHTML=window.HSDress ? HSDress(HARLEY[m],'harley') : HARLEY[m];
   if(m==='celebrate'){ const cols=['#FFD166','#7FE0C9','#F7B8C4','#F5C542','#fff'];
     el.insertAdjacentHTML('beforeend', Array.from({length:12},(_,i)=>{ const a=i/12*Math.PI*2, r=38+Math.random()*18; return `<i class="spark" style="background:${cols[i%5]};--dx:${Math.round(Math.cos(a)*r)}px;--dy:${Math.round(Math.sin(a)*r)}px;animation-delay:${(Math.random()*.15).toFixed(2)}s"></i>`; }).join('')); }
 }
@@ -988,7 +993,7 @@ function renderSummary(){
   const weak = L.map((p,i)=>({p,i,b:best[i]})).filter(x=>x.b===undefined||x.b<80).sort((a,b)=>(a.b??999)-(b.b??999)).slice(0,3);
   const e = s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   let h = `<div class="sum-set">${e(setName(set))} · ${e(t('s_title'))}</div>
-    <div class="sum-dog anim-${look[1]}" aria-hidden="true">${HARLEY[look[0]]}</div>`;
+    <div class="sum-dog anim-${look[1]}" aria-hidden="true">${window.HSDress ? HSDress(HARLEY[look[0]],'harley') : HARLEY[look[0]]}</div>`;
   if(tried){
     h += `<div class="a-num">${overall}<small>/100</small></div>
       <div class="sum-stars" aria-label="${stars}/3">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`;

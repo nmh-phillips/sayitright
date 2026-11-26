@@ -120,6 +120,8 @@
   // ---------- Harley ----------
   const HARLEY = '<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="10" y="10" width="280" height="280" rx="64" fill="#FF8A3D"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg>';
 
+  const dressed = () => window.HSDress ? HSDress(HARLEY, 'harley') : HARLEY;
+
   // ---------- Hub ----------
   function hub() {
     document.title = t('title');
@@ -127,7 +129,7 @@
     const uiOpts = window.HG_UI_LANGS.map(([k, n]) => `<option value="${k}"${k === ui ? ' selected' : ''}>${esc(n)}</option>`).join('');
     app.innerHTML = `
       <section class="hero">
-        <div class="hero-dog">${HARLEY}</div>
+        <div class="hero-dog">${dressed()}</div>
         <div><h2>${esc(t('heroH'))}</h2>
         <p>${esc(t('heroP'))}</p></div>
       </section>
@@ -157,7 +159,7 @@
         <div class="su-top"><a href="#" class="su-back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a><span class="su-ic">${game.ic}</span></div>
         <h2>${esc(game.name)}</h2>
         <p>${esc(game.desc)}${n ? ` · ${esc(t('played', { n }))}` : ''}</p>
-        <div class="su-dog">${HARLEY}</div>
+        <div class="su-dog">${dressed()}</div>
       </section>
       <section class="card su-card su-in" style="--d:1"${game.noTopic ? ' hidden' : ''}>
         <h4>${esc(t('g_topic'))}</h4>
@@ -232,7 +234,7 @@
     }
     $('game').innerHTML = `
       <section class="card done">
-        <div class="done-dog">${HARLEY}</div>
+        <div class="done-dog">${dressed()}</div>
         <h3>${msg}</h3>
         <div class="stars" aria-label="${stars} out of 3 stars">${'★'.repeat(stars)}<span>${'★'.repeat(3 - stars)}</span></div>
         ${timeLine}${extra ? `<p class="sub">${extra}</p>` : ''}
@@ -634,7 +636,7 @@
   function hangman(game) {
     const pool = shuffle(words().filter(onlyLetters).filter(x => x.L.length >= 3)).slice(0, 3), lives = L3(8, 6, 5);
     let n = 0, mistakes = 0;
-    frame(game, `<section class="card hm"><p class="sy-n" id="hmN"></p><div class="hm-dog"><div class="hm-face">${HARLEY}</div><div class="hm-bis" id="hmBis"></div></div>
+    frame(game, `<section class="card hm"><p class="sy-n" id="hmN"></p><div class="hm-dog"><div class="hm-face">${dressed()}</div><div class="hm-bis" id="hmBis"></div></div>
       <p class="sy-clue" id="hmClue" dir="auto"></p><div class="hm-word" id="hmWord" dir="ltr"></div><div class="kb" id="hmKb" dir="ltr"></div></section>`);
     function round() {
       const x = pool[n], target = x.L.map(plain), guessed = new Set(); let left = lives;

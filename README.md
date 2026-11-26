@@ -166,3 +166,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - **Harley's biscuits** (`hangman`): guess letters; each wrong letter Harley eats a biscuit (8/6/5 by level).
 - **Word of the day** (`wordday`): one 5-letter word a day per language, same for everyone, 6 tries, shareable emoji grid (`hs_wordday`). No setup screen.
 - **Fill the gap** (`fill`): phrases from the main app's `phrases.js` (loaded on demand) with one word missing. Ignores the topic.
+
+### Harley's shop (dress.js)
+- Spend XP (balance = total XP − spent, `hs_shop`) on outfits for Harley and Lilou: 8 hats, 4 glasses, 5 neck items, 4 hairstyles; or treats (streak freeze 150 XP, max 2; biscuit 20 XP).
+- `HSDress(svg, who)` adds the outfit to any 300×300 face drawing (main app moods, coach faces, summary dog, games Harley, Interview Coach report); `HSDress.layer(who)` is used inside the animated talking head (talkhead.js). A change fires `hs-dress` so pages redraw.
+- Open from the 🛍️ button on the home progress card or from the XP ring panel.

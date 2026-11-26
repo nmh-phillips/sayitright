@@ -102,6 +102,7 @@ function svg(persona) {
     </g>
     <path class="smile" d="M150 172 q-10 13 -21 4 M150 172 q10 13 21 4" fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
     ${bow}
+    ${window.HSDress ? window.HSDress.layer(persona) : ''}
   </g></svg>`;
 }
 
@@ -130,6 +131,7 @@ window.HSTalk = function (opts) {
   el.innerHTML = `<div class="hs-head"></div><div class="hs-cap" aria-live="polite"></div>`;
   const headBox = el.querySelector('.hs-head'), cap = el.querySelector('.hs-cap');
   let drawnFor = null, parts = null;
+  window.addEventListener('hs-dress', () => { drawnFor = null; try { build(); } catch (e) {} }); // new outfit from the shop
   function build() {
     const p = persona();
     if (drawnFor === p) return;
