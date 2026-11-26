@@ -500,7 +500,7 @@
   </details>
 </main>
 <footer>
-  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/games/" data-i18n="gm_foot">🎮 Word games</a><a href="/interview/">💼 Interview Coach</a><a href="/citizen/">🇬🇧 Life in the UK test</a><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
+  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/games/" data-i18n="gm_foot">🎮 Word games</a><a href="/interview/">💼 Interview Coach</a><a href="/citizen/">🇬🇧 Life in the UK test</a><a href="/travel/">✈️ Travel phrases</a><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
   <p class="adult" data-i18n="lg_adult">For adults aged 18 and over.</p>
   <span data-i18n="footer"></span>
 </footer>
@@ -1174,5 +1174,15 @@ render();
 <script src="journey.js"></script>
 <script src="account.js"></script>
 <script src="friends.js"></script>
+<script>
+// Deep links, e.g. from Harley Travel: /?lang=es&set=Travel&lesson=1
+(function(){ try{ const q=new URLSearchParams(location.search), l=q.get('lang'), s=q.get('set');
+  if(!l && !s) return;
+  if(l && DATA[l]){ lang=l; store.set('sir_lang',l); if(els.lang) els.lang.value=l; }
+  if(s && DATA[lang].sets[s]){ set=s; idx=0; }
+  render(); if(q.get('lesson') && window.hsStartLesson) setTimeout(()=>window.hsStartLesson(),300);
+  history.replaceState(null,'',location.pathname);
+}catch(e){} })();
+</script>
 </body>
 </html>

@@ -201,3 +201,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 ### Invite a friend, easier to find
 - "👥 Invite a friend" card on the home page (above the games card).
 - After a good moment (any confetti: perfect game, passed mock test, interview report, daily goal; or a lesson round with 2+ stars) a small prompt suggests inviting a friend, at most once a day (`hs_nudge`), never over an open dialog.
+
+### Harley Travel (/travel/)
+- Pick a destination (Spain, France, Italy, Portugal, Germany, Netherlands, Mexico, UK, US) and optionally a date: countdown, "Today's 5 for your trip" (the next five unlearned phrases, essentials first), progress meter.
+- Phrasebook by situation: essentials, getting around, eating out, hotel, shopping & money, numbers, emergencies (10 emergency phrases per language written for Travel + the local emergency number, tap to call). Phrases from the main library are picked by their English meaning (topics are translated in roughly, not exactly, the same order).
+- Each phrase: listen, slow, "Say it" (quick speech check, marks it learned), "Show" (full-screen big text to show someone), "Got it". "Practise with scoring" deep-links to the main app: `/?lang=es&set=Travel&lesson=1` (deep links handled at the end of index.html).
+- Works offline: the travel page, phrases and scripts are in the service worker's core cache (`harley-v3`). Interface in 16 languages; meanings in English as in the main app. Stored in `hs_trip`. Stats: `travel`, `trip_set`, `trip_day`.
