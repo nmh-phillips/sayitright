@@ -147,3 +147,10 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - The AI is told the candidate is probably not a native speaker and speech recognition may mishear: it doesn't criticise words it isn't sure were said.
 - iPhone defaults to "tap when you've finished" instead of hands-free.
 - 👍/👎 on each tip (stats: `iv_tip_up`, `iv_tip_down`).
+
+### Engagement: sounds, XP, daily goal, streak freezes (fx.js)
+- `fx.js` (main app, games, interview): synthesised sounds (no audio files) and vibration (Android), "+n XP" floats, confetti, toasts.
+- **XP**: phrase attempt 10/5/2 (80%+/60%+/other); lesson round 15; Daily 5 20; chat reply 5, chat 30; assessment 20; section summary 10; game 10 + 5 per star (+10 daily puzzle); interview answer 10, interview 30. Stored in `hs_xp` (60 days kept).
+- **Daily goal** ring in every header (Casual 20 / Regular 50 / Serious 100 XP, `hs_goal`); tap for the panel (goal, streak, freezes, total XP, sounds on/off `hs_sound`).
+- **Overall streak** `hs_streak` = days the daily goal was met. **Streak freezes**: one earned every 7 days in a row (max 2), used automatically for missed days.
+- **Games**: live timer and personal best per game and level (`hs_games_best`), sounds on hits/misses.

@@ -192,11 +192,19 @@
     return `<a class="promo" href="/?from=games"><span class="pic">🎙️</span><span><b>${esc(h)}</b><span>${esc(p)}</span></span><span class="go">${esc(t('promoGo'))}</span></a>`;
   }
 
+  // ---------- Sounds, XP (fx.js), timer and personal bests ----------
+  const fx = k => { if (window.HSFX) { HSFX.sound(k); if (k === 'pop' || k === 'good') HSFX.buzz(15); } };
+  let gameT0 = 0, tick = null;
+  const mmss = sec => Math.floor(sec / 60) + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
+  function startTimer() {
+    clearInterval(tick); gameT0 = Date.now();
+    tick = setInterval(() => { const el = $('gTimer'); if (!el) return clearInterval(tick); el.textContent = '⏱ ' + mmss((Date.now() - gameT0) / 1000); }, 1000);
+  }
   function frame(game, inner) {
     document.title = `${game.name} · ${topicName()} · Harley's Games`;
     app.innerHTML = `
       <div class="ghead"><a href="#${daily ? '' : game.id}" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
-        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())} · ${pick === 'random' && !daily ? '🎲 ' : ''}${esc(topicName())}${daily ? '' : ` · ${esc(t(level))}`}</p></div></div>
+        <span class="gtimer" id="gTimer" aria-hidden="true">⏱ 0:00</span><div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())} · ${pick === 'random' && !daily ? '🎲 ' : ''}${esc(topicName())}${daily ? '' : ` · ${esc(t(level))}`}</p></div></div>
       <p class="help">${esc(t('h_' + game.id))}</p>
       <div id="game">${inner}</div>`;
   }
@@ -206,6 +214,12 @@
     const stars = mistakes === 0 ? 3 : mistakes <= 2 ? 2 : 1;
     prog.done[game.id] = (prog.done[game.id] || 0) + 1; store.set('hs_games', prog);
     track('game_done');
+    clearInterval(tick);
+    const secs = Math.max(1, Math.round((Date.now() - gameT0) / 1000)), bk = `${game.id}|${daily ? 'daily' : level}`, bests = store.get('hs_games_best', {});
+    const isBest = !bests[bk] || secs < bests[bk];
+    if (isBest) { bests[bk] = secs; store.set('hs_games_best', bests); }
+    const timeLine = `<p class="g-time${isBest && prog.done[game.id] > 1 ? ' best' : ''}">⏱ ${mmss(secs)} · ${isBest && prog.done[game.id] > 1 ? '🏅 ' + esc(t('g_newBest')) : esc(t('g_best', { t: mmss(bests[bk]) }))}</p>`;
+    fx('win'); if (window.HSFX) { if (stars === 3) HSFX.confetti(); HSFX.xp(10 + 5 * stars + (daily ? 10 : 0)); }
     const msg = t('done' + stars);
     let dailyBox = '';
     if (daily) {
@@ -220,7 +234,7 @@
         <div class="done-dog">${HARLEY}</div>
         <h3>${msg}</h3>
         <div class="stars" aria-label="${stars} out of 3 stars">${'★'.repeat(stars)}<span>${'★'.repeat(3 - stars)}</span></div>
-        ${extra ? `<p class="sub">${extra}</p>` : ''}
+        ${timeLine}${extra ? `<p class="sub">${extra}</p>` : ''}
         ${dailyBox}
         <div class="review">${list.map(x => `<button type="button" class="rw" data-say="${esc(x.w)}"><b>${esc(x.w)}</b><span dir="auto">${esc(x.tr || x.clue)}</span><i>🔊</i></button>`).join('')}</div>
         <div class="row"><button type="button" class="btn primary" id="again">${esc(t('again'))}</button><a class="btn" href="#">${esc(t('other'))}</a></div>
@@ -295,7 +309,7 @@
       const s = path.map(p => grid[p.r][p.c]).join(''), rev = [...s].reverse().join('');
       const i = placed.findIndex(x => !x.found && (x.L.join('') === s || x.L.join('') === rev));
       if (i < 0) return false;
-      placed[i].found = true; colour = (colour % 6) + 1;
+      placed[i].found = true; colour = (colour % 6) + 1; fx('pop');
       path.forEach(p => cell(p.r, p.c).classList.add('f', 'k' + colour));
       const li = $('wl').querySelector(`[data-i="${i}"]`); li.classList.add('got'); li.innerHTML += ` <button type="button" class="spk" aria-label="${esc(t('listen'))}">🔊</button>`;
       li.querySelector('.spk').onclick = () => say(placed[i].w);
@@ -314,7 +328,7 @@
       const p = at(e) || (cur.length ? cur[cur.length - 1] : start);
       if (!pending && p.r === start.r && p.c === start.c) { pending = start; start = null; show([pending]); return; }
       const path = line(start, p); start = null; pending = null;
-      if (!check(path) && path && path.length > 1) { mistakes++; ws.classList.add('shake'); setTimeout(() => ws.classList.remove('shake'), 350); }
+      if (!check(path) && path && path.length > 1) { mistakes++; fx('try'); ws.classList.add('shake'); setTimeout(() => ws.classList.remove('shake'), 350); }
       show([]);
     };
     ws.addEventListener('pointerup', end);
@@ -449,7 +463,7 @@
       if (right === total) {
         $('cw').querySelectorAll('input').forEach(el => { el.value = ans[el.dataset.k]; el.parentNode.classList.add('ok'); });
         setTimeout(() => finish(game, words2.map(p => p.x), Math.max(0, checks - 1)), 600);
-      } else $('cwMsg').textContent = wrong ? t(strict ? 'wrongHard' : 'toFix', { n: wrong }) : t('toGo', { n: total - right });
+      } else { if (wrong) fx('try'); else fx('tick'); } if (right !== total) $('cwMsg').textContent = wrong ? t(strict ? 'wrongHard' : 'toFix', { n: wrong }) : t('toGo', { n: total - right });
     };
     $('cwReveal').onclick = () => {
       for (const k in ans) { const el = inp(k); el.value = ans[k]; el.parentNode.classList.remove('bad'); el.parentNode.classList.add('rev'); }
@@ -473,10 +487,10 @@
       const a = selL, b = selR; selL = selR = null;
       if (a.dataset.i === b.dataset.i) {
         [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('ok'); x.disabled = true; });
-        done++;
+        done++; fx('pop');
         if (done === pool.length) { const s = Math.round((Date.now() - t0) / 1000); setTimeout(() => finish(game, pool, mistakes, t('time', { s, m: mistakes })), 500); }
       } else {
-        mistakes++;
+        mistakes++; fx('try');
         [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('no'); setTimeout(() => x.classList.remove('no'), 400); });
       }
     };
@@ -510,8 +524,8 @@
           const o = tiles.find(t => t.id === +b.dataset.id), i = slots.indexOf(null);
           if (i < 0) return; slots[i] = o; draw();
           if (!slots.includes(null)) {
-            if (slots.map(s => s.ch).join('') === x.L.join('')) { $('slots').classList.add('win'); say(x.w); setTimeout(next, 900); }
-            else { mistakes++; $('slots').classList.add('shake'); setTimeout(() => $('slots') && $('slots').classList.remove('shake'), 350); }
+            if (slots.map(s => s.ch).join('') === x.L.join('')) { $('slots').classList.add('win'); fx('good'); say(x.w); setTimeout(next, 900); }
+            else { mistakes++; fx('try'); $('slots').classList.add('shake'); setTimeout(() => $('slots') && $('slots').classList.remove('shake'), 350); }
           }
         });
       };
@@ -551,6 +565,7 @@
     if (!again) window.scrollTo(0, 0);
     track(daily ? 'daily_start' : 'game_start');
     RUN[id](game);
+    startTimer();
   }
   window.addEventListener('hashchange', () => route());
   applyStatic();

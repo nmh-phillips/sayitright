@@ -297,7 +297,7 @@ async function answer(text, m) {
     const j = await call('reply');
     if (j.feedback) item.fb = j.feedback;
     S.history.push({ r: 'c', t: j.line }); S.items.push({ r: 'c', line: j.line, translation: j.translation });
-    S.hint = j.hint || ''; S.ended = !!j.end; track('iv_answer');
+    S.hint = j.hint || ''; S.ended = !!j.end; track('iv_answer'); if (window.HSFX) { HSFX.sound('good'); HSFX.xp(10); }
     await Promise.race([ack, new Promise(r => setTimeout(r, 1500))]);
     S.busy = false; if (inInterview()) say(j.line, afterLine, j.audio);
   } catch (e) { S.error = errMsg(e.status, e.j || {}); S.busy = false; }
@@ -311,7 +311,7 @@ async function finish() {
     const j = await call('end');
     // tips for each answer come with the report (unless they were shown during the interview)
     let k = 0; S.items.forEach(it => { if (it.r === 'l') { if (!it.fb && j.turns && j.turns[k]) it.fb = j.turns[k]; k++; } });
-    S.sum = j; S.view = 'report'; track('iv_done');
+    S.sum = j; S.view = 'report'; track('iv_done'); if (window.HSFX) { HSFX.sound('win'); HSFX.confetti(); HSFX.xp(30); }
   } catch (e) { S.error = errMsg(e.status, e.j || {}); }
   S.busy = false; draw();
   if (S.view === 'report') window.scrollTo({ top: 0, behavior: 'smooth' });

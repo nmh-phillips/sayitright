@@ -578,7 +578,9 @@ function loadUILang(k){ return new Promise(function(res){ if(window.SIR_UI[k] ||
 <script>
 const DATA = window.SIR_DATA;
 // Privacy-friendly usage counts (daily totals only, see netlify/functions/track.mjs and /stats.html).
-function track(e){ try{ if(location.protocol==='file:') return; fetch('/.netlify/functions/track',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({e,l:typeof lang!=='undefined'?lang:'',u:typeof ui!=='undefined'?ui:''})}).catch(()=>{}); }catch(err){} }
+// XP for finishing things (fx.js): a finished Daily 5, lesson round, chat, section or assessment.
+const XP_FOR={d5_done:[20,'win'],lesson_round:[15,'win'],chat_turn:[5],chat_done:[30,'win'],summary:[10],read:[20,'win'],speak:[20,'win'],write:[20,'win']};
+function track(e){ try{ const x=XP_FOR[e]; if(x && window.HSFX){ if(x[1]) HSFX.sound(x[1]); HSFX.xp(x[0]); } }catch(err){} try{ if(location.protocol==='file:') return; fetch('/.netlify/functions/track',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({e,l:typeof lang!=='undefined'?lang:'',u:typeof ui!=='undefined'?ui:''})}).catch(()=>{}); }catch(err){} }
 var premOpen = false; // Premium box shows only in the Premium section or after tapping a Premium button
 const CUSTOM = 'My phrase';
 const ASSESS = 'Assess me';
@@ -907,6 +909,7 @@ function gradeAzure(j){
   const hits = target.map(tk=>{ const n=normTok(tk); for(let i=ptr;i<said.length;i++){ if(said[i].x===n){ ptr=i+1; return said[i].ok; } } return false; });
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
   if(window.daily5Scored) window.daily5Scored(p,pct);
+  if(window.HSFX) HSFX.result(pct);
   const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
   els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad'); els.next.classList.toggle('next-go', pct>=70 && !els.next.disabled);
   els.pct.textContent=pct+'%';
@@ -928,6 +931,7 @@ function grade(b){
   const p=current(); const k=key(p);
   if(pct>(scores[k]||0)){ scores[k]=pct; store.set('sir_scores',scores); }
   if(window.daily5Scored) window.daily5Scored(p,pct);
+  if(window.HSFX) HSFX.result(pct);
   const stars = pct>=90?3:pct>=70?2:pct>=40?1:0;
   els.result.className='result show '+(pct>=80?'good':pct>=50?'mid':'bad'); els.next.classList.toggle('next-go', pct>=70 && !els.next.disabled);
   els.pct.textContent=pct+'%';
@@ -1141,6 +1145,7 @@ showInstall();
 render();
 { const d=new Date().toISOString().slice(0,10); if(store.get('sir_seen','')!==d){ store.set('sir_seen',d); track('visit'); } }
 </script>
+<script src="fx.js"></script>
 <script src="assess.js"></script>
 <script src="pron.js"></script>
 <script src="lesson.js"></script>
