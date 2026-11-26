@@ -26,6 +26,7 @@ const LEVELS = ['easy', 'normal', 'hard'];
 const LANGS = { en: ['en-GB', '🇬🇧'], enus: ['en-US', '🇺🇸'], es: ['es-ES', '🇪🇸'], esmx: ['es-MX', '🇲🇽'], fr: ['fr-FR', '🇫🇷'], it: ['it-IT', '🇮🇹'], de: ['de-DE', '🇩🇪'], pt: ['pt-PT', '🇵🇹'], nl: ['nl-NL', '🇳🇱'] };
 const UI = window.IV_UI, ACC = window.HG_ACC || {};
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const $ = id => document.getElementById(id);
 const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -61,8 +62,9 @@ const S = {
   view: 'setup', intro: true, more: false, access: null, job: store.get('hs_iv_job', ''), kind: store.get('hs_iv_kind', 'general'), level: store.get('hs_iv_level', 'normal'),
   history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null,
   typing: !Rec, interim: '', listening: false, talking: false, paused: false,
-  auto: !!Rec && store.get('hs_iv_auto', true), live: store.get('hs_iv_live', false), pause: store.get('hs_pause', 'normal'),
+  auto: !!Rec && store.get('hs_iv_auto', !IOS), // iPhone: tap when you've finished (hands-free is unreliable there) live: store.get('hs_iv_live', false), pause: store.get('hs_pause', 'normal'),
   showTr: store.get('hs_iv_tr', false),
+  review: null, // { text, m }: what we heard, shown for checking before it's sent
   autoBlocked: false // this phone won't let the mic open by itself (iPhone): ask for a tap instead
 };
 const pauseMs = () => PAUSE_BASE * (PAUSES[S.pause] || 1);
@@ -87,18 +89,134 @@ function afterLine() {
   if (S.auto && !S.typing && !S.paused && !S.autoBlocked) setTimeout(() => { if (inInterview() && !S.busy && !S.talking && !S.listening && !S.ended) listen('', false); }, 250);
 }
 
+// ---------- Azure speech (better with accents than the phone's own recogniser) ----------
+// A 10-minute token from /speech-token (kind 'iv', its own daily allowance); answers stream to Azure with word timings,
+// and, where Azure supports it, unscripted pronunciation and fluency scores. Anything fails → the phone's recogniser.
+const SDK_SRC = '/vendor/speech-sdk-1.53.0.min.js';
+const AZ = { tok: null, at: 0, ok: null, pa: true, sdkP: null };
+function loadSDK() {
+  if (window.SpeechSDK) return Promise.resolve();
+  if (!AZ.sdkP) AZ.sdkP = new Promise((res, rej) => {
+    const sc = document.createElement('script'); sc.src = SDK_SRC; sc.async = true;
+    sc.onload = () => window.SpeechSDK ? res() : rej(new Error('sdk'));
+    sc.onerror = () => { AZ.sdkP = null; rej(new Error('sdk')); };
+    document.head.appendChild(sc);
+  });
+  return AZ.sdkP;
+}
+async function azPrepare() {
+  if (AZ.ok === false || location.protocol === 'file:') return false;
+  if (AZ.tok && Date.now() - AZ.at < 8.5 * 60000 && window.SpeechSDK) return true;
+  try {
+    const [r] = await Promise.all([
+      fetch('/.netlify/functions/speech-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ device: DEVICE_ID, kind: 'iv' }) }),
+      loadSDK()
+    ]);
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.token) { if (r.status === 503 || !AZ.tok) AZ.ok = false; return false; }
+    AZ.tok = j; AZ.at = Date.now(); AZ.ok = true; return true;
+  } catch (e) { if (!AZ.tok) AZ.ok = false; return false; }
+}
+const azReady = () => AZ.ok === true && !!window.SpeechSDK && !!AZ.tok && Date.now() - AZ.at < 9.5 * 60000;
+const FILLERS = /(^|\s)(um+|uh+|erm+|er|ah+|hmm+|eh+|ehm|em+|euh|äh+|ähm|eeh|ehh|mmm+)(?=\s|$|[,.!?])/gi;
+const countFillers = txt => (String(txt || '').match(FILLERS) || []).length;
+// Delivery numbers for one answer: pace (words a minute), long pauses (over 2 s), fillers, and Azure's fluency/pronunciation (0-100).
+function azMetrics(segs, text) {
+  const words = []; let flu = 0, pron = 0, dur = 0, lex = '';
+  for (const seg of segs) {
+    const nb = seg.NBest && seg.NBest[0]; if (!nb) continue;
+    lex += ' ' + (nb.Lexical || '');
+    const pa = nb.PronunciationAssessment, d = Number(seg.Duration) || 1;
+    if (pa && pa.FluencyScore != null) { flu += Number(pa.FluencyScore) * d; pron += Number(pa.PronScore != null ? pa.PronScore : pa.AccuracyScore || 0) * d; dur += d; }
+    for (const w of nb.Words || []) words.push({ o: Number(w.Offset) || 0, d: Number(w.Duration) || 0 });
+  }
+  words.sort((a, b) => a.o - b.o);
+  let pauses = 0; for (let i = 1; i < words.length; i++) if (words[i].o - (words[i - 1].o + words[i - 1].d) > 2e7) pauses++;
+  const span = words.length > 1 ? (words[words.length - 1].o + words[words.length - 1].d - words[0].o) / 1e7 : 0;
+  const n = String(text || '').split(/\s+/).filter(Boolean).length;
+  return { wpm: span > 3 ? Math.round(n / (span / 60)) : null, pauses: words.length > 1 ? pauses : null, fillers: countFillers(lex) || countFillers(text),
+    fluency: dur ? Math.round(flu / dur) : null, pron: dur ? Math.round(pron / dur) : null };
+}
+function listenAz(tap) {
+  const SDK = window.SpeechSDK;
+  let rec, finals = [], segs = [], part = '', ours = false, done = false, firstAt = 0;
+  try {
+    const cfg = SDK.SpeechConfig.fromAuthorizationToken(AZ.tok.token, AZ.tok.region);
+    cfg.speechRecognitionLanguage = code();
+    cfg.outputFormat = SDK.OutputFormat.Detailed; cfg.requestWordLevelTimestamps();
+    rec = new SDK.SpeechRecognizer(cfg, SDK.AudioConfig.fromDefaultMicrophoneInput());
+    if (AZ.pa) { try { new SDK.PronunciationAssessmentConfig('', SDK.PronunciationAssessmentGradingSystem.HundredMark, SDK.PronunciationAssessmentGranularity.Word, false).applyTo(rec); } catch (e) { AZ.pa = false; } }
+  } catch (e) { AZ.ok = false; return listenPhone('', tap); }
+  hush();
+  const said = () => (finals.join(' ') + ' ' + part).replace(/\s+/g, ' ').trim();
+  const end = () => {
+    if (done) return; done = true; clearTimers(); stopRec = null;
+    const text = finals.join(' ').replace(/\s+/g, ' ').trim() || part.trim();
+    const m = azMetrics(segs, text);
+    try { rec.close(); } catch (e) {}
+    azRec = null; S.listening = false; S.interim = '';
+    if (text) return gotAnswer(text, m);
+    if (S.auto) S.paused = true; else S.error = esc(t('noCatch'));
+    draw();
+  };
+  const stop = () => { if (ours) return; ours = true; clearTimers(); try { rec.stopContinuousRecognitionAsync(() => setTimeout(end, 250), end); } catch (e) { end(); } setTimeout(end, 4000); };
+  stopRec = stop; azRec = { stop: () => { done = true; clearTimers(); try { rec.stopContinuousRecognitionAsync(() => { try { rec.close(); } catch (e) {} }, () => {}); } catch (e) {} } };
+  const quiet = () => { if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(stop, pauseMs()); } };
+  rec.recognizing = (x, e) => { if (done) return; if (!firstAt) firstAt = Date.now(); part = e.result.text || ''; S.interim = said(); stage.listening(S.interim); quiet(); };
+  rec.recognized = (x, e) => {
+    if (done || e.result.reason !== SDK.ResultReason.RecognizedSpeech) return;
+    try { segs.push(JSON.parse(e.result.properties.getProperty(SDK.PropertyId.SpeechServiceResponse_JsonResult))); } catch (err) {}
+    if (e.result.text) finals.push(e.result.text); part = ''; S.interim = said(); stage.listening(S.interim); quiet();
+    if (said().length >= MAX_CHARS) stop();
+  };
+  rec.canceled = (x, e) => {
+    if (done || e.reason !== SDK.CancellationReason.Error) return;
+    // pronunciation scoring not offered for this language: carry on without it next time
+    if (AZ.pa && !finals.length && /pronunciation|assessment/i.test(e.errorDetails || '')) { AZ.pa = false; done = true; try { rec.close(); } catch (er) {} azRec = null; S.listening = false; return listenAz(tap); }
+    if (finals.length) return stop();
+    done = true; try { rec.close(); } catch (er) {} azRec = null; S.listening = false; AZ.ok = false;
+    listenPhone('', tap); // fall back to the phone's recogniser for this answer and the rest
+  };
+  rec.startContinuousRecognitionAsync(() => {
+    S.listening = true; S.interim = ''; S.error = ''; S.paused = false; draw();
+    if (S.auto) waitT = setTimeout(() => { if (!finals.length && !part) stop(); }, WAIT_MS);
+    setTimeout(() => { if (!done) stop(); }, 180000); // 3 minutes at most
+  }, () => { done = true; azRec = null; AZ.ok = false; listenPhone('', tap); });
+}
+let azRec = null;
+// What we heard: shown for checking (and correcting) before it's sent. Hands-free sends it by itself after a few seconds.
+let reviewT = null;
+function gotAnswer(text, m) {
+  S.review = { text, m: m || null, auto: S.auto };
+  draw();
+  if (S.auto) reviewT = setTimeout(sendReview, 4500);
+}
+function holdReview() { clearTimeout(reviewT); reviewT = null; if (S.review) S.review.auto = false; const bar = document.querySelector('.rv-bar'); if (bar) bar.remove(); }
+function sendReview() {
+  clearTimeout(reviewT); reviewT = null; const r = S.review; if (!r) return;
+  const box = $('rvText'); const text = (box ? box.value : r.text).replace(/\s+/g, ' ').trim();
+  S.review = null;
+  if (!text) { draw(); return; }
+  answer(text, text === r.text ? r.m : Object.assign({}, r.m, { edited: true }));
+}
+
 // ---------- listening ----------
 let rec = null, quietT = null, waitT = null, stopRec = null; // stopRec: finish the answer now (tap)
 function clearTimers() { clearTimeout(quietT); clearTimeout(waitT); quietT = waitT = null; }
-function stopListening() { clearTimers(); if (rec) { const r = rec; rec = null; try { r.onend = null; r.abort(); } catch (e) {} } S.listening = false; S.interim = ''; }
+function stopListening() { clearTimers(); if (azRec) { const a = azRec; azRec = null; a.stop(); } if (rec) { const r = rec; rec = null; try { r.onend = null; r.abort(); } catch (e) {} } S.listening = false; S.interim = ''; }
 // prefix: what was already said, when the phone's recogniser stopped by itself mid-answer and we carry on listening.
 function listen(prefix, tap) {
-  prefix = prefix || '';
   if (S.listening && !prefix) { if (stopRec) stopRec(); return; }
+  if (S.review) return;
+  if (!prefix && azReady()) return listenAz(tap);
+  return listenPhone(prefix, tap);
+}
+function listenPhone(prefix, tap) {
+  prefix = prefix || '';
   if (!Rec) { S.typing = true; draw(); return; }
   hush();
   const r = rec = new Rec(); r.lang = code(); r.interimResults = true; r.continuous = !!S.auto; r.maxAlternatives = 1;
-  let heard = '', failed = '', ours = false, lastAt = 0;
+  let heard = '', failed = '', ours = false, lastAt = 0, firstAt = 0;
   const stop = () => { ours = true; r.stop(); }; stopRec = stop;
   r.onstart = () => {
     if (rec !== r) return;
@@ -107,7 +225,7 @@ function listen(prefix, tap) {
   };
   r.onresult = e => {
     if (rec !== r) return;
-    heard = joinResults(e.results); lastAt = Date.now(); S.interim = (prefix + ' ' + heard).trim();
+    heard = joinResults(e.results); lastAt = Date.now(); if (!firstAt) firstAt = lastAt; S.interim = (prefix + ' ' + heard).trim();
     stage.listening(S.interim);
     if (S.auto) { clearTimeout(waitT); clearTimeout(quietT); quietT = setTimeout(() => { if (rec === r) stop(); }, pauseMs()); }
   };
@@ -117,16 +235,18 @@ function listen(prefix, tap) {
     clearTimers(); rec = null; S.listening = false; S.interim = '';
     const said = (prefix + ' ' + heard).replace(/\s+/g, ' ').trim();
     // The phone stopped listening by itself while they were still talking: carry on, keeping what they said.
-    if (said && S.auto && !ours && !failed && Date.now() - lastAt < pauseMs() && said.length < MAX_CHARS) return listen(said, false);
-    if (said) return answer(said);
-    if (prefix && (failed === 'not-allowed' || failed === 'service-not-allowed')) return answer(prefix);
+    if (said && S.auto && !ours && !failed && Date.now() - lastAt < pauseMs() && said.length < MAX_CHARS) return listenPhone(said, false);
+    const secs = firstAt && lastAt > firstAt ? (lastAt - firstAt) / 1000 : 0, n = said.split(/\s+/).filter(Boolean).length;
+    const m = { wpm: !prefix && secs > 3 ? Math.round(n / (secs / 60)) : null, pauses: null, fillers: countFillers(said), fluency: null, pron: null };
+    if (said) return gotAnswer(said, m);
+    if (prefix && (failed === 'not-allowed' || failed === 'service-not-allowed')) return gotAnswer(prefix, null);
     if ((failed === 'not-allowed' || failed === 'service-not-allowed') && !tap) { S.autoBlocked = true; S.paused = true; } // the phone wants a tap: ask for one, no error
     else if (failed === 'not-allowed' || failed === 'service-not-allowed') { S.error = esc(t('micBlocked')); S.paused = true; }
     else if (S.auto) S.paused = true;
     else S.error = esc(t('noCatch'));
     draw();
   };
-  try { r.start(); } catch (err) { rec = null; S.listening = false; S.paused = true; if (!tap) S.autoBlocked = true; if (prefix) return answer(prefix); draw(); }
+  try { r.start(); } catch (err) { rec = null; S.listening = false; S.paused = true; if (!tap) S.autoBlocked = true; if (prefix) return gotAnswer(prefix, null); draw(); }
 }
 
 // ---------- server ----------
@@ -138,7 +258,7 @@ async function headers() {
 }
 async function call(action) {
   const r = await fetch('/.netlify/functions/chat', { method: 'POST', headers: await headers(),
-    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: 'interview', level: S.level, persona: S.who, job: S.job, itype: S.kind, history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end' }) });
+    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: 'interview', level: S.level, persona: S.who, job: S.job, itype: S.kind, history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end', delivery: S.items.filter(x => x.r === 'l').map(x => x.m || null) }) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || j.error) { const e = new Error(j.error || 'HTTP ' + r.status); e.status = r.status; e.j = j; throw e; }
   return j;
@@ -149,14 +269,14 @@ function errMsg(status, j) {
   return esc(t('err')) + ` <button class="link" data-retry>${esc(t('retry'))}</button>`;
 }
 let pending = null;
-function reset(view) { hush(); stopListening(); Object.assign(S, { view: view || 'setup', history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null, paused: false }); }
+function reset(view) { hush(); stopListening(); clearTimeout(reviewT); Object.assign(S, { review: null, view: view || 'setup', history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null, paused: false }); }
 async function start() {
   reset('iv'); S.busy = true; pending = start;
   draw(); window.scrollTo({ top: 0, behavior: 'smooth' });
   try {
     const j = await call('start');
     S.history.push({ r: 'c', t: j.line }); S.items.push({ r: 'c', line: j.line, translation: j.translation });
-    S.hint = j.hint || ''; track('iv_start'); stage.prefetchAcks();
+    S.hint = j.hint || ''; track('iv_start'); stage.prefetchAcks(); azPrepare();
     S.busy = false; say(j.line, afterLine, j.audio);
   } catch (e) {
     S.error = errMsg(e.status, e.j || {}); S.busy = false;
@@ -164,12 +284,13 @@ async function start() {
   }
   draw();
 }
-async function answer(text) {
+async function answer(text, m) {
   text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, MAX_CHARS);
   if (!text || S.busy || S.ended) return;
-  S.history.push({ r: 'l', t: text }); const item = { r: 'l', text }; S.items.push(item);
+  if (azReady() && Date.now() - AZ.at > 7 * 60000) azPrepare(); // fresh token before the next answer
+  S.history.push({ r: 'l', t: text }); const item = { r: 'l', text, m: m || null }; S.items.push(item);
   S.busy = true; S.error = ''; S.hint = ''; S.interim = '';
-  pending = () => { S.history.pop(); S.items.pop(); answer(text); };
+  pending = () => { S.history.pop(); S.items.pop(); answer(text, m); };
   draw();
   const ack = stage.ack(); // a quick "mm-hm" while Harley thinks
   try {
@@ -245,6 +366,17 @@ function vSetup() {
     ${S.error ? `<p class="err">${S.error}</p>` : ''}
   </div>`;
 }
+// Delivery chips for one answer: pace, long pauses, fillers, fluency (only what was measured).
+function dlvHtml(m) {
+  if (!m) return '';
+  const c = [];
+  if (m.wpm) c.push(`<span class="${m.wpm < 90 || m.wpm > 175 ? 'warn' : ''}">🗣️ ${esc(t('ivWpm', { n: m.wpm }))}</span>`);
+  if (m.pauses != null) c.push(`<span class="${m.pauses > 2 ? 'warn' : ''}">⏸️ ${esc(t('ivPauses', { n: m.pauses }))}</span>`);
+  if (m.fillers) c.push(`<span class="${m.fillers > 3 ? 'warn' : ''}">💬 ${esc(t('ivFillers', { n: m.fillers }))}</span>`);
+  if (m.fluency != null) c.push(`<span class="${m.fluency < 60 ? 'warn' : ''}">🌊 ${esc(t('ivFluency', { n: m.fluency }))}</span>`);
+  return c.length ? `<div class="dlv">${c.join('')}</div>` : '';
+}
+const voteHtml = (i, v) => `<div class="vote">${v ? `<span>${esc(t('ivThanks'))}</span>` : `<span>${esc(t('ivUseful'))}</span><button class="link" data-vote="up" data-vi="${i}" aria-label="👍">👍</button><button class="link" data-vote="down" data-vi="${i}" aria-label="👎">👎</button>`}</div>`;
 const fbHtml = f => `<b>${esc(t(f.rating))}</b> ${rich(f.note)}${f.better ? `<div class="better"><span>${esc(t('stronger'))}</span> <button class="w" data-line="${esc(f.better)}">🔊 ${esc(f.better)}</button></div>` : ''}`;
 function vInterview() {
   const answers = S.history.filter(h => h.r === 'l').length;
@@ -254,8 +386,8 @@ function vInterview() {
     if (it.r === 'c') {
       h += `<div class="row c"><div class="av">${window.HSTalk.face(S.who)}</div><div class="bub c"><div class="line">${esc(it.line)}</div>${it.showTr && it.translation ? `<div class="tr">${esc(it.translation)}</div>` : ''}<div class="tools"><button class="link" data-say="${i}">🔊</button>${it.translation ? `<button class="link" data-tr="${i}">${esc(t(it.showTr ? 'hideTr' : 'showTr'))}</button>` : ''}</div></div></div>`;
     } else {
-      h += `<div class="row l"><div class="bub l">${esc(it.text)}</div></div>`;
-      if (it.fb && S.live) h += `<div class="fb ${it.fb.rating}">${fbHtml(it.fb)}</div>`;
+      h += `<div class="row l"><div class="bub l">${esc(it.text)}${dlvHtml(it.m)}</div></div>`;
+      if (it.fb && S.live) h += `<div class="fb ${it.fb.rating}">${fbHtml(it.fb)}${voteHtml(i, it.vote)}</div>`;
     }
   });
   h += `</div>`;
@@ -263,7 +395,11 @@ function vInterview() {
   if (S.ended && !S.busy && !S.talking) h += `<button class="btn primary big" data-end>${esc(t('seeReport'))}</button>`;
   else if (S.items.length && !S.busy && !S.ended) {
     if (S.hint) h += `<div class="hint"><span>${esc(t('startWith'))}</span> <button class="w" data-line="${esc(S.hint)}">🔊 ${esc(S.hint)}</button></div>`;
-    if (S.typing) {
+    if (S.review) {
+      h += `<div class="rv"><div class="rv-h">👂 ${esc(t('ivHeard'))}</div><textarea id="rvText" rows="3" maxlength="${MAX_CHARS}" lang="${esc(code())}">${esc(S.review.text)}</textarea>
+        <p class="rv-tip">${esc(t('ivHeardTip'))}</p>${S.review.auto ? '<div class="rv-bar"><i></i></div>' : ''}
+        <div class="rv-btns"><button class="btn" data-rvagain>🎙️ ${esc(t('ivAgain'))}</button><button class="btn primary" data-rvsend>${esc(t('send'))} ➤</button></div></div><div class="ctl">`;
+    } else if (S.typing) {
       h += `<form class="type" data-form><textarea id="ivInput" rows="3" maxlength="${MAX_CHARS}" placeholder="${esc(t('placeholder'))}" lang="${esc(code())}"></textarea><button class="btn primary" type="submit">${esc(t('send'))}</button></form><div class="ctl">${Rec ? `<button class="link" data-mode>${esc(t('speakIn'))}</button>` : ''}`;
     } else if (S.auto) {
       const st = S.listening ? ['on', t('yourTurn')] : S.talking ? ['', t('speaking', { name: t('Ivr_' + S.who) })] : ['tap', t('tapTalk')];
@@ -286,7 +422,8 @@ function vReport() {
     <p class="sum">${rich(s.summary)}</p>`;
   if (s.strongest) h += `<div class="box good"><b>💪 ${esc(t('strongest'))}</b><p>${rich(s.strongest)}</p></div>`;
   if (s.workOn) h += `<div class="box work"><b>🎯 ${esc(t('workOn'))}</b><p>${rich(s.workOn)}</p></div>`;
-  if (pairs.length) h += `<h3>${esc(t('answers'))}</h3>` + pairs.map((p, i) => `<div class="pair"><div class="q">${i + 1}. ${esc(p.q)}</div><div class="a">“${esc(p.a.text)}”</div>${p.a.fb ? `<div class="fb ${p.a.fb.rating}">${fbHtml(p.a.fb)}</div>` : ''}</div>`).join('');
+  if (s.delivery) h += `<div class="box dlvbox"><b>🗣️ ${esc(t('ivDelivery'))}</b><p>${rich(s.delivery)}</p></div>`;
+  if (pairs.length) h += `<h3>${esc(t('answers'))}</h3>` + pairs.map((p, i) => `<div class="pair"><div class="q">${i + 1}. ${esc(p.q)}</div><div class="a">“${esc(p.a.text)}”${dlvHtml(p.a.m)}</div>${p.a.fb ? `<div class="fb ${p.a.fb.rating}">${fbHtml(p.a.fb)}${voteHtml(S.items.indexOf(p.a), p.a.vote)}</div>` : ''}</div>`).join('');
   if (s.practise && s.practise.length) h += `<h3>${esc(t('phrases'))}</h3>` + s.practise.map(x => `<div class="phr"><button class="w" data-line="${esc(x.p)}">🔊 ${esc(x.p)}</button><small>${esc(x.m)}</small></div>`).join('');
   h += `<div class="btns"><button class="btn" data-again>${esc(t('again'))}</button><button class="btn primary" data-quit>${esc(t('newIv'))}</button></div></div>`;
   return h;
@@ -309,7 +446,8 @@ function applyStatic() {
 }
 
 // ---------- events ----------
-document.addEventListener('input', e => { if (e.target.id === 'ivJob') { S.job = e.target.value.slice(0, 60); store.set('hs_iv_job', S.job); } });
+document.addEventListener('focusin', e => { if (e.target.id === 'rvText') holdReview(); });
+document.addEventListener('input', e => { if (e.target.id === 'rvText') holdReview(); if (e.target.id === 'ivJob') { S.job = e.target.value.slice(0, 60); store.set('hs_iv_job', S.job); } });
 document.addEventListener('change', e => {
   const el = e.target;
   if (el.id === 'ivUi') { ui = el.value; store.set('sir_ui', ui); applyStatic(); draw(); return; }
@@ -332,6 +470,9 @@ document.addEventListener('click', e => {
   if (d.line !== undefined) { unlock(); S.paused = true; say(d.line); return; }
   if (d.say !== undefined) { unlock(); say(S.items[+d.say].line, afterLine); return; }
   if (d.tr !== undefined) { const it = S.items[+d.tr]; it.showTr = !it.showTr; draw(); return; }
+  if (b.hasAttribute('data-rvsend')) { unlock(); sendReview(); return; }
+  if (b.hasAttribute('data-rvagain')) { unlock(); clearTimeout(reviewT); S.review = null; listen('', true); return; }
+  if (d.vote) { const it = S.items[+d.vi]; if (it && !it.vote) { it.vote = d.vote; track(d.vote === 'up' ? 'iv_tip_up' : 'iv_tip_down'); draw(); } return; }
   if (b.hasAttribute('data-mic')) { unlock(); if (S.talking) hush(); S.paused = false; if (S.listening && stopRec) stopRec(); else listen('', true); return; }
   if (b.hasAttribute('data-pause')) { hush(); stopListening(); S.paused = true; draw(); return; }
   if (b.hasAttribute('data-mode')) { hush(); stopListening(); S.typing = !S.typing; S.focusInput = S.typing; if (!S.typing) S.paused = false; draw(); if (!S.typing && S.auto) listen('', true); return; }
@@ -346,7 +487,7 @@ document.addEventListener('submit', e => {
   const inp = $('ivInput'); S.focusInput = true; answer(inp ? inp.value : '');
 });
 document.addEventListener('keydown', e => { if (e.target.id === 'ivInput' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.form.requestSubmit(); } });
-document.addEventListener('visibilitychange', () => { if (document.hidden && S.view === 'iv') { hush(); stopListening(); S.paused = true; draw(); } });
+document.addEventListener('visibilitychange', () => { if (document.hidden && S.view === 'iv') { holdReview(); hush(); stopListening(); S.paused = true; draw(); } });
 
 // ---------- access (private beta, same list as Harley Chats) ----------
 let checking = 0;

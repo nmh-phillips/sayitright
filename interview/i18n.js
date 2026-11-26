@@ -88,3 +88,27 @@ vi:["Bắt đầu nào", "Trả lời câu hỏi thật bằng giọng nói", "N
 };
 for (const k in S) K.forEach((x,i)=>{ window.IV_UI[k][x]=S[k][i]; });
 })();
+
+// What we heard, delivery chips, tip votes
+(function(){
+const K=["ivHeard", "ivHeardTip", "ivAgain", "ivWpm", "ivPauses", "ivFillers", "ivFluency", "ivDelivery", "ivUseful", "ivThanks"];
+const S={
+en:["What I heard", "Check it's right. Tap to fix any word that was misheard.", "Say it again", "{n} words/min", "{n} long pauses", "{n} fillers", "Fluency {n}", "How you came across", "Useful tip?", "Thanks for the feedback!"],
+es:["Lo que he oído", "Comprueba que está bien. Toca para corregir cualquier palabra mal entendida.", "Repetir", "{n} palabras/min", "{n} pausas largas", "{n} muletillas", "Fluidez {n}", "Cómo sonaste", "¿Consejo útil?", "¡Gracias por tu opinión!"],
+fr:["Ce que j'ai entendu", "Vérifie que c'est juste. Touche pour corriger un mot mal compris.", "Recommencer", "{n} mots/min", "{n} longues pauses", "{n} mots de remplissage", "Fluidité {n}", "Ton impression à l'oral", "Conseil utile ?", "Merci pour ton avis !"],
+it:["Cosa ho sentito", "Controlla che sia giusto. Tocca per correggere una parola capita male.", "Ripeti", "{n} parole/min", "{n} pause lunghe", "{n} intercalari", "Fluidità {n}", "Come ti sei presentato", "Consiglio utile?", "Grazie per il feedback!"],
+de:["Was ich gehört habe", "Prüfe, ob es stimmt. Tippe, um falsch verstandene Wörter zu korrigieren.", "Nochmal sagen", "{n} Wörter/Min.", "{n} lange Pausen", "{n} Füllwörter", "Flüssigkeit {n}", "Wie du rübergekommen bist", "Hilfreicher Tipp?", "Danke für dein Feedback!"],
+pt:["O que ouvi", "Confirma se está certo. Toca para corrigir qualquer palavra mal percebida.", "Dizer outra vez", "{n} palavras/min", "{n} pausas longas", "{n} bordões", "Fluência {n}", "Como soaste", "Dica útil?", "Obrigado pelo feedback!"],
+pl:["Co usłyszałem", "Sprawdź, czy się zgadza. Dotknij, aby poprawić źle usłyszane słowo.", "Powiedz jeszcze raz", "{n} słów/min", "{n} długich pauz", "{n} wtrąceń", "Płynność {n}", "Jak wypadłeś", "Przydatna wskazówka?", "Dzięki za opinię!"],
+ro:["Ce am auzit", "Verifică dacă e corect. Atinge pentru a corecta un cuvânt auzit greșit.", "Spune din nou", "{n} cuvinte/min", "{n} pauze lungi", "{n} cuvinte de umplutură", "Fluență {n}", "Cum ai sunat", "Sfat util?", "Mulțumim pentru părere!"],
+uk:["Що я почув", "Перевір, чи все правильно. Торкнися, щоб виправити неправильно почуте слово.", "Сказати ще раз", "{n} слів/хв", "{n} довгих пауз", "{n} слів-паразитів", "Плавність {n}", "Як ти звучав", "Корисна порада?", "Дякуємо за відгук!"],
+zh:["我听到的内容", "请确认是否正确。点击即可修改听错的词。", "重新说", "每分钟 {n} 词", "{n} 次长停顿", "{n} 个口头禅", "流利度 {n}", "你的表达效果", "这条建议有用吗？", "感谢你的反馈！"],
+ar:["ما سمعته", "تأكد من صحته. اضغط لتصحيح أي كلمة سُمعت خطأ.", "قلها مرة أخرى", "{n} كلمة/دقيقة", "{n} توقفات طويلة", "{n} كلمات حشو", "الطلاقة {n}", "كيف بدا حديثك", "هل النصيحة مفيدة؟", "شكرًا على رأيك!"],
+nl:["Wat ik hoorde", "Controleer of het klopt. Tik om een verkeerd verstaan woord te verbeteren.", "Opnieuw zeggen", "{n} woorden/min", "{n} lange pauzes", "{n} stopwoorden", "Vloeiendheid {n}", "Hoe je overkwam", "Nuttige tip?", "Bedankt voor je feedback!"],
+tr:["Duyduğum", "Doğru olduğunu kontrol et. Yanlış anlaşılan kelimeyi düzeltmek için dokun.", "Tekrar söyle", "{n} kelime/dk", "{n} uzun duraklama", "{n} dolgu kelimesi", "Akıcılık {n}", "Nasıl göründün", "Faydalı ipucu mu?", "Geri bildirimin için teşekkürler!"],
+ja:["聞き取った内容", "正しいか確認してください。聞き間違いはタップして直せます。", "もう一度話す", "毎分 {n} 語", "長い間 {n} 回", "つなぎ言葉 {n} 回", "流暢さ {n}", "話し方の印象", "役に立つアドバイス？", "フィードバックありがとう！"],
+ko:["들은 내용", "맞는지 확인하세요. 잘못 들린 단어는 눌러서 고칠 수 있어요.", "다시 말하기", "분당 {n}단어", "긴 멈춤 {n}회", "군말 {n}회", "유창성 {n}", "말하기 인상", "유용한 팁인가요?", "의견 감사합니다!"],
+vi:["Những gì tôi nghe được", "Kiểm tra xem đã đúng chưa. Chạm để sửa từ bị nghe nhầm.", "Nói lại", "{n} từ/phút", "{n} lần ngừng lâu", "{n} từ đệm", "Độ trôi chảy {n}", "Cách bạn thể hiện", "Mẹo hữu ích?", "Cảm ơn phản hồi của bạn!"]
+};
+for (const k in S) K.forEach((x,i)=>{ window.IV_UI[k][x]=S[k][i]; });
+})();

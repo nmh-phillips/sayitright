@@ -139,3 +139,11 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Chats: teal header, scenes as colourful animated tiles; level, hands-free, tips and pause sit behind a ⚙️ Settings toggle.
 - Interview Coach: animated intro (both interviewers, three steps, "Let's get started"), then setup; hands-free, tips and pause behind ⚙️ More options.
 - Home: navy progress card with shimmering bar, colourful games card, tips card with animated reveal.
+
+### Interview Coach upgrades (Nov 2026)
+- Answers stream to **Azure speech recognition** (token from `speech-token` with `kind:'iv'`, its own allowance `IV_SPEECH_LIMIT`, default 6 ten-minute tokens a day); falls back to the phone's recogniser if Azure isn't available.
+- **What I heard**: each answer is shown for checking/correcting before it's sent (hands-free sends it after 4.5 s unless you tap into it).
+- **Delivery numbers** per answer: words a minute, pauses over 2 s, filler words, Azure fluency (where Azure gives it). Sent to the report, which adds a "How you came across" section.
+- The AI is told the candidate is probably not a native speaker and speech recognition may mishear: it doesn't criticise words it isn't sure were said.
+- iPhone defaults to "tap when you've finished" instead of hands-free.
+- 👍/👎 on each tip (stats: `iv_tip_up`, `iv_tip_down`).

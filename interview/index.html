@@ -132,6 +132,21 @@
   @keyframes ivPulse{0%,100%{box-shadow:0 4px 0 rgba(0,0,0,.25),0 0 0 0 rgba(255,255,255,.6)}50%{box-shadow:0 4px 0 rgba(0,0,0,.25),0 0 0 10px rgba(255,255,255,0)}}
   @keyframes ivPulseB{0%,100%{box-shadow:0 0 0 0 rgba(51,70,200,.45)}50%{box-shadow:0 0 0 9px rgba(51,70,200,0)}}
   @media (prefers-reduced-motion:reduce){.iv-intro,.iv-intro *,.iv-in,.iv-more,.iv-startb{animation:none!important}}
+  /* What we heard (check before sending), delivery chips, tip votes */
+  .rv{background:#FFF8EF;border:2px solid #FFD8B5;border-radius:16px;padding:12px;margin-top:10px;animation:ivIn .35s ease}
+  .rv-h{font-weight:800;margin-bottom:6px}
+  .rv textarea{width:100%;box-sizing:border-box;border:1px solid #f0cfae;border-radius:12px;padding:10px;font:16px Inter,sans-serif;resize:vertical;background:#fff}
+  .rv-tip{margin:6px 0 8px;font-size:13px;color:#7a6a5a}
+  .rv-bar{height:4px;border-radius:4px;background:#f3dcc4;overflow:hidden;margin-bottom:10px}
+  .rv-bar i{display:block;height:100%;background:#FF8A3D;animation:rvBar 4.5s linear forwards}
+  @keyframes rvBar{from{width:100%}to{width:0}}
+  .rv-btns{display:flex;gap:8px}.rv-btns .btn{flex:1}
+  .dlv{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .dlv span{font-size:12px;font-weight:600;background:rgba(255,255,255,.75);border:1px solid #dfe3f0;color:#1C2563;border-radius:999px;padding:2px 8px}
+  .dlv span.warn{background:#FFF1E6;border-color:#f5c9a8;color:#a14a10}
+  .vote{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:#667}
+  .vote .link{font-size:16px;padding:0 2px}
+  .box.dlvbox{background:#EEF3FF;border-color:#cdd8ff}
 </style>
 </head>
 <body>

@@ -9,6 +9,8 @@ import { createHash } from 'node:crypto';
 const ASSESS_FREE = Number(process.env.ASSESS_PRON_LIMIT || 9);
 const IP_CAP = Number(process.env.PRON_IP_LIMIT || 30);
 const COST = 3;
+// Interview Coach (kind 'iv'): its own allowance of 10-minute tokens a day (IV_SPEECH_LIMIT, default 6 ≈ 2-3 interviews).
+const IV_FREE = Number(process.env.IV_SPEECH_LIMIT || 6);
 const hash = x => createHash('sha256').update('harley-says-pron:' + x).digest('hex').slice(0, 24);
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
@@ -20,7 +22,8 @@ export default async (req, context) => {
   if (!key || !region) return json({ error: 'Pronunciation scoring not configured' }, 503);
 
   const day = new Date().toISOString().slice(0, 10);
-  const devKey = `${day}/a/${hash(String(b.device || 'none').slice(0, 64))}`;
+  const iv = b.kind === 'iv', cost = iv ? 1 : COST, free = iv ? IV_FREE : ASSESS_FREE;
+  const devKey = `${day}/${iv ? 'iv' : 'a'}/${hash(String(b.device || 'none').slice(0, 64))}`;
   const ipKey = `${day}/ip/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
   let store = null, devUsed = 0, ipUsed = 0;
   try {
@@ -28,7 +31,7 @@ export default async (req, context) => {
     devUsed = Number(await store.get(devKey)) || 0;
     ipUsed = Number(await store.get(ipKey)) || 0;
   } catch { store = null; }
-  if (devUsed >= ASSESS_FREE || ipUsed >= IP_CAP) return json({ error: 'limit', limit: Math.floor(ASSESS_FREE / COST) }, 429);
+  if (devUsed >= free || ipUsed >= IP_CAP) return json({ error: 'limit', limit: Math.floor(free / cost) }, 429);
 
   let r;
   try {
@@ -36,6 +39,6 @@ export default async (req, context) => {
   } catch { return json({ error: 'Could not reach the speech service' }, 502); }
   if (!r.ok) return json({ error: `Speech service error ${r.status}` }, 502);
   const token = await r.text();
-  if (store) { try { await store.set(devKey, String(devUsed + COST)); await store.set(ipKey, String(ipUsed + COST)); } catch {} }
-  return json({ token, region, remaining: Math.max(0, Math.floor((ASSESS_FREE - devUsed - COST) / COST)) });
+  if (store) { try { await store.set(devKey, String(devUsed + cost)); await store.set(ipKey, String(ipUsed + cost)); } catch {} }
+  return json({ token, region, remaining: Math.max(0, Math.floor((free - devUsed - cost) / cost)) });
 };
