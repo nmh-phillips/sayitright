@@ -217,7 +217,7 @@ async function finish(){
     const j = await call('end');
     // tips for each reply come with the report (unless they were shown during the chat)
     let k = 0; S.items.forEach(it => { if (it.r === 'l') { if (!it.fb && j.turns && j.turns[k]) it.fb = j.turns[k]; k++; } });
-    S.sum = j; S.view = 'sum'; track('chat_done');
+    S.sum = j; S.view = 'sum'; track('chat_done'); window.dispatchEvent(new CustomEvent('hs-chat-done', { detail: { scene: S.scene } }));
     // keep the phrases for later practice (Daily 5)
     const rev = store.get('hs_chat_review', []).filter(x => !j.practise.some(p => p.p === x.p));
     store.set('hs_chat_review', j.practise.map(p => ({ ...p, lang, day: today() })).concat(rev).slice(0, 30));
@@ -396,5 +396,7 @@ async function checkAccess(){
   render();
 }
 window.addEventListener('hs-auth', checkAccess);
+// Open a scene straight away (journey.js: a stop on the day-out map). Call inside a tap.
+window.hsChatScene = scene => { set = CHATS; render(); unlock(); start(scene); };
 if (location.protocol !== 'file:') checkAccess();
 })();

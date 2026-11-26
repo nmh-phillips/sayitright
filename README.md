@@ -176,3 +176,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Builder (from the shop's ＋/✏️ tile): name, coat (fluffy/smooth/curly), ears (floppy/pointy/long), fur and ear colours, markings, background, voice (Harley's or Lilou's). Stored in `hs_mydog`.
 - "Use as my tutor" (`on`): the dog replaces Harley/Lilou in drawings (coachFace, score dog, summary, games, interview report) and in the animated talking head (talkhead.js); its name replaces the coach's name in Chats. `coachId()` returns the chosen voice, so the server is unchanged.
 - It has its own wardrobe in the shop (`wear.mydog`).
+
+### A day out: journey map (journey.js)
+- Card under Daily 5: "A day out in {city}" (city by learning language). Opens a full-screen map from morning to night with 8 stops: morning coffee, asking the way, shopping, lunch, pharmacy, station, hotel, evening party.
+- Each stop = one lesson round (10 phrases) of a matching topic (`hsStartRound(set, round)` in lesson.js), plus that place's Harley Chats scene when Chats is on (`hsChatScene`). Finishing (1+ stars) unlocks the next stop, +25 XP; the map reopens with the dog walking on. After all 8: confetti and "Start day 2".
+- Events: lesson.js fires `hs-round` { set, round, stars }; chat.js fires `hs-chat-done` { scene }. Stored per learning language in `hs_journey`.

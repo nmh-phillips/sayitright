@@ -163,6 +163,8 @@
   $('lsClose').onclick = () => exit();
   home.addEventListener('click', e => { if (e.target.closest('.lh-go')) enter(true); });
   window.hsStartLesson = () => enter(true);
+  // Start a given round of a topic (journey.js: a stop on the day-out map)
+  window.hsStartRound = (name, r) => { set = name; idx = r * ROUND; render(); enter(false); };
 
   // Home screen: no practice card until you start. A colourful card shows the topic, your progress and a Start button.
   function renderHome(can) {
@@ -261,6 +263,7 @@
     if (window.haUnlock) haUnlock();
     if (window.harleySay && vals.length) harleySay('clip', band === 'top' ? 'yay' : band === 'good' ? 'woof' : 'aww');
     if (typeof track === 'function') track('lesson_round');
+    window.dispatchEvent(new CustomEvent('hs-round', { detail: { set, round: r, stars } })); // journey.js
   }
   roundEl.addEventListener('click', e => {
     const b = e.target.closest('[data-lsgo],[data-lscont],[data-lsagain]'); if (!b) return;
