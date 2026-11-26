@@ -64,16 +64,19 @@ function afterLine(){
 // ---------- views ----------
 function renderPick(c){
   const left = leftToday();
-  let h = `<div class="a-head"><h2>💬 ${esc(t('ch_title'))}</h2></div>
-    <div class="ch-intro"><div class="ch-face" aria-hidden="true">${coachFace('happy')}</div><p>${esc(t('ch_intro',{lang:LN(lang), name:coachName()}))}</p></div>
+  let h = `<div class="ch-stage"><div class="ch-face" aria-hidden="true">${coachFace('happy')}</div><div><h2>💬 ${esc(t('ch_title'))}</h2><p>${esc(t('ch_intro',{lang:LN(lang), name:coachName()}))}</p></div></div>
+    <h3 class="ch-h3">${esc(t('ch_pick'))}</h3>
+    <div class="ch-scenes${renderPick.introDone ? '' : ' intro'}">${SCENES.map(([id,ic],i) => `<button class="ch-scene sc${i%8}" style="--i:${i}" data-chscene="${id}"><span class="ic" aria-hidden="true">${ic}</span><b>${esc(t('ch_s_'+id))}</b><small>${esc(t('ch_d_'+id))}</small></button>`).join('')}</div>
+    <button type="button" class="ch-settog${S.setOpen ? ' open' : ''}" data-chset aria-expanded="${!!S.setOpen}">⚙️ ${esc(t('ch_settings'))} <span>· ${esc(t('ch_'+S.level))}</span><i aria-hidden="true">▾</i></button>
+    <div class="ch-set"${S.setOpen ? '' : ' hidden'}>
     <div class="ch-lvl" role="group" aria-label="${esc(t('ch_level'))}"><span>${esc(t('ch_level'))}</span>${LEVELS.map(l => `<button data-chlvl="${l}" class="${S.level===l?'on':''}" aria-pressed="${S.level===l}">${esc(t('ch_'+l))}</button>`).join('')}</div>
     <div class="ch-opts">
       ${Rec ? `<label><input type="checkbox" data-chopt="auto" ${S.auto?'checked':''}> ${esc(t('ch_auto',{name:coachName()}))}</label>` : ''}
       <label><input type="checkbox" data-chopt="live" ${S.live?'checked':''}> ${esc(t('ch_tipsLive'))}</label>
     </div>
     ${Rec ? `<div class="ch-lvl" role="group" aria-label="${esc(t('ch_pauseL'))}"><span>${esc(t('ch_pauseL'))}</span>${Object.keys(PAUSES).map(k => `<button data-chpz="${k}" class="${S.pause===k?'on':''}" aria-pressed="${S.pause===k}">${esc(t('ch_pz_'+k))}</button>`).join('')}</div>` : ''}
-    <h3 class="ch-h3">${esc(t('ch_pick'))}</h3>
-    <div class="ch-scenes">${SCENES.map(([id,ic]) => `<button class="ch-scene" data-chscene="${id}"><span class="ic" aria-hidden="true">${ic}</span><b>${esc(t('ch_s_'+id))}</b><small>${esc(t('ch_d_'+id))}</small></button>`).join('')}</div>`;
+    </div>`;
+  renderPick.introDone = true;
   h += `<a class="ch-iv" href="/interview/">💼 <b>${esc(t('ch_ivLink'))}</b><span>${esc(t('ch_ivSub'))}</span></a>`;
   if (left !== null) h += `<p class="a-meta">${esc(t('ch_left',{n:left}))}</p>`;
   if (!Rec) h += `<p class="a-meta">${esc(t('ch_noMic'))}</p>`;
@@ -271,6 +274,7 @@ document.addEventListener('change', e => {
 document.addEventListener('click', e => {
   const b = e.target.closest('#chatCard button'); if (!b) return;
   const d = b.dataset;
+  if (d.chset !== undefined){ S.setOpen = !S.setOpen; draw(); return; }
   if (d.chlvl){ S.level = d.chlvl; store.set('hs_chat_level', S.level); draw(); return; }
   if (d.chpz){ S.pause = d.chpz; store.set('hs_pause', S.pause); draw(); return; }
   if (d.chscene){ unlock(); start(d.chscene); return; }
@@ -355,6 +359,26 @@ const css = `
 #chatCard .ch-iv{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center;margin-top:10px;padding:12px;border-radius:14px;background:#1C2563;color:#fff;text-decoration:none;font-size:20px}
 #chatCard .ch-iv b{font-size:15px} #chatCard .ch-iv span{grid-column:2;font-size:13px;opacity:.85}
 #chatCard .ch-said{font-style:italic;margin-bottom:4px} #chatCard .ch-rev .ch-fb{max-width:none}
+#chatCard .ch-stage{display:flex;gap:12px;align-items:center;margin:-4px 0 12px;padding:14px;border-radius:18px;color:#fff;background:linear-gradient(150deg,#0E9F9A,#2DD4BF);box-shadow:0 4px 0 #0a7370,0 10px 22px rgba(28,37,99,.14);animation:chIn .5s cubic-bezier(.2,.9,.3,1.3)}
+#chatCard .ch-stage h2{margin:0 0 4px;font-size:20px} #chatCard .ch-stage p{margin:0;font-size:14px;line-height:1.4;opacity:.95}
+#chatCard .ch-stage .ch-face{width:64px;height:64px;background:#fff;border-radius:50%;padding:4px;animation:chFloat 2.6s ease-in-out infinite}
+#chatCard .ch-scene{position:relative;overflow:hidden;border:0;color:#fff;background:var(--g);box-shadow:0 3px 0 var(--gs);transition:transform .15s}
+#chatCard .ch-scene small{color:rgba(255,255,255,.92)} #chatCard .ch-scene b{text-shadow:0 1px 1px rgba(0,0,0,.12)}
+#chatCard .ch-scene .ic{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.25);font-size:22px;animation:chFloat 3s ease-in-out infinite;animation-delay:calc(var(--i) * -.4s)}
+#chatCard .ch-scene::after{content:'▶';position:absolute;right:10px;top:12px;width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:#fff;color:var(--gs);font-size:11px}
+#chatCard .ch-scene:active{transform:translateY(3px);box-shadow:none}
+#chatCard .ch-scenes.intro .ch-scene{animation:chIn .5s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:calc(var(--i) * 70ms)}
+#chatCard .sc0{--g:linear-gradient(150deg,#C2410C,#FB923C);--gs:#8a2f08} #chatCard .sc1{--g:linear-gradient(150deg,#E0457B,#FF8FB1);--gs:#a82d5a}
+#chatCard .sc2{--g:linear-gradient(150deg,#3346C8,#6C7BFF);--gs:#22308f} #chatCard .sc3{--g:linear-gradient(150deg,#7B2FD0,#B66CF0);--gs:#55209a}
+#chatCard .sc4{--g:linear-gradient(150deg,#0E9F9A,#2DD4BF);--gs:#0a7370} #chatCard .sc5{--g:linear-gradient(150deg,#16A34A,#4ADE80);--gs:#0f7535}
+#chatCard .sc6{--g:linear-gradient(150deg,#B45309,#F59E0B);--gs:#7c3a06} #chatCard .sc7{--g:linear-gradient(150deg,#0369A1,#38BDF8);--gs:#024a73}
+#chatCard .ch-settog{display:flex;align-items:center;gap:6px;width:100%;margin:12px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;font:700 14px Inter,sans-serif;color:var(--ink);cursor:pointer;text-align:left}
+#chatCard .ch-settog span{font-weight:500;color:var(--muted);flex:1} #chatCard .ch-settog i{font-style:normal;transition:transform .2s} #chatCard .ch-settog.open i{transform:rotate(180deg)}
+#chatCard .ch-set{padding:12px 4px 0;animation:chIn .35s ease}
+#chatCard .ch-set[hidden]{display:none}
+@keyframes chIn{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes chFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){#chatCard .ch-stage,#chatCard .ch-stage *,#chatCard .ch-scene,#chatCard .ch-scene *,#chatCard .ch-set{animation:none!important}}
 `;
 const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 

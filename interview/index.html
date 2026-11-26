@@ -106,6 +106,32 @@
   dialog.fb .row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
   footer{max-width:680px;margin:0 auto;padding:8px 16px 30px;color:var(--muted);font-size:13px;text-align:center}
   footer a{color:var(--muted);margin:0 6px}
+  /* Intro screen (button first) and animated setup */
+  .iv-intro{position:relative;overflow:hidden;text-align:center;color:#fff;background:linear-gradient(155deg,#1C2563,#3346C8 60%,#6C7BFF);border-radius:24px;padding:22px 18px 18px;margin:6px 0 16px;box-shadow:0 5px 0 #11183f,0 14px 30px rgba(28,37,99,.22);animation:ivIn .55s cubic-bezier(.2,.9,.3,1.3)}
+  .iv-pair{position:relative;height:110px;margin:0 auto 6px;width:210px}
+  .ivp{position:absolute;top:8px;width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.18);padding:4px;animation:ivBob 2.8s ease-in-out infinite}
+  .ivp svg{width:100%;height:100%;display:block}
+  .ivp.a{left:6px} .ivp.b{right:6px;animation-delay:-1.4s}
+  .iv-bub{position:absolute;left:50%;top:0;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:#FF8A3D;display:grid;place-items:center;font-size:22px;box-shadow:0 3px 0 #d96a22;animation:ivPop 2s ease-in-out infinite}
+  .iv-intro h2{margin:6px 0 6px;font-size:23px;line-height:1.2}
+  .iv-intro > p{margin:0 auto 14px;max-width:440px;opacity:.9;line-height:1.45;font-size:15px}
+  .iv-steps{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:8px;text-align:start}
+  .iv-steps li{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.13);border-radius:14px;padding:10px 12px;font-weight:600;font-size:15px;animation:ivIn .5s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:calc(.25s + var(--i) * .12s)}
+  .iv-steps li span{display:grid;place-items:center;flex:0 0 36px;height:36px;border-radius:50%;background:#fff;font-size:18px}
+  .iv-go{display:block;width:100%;border:0;border-radius:18px;padding:16px;font:800 19px Inter,sans-serif;color:#1C2563;background:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.25);animation:ivIn .5s backwards .7s,ivPulse 2.2s ease-in-out 1.4s infinite}
+  .iv-go:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .iv-meta{margin:10px 0 0;font-size:13px;opacity:.8}
+  .iv-in{animation:ivIn .45s cubic-bezier(.2,.9,.3,1.3) backwards;animation-delay:calc(var(--d,0) * 90ms)}
+  .iv-moretog{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:16px;padding:12px 14px;border:1px solid #e3e6ec;border-radius:14px;background:#f7f8fc;font:700 14px Inter,sans-serif;color:inherit;cursor:pointer}
+  .iv-moretog i{font-style:normal;transition:transform .2s} .iv-moretog.open i{transform:rotate(180deg)}
+  .iv-more{padding-top:6px;animation:ivIn .3s ease} .iv-more[hidden]{display:none}
+  .iv-startb{animation:ivPulseB 2.2s ease-in-out infinite}
+  @keyframes ivIn{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:none}}
+  @keyframes ivBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+  @keyframes ivPop{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.12)}}
+  @keyframes ivPulse{0%,100%{box-shadow:0 4px 0 rgba(0,0,0,.25),0 0 0 0 rgba(255,255,255,.6)}50%{box-shadow:0 4px 0 rgba(0,0,0,.25),0 0 0 10px rgba(255,255,255,0)}}
+  @keyframes ivPulseB{0%,100%{box-shadow:0 0 0 0 rgba(51,70,200,.45)}50%{box-shadow:0 0 0 9px rgba(51,70,200,0)}}
+  @media (prefers-reduced-motion:reduce){.iv-intro,.iv-intro *,.iv-in,.iv-more,.iv-startb{animation:none!important}}
 </style>
 </head>
 <body>

@@ -58,7 +58,7 @@ const face = () => coach() === 'lilou' ? LILOU : FACE;
 // ---------- state ----------
 const S = {
   who: store.get('hs_iv_who', 'man') === 'woman' ? 'woman' : 'man', // the interviewer: an illustrated man or woman
-  view: 'setup', access: null, job: store.get('hs_iv_job', ''), kind: store.get('hs_iv_kind', 'general'), level: store.get('hs_iv_level', 'normal'),
+  view: 'setup', intro: true, more: false, access: null, job: store.get('hs_iv_job', ''), kind: store.get('hs_iv_kind', 'general'), level: store.get('hs_iv_level', 'normal'),
   history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null,
   typing: !Rec, interim: '', listening: false, talking: false, paused: false,
   auto: !!Rec && store.get('hs_iv_auto', true), live: store.get('hs_iv_live', false), pause: store.get('hs_pause', 'normal'),
@@ -206,9 +206,20 @@ function vGate() {
 function chips(name, list, cur, label) {
   return `<div class="chips" role="group" aria-label="${esc(label)}">${list.map(([v, txt, sub]) => `<button data-${name}="${v}" class="${cur === v ? 'on' : ''}" aria-pressed="${cur === v}">${esc(txt)}${sub ? `<small>${esc(sub)}</small>` : ''}</button>`).join('')}</div>`;
 }
+function vIntro() {
+  return `<section class="iv-intro">
+    <div class="iv-pair"><span class="ivp a">${window.HSTalk.face('man')}</span><span class="ivp b">${window.HSTalk.face('woman')}</span><span class="iv-bub">💼</span></div>
+    <h2>${esc(t('heroH'))}</h2>
+    <p>${esc(t('heroP2'))}</p>
+    <ol class="iv-steps">${['🎙️', '💡', '📋'].map((ic, i) => `<li style="--i:${i}"><span>${ic}</span>${esc(t('ivS' + (i + 1)))}</li>`).join('')}</ol>
+    <button class="iv-go" data-ivgo>${esc(t('ivGo'))} →</button>
+    <p class="iv-meta">${esc(t('meta', { n: TURNS }))}</p>
+  </section>`;
+}
 function vSetup() {
-  return `<div class="hero"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('heroH'))}</h2><p>${esc(t('heroP2'))}</p></div></div>
-  <div class="card">
+  if (S.intro) return vIntro();
+  return `<div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('heroH'))}</h2></div></div>
+  <div class="card iv-in" style="--d:1">
     <div class="lbl" style="margin-top:0">${esc(t('who'))}</div>
     <div class="who">${['man', 'woman'].map(w => `<button data-who="${w}" class="${S.who === w ? 'on' : ''}" aria-pressed="${S.who === w}"><span class="pic">${window.HSTalk.face(w)}</span>${esc(t('who_' + w))}</button>`).join('')}</div>
     <label class="lbl" for="ivJob">${esc(t('job'))}</label>
@@ -219,12 +230,16 @@ function vSetup() {
     ${chips('level', LEVELS.map(l => [l, t(l)]), S.level, t('level'))}
     <label class="lbl" for="ivLang">${esc(t('ivIn'))}</label>
     <select id="ivLang">${Object.keys(LANGS).map(k => `<option value="${k}" ${k === lang ? 'selected' : ''}>${LANGS[k][1]} ${esc(langName(k))}</option>`).join('')}</select>
+    <button type="button" class="iv-moretog${S.more ? ' open' : ''}" data-ivmore aria-expanded="${!!S.more}">⚙️ ${esc(t('ivMore'))}<i aria-hidden="true">▾</i></button>
+    <div class="iv-more"${S.more ? '' : ' hidden'}>
     <div class="opts">
       ${Rec ? `<label><input type="checkbox" data-opt="auto" ${S.auto ? 'checked' : ''}> ${esc(t('auto', { name: t('ivr_' + S.who) }))}</label>` : ''}
       <label><input type="checkbox" data-opt="live" ${S.live ? 'checked' : ''}> ${esc(t('tipsLive'))}</label>
     </div>
-    ${Rec ? `<div class="lbl">${esc(t('pauseL'))}</div>${chips('pz', Object.keys(PAUSES).map(k => [k, t('pz_' + k)]), S.pause, t('pauseL'))}<div style="height:14px"></div>` : ''}
-    <button class="btn primary big" data-start>${esc(t('start'))}</button>
+    ${Rec ? `<div class="lbl">${esc(t('pauseL'))}</div>${chips('pz', Object.keys(PAUSES).map(k => [k, t('pz_' + k)]), S.pause, t('pauseL'))}` : ''}
+    </div>
+    <div style="height:14px"></div>
+    <button class="btn primary big iv-startb" data-start>▶ ${esc(t('start'))}</button>
     <p class="meta">${esc(t('meta', { n: TURNS }))}</p>
     ${Rec ? '' : `<p class="meta">${esc(t('noMic'))}</p>`}
     ${S.error ? `<p class="err">${S.error}</p>` : ''}
@@ -306,6 +321,8 @@ document.addEventListener('change', e => {
 document.addEventListener('click', e => {
   const b = e.target.closest('#app button'); if (!b) return;
   const d = b.dataset;
+  if (b.hasAttribute('data-ivgo')) { S.intro = false; draw(); window.scrollTo(0, 0); return; }
+  if (b.hasAttribute('data-ivmore')) { S.more = !S.more; draw(); return; }
   if (d.who) { S.who = d.who; store.set('hs_iv_who', S.who); draw(); return; }
   if (d.kind) { S.kind = d.kind; store.set('hs_iv_kind', S.kind); draw(); return; }
   if (d.level) { S.level = d.level; store.set('hs_iv_level', S.level); draw(); return; }

@@ -792,3 +792,9 @@ const S={
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
+
+// Chats settings toggle
+(function(){
+const S={"en": {"ch_settings": "Settings"}, "es": {"ch_settings": "Ajustes"}, "fr": {"ch_settings": "Réglages"}, "it": {"ch_settings": "Impostazioni"}, "de": {"ch_settings": "Einstellungen"}, "pt": {"ch_settings": "Definições"}};
+for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
+})();

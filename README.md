@@ -133,3 +133,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - `story.html` + `story.js`: "Why we built Harley Says" as 5 swipeable, animated slides (floating "hello"s, mic and sound waves, Harley and Lilou drawn with `talkhead.js` faces), ending with the real photos dropping in as polaroids and a "Start practising" button. Uses the existing `story*`, `whyH` and `cap*` strings plus `st_*` (16 languages). Stats event `story`.
 - The home page shows a small "🐶 Why we built Harley Says" card linking to it instead of the full story.
 - The Premium box (`#premiumCard`) is hidden by default and only shows in the Premium section or after tapping a Premium button (⭐ in the header, "Get notified", locked topics).
+
+### Look and feel (Nov 2026)
+- Games: pick the game first; topic (incl. 🎲 Surprise me and 🌈 Mix of everything) and difficulty are chosen on a colourful setup screen inside each game (`#game` = setup, `#game/go` = play).
+- Chats: teal header, scenes as colourful animated tiles; level, hands-free, tips and pause sit behind a ⚙️ Settings toggle.
+- Interview Coach: animated intro (both interviewers, three steps, "Let's get started"), then setup; hands-free, tips and pause behind ⚙️ More options.
+- Home: navy progress card with shimmering bar, colourful games card, tips card with animated reveal.

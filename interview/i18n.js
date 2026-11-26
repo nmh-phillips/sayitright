@@ -64,3 +64,27 @@ const H={
 };
 for (const k in H) Object.assign(window.IV_UI[k], H[k]);
 })();
+
+// Intro screen and More options toggle
+(function(){
+const K=["ivGo", "ivS1", "ivS2", "ivS3", "ivMore"];
+const S={
+en:["Let's get started", "Answer real questions out loud", "Get a quick tip after each answer", "Finish with a report and stronger answers", "More options"],
+es:["Empecemos", "Responde preguntas reales en voz alta", "Recibe un consejo tras cada respuesta", "Termina con un informe y mejores respuestas", "Más opciones"],
+fr:["C'est parti", "Réponds à voix haute à de vraies questions", "Reçois un conseil après chaque réponse", "Termine avec un bilan et de meilleures réponses", "Plus d'options"],
+it:["Iniziamo", "Rispondi ad alta voce a domande vere", "Ricevi un consiglio dopo ogni risposta", "Chiudi con un resoconto e risposte migliori", "Altre opzioni"],
+de:["Los geht's", "Beantworte echte Fragen laut", "Nach jeder Antwort ein kurzer Tipp", "Zum Schluss ein Bericht mit besseren Antworten", "Weitere Optionen"],
+pt:["Vamos começar", "Responde a perguntas reais em voz alta", "Recebe uma dica após cada resposta", "Termina com um relatório e respostas melhores", "Mais opções"],
+pl:["Zaczynamy", "Odpowiadaj na prawdziwe pytania na głos", "Otrzymuj wskazówkę po każdej odpowiedzi", "Na koniec raport i lepsze odpowiedzi", "Więcej opcji"],
+ro:["Să începem", "Răspunde cu voce tare la întrebări reale", "Primești un sfat după fiecare răspuns", "La final, un raport și răspunsuri mai bune", "Mai multe opțiuni"],
+uk:["Почнімо", "Відповідай уголос на справжні запитання", "Отримуй пораду після кожної відповіді", "Наприкінці — звіт і сильніші відповіді", "Більше налаштувань"],
+zh:["开始吧", "大声回答真实的面试问题", "每次回答后获得小建议", "最后获得报告和更好的回答", "更多选项"],
+ar:["لنبدأ", "أجب عن أسئلة حقيقية بصوت عالٍ", "احصل على نصيحة بعد كل إجابة", "اختم بتقرير وإجابات أقوى", "خيارات أخرى"],
+nl:["Aan de slag", "Beantwoord echte vragen hardop", "Krijg een tip na elk antwoord", "Sluit af met een verslag en sterkere antwoorden", "Meer opties"],
+tr:["Hadi başlayalım", "Gerçek soruları sesli yanıtla", "Her yanıttan sonra kısa bir ipucu al", "Sonunda rapor ve daha güçlü yanıtlar", "Diğer seçenekler"],
+ja:["はじめよう", "本番さながらの質問に声で答える", "回答ごとにヒントがもらえる", "最後にレポートとより良い回答例", "その他の設定"],
+ko:["시작해요", "실제 면접 질문에 소리 내어 답하기", "답변마다 짧은 팁 받기", "마지막에 리포트와 더 좋은 답변", "더 많은 옵션"],
+vi:["Bắt đầu nào", "Trả lời câu hỏi thật bằng giọng nói", "Nhận mẹo sau mỗi câu trả lời", "Kết thúc với báo cáo và câu trả lời tốt hơn", "Tùy chọn khác"]
+};
+for (const k in S) K.forEach((x,i)=>{ window.IV_UI[k][x]=S[k][i]; });
+})();
