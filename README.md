@@ -159,3 +159,10 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Tabs on the Interview Coach setup: 💼 Interview / 🎤 Presentation. Topic, audience (team, class, pitch, event), length (2/5/10 min), optional script or key points.
 - Speak continuously (Azure streaming with token refresh on long talks; phone recogniser as fallback), with a timer ring against the target. Then check/fix the transcript and get one report from `/.netlify/functions/present` (structure, clarity, delivery, stronger opening and close, likely audience questions, phrases).
 - Free limit: `PRESENT_FREE_LIMIT` a week (default 1), per device and account (blob store `present-usage`, cleared after 2 weeks). Same private beta as Chats. Stats: `pres_start`, `pres_done`.
+
+### Five new games (Nov 2026)
+- **Say it to win** (`sayit`): say each word before the bar runs out (phone speech recognition; needs Chrome/Edge/Safari).
+- **Listen and pick** (`listen`): Harley says a word, tap it (harder levels use look-alike words).
+- **Harley's biscuits** (`hangman`): guess letters; each wrong letter Harley eats a biscuit (8/6/5 by level).
+- **Word of the day** (`wordday`): one 5-letter word a day per language, same for everyone, 6 tries, shareable emoji grid (`hs_wordday`). No setup screen.
+- **Fill the gap** (`fill`): phrases from the main app's `phrases.js` (loaded on demand) with one word missing. Ignores the topic.

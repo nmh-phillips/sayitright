@@ -113,7 +113,8 @@
   const topicName = () => t('t_' + topic);
   const pickName = p => t('t_' + p);
 
-  const GAMES = [{ id: 'wordsearch', ic: '🔎' }, { id: 'crossword', ic: '✏️' }, { id: 'match', ic: '🧩' }, { id: 'unscramble', ic: '🔤' }];
+  const GAMES = [{ id: 'wordsearch', ic: '🔎' }, { id: 'crossword', ic: '✏️' }, { id: 'match', ic: '🧩' }, { id: 'unscramble', ic: '🔤' },
+    { id: 'sayit', ic: '🎙️' }, { id: 'listen', ic: '👂' }, { id: 'hangman', ic: '🍪' }, { id: 'wordday', ic: '🟩', noSetup: true }, { id: 'fill', ic: '🧱', noTopic: true }];
   GAMES.forEach(g => { Object.defineProperty(g, 'name', { get: () => t('g_' + g.id) }); Object.defineProperty(g, 'desc', { get: () => t('d_' + g.id) }); });
 
   // ---------- Harley ----------
@@ -158,7 +159,7 @@
         <p>${esc(game.desc)}${n ? ` · ${esc(t('played', { n }))}` : ''}</p>
         <div class="su-dog">${HARLEY}</div>
       </section>
-      <section class="card su-card su-in" style="--d:1">
+      <section class="card su-card su-in" style="--d:1"${game.noTopic ? ' hidden' : ''}>
         <h4>${esc(t('g_topic'))}</h4>
         <nav class="chips su-chips">${chip('random', '🎲', t('t_random'), 'special') + chip('mix', '🌈', t('t_mix'), 'special')}${TOPICS.map(x => chip(x.id, x.ic, t('t_' + x.id))).join('')}</nav>
       </section>
@@ -204,7 +205,7 @@
     document.title = `${game.name} · ${topicName()} · Harley's Games`;
     app.innerHTML = `
       <div class="ghead"><a href="#${daily ? '' : game.id}" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
-        <span class="gtimer" id="gTimer" aria-hidden="true">⏱ 0:00</span><div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())} · ${pick === 'random' && !daily ? '🎲 ' : ''}${esc(topicName())}${daily ? '' : ` · ${esc(t(level))}`}</p></div></div>
+        <span class="gtimer" id="gTimer" aria-hidden="true">⏱ 0:00</span><div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())}${game.noSetup ? ` · 📅 ${esc(dayKey())}` : `${game.noTopic ? '' : ` · ${pick === 'random' && !daily ? '🎲 ' : ''}${esc(topicName())}`}${daily ? '' : ` · ${esc(t(level))}`}`}</p></div></div>
       <p class="help">${esc(t('h_' + game.id))}</p>
       <div id="game">${inner}</div>`;
   }
@@ -550,10 +551,237 @@
   }
 
   // ---------- Routing ----------
-  const RUN = { wordsearch, crossword, match, unscramble };
+
+  // ================= New games =================
+  const onlyLetters = x => /^[\p{L}]+$/u.test(x.w);
+  const speakable = () => 'speechSynthesis' in window;
+
+  // ---------- Say it to win: say each word before the time runs out (the phone's speech recognition) ----------
+  function sayit(game) {
+    const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Rec) { frame(game, `<section class="card"><p>${esc(t('n_noMic'))}</p><a class="btn" href="#">${esc(t('other'))}</a></section>`); return; }
+    const pool = shuffle(words()).slice(0, L3(6, 8, 10)), secs = L3(10, 7, 5);
+    let n = 0, mistakes = 0, rec = null, timer = null, left = 0, got = false;
+    frame(game, `<section class="card sy"><div class="sy-bar"><i id="syBar"></i></div>
+      <p class="sy-n" id="syN"></p><div class="sy-word" id="syWord"></div><p class="sy-clue" id="syClue" dir="auto"></p>
+      <button type="button" class="sy-mic" id="syMic">🎙️</button><p class="sy-msg" id="syMsg">${esc(t('n_tapSay'))}</p>
+      <div class="row"><button type="button" class="btn" id="syHear">🔊 ${esc(t('listen'))}</button><button type="button" class="btn" id="sySkip">${esc(t('n_skip'))}</button></div></section>`);
+    const norm = x => plain(String(x)).replace(/[^\p{L}\p{N} ]/gu, ' ').replace(/\s+/g, ' ').trim();
+    const stopRec = () => { if (rec) { try { rec.abort(); } catch (e) {} rec = null; } $('syMic') && $('syMic').classList.remove('on'); };
+    function round() {
+      const x = pool[n]; got = false; left = secs * 10;
+      $('syN').textContent = `${n + 1} / ${pool.length}`; $('syWord').textContent = x.w; $('syClue').textContent = x.clue; $('syMsg').textContent = t('n_tapSay'); $('syMsg').className = 'sy-msg';
+      $('syWord').classList.remove('win', 'pop'); void $('syWord').offsetWidth; $('syWord').classList.add('pop');
+      clearInterval(timer);
+      timer = setInterval(() => { left--; const b = $('syBar'); if (!b) return clearInterval(timer); b.style.width = (100 * left / (secs * 10)) + '%'; b.classList.toggle('low', left < secs * 3); if (left <= 0) miss(); }, 100);
+    }
+    function miss() { clearInterval(timer); stopRec(); if (got) return; mistakes++; fx('try'); $('syMsg').textContent = '⏰ ' + t('n_timeUp'); $('syMsg').className = 'sy-msg bad'; say(pool[n].w); setTimeout(next, 1600); }
+    function win() { got = true; clearInterval(timer); stopRec(); fx('good'); $('syWord').classList.add('win'); $('syMsg').textContent = '✓ ' + t('n_great'); $('syMsg').className = 'sy-msg good'; setTimeout(next, 900); }
+    function next() { if ($('syWord') == null) return; n++; if (n >= pool.length) finish(game, pool, mistakes); else round(); }
+    $('syMic').onclick = () => {
+      if (rec || got || left <= 0) return;
+      const target = norm(pool[n].w);
+      const r = rec = new Rec(); r.lang = LANGS[lang].code; r.interimResults = true; r.maxAlternatives = 3;
+      $('syMic').classList.add('on'); $('syMsg').textContent = t('n_listening');
+      r.onresult = e => {
+        const alts = []; for (const res of e.results) for (const a of res) alts.push(norm(a.transcript));
+        if (alts.some(a => (' ' + a + ' ').includes(' ' + target + ' '))) win();
+        else { const last = e.results[e.results.length - 1]; if (last.isFinal) $('syMsg').textContent = t('n_heard', { w: last[0].transcript }); }
+      };
+      r.onend = () => { if (rec === r) { rec = null; $('syMic') && $('syMic').classList.remove('on'); } };
+      try { r.start(); } catch (e) { rec = null; }
+    };
+    $('syHear').onclick = () => say(pool[n].w);
+    $('sySkip').onclick = () => { if (!got) { left = 0; miss(); } };
+    round();
+  }
+
+  // ---------- Listen and pick: Harley says a word, tap the one you heard ----------
+  function listen(game) {
+    const all = words(), pool = shuffle(all).slice(0, L3(6, 8, 10)), nOpt = L3(3, 4, 4);
+    let n = 0, mistakes = 0, wrongThis = false;
+    frame(game, `<section class="card ls"><p class="sy-n" id="lsN"></p>
+      <button type="button" class="ls-play" id="lsPlay" aria-label="${esc(t('listen'))}">🔊</button>
+      <p class="sy-msg" id="lsMsg">${esc(speakable() ? t('n_whichWord') : t('n_noVoice'))}</p>
+      <div class="ls-opts" id="lsOpts"></div></section>`);
+    // distractors: words that look most alike (same first letter, similar length) on hard; random otherwise
+    const like = (x, y) => (plain(x.w[0]) === plain(y.w[0]) ? 2 : 0) + (Math.abs(x.w.length - y.w.length) <= 1 ? 1 : 0);
+    function round() {
+      const x = pool[n]; wrongThis = false;
+      const others = shuffle(all.filter(y => y.w !== x.w));
+      if (level !== 'easy') others.sort((a, b) => like(b, x) - like(a, x));
+      const opts = shuffle([x].concat(others.slice(0, nOpt - 1)));
+      $('lsN').textContent = `${n + 1} / ${pool.length}`;
+      $('lsOpts').innerHTML = opts.map(o => `<button type="button" class="ls-o" data-w="${esc(o.w)}"><b>${esc(o.w)}</b>${level === 'easy' ? `<small dir="auto">${esc(o.clue)}</small>` : ''}</button>`).join('');
+      $('lsOpts').querySelectorAll('.ls-o').forEach(b => b.onclick = () => {
+        if (b.dataset.w === x.w) { fx('pop'); b.classList.add('ok'); $('lsOpts').querySelectorAll('.ls-o').forEach(o => o.disabled = true); setTimeout(next, 700); }
+        else { if (!wrongThis) mistakes++; wrongThis = true; fx('try'); b.classList.add('no'); b.disabled = true; say(x.w); }
+      });
+      setTimeout(() => say(x.w), 350);
+    }
+    function next() { if (!$('lsOpts')) return; n++; if (n >= pool.length) finish(game, pool, mistakes); else round(); }
+    $('lsPlay').onclick = () => { const b = $('lsPlay'); b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); say(pool[n].w); };
+    round();
+  }
+
+  // ---------- Harley's biscuits (hangman): guess the letters before Harley eats all his biscuits ----------
+  function keyboardFor(extra) {
+    const set = new Set();
+    for (const tp of TOPICS) for (const [w] of W[lang][tp.id] || []) for (const ch of Array.from(w)) { const p = plain(ch); if (/\p{L}/u.test(p)) set.add(p); }
+    for (const ch of extra) set.add(plain(ch));
+    return [...set].sort((a, b) => a.localeCompare(b, LANGS[lang].code));
+  }
+  function hangman(game) {
+    const pool = shuffle(words().filter(onlyLetters).filter(x => x.L.length >= 3)).slice(0, 3), lives = L3(8, 6, 5);
+    let n = 0, mistakes = 0;
+    frame(game, `<section class="card hm"><p class="sy-n" id="hmN"></p><div class="hm-dog"><div class="hm-face">${HARLEY}</div><div class="hm-bis" id="hmBis"></div></div>
+      <p class="sy-clue" id="hmClue" dir="auto"></p><div class="hm-word" id="hmWord" dir="ltr"></div><div class="kb" id="hmKb" dir="ltr"></div></section>`);
+    function round() {
+      const x = pool[n], target = x.L.map(plain), guessed = new Set(); let left = lives;
+      if (level === 'easy') guessed.add(target[0]);
+      $('hmN').textContent = `${n + 1} / ${pool.length}`; $('hmClue').textContent = x.clue;
+      const kb = keyboardFor(target);
+      const draw = () => {
+        $('hmWord').innerHTML = x.L.map((ch, i) => `<span class="${guessed.has(target[i]) ? 'on' : ''}">${guessed.has(target[i]) ? esc(ch) : ''}</span>`).join('');
+        $('hmBis').innerHTML = Array.from({ length: lives }, (_, i) => `<i class="${i < left ? '' : 'gone'}">🍪</i>`).join('');
+      };
+      $('hmKb').innerHTML = kb.map(k => `<button type="button" data-k="${esc(k)}"${guessed.has(k) ? ' disabled' : ''}>${esc(k)}</button>`).join('');
+      $('hmKb').querySelectorAll('button').forEach(b => b.onclick = () => {
+        const k = b.dataset.k; b.disabled = true; guessed.add(k);
+        if (target.includes(k)) { b.classList.add('ok'); fx('pop'); }
+        else { b.classList.add('no'); left--; mistakes++; fx('try'); const f = app.querySelector('.hm-face'); f.classList.remove('munch'); void f.offsetWidth; f.classList.add('munch'); }
+        draw();
+        const won = target.every(c => guessed.has(c));
+        if (won || left <= 0) {
+          $('hmKb').querySelectorAll('button').forEach(o => o.disabled = true);
+          if (!won) { target.forEach(c => guessed.add(c)); draw(); $('hmWord').classList.add('lost'); } else { fx('good'); $('hmWord').classList.add('won'); }
+          say(x.w); setTimeout(() => { $('hmWord') && $('hmWord').classList.remove('won', 'lost'); n++; if (n >= pool.length) finish(game, pool, Math.round(mistakes / 2)); else round(); }, won ? 1400 : 2200);
+        }
+      });
+      draw();
+    }
+    round();
+  }
+
+  // ---------- Word of the day: guess the 5-letter word in 6 tries (same word for everyone today) ----------
+  function wordday(game) {
+    const all = [].concat(...TOPICS.map(x => wordsFor(x.id))).filter(onlyLetters);
+    let cands = all.filter(x => x.L.length === 5); if (cands.length < 5) cands = all.filter(x => x.L.length >= 4 && x.L.length <= 6);
+    const pr = seeded('wordday|' + dayKey() + '|' + lang);
+    const x = cands[Math.floor(pr() * cands.length)], target = x.L.map(plain), len = target.length, tries = 6;
+    const key = 'hs_wordday', st = store.get(key, {}), id = dayKey() + '|' + lang;
+    const rec = st[id] || { g: [] }; st[id] = rec;
+    let cur = [];
+    frame(game, `<section class="card wd"><p class="sy-clue" dir="auto">💡 ${esc(x.clue)}</p><div class="wd-grid" id="wdGrid" dir="ltr" style="--n:${len}"></div>
+      <p class="sy-msg" id="wdMsg"></p><div class="kb wd-kb" id="wdKb" dir="ltr"></div><div id="wdEnd"></div></section>`);
+    const score = g => { // 2 = right place, 1 = in the word, 0 = not in it (repeated letters counted properly)
+      const res = Array(len).fill(0), rest = {};
+      target.forEach((c, i) => { if (g[i] === c) res[i] = 2; else rest[c] = (rest[c] || 0) + 1; });
+      g.forEach((c, i) => { if (res[i] !== 2 && rest[c]) { res[i] = 1; rest[c]--; } });
+      return res;
+    };
+    const kb = keyboardFor(target);
+    const done = () => rec.g.length && (rec.g[rec.g.length - 1].join('') === target.join('') || rec.g.length >= tries);
+    function draw(flipRow) {
+      const rows = [];
+      for (let r = 0; r < tries; r++) {
+        const g = rec.g[r], sc = g ? score(g) : null, live = !g && r === rec.g.length && !done();
+        rows.push(`<div class="wd-row${live && cur.length === len ? ' full' : ''}">${Array.from({ length: len }, (_, i) => {
+          const ch = g ? g[i] : live ? (cur[i] || '') : '';
+          return `<span class="${sc ? 's' + sc[i] : ch ? 'f' : ''}${r === flipRow ? ' flip' : ''}" style="--i:${i}">${esc(ch)}</span>`;
+        }).join('')}</div>`);
+      }
+      $('wdGrid').innerHTML = rows.join('');
+      const best = {}; rec.g.forEach(g => score(g).forEach((v, i) => { best[g[i]] = Math.max(best[g[i]] ?? -1, v); }));
+      $('wdKb').innerHTML = kb.map(k => `<button type="button" data-k="${esc(k)}" class="${best[k] === 2 ? 's2' : best[k] === 1 ? 's1' : best[k] === 0 ? 's0' : ''}">${esc(k)}</button>`).join('') +
+        `<button type="button" data-k="DEL" class="wide">⌫</button><button type="button" data-k="ENTER" class="wide enter">✓</button>`;
+      $('wdKb').querySelectorAll('button').forEach(b => b.onclick = () => press(b.dataset.k));
+      if (done()) end();
+    }
+    function press(k) {
+      if (done()) return;
+      if (k === 'DEL') { cur.pop(); fx('tick'); }
+      else if (k === 'ENTER') {
+        if (cur.length < len) { $('wdMsg').textContent = t('n_letters', { n: len }); const row = app.querySelectorAll('.wd-row')[rec.g.length]; row && row.classList.add('shake'); setTimeout(() => row && row.classList.remove('shake'), 350); return; }
+        rec.g.push(cur); cur = []; store.set(key, st); $('wdMsg').textContent = '';
+        const ok = rec.g[rec.g.length - 1].join('') === target.join('');
+        fx(ok ? 'good' : 'pop'); draw(rec.g.length - 1);
+        return;
+      } else if (cur.length < len) { cur.push(k); fx('tick'); }
+      draw();
+    }
+    let ended = false;
+    function end() {
+      if (ended) return; ended = true;
+      const won = rec.g[rec.g.length - 1].join('') === target.join('');
+      const grid = rec.g.map(g => score(g).map(v => v === 2 ? '🟩' : v === 1 ? '🟨' : '⬜').join('')).join('\n');
+      const shareTxt = `${t('g_wordday')} 📅 ${dayKey()} ${won ? rec.g.length : 'X'}/${tries}\n${grid}\nhttps://harleysays.com/games/`;
+      $('wdKb').innerHTML = '';
+      $('wdEnd').innerHTML = `<div class="wd-end ${won ? 'won' : ''}"><b>${won ? '🎉 ' + esc(t('n_great')) : esc(t('n_wordWas'))}</b>
+        <button type="button" class="w big" data-say="${esc(x.w)}">🔊 ${esc(x.w)}</button><span dir="auto">${esc(x.clue)}</span>
+        <p>${esc(t('n_tomorrow'))}</p><div class="row"><button type="button" class="btn primary" id="wdShare">📤 ${esc(t('dShare'))}</button><a class="btn" href="#">${esc(t('other'))}</a></div></div>`;
+      bindSay($('wdEnd'));
+      $('wdShare').onclick = async () => { try { if (navigator.share) { await navigator.share({ text: shareTxt }); return; } } catch (e) { return; } try { await navigator.clipboard.writeText(shareTxt); $('wdShare').textContent = '✓ ' + t('dCopied'); } catch (e) {} };
+      if (!rec.counted) {
+        rec.counted = true; store.set(key, st);
+        prog.done.wordday = (prog.done.wordday || 0) + 1; store.set('hs_games', prog); track('game_done'); clearInterval(tick);
+        if (won) { fx('win'); if (window.HSFX) { HSFX.confetti(); HSFX.xp(10 + (tries - rec.g.length) * 5); } } else if (window.HSFX) HSFX.xp(5);
+      }
+    }
+    document.onkeydown = e => {
+      if (!$('wdGrid')) { document.onkeydown = null; return; }
+      if (e.key === 'Enter') press('ENTER'); else if (e.key === 'Backspace') press('DEL');
+      else if (e.key.length === 1 && kb.includes(plain(e.key))) press(plain(e.key));
+    };
+    draw();
+  }
+
+  // ---------- Fill the gap: phrases from Harley Says with one word missing ----------
+  let phrasesP = null;
+  const loadPhrases = () => phrasesP || (phrasesP = new Promise((res, rej) => { if (window.SIR_DATA) return res(); const sc = document.createElement('script'); sc.src = '/phrases.js'; sc.onload = res; sc.onerror = () => { phrasesP = null; rej(); }; document.head.appendChild(sc); }));
+  function fill(game) {
+    frame(game, `<section class="card"><p class="sy-msg">…</p></section>`);
+    loadPhrases().then(() => fillPlay(game)).catch(() => { $('game').innerHTML = `<section class="card"><p>${esc(t('n_err'))}</p></section>`; });
+  }
+  function fillPlay(game) {
+    const D = window.SIR_DATA && (window.SIR_DATA[lang] || window.SIR_DATA[lang === 'esmx' ? 'es' : lang === 'enus' ? 'en' : lang]);
+    if (!D) { $('game').innerHTML = `<section class="card"><p>${esc(t('n_err'))}</p></section>`; return; }
+    const tok = p => p.split(/(\s+)/);
+    const isWord = w => /^[\p{L}'’-]{2,}$/u.test(w.replace(/[.,!?¿¡;:"«»]/g, ''));
+    const all = [].concat(...Object.values(D.sets)).filter(p => tok(p[0]).filter(w => w.trim()).length >= 3);
+    const vocab = [...new Set([].concat(...all.map(p => p[0].split(/\s+/).map(w => w.replace(/[.,!?¿¡;:"«»]/g, '')).filter(isWord))))];
+    const pool = shuffle(all).slice(0, L3(6, 8, 10)), nOpt = L3(3, 4, 4);
+    let n = 0, mistakes = 0, wrongThis = false;
+    $('game').innerHTML = `<section class="card fl"><p class="sy-n" id="flN"></p><p class="fl-p" id="flP" dir="auto"></p><p class="sy-clue" id="flM" dir="auto"></p><div class="ls-opts" id="flO"></div></section>`;
+    function round() {
+      const [ph, mean] = pool[n]; wrongThis = false;
+      const parts = tok(ph), idxs = parts.map((w, i) => i).filter(i => isWord(parts[i]));
+      // the gap: a longer word on medium/hard, any word on easy
+      idxs.sort((a, b) => parts[b].length - parts[a].length);
+      const gi = level === 'easy' ? idxs[Math.floor(R() * idxs.length)] : idxs[Math.floor(R() * Math.min(2, idxs.length))];
+      const raw = parts[gi], m = raw.match(/^([¿¡"«]*)(.*?)([.,!?;:"»]*)$/u), ans = m[2];
+      const lower = w => w.toLocaleLowerCase();
+      const others = shuffle(vocab.filter(v => lower(v) !== lower(ans)));
+      if (level === 'hard') others.sort((a, b) => Math.abs(a.length - ans.length) - Math.abs(b.length - ans.length));
+      const opts = shuffle([ans].concat(others.slice(0, nOpt - 1)));
+      $('flN').textContent = `${n + 1} / ${pool.length}`;
+      $('flP').innerHTML = parts.map((w, i) => i === gi ? `${esc(m[1])}<span class="gap" id="flGap">____</span>${esc(m[3])}` : esc(w)).join('');
+      $('flM').textContent = mean ? '💡 ' + mean : '';
+      $('flO').innerHTML = opts.map(o => `<button type="button" class="ls-o" data-w="${esc(o)}"><b>${esc(o)}</b></button>`).join('');
+      $('flO').querySelectorAll('.ls-o').forEach(b => b.onclick = () => {
+        if (b.dataset.w === ans) { fx('pop'); b.classList.add('ok'); $('flGap').textContent = ans; $('flGap').classList.add('ok'); $('flO').querySelectorAll('.ls-o').forEach(o => o.disabled = true); say(ph); setTimeout(next, 1300); }
+        else { if (!wrongThis) mistakes++; wrongThis = true; fx('try'); b.classList.add('no'); b.disabled = true; }
+      });
+    }
+    function next() { if (!$('flO')) return; n++; if (n >= pool.length) finish(game, pool.map(p => ({ w: p[0], clue: p[1] })), mistakes); else round(); }
+    round();
+  }
+
+  const RUN = { wordsearch, crossword, match, unscramble, sayit, listen, hangman, wordday, fill };
   function route(again) {
     let [id, go] = location.hash.slice(1).split('/');
     if ('speechSynthesis' in window) speechSynthesis.cancel();
+    document.onkeydown = null;
     daily = id === 'daily'; R = Math.random;
     pick = store.get('hs_games_topic', 'animals'); if (!okPick(pick)) pick = 'animals';
     topic = pick === 'random' ? rnd(TOPICS).id : pick;
@@ -561,7 +789,7 @@
     if (daily) { const plan = dailyPlan(); id = plan.game; topic = plan.topic; level = 'medium'; R = seeded('daily|' + dayKey() + '|' + lang); }
     const game = GAMES.find(g => g.id === id);
     if (!game) { hub(); window.scrollTo(0, 0); return; }
-    if (!daily && go !== 'go') { setup(game); window.scrollTo(0, 0); return; }
+    if (!daily && go !== 'go' && !game.noSetup) { setup(game); window.scrollTo(0, 0); return; }
     if (!again) window.scrollTo(0, 0);
     track(daily ? 'daily_start' : 'game_start');
     RUN[id](game);
