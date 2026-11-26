@@ -19,6 +19,14 @@ export default async () => {
       }
     } catch (e) { console.log('cleanup', name, String(e)); }
   }
+  // Presentation mode counts per week (keys start 2026-W48): keep the current and previous week only.
+  try {
+    const d = new Date(Date.now() - 14 * 864e5), t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const wd = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - wd);
+    const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y, 0, 1)) / 864e5 + 1) / 7), old = `${y}-W${String(w).padStart(2, '0')}`;
+    const store = getStore('present-usage'); const { blobs } = await store.list();
+    for (const { key } of blobs) { const wk = key.slice(0, 8); if (/^\d{4}-W\d{2}$/.test(wk) && wk <= old) { await store.delete(key); deleted++; } }
+  } catch (e) { console.log('cleanup present-usage', String(e)); }
   console.log('cleanup deleted', deleted, 'counters older than', cutoff);
   return new Response(null, { status: 204 });
 };

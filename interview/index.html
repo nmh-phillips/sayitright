@@ -147,6 +147,30 @@
   .vote{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:#667}
   .vote .link{font-size:16px;padding:0 2px}
   .box.dlvbox{background:#EEF3FF;border-color:#cdd8ff}
+  /* Presentation mode */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#e9ecf7;border-radius:16px;padding:5px;margin:6px 0 12px}
+  .modes button{border:0;border-radius:12px;padding:11px 8px;background:transparent;font:800 15px Inter,sans-serif;color:#4b5590;cursor:pointer;transition:background .2s,color .2s}
+  .modes button.on{background:#fff;color:#1C2563;box-shadow:0 2px 6px rgba(28,37,99,.12)}
+  .iv-pres{display:block;width:100%;margin-top:10px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:14px;padding:12px;font:700 15px Inter,sans-serif;cursor:pointer;animation:ivIn .5s backwards .85s}
+  .p-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .p-chips button{border:1px solid #dfe3f0;background:#fff;border-radius:999px;padding:8px 13px;font:700 14px Inter,sans-serif;color:#1C2563;cursor:pointer}
+  .p-chips button.on{background:#3346C8;border-color:#3346C8;color:#fff}
+  #pTitle,#pNotes{width:100%;box-sizing:border-box;border:1px solid #dfe3f0;border-radius:12px;padding:11px;font:16px Inter,sans-serif}
+  .p-rec{text-align:center}
+  .p-rec .top{text-align:start}
+  .p-ringwrap{position:relative;width:170px;height:170px;margin:8px auto 4px}
+  .p-ring{width:100%;height:100%;transform:rotate(-90deg)}
+  .p-ring .bg{fill:none;stroke:#e9ecf7;stroke-width:9} .p-ring .fg{fill:none;stroke:#3346C8;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .5s linear}
+  .p-ring .fg.over{stroke:#FF8A3D}
+  .p-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .p-time b{font-size:36px;font-variant-numeric:tabular-nums} .p-time small{color:#667;font-weight:600}
+  .p-go{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;color:#E0457B;margin:4px 0 10px}
+  .p-go .pulse{width:10px;height:10px;border-radius:50%;background:#E0457B;animation:ivPulseDot 1s ease-in-out infinite}
+  @keyframes ivPulseDot{50%{opacity:.3;transform:scale(.7)}}
+  .p-live{min-height:44px;color:#667;font-style:italic;font-size:14px;line-height:1.4;margin:10px 4px}
+  .p-stop{background:#E0457B!important}
+  .box.p-st{background:#F3EEFF;border-color:#dccdfb} .box.p-cl{background:#FFF8E1;border-color:#f4e2a6}
+  .box.p-line .w{display:block;margin-top:6px;text-align:start}
 </style>
 </head>
 <body>

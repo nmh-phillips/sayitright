@@ -154,3 +154,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - **Daily goal** ring in every header (Casual 20 / Regular 50 / Serious 100 XP, `hs_goal`); tap for the panel (goal, streak, freezes, total XP, sounds on/off `hs_sound`).
 - **Overall streak** `hs_streak` = days the daily goal was met. **Streak freezes**: one earned every 7 days in a row (max 2), used automatically for missed days.
 - **Games**: live timer and personal best per game and level (`hs_games_best`), sounds on hits/misses.
+
+### Presentation mode (Interview Coach)
+- Tabs on the Interview Coach setup: 💼 Interview / 🎤 Presentation. Topic, audience (team, class, pitch, event), length (2/5/10 min), optional script or key points.
+- Speak continuously (Azure streaming with token refresh on long talks; phone recogniser as fallback), with a timer ring against the target. Then check/fix the transcript and get one report from `/.netlify/functions/present` (structure, clarity, delivery, stronger opening and close, likely audience questions, phrases).
+- Free limit: `PRESENT_FREE_LIMIT` a week (default 1), per device and account (blob store `present-usage`, cleared after 2 weeks). Same private beta as Chats. Stats: `pres_start`, `pres_done`.

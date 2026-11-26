@@ -24,25 +24,25 @@ import { pickPreset, lineSsml, synth } from '../lib/voice.mjs';
 const FREE = Number(process.env.CHAT_FREE_LIMIT ?? 1);
 const FREE_IV = Number(process.env.INTERVIEW_FREE_LIMIT ?? 1);
 const IP_SESSIONS = Number(process.env.CHAT_IP_SESSIONS || 6);
-const NOLIMIT = String(process.env.CHAT_NOLIMIT_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+export const NOLIMIT = String(process.env.CHAT_NOLIMIT_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 const TURNS = Number(process.env.CHAT_TURNS || 8);
 const ITURNS = Number(process.env.INTERVIEW_TURNS || 6); // answers per mock interview (Interview Coach, /interview)
 const turnsFor = scene => scene === 'interview' ? ITURNS : TURNS;
 // The end-of-chat report is one call, so it can use a stronger model than the quick back-and-forth.
-const REPORT_MODEL = process.env.CHAT_REPORT_MODEL || 'claude-sonnet-5-5';
+export const REPORT_MODEL = process.env.CHAT_REPORT_MODEL || 'claude-sonnet-5-5';
 const IP_CAP = Number(process.env.CHAT_IP_LIMIT || 120);
 const GLOBAL_CAP = Number(process.env.CHAT_GLOBAL_LIMIT || 3000);
 const BETA = String(process.env.CHAT_BETA_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 const DEV_CALLS = FREE * (TURNS + 2) + FREE_IV * (ITURNS + 2) + 6; // calls per person per day (stops replies being sent without starting a session)
 
-const LANGS = {
+export const LANGS = {
   en: ['English (British)', 'London'], enus: ['English (American)', 'New York'], es: ['Spanish (Spain)', 'Madrid'],
   esmx: ['Spanish (Latin American, Mexican)', 'Mexico City'], fr: ['French', 'Paris'], it: ['Italian', 'Rome'],
   de: ['German', 'Berlin'], pt: ['Portuguese (European)', 'Lisbon'], nl: ['Dutch', 'Amsterdam']
 };
 // Azure voice locale for each learning language.
 const VOICE_CODE = { en: 'en-GB', enus: 'en-US', es: 'es-ES', esmx: 'es-MX', fr: 'fr-FR', it: 'it-IT', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL' };
-const UI = { en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' };
+export const UI = { en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' };
 // {city} is filled in from the learning language.
 export const SCENES = {
   cafe: 'You are the barista at a busy café in {city}. The learner is a customer. Help them order drinks and something to eat, ask about size, milk or eating in/taking away, and take payment.',
@@ -72,9 +72,9 @@ const LEVELS = {
   hard: 'The learner is upper-intermediate to advanced (CEFR B2-C1). Speak naturally as a native would, with common idioms and the occasional follow-up question that needs a longer answer.'
 };
 
-const hash = x => createHash('sha256').update('harley-says-chat:' + x).digest('hex').slice(0, 24);
+export const hash = x => createHash('sha256').update('harley-says-chat:' + x).digest('hex').slice(0, 24);
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
-const clean = (s, n) => String(s == null ? '' : s).replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n);
+export const clean = (s, n) => String(s == null ? '' : s).replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n);
 const str = (s, n) => typeof s === 'string' ? clean(s, n) : '';
 
 // Pull the JSON object out of the model's reply (tolerates code fences or stray text around it).
@@ -98,7 +98,7 @@ const IV_FB = (L, U) => `- "rating": "great" if it was a strong, clear answer in
 // blame them for words they never said.
 const IV_ASR = 'The candidate is probably not a native speaker, and their answers come from speech recognition, which often mishears accented speech. If a word looks odd, out of place or nonsensical, assume it was misheard and work out what they most likely meant; never criticise or correct a word unless you are confident they really said it. Ignore punctuation and capital letters.';
 // Delivery numbers measured on the page for each answer (null = not measured): words a minute, pauses over 2 s, filler words, Azure fluency 0-100.
-function deliveryText(delivery) {
+export function deliveryText(delivery) {
   if (!Array.isArray(delivery)) return '';
   const lines = delivery.map((m, i) => {
     if (!m || typeof m !== 'object') return '';

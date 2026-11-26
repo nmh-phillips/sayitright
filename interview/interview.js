@@ -64,6 +64,10 @@ const S = {
   typing: !Rec, interim: '', listening: false, talking: false, paused: false,
   auto: !!Rec && store.get('hs_iv_auto', !IOS), // iPhone: tap when you've finished (hands-free is unreliable there) live: store.get('hs_iv_live', false), pause: store.get('hs_pause', 'normal'),
   showTr: store.get('hs_iv_tr', false),
+  mode: store.get('hs_iv_mode', 'iv') === 'pres' ? 'pres' : 'iv', // 'iv' = interview, 'pres' = presentation
+  pt: store.get('hs_p_title', ''), paud: store.get('hs_p_aud', 'team'), pmin: store.get('hs_p_min', 5), pnotes: store.get('hs_p_notes', ''),
+  pr: null, // presentation in progress / being checked: { text, m, secs, az }
+  pres: null, // presentation report
   review: null, // { text, m }: what we heard, shown for checking before it's sent
   autoBlocked: false // this phone won't let the mic open by itself (iPhone): ask for a tap instead
 };
@@ -269,7 +273,7 @@ function errMsg(status, j) {
   return esc(t('err')) + ` <button class="link" data-retry>${esc(t('retry'))}</button>`;
 }
 let pending = null;
-function reset(view) { hush(); stopListening(); clearTimeout(reviewT); Object.assign(S, { review: null, view: view || 'setup', history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null, paused: false }); }
+function reset(view) { hush(); stopListening(); if (typeof PR !== 'undefined' && (PR.az || PR.rec)) { PR.stopping = true; clearInterval(PR.timer); try { PR.az && PR.az.close(); } catch (e) {} try { PR.rec && PR.rec.abort(); } catch (e) {} PR.az = PR.rec = null; } clearTimeout(reviewT); Object.assign(S, { review: null, view: view || 'setup', history: [], items: [], hint: '', busy: false, error: '', ended: false, sum: null, paused: false }); }
 async function start() {
   reset('iv'); S.busy = true; pending = start;
   draw(); window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -327,6 +331,162 @@ function vGate() {
 function chips(name, list, cur, label) {
   return `<div class="chips" role="group" aria-label="${esc(label)}">${list.map(([v, txt, sub]) => `<button data-${name}="${v}" class="${cur === v ? 'on' : ''}" aria-pressed="${cur === v}">${esc(txt)}${sub ? `<small>${esc(sub)}</small>` : ''}</button>`).join('')}</div>`;
 }
+
+// ---------- Presentation mode: speak for 2-10 minutes, then one report on structure, clarity and delivery ----------
+const AUDS = ['team', 'class', 'pitch', 'event'], MINS = [2, 5, 10];
+if (!AUDS.includes(S.paud)) S.paud = 'team';
+if (!MINS.includes(S.pmin)) S.pmin = 5;
+const PR = { rec: null, az: null, finals: [], part: '', segs: [], t0: 0, timer: null, stopping: false };
+const prText = () => (PR.finals.join(' ') + ' ' + PR.part).replace(/\s+/g, ' ').trim();
+const mmss = sec => Math.floor(sec / 60) + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
+function prTick() {
+  if (!PR.t0 || S.view !== 'prec') return;
+  const secs = (Date.now() - PR.t0) / 1000, max = S.pmin * 60;
+  const el = $('pTime'); if (el) el.textContent = mmss(secs);
+  const ring = $('pRing'); if (ring) { const c = 2 * Math.PI * 54; ring.style.strokeDashoffset = c * (1 - Math.min(1, secs / max)); ring.classList.toggle('over', secs > max); }
+  const tx = $('pLive'); if (tx) { const w = prText().split(' '); tx.textContent = w.slice(-40).join(' '); }
+  if (secs > Math.min(max * 1.5, 15 * 60)) stopPres(); // hard stop well past the target
+  // keep the Azure token fresh on long talks (tokens last 10 minutes)
+  if (PR.az && Date.now() - AZ.at > 8 * 60000 && !PR.refreshing) { PR.refreshing = true; AZ.at = 0; azPrepare().then(ok => { PR.refreshing = false; if (ok && PR.az) try { PR.az.authorizationToken = AZ.tok.token; } catch (e) {} }); }
+}
+async function startPres() {
+  hush(); stopListening(); unlock();
+  Object.assign(PR, { finals: [], part: '', segs: [], stopping: false, az: null, rec: null, t0: 0 });
+  S.pr = null; S.pres = null; S.error = ''; S.view = 'prec'; S.busy = true; draw(); window.scrollTo(0, 0);
+  track('pres_start');
+  const az = await azPrepare().catch(() => false);
+  if (S.view !== 'prec') return;
+  S.busy = false;
+  if (az && azReady()) presAz(); else presPhone();
+}
+function presBegin() { PR.t0 = Date.now(); clearInterval(PR.timer); PR.timer = setInterval(prTick, 500); S.listening = true; draw(); prTick(); }
+function presAz() {
+  const SDK = window.SpeechSDK; let rec;
+  try {
+    const cfg = SDK.SpeechConfig.fromAuthorizationToken(AZ.tok.token, AZ.tok.region);
+    cfg.speechRecognitionLanguage = code(); cfg.outputFormat = SDK.OutputFormat.Detailed; cfg.requestWordLevelTimestamps();
+    rec = new SDK.SpeechRecognizer(cfg, SDK.AudioConfig.fromDefaultMicrophoneInput());
+    if (AZ.pa) { try { new SDK.PronunciationAssessmentConfig('', SDK.PronunciationAssessmentGradingSystem.HundredMark, SDK.PronunciationAssessmentGranularity.Word, false).applyTo(rec); } catch (e) { AZ.pa = false; } }
+  } catch (e) { AZ.ok = false; return presPhone(); }
+  PR.az = rec;
+  rec.recognizing = (x, e) => { PR.part = e.result.text || ''; stage.listening(prText().split(' ').slice(-12).join(' ')); };
+  rec.recognized = (x, e) => {
+    if (e.result.reason !== SDK.ResultReason.RecognizedSpeech) return;
+    try { PR.segs.push(JSON.parse(e.result.properties.getProperty(SDK.PropertyId.SpeechServiceResponse_JsonResult))); } catch (err) {}
+    if (e.result.text) PR.finals.push(e.result.text); PR.part = '';
+  };
+  rec.canceled = (x, e) => {
+    if (e.reason !== SDK.CancellationReason.Error || PR.stopping) return;
+    if (AZ.pa && !PR.finals.length && /pronunciation|assessment/i.test(e.errorDetails || '')) { AZ.pa = false; try { rec.close(); } catch (er) {} PR.az = null; return presAz(); }
+    if (PR.finals.length) return stopPres();
+    try { rec.close(); } catch (er) {} PR.az = null; AZ.ok = false; presPhone();
+  };
+  rec.startContinuousRecognitionAsync(presBegin, () => { PR.az = null; AZ.ok = false; presPhone(); });
+}
+function presPhone() {
+  if (!Rec) { S.view = 'setup'; S.error = esc(t('noMic')); draw(); return; }
+  let base = PR.finals.join(' ');
+  const go = () => {
+    const r = PR.rec = new Rec(); r.lang = code(); r.interimResults = true; r.continuous = true;
+    r.onresult = e => { PR.part = joinResults(e.results); stage.listening(prText().split(' ').slice(-12).join(' ')); };
+    r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { PR.denied = true; } };
+    r.onend = () => {
+      if (PR.part) { PR.finals.push(PR.part); PR.part = ''; }
+      if (PR.stopping || PR.denied) { PR.rec = null; if (PR.denied && !PR.stopping) { PR.denied = false; S.view = 'setup'; S.error = esc(t('micBlocked')); clearInterval(PR.timer); S.listening = false; draw(); } else if (PR.stopping) presDone(); return; }
+      try { go(); } catch (err) { presDone(); } // the phone stopped by itself: carry on listening
+    };
+    r.start();
+  };
+  try { go(); presBegin(); } catch (e) { S.view = 'setup'; S.error = esc(t('noMic')); draw(); }
+}
+function stopPres() {
+  if (PR.stopping || S.view !== 'prec') return; PR.stopping = true; clearInterval(PR.timer);
+  if (PR.az) { const rec = PR.az; let done = false; const fin = () => { if (done) return; done = true; try { rec.close(); } catch (e) {} PR.az = null; presDone(true); }; try { rec.stopContinuousRecognitionAsync(() => setTimeout(fin, 300), fin); } catch (e) { fin(); } setTimeout(fin, 5000); }
+  else if (PR.rec) { try { PR.rec.stop(); } catch (e) { presDone(); } setTimeout(() => { if (S.view === 'prec') presDone(); }, 2500); }
+  else presDone();
+}
+function presDone(az) {
+  if (S.view !== 'prec') return;
+  S.listening = false; clearInterval(PR.timer);
+  const secs = Math.round((Date.now() - PR.t0) / 1000), text = prText();
+  const m = az ? azMetrics(PR.segs, text) : { wpm: null, pauses: null, fillers: countFillers(text), fluency: null, pron: null };
+  if (!m.wpm && secs > 10) m.wpm = Math.round(text.split(/\s+/).filter(Boolean).length / (secs / 60));
+  m.secs = secs;
+  S.pr = { text, m, secs }; S.view = 'prev'; draw(); window.scrollTo(0, 0);
+}
+function cancelPres() { PR.stopping = true; clearInterval(PR.timer); if (PR.az) { try { PR.az.stopContinuousRecognitionAsync(() => {}, () => {}); PR.az.close(); } catch (e) {} PR.az = null; } if (PR.rec) { try { PR.rec.abort(); } catch (e) {} PR.rec = null; } S.listening = false; S.view = 'setup'; S.pr = null; draw(); }
+async function sendPres() {
+  const box = $('pText'); const text = (box ? box.value : (S.pr && S.pr.text) || '').replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  S.pr.text = text; S.busy = true; S.error = ''; draw();
+  try {
+    const r = await fetch('/.netlify/functions/present', { method: 'POST', headers: await headers(), body: JSON.stringify({ device: DEVICE_ID, lang, ui, title: S.pt, audience: S.paud, minutes: S.pmin, notes: S.pnotes, transcript: text, delivery: S.pr.m }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 429 || j.error === 'limit') { S.error = esc(t('presLimit')); track('limit'); }
+    else if (!r.ok || j.error) S.error = esc(t('err')) + ` <button class="link" data-pfb>${esc(t('retry'))}</button>`;
+    else { S.pres = j; S.view = 'prep'; track('pres_done'); if (window.HSFX) { HSFX.sound('win'); HSFX.confetti(); HSFX.xp(40); } window.scrollTo(0, 0); }
+  } catch (e) { S.error = esc(t('err')) + ` <button class="link" data-pfb>${esc(t('retry'))}</button>`; }
+  S.busy = false; draw();
+}
+function vPresSetup() {
+  const chip = (attr, val, on, label) => `<button type="button" data-${attr}="${val}" class="${on ? 'on' : ''}" aria-pressed="${on}">${label}</button>`;
+  return `<div class="card iv-in" style="--d:1">
+    <label class="lbl" for="pTitle" style="margin-top:0">${esc(t('presTitle'))}</label>
+    <input id="pTitle" maxlength="100" autocomplete="off" value="${esc(S.pt)}" placeholder="${esc(t('presTitlePh'))}">
+    <div class="lbl">${esc(t('presAud'))}</div>
+    <div class="chips p-chips">${AUDS.map(a => chip('paud', a, S.paud === a, esc(t('aud_' + a)))).join('')}</div>
+    <div class="lbl">${esc(t('presLen'))}</div>
+    <div class="chips p-chips">${MINS.map(n => chip('pmin', n, S.pmin === n, esc(t('presMin', { n })))).join('')}</div>
+    <label class="lbl" for="pNotes">${esc(t('presNotes'))}</label>
+    <textarea id="pNotes" rows="3" maxlength="3000" placeholder="${esc(t('presNotesPh'))}">${esc(S.pnotes)}</textarea>
+    <label class="lbl" for="ivLang">${esc(t('ivIn'))}</label>
+    <select id="ivLang">${Object.keys(LANGS).map(k => `<option value="${k}" ${k === lang ? 'selected' : ''}>${LANGS[k][1]} ${esc(langName(k))}</option>`).join('')}</select>
+    <div style="height:14px"></div>
+    <button class="btn primary big iv-startb p-start" data-pstart>🎤 ${esc(t('presStart'))}</button>
+    <p class="meta">${esc(t('presMeta'))}</p>
+    ${S.error ? `<p class="err">${S.error}</p>` : ''}
+  </div>`;
+}
+function vPresRec() {
+  const c = 2 * Math.PI * 54;
+  if (S.busy) return `<div class="card p-rec"><div class="stage-slot"></div><p class="meta">…</p></div>`;
+  return `<div class="card p-rec">
+    <div class="top"><b>🎤 ${esc(S.pt || t('modePres'))}</b><button class="link" data-pcancel aria-label="${esc(t('presCancel'))}">✕</button></div>
+    <div class="p-ringwrap"><svg viewBox="0 0 120 120" class="p-ring"><circle cx="60" cy="60" r="54" class="bg"/><circle id="pRing" cx="60" cy="60" r="54" class="fg" stroke-dasharray="${c}" stroke-dashoffset="${c}"/></svg>
+      <div class="p-time"><b id="pTime">0:00</b><small>${esc(t('presTarget', { t: S.pmin + ':00' }))}</small></div></div>
+    <p class="p-go"><span class="pulse"></span> ${esc(t('presGo'))}</p>
+    <div class="stage-slot"></div>
+    <p class="p-live" id="pLive"></p>
+    <button class="btn primary big p-stop" data-pstop>■ ${esc(t('presStop'))}</button>
+  </div>`;
+}
+function vPresReview() {
+  const p = S.pr, words = p.text.split(/\s+/).filter(Boolean).length;
+  return `<div class="card iv-in">
+    <div class="top"><b>🎤 ${esc(S.pt || t('modePres'))}</b><span class="meta">⏱ ${mmss(p.secs)} / ${S.pmin}:00</span></div>
+    <div class="rv"><div class="rv-h">👂 ${esc(t('ivHeard'))}</div>
+      <textarea id="pText" rows="9" maxlength="12000" lang="${esc(code())}">${esc(p.text)}</textarea>
+      <p class="rv-tip">${esc(t('presCheck'))}</p>${dlvHtml(p.m)}</div>
+    ${words < 40 ? `<p class="err">${esc(t('presShort'))}</p>` : ''}
+    ${S.error ? `<p class="err">${S.error}</p>` : ''}
+    <div class="rv-btns" style="margin-top:12px"><button class="btn" data-pagain>🎤 ${esc(t('presAgain'))}</button><button class="btn primary" data-pfb ${S.busy || !words ? 'disabled' : ''}>${S.busy ? '…' : '✨ ' + esc(t('presFeedback'))}</button></div>
+  </div>`;
+}
+function vPresReport() {
+  const s = S.pres, stars = s.score >= 85 ? 3 : s.score >= 65 ? 2 : s.score >= 40 ? 1 : 0;
+  const box = (cls, ic, k, v) => v ? `<div class="box ${cls}"><b>${ic} ${esc(t(k))}</b><p>${rich(v)}</p></div>` : '';
+  const line = (k, v) => v ? `<div class="box p-line"><b>${esc(t(k))}</b><button class="w" data-line="${esc(v)}">🔊 ${esc(v)}</button></div>` : '';
+  let h = `<div class="card report"><div class="meta">🎤 ${esc(S.pt || t('modePres'))} · ${esc(t('aud_' + S.paud))} · ⏱ ${mmss(S.pr.secs)}</div><h2>${esc(t('presReport'))}</h2>
+    <div class="dog big">${face()}</div><div class="score">${s.score}<small>/100</small></div><div class="stars" aria-label="${stars}/3">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+    <p class="sum">${rich(s.summary)}</p>`;
+  h += box('good', '💪', 'strongest', s.strongest) + box('work', '🎯', 'workOn', s.workOn) + box('p-st', '🧱', 'presStructure', s.structure) + box('p-cl', '💡', 'presClarity', s.clarity);
+  h += `<div class="box dlvbox"><b>🗣️ ${esc(t('ivDelivery'))}</b>${dlvHtml(S.pr.m)}${s.delivery ? `<p>${rich(s.delivery)}</p>` : ''}</div>`;
+  h += line('presOpening', s.opening) + line('presClosing', s.closing);
+  if (s.questions && s.questions.length) h += `<h3>${esc(t('presQs'))}</h3>` + s.questions.map(q => `<div class="phr"><button class="w" data-line="${esc(q)}">🔊 ${esc(q)}</button></div>`).join('');
+  if (s.practise && s.practise.length) h += `<h3>${esc(t('phrases'))}</h3>` + s.practise.map(x => `<div class="phr"><button class="w" data-line="${esc(x.p)}">🔊 ${esc(x.p)}</button><small>${esc(x.m)}</small></div>`).join('');
+  h += `<div class="btns"><button class="btn" data-pagain>${esc(t('presAgain'))}</button><button class="btn primary" data-quit>${esc(t('newIv'))}</button></div></div>`;
+  return h;
+}
 function vIntro() {
   return `<section class="iv-intro">
     <div class="iv-pair"><span class="ivp a">${window.HSTalk.face('man')}</span><span class="ivp b">${window.HSTalk.face('woman')}</span><span class="iv-bub">💼</span></div>
@@ -334,12 +494,15 @@ function vIntro() {
     <p>${esc(t('heroP2'))}</p>
     <ol class="iv-steps">${['🎙️', '💡', '📋'].map((ic, i) => `<li style="--i:${i}"><span>${ic}</span>${esc(t('ivS' + (i + 1)))}</li>`).join('')}</ol>
     <button class="iv-go" data-ivgo>${esc(t('ivGo'))} →</button>
+    <button class="iv-pres" data-presgo>🎤 ${esc(t('presOr'))}</button>
     <p class="iv-meta">${esc(t('meta', { n: TURNS }))}</p>
   </section>`;
 }
 function vSetup() {
   if (S.intro) return vIntro();
-  return `<div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('heroH'))}</h2></div></div>
+  const tabs = `<div class="modes iv-in" role="tablist">${[['iv', '💼', 'modeIv'], ['pres', '🎤', 'modePres']].map(([m, ic, k]) => `<button role="tab" aria-selected="${S.mode === m}" data-pmode="${m}" class="${S.mode === m ? 'on' : ''}">${ic} ${esc(t(k))}</button>`).join('')}</div>`;
+  if (S.mode === 'pres') return tabs + `<div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('presH'))}</h2><p>${esc(t('presP'))}</p></div></div>` + vPresSetup();
+  return tabs + `<div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('heroH'))}</h2></div></div>
   <div class="card iv-in" style="--d:1">
     <div class="lbl" style="margin-top:0">${esc(t('who'))}</div>
     <div class="who">${['man', 'woman'].map(w => `<button data-who="${w}" class="${S.who === w ? 'on' : ''}" aria-pressed="${S.who === w}"><span class="pic">${window.HSTalk.face(w)}</span>${esc(t('who_' + w))}</button>`).join('')}</div>
@@ -431,8 +594,9 @@ function vReport() {
 function draw() {
   const app = $('app'); if (!app) return;
   if (S.access !== true) app.innerHTML = vGate();
-  else app.innerHTML = S.view === 'iv' ? vInterview() : S.view === 'report' && S.sum ? vReport() : vSetup();
+  else app.innerHTML = S.view === 'prec' ? vPresRec() : S.view === 'prev' && S.pr ? vPresReview() : S.view === 'prep' && S.pres ? vPresReport() : S.view === 'iv' ? vInterview() : S.view === 'report' && S.sum ? vReport() : vSetup();
   const slot = app.querySelector('.stage-slot'); if (slot) slot.replaceWith(stage.el);
+  if (S.view === 'prec') { if (S.busy) stage.thinking(); else stage.listening(''); prTick(); }
   if (S.view === 'iv') { if (S.listening) stage.listening(S.interim); else if (S.busy) stage.thinking(); else if (!S.talking) stage.mode(S.ended ? 'happy' : 'idle'); }
   const log = $('ivLog'); if (log) log.scrollTop = log.scrollHeight;
   const inp = $('ivInput'); if (inp && S.focusInput) { S.focusInput = false; inp.focus(); }
@@ -447,7 +611,9 @@ function applyStatic() {
 
 // ---------- events ----------
 document.addEventListener('focusin', e => { if (e.target.id === 'rvText') holdReview(); });
-document.addEventListener('input', e => { if (e.target.id === 'rvText') holdReview(); if (e.target.id === 'ivJob') { S.job = e.target.value.slice(0, 60); store.set('hs_iv_job', S.job); } });
+document.addEventListener('input', e => { if (e.target.id === 'rvText') holdReview();
+  if (e.target.id === 'pTitle') { S.pt = e.target.value.slice(0, 100); store.set('hs_p_title', S.pt); }
+  if (e.target.id === 'pNotes') { S.pnotes = e.target.value.slice(0, 3000); store.set('hs_p_notes', S.pnotes); } if (e.target.id === 'ivJob') { S.job = e.target.value.slice(0, 60); store.set('hs_iv_job', S.job); } });
 document.addEventListener('change', e => {
   const el = e.target;
   if (el.id === 'ivUi') { ui = el.value; store.set('sir_ui', ui); applyStatic(); draw(); return; }
@@ -459,6 +625,15 @@ document.addEventListener('change', e => {
 document.addEventListener('click', e => {
   const b = e.target.closest('#app button'); if (!b) return;
   const d = b.dataset;
+  if (b.hasAttribute('data-presgo')) { S.intro = false; S.mode = 'pres'; store.set('hs_iv_mode', 'pres'); S.error = ''; draw(); window.scrollTo(0, 0); return; }
+  if (d.pmode) { S.mode = d.pmode; store.set('hs_iv_mode', S.mode); S.error = ''; draw(); return; }
+  if (d.paud) { S.paud = d.paud; store.set('hs_p_aud', S.paud); draw(); return; }
+  if (d.pmin) { S.pmin = +d.pmin; store.set('hs_p_min', S.pmin); draw(); return; }
+  if (b.hasAttribute('data-pstart')) { startPres(); return; }
+  if (b.hasAttribute('data-pstop')) { stopPres(); return; }
+  if (b.hasAttribute('data-pcancel')) { cancelPres(); return; }
+  if (b.hasAttribute('data-pfb')) { unlock(); sendPres(); return; }
+  if (b.hasAttribute('data-pagain')) { S.error = ''; startPres(); return; }
   if (b.hasAttribute('data-ivgo')) { S.intro = false; draw(); window.scrollTo(0, 0); return; }
   if (b.hasAttribute('data-ivmore')) { S.more = !S.more; draw(); return; }
   if (d.who) { S.who = d.who; store.set('hs_iv_who', S.who); draw(); return; }
