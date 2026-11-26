@@ -31,8 +31,11 @@
   }
   let lang = store.get('sir_lang', null);
   if (!W[lang]) lang = defaultLang();
-  let topic = store.get('hs_games_topic', 'animals');
-  if (!TOPICS.some(t => t.id === topic)) topic = 'animals';
+  // pick = what the player chose (a topic id, 'random' or 'mix'); topic = what is being played now.
+  const okPick = v => v === 'random' || v === 'mix' || TOPICS.some(x => x.id === v);
+  let pick = store.get('hs_games_topic', 'animals');
+  if (!okPick(pick)) pick = 'animals';
+  let topic = pick === 'random' ? 'animals' : pick;
   window.store = store; // account.js saves to the account whenever these change
   const prog = store.get('hs_games', { done: {} });
   const LEVELS = ['easy', 'medium', 'hard'];
@@ -92,7 +95,12 @@
 
   // Clues: English learners get the meaning in their own language plus a short English definition.
   // Everyone else gets the meaning in their interface language, unless that's the language being learnt.
+  // 'mix' combines every vocabulary topic (verb-form topics stay separate: their clues work differently).
   function words() {
+    if (topic === 'mix') return [].concat(...TOPICS.filter(x => !x.form).map(x => wordsFor(x.id)));
+    return wordsFor(topic);
+  }
+  function wordsFor(topic) {
     const en = lang === 'en' || lang === 'enus', base = lang === 'esmx' ? 'es' : lang, form = TOPICS.find(x => x.id === topic).form;
     const G = GLOSS[ui] && GLOSS[ui][topic], E = GLOSS.en[topic];
     return W[lang][topic].map(([w, c], i) => {
@@ -103,6 +111,7 @@
     });
   }
   const topicName = () => t('t_' + topic);
+  const pickName = p => t('t_' + p);
 
   const GAMES = [{ id: 'wordsearch', ic: '🔎' }, { id: 'crossword', ic: '✏️' }, { id: 'match', ic: '🧩' }, { id: 'unscramble', ic: '🔤' }];
   GAMES.forEach(g => { Object.defineProperty(g, 'name', { get: () => t('g_' + g.id) }); Object.defineProperty(g, 'desc', { get: () => t('d_' + g.id) }); });
@@ -123,8 +132,7 @@
       </section>
       <div class="bar"><label>${esc(t('iSpeak'))} <select id="hgUi">${uiOpts}</select></label><label>${esc(t('learning'))} <select id="hgLang">${langOpts}</select></label></div>
       ${dailyCard()}
-      <nav class="chips">${TOPICS.map(x => `<button type="button" data-topic="${x.id}" class="${x.id === topic ? 'on' : ''}"><span>${x.ic}</span> ${esc(t('t_' + x.id))}</button>`).join('')}</nav>
-      <div class="lvl" role="group" aria-label="${esc(t('level'))}"><span>${esc(t('level'))}</span>${LEVELS.map(l => `<button type="button" data-level="${l}" class="${l === level ? 'on' : ''}">${esc(t(l))}</button>`).join('')}</div>
+      <h3 class="pick-h">${esc(t('g_pick'))}</h3>
       <div class="cards${hub.introDone ? '' : ' intro'}">${GAMES.map((g, i) => {
         const n = prog.done[g.id] || 0;
         return `<a class="game g-${g.id}" style="--i:${i}" href="#${g.id}"><span class="ic">${g.ic}</span><b>${esc(g.name)}</b><span class="d">${esc(g.desc)}</span>${n ? `<span class="n">${esc(t('played', { n }))}</span>` : ''}</a>`;
@@ -135,15 +143,39 @@
         <p>${esc(t('about2'))}</p></section>`;
     hub.introDone = true;
     $('hgLang').onchange = e => { lang = e.target.value; store.set('sir_lang', lang); const dc = $('dailyCard'); if (dc) dc.outerHTML = dailyCard(); };
+    $('hgUi').onchange = e => { ui = e.target.value; store.set('sir_ui', ui); applyStatic(); hub(); };
+  }
+
+  // ---------- Game setup: pick topic and level inside the chosen game, then Play ----------
+  function setup(game) {
+    document.title = `${game.name} · Harley's Games`;
+    const n = prog.done[game.id] || 0;
+    const chip = (id, ic, label, extra) => `<button type="button" data-pick="${id}" class="${extra || ''}${id === pick ? ' on' : ''}"><span>${ic}</span> ${esc(label)}</button>`;
+    app.innerHTML = `
+      <section class="setup g-${game.id}">
+        <div class="su-top"><a href="#" class="su-back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a><span class="su-ic">${game.ic}</span></div>
+        <h2>${esc(game.name)}</h2>
+        <p>${esc(game.desc)}${n ? ` · ${esc(t('played', { n }))}` : ''}</p>
+        <div class="su-dog">${HARLEY}</div>
+      </section>
+      <section class="card su-card su-in" style="--d:1">
+        <h4>${esc(t('g_topic'))}</h4>
+        <nav class="chips su-chips">${chip('random', '🎲', t('t_random'), 'special') + chip('mix', '🌈', t('t_mix'), 'special')}${TOPICS.map(x => chip(x.id, x.ic, t('t_' + x.id))).join('')}</nav>
+      </section>
+      <section class="card su-card su-in" style="--d:2">
+        <h4>${esc(t('level'))}</h4>
+        <div class="su-lvl" role="group" aria-label="${esc(t('level'))}">${LEVELS.map((l, i) => `<button type="button" data-level="${l}" class="${l === level ? 'on' : ''}"><span>${'●'.repeat(i + 1)}</span>${esc(t(l))}</button>`).join('')}</div>
+      </section>
+      <button type="button" class="su-play g-${game.id} su-in" style="--d:3" id="suPlay">${esc(t('g_play'))}</button>`;
+    app.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => {
+      pick = b.dataset.pick; store.set('hs_games_topic', pick);
+      app.querySelectorAll('[data-pick]').forEach(x => x.classList.toggle('on', x === b));
+    });
     app.querySelectorAll('[data-level]').forEach(b => b.onclick = () => {
       level = b.dataset.level; store.set('hs_games_level', level);
       app.querySelectorAll('[data-level]').forEach(x => x.classList.toggle('on', x === b));
     });
-    $('hgUi').onchange = e => { ui = e.target.value; store.set('sir_ui', ui); applyStatic(); hub(); };
-    app.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => {
-      topic = b.dataset.topic; store.set('hs_games_topic', topic);
-      app.querySelectorAll('[data-topic]').forEach(x => x.classList.toggle('on', x === b));
-    });
+    $('suPlay').onclick = () => { location.hash = game.id + '/go'; };
   }
 
   function dailyCard() {
@@ -163,8 +195,8 @@
   function frame(game, inner) {
     document.title = `${game.name} · ${topicName()} · Harley's Games`;
     app.innerHTML = `
-      <div class="ghead"><a href="#" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
-        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())} · ${esc(topicName())}${daily ? '' : ` · ${esc(t(level))}`}</p></div></div>
+      <div class="ghead"><a href="#${daily ? '' : game.id}" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
+        <div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())} · ${pick === 'random' && !daily ? '🎲 ' : ''}${esc(topicName())}${daily ? '' : ` · ${esc(t(level))}`}</p></div></div>
       <p class="help">${esc(t('h_' + game.id))}</p>
       <div id="game">${inner}</div>`;
   }
@@ -506,14 +538,16 @@
   // ---------- Routing ----------
   const RUN = { wordsearch, crossword, match, unscramble };
   function route(again) {
-    let id = location.hash.slice(1);
+    let [id, go] = location.hash.slice(1).split('/');
     if ('speechSynthesis' in window) speechSynthesis.cancel();
     daily = id === 'daily'; R = Math.random;
-    topic = store.get('hs_games_topic', 'animals'); if (!TOPICS.some(x => x.id === topic)) topic = 'animals';
+    pick = store.get('hs_games_topic', 'animals'); if (!okPick(pick)) pick = 'animals';
+    topic = pick === 'random' ? rnd(TOPICS).id : pick;
     level = store.get('hs_games_level', 'medium'); if (!LEVELS.includes(level)) level = 'medium';
     if (daily) { const plan = dailyPlan(); id = plan.game; topic = plan.topic; level = 'medium'; R = seeded('daily|' + dayKey() + '|' + lang); }
     const game = GAMES.find(g => g.id === id);
     if (!game) { hub(); window.scrollTo(0, 0); return; }
+    if (!daily && go !== 'go') { setup(game); window.scrollTo(0, 0); return; }
     if (!again) window.scrollTo(0, 0);
     track(daily ? 'daily_start' : 'game_start');
     RUN[id](game);

@@ -311,3 +311,29 @@ window.HG_UI = {
   };
   for (const l in S) K.forEach((k, i) => { window.HG_UI[l][k] = S[l][i]; });
 })();
+
+// Game setup screen: pick a game first, then topic and level inside it.
+(function () {
+  const K = ['g_pick', 'g_topic', 'g_play', 't_random', 't_mix'];
+  const S = {
+    en: ["Pick a game", "Topic", "▶ Play", "Surprise me", "Mix of everything"],
+    es: ["Elige un juego", "Tema", "▶ Jugar", "Sorpréndeme", "Un poco de todo"],
+    fr: ["Choisis un jeu", "Thème", "▶ Jouer", "Surprends-moi", "Un peu de tout"],
+    it: ["Scegli un gioco", "Argomento", "▶ Gioca", "Sorprendimi", "Un po' di tutto"],
+    de: ["Wähle ein Spiel", "Thema", "▶ Spielen", "Überrasch mich", "Alles gemischt"],
+    pt: ["Escolhe um jogo", "Tema", "▶ Jogar", "Surpreende-me", "Um pouco de tudo"],
+    pl: ["Wybierz grę", "Temat", "▶ Graj", "Zaskocz mnie", "Wszystkiego po trochu"],
+    ro: ["Alege un joc", "Temă", "▶ Joacă", "Surprinde-mă", "Câte puțin din toate"],
+    uk: ["Обери гру", "Тема", "▶ Грати", "Здивуй мене", "Усього потроху"],
+    zh: ["选择游戏", "主题", "▶ 开始", "随机", "混合所有主题"],
+    ar: ["اختر لعبة", "الموضوع", "▶ العب", "فاجئني", "مزيج من كل شيء"],
+    nl: ["Kies een spel", "Onderwerp", "▶ Spelen", "Verras me", "Van alles wat"],
+    tr: ["Bir oyun seç", "Konu", "▶ Oyna", "Şaşırt beni", "Hepsinden biraz"],
+    ja: ["ゲームを選ぶ", "テーマ", "▶ プレイ", "おまかせ", "全部ミックス"],
+    ko: ["게임 선택", "주제", "▶ 시작", "랜덤", "모두 섞기"],
+    vi: ["Chọn trò chơi", "Chủ đề", "▶ Chơi", "Ngẫu nhiên", "Trộn tất cả"]
+  };
+  for (const l in S) K.forEach((k, i) => { window.HG_UI[l][k] = S[l][i]; });
+  const A = {"en": "Choose a game, then pick a topic and how hard you want it. Tap any word you've found to hear it said out loud.", "es": "Elige un juego y luego un tema y la dificultad. Toca cualquier palabra que encuentres para oírla en voz alta.", "fr": "Choisis un jeu, puis un thème et la difficulté. Touche un mot trouvé pour l'entendre à voix haute.", "it": "Scegli un gioco, poi un argomento e la difficoltà. Tocca una parola trovata per sentirla pronunciare.", "de": "Wähle ein Spiel, dann ein Thema und den Schwierigkeitsgrad. Tippe auf ein gefundenes Wort, um es zu hören.", "pt": "Escolhe um jogo e depois um tema e a dificuldade. Toca numa palavra encontrada para a ouvir em voz alta.", "pl": "Wybierz grę, potem temat i poziom trudności. Dotknij znalezionego słowa, aby je usłyszeć.", "ro": "Alege un joc, apoi o temă și dificultatea. Atinge orice cuvânt găsit ca să-l auzi pronunțat.", "uk": "Обери гру, потім тему й складність. Торкнися знайденого слова, щоб почути його вимову.", "zh": "先选择游戏，再选择主题和难度。点击找到的单词即可听到发音。", "ar": "اختر لعبة، ثم موضوعًا ومستوى الصعوبة. اضغط على أي كلمة وجدتها لتسمع نطقها.", "nl": "Kies een spel en daarna een onderwerp en de moeilijkheid. Tik op een gevonden woord om het te horen.", "tr": "Bir oyun seç, sonra konu ve zorluk seviyesini belirle. Bulduğun bir kelimeye dokunarak sesli dinle.", "ja": "ゲームを選んでから、テーマと難しさを選びます。見つけた単語をタップすると発音が聞けます。", "ko": "게임을 고른 다음 주제와 난이도를 선택하세요. 찾은 단어를 누르면 발음을 들을 수 있어요.", "vi": "Chọn trò chơi, rồi chọn chủ đề và độ khó. Chạm vào từ bạn tìm được để nghe phát âm."};
+  for (const l in A) window.HG_UI[l].about1 = A[l];
+})();
