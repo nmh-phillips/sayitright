@@ -187,3 +187,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Friends-only leaderboard of this week's XP (ISO week, from fx.js's daily XP, pushed via `hs_push_xp` a few seconds after earning XP). Remove a friend with a double tap. "Share my streak" works without signing in.
 - Database: tables `friend_profiles`, `friendships`, `weekly_xp` with RLS on and no direct access; everything goes through security-definer functions `hs_me`, `hs_set_name`, `hs_accept`, `hs_remove_friend`, `hs_push_xp`, `hs_board` (authenticated only, scoped by `auth.uid()`). All rows cascade when an account is deleted. Applied to the live project 26 Nov 2026.
 - Opened from the 👥 Friends button in the XP ring panel. Privacy policy updated (Friends section).
+
+### Harley Citizen (/citizen/)
+- Life in the UK test practice (in English, as the real test is): mock test (24 questions, 45-minute timer, pass 18, spread across chapters, review with explanations and a chapter breakdown), practise by chapter (10 questions with instant explanations, weakest first), My mistakes, and an average-of-last-3 readiness meter. Stored in `hs_ct`.
+- Question bank `citizen/questions.js`: ~150 questions written from the 3rd-edition handbook, each with an explanation. Facts that changed after the handbook (current office-holders, member counts) are left out. Practice only, not official; check new questions against the handbook.
+- English speaking test: `/interview/?kind=selt` opens the Interview Coach with the new "English speaking test (B1)" type (`ITYPES.selt` in chat.mjs): a friendly examiner asks everyday questions, in English.
+- Stats: `citizen`, `ct_test`, `ct_pass`, `ct_fail`, `ct_practice`. Linked from the main app's footer.

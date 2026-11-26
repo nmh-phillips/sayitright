@@ -136,3 +136,9 @@ vi:["Phỏng vấn", "Thuyết trình", "Hoặc luyện một bài thuyết trì
 };
 for (const k in S) K.forEach((x,i)=>{ window.IV_UI[k][x]=S[k][i]; });
 })();
+
+// English speaking test (B1) interview type, from Harley Citizen
+(function(){
+const S={"en": ["English speaking test (B1)", "Everyday questions, like the test for UK visas and citizenship"], "es": ["Examen oral de inglés (B1)", "Preguntas cotidianas, como en el examen para visados y nacionalidad británica"], "fr": ["Test d'anglais oral (B1)", "Questions du quotidien, comme le test pour les visas et la nationalité britanniques"], "it": ["Test orale di inglese (B1)", "Domande quotidiane, come nel test per visti e cittadinanza britannica"], "de": ["Englisch-Sprechtest (B1)", "Alltagsfragen wie im Test für britische Visa und Staatsbürgerschaft"], "pt": ["Teste oral de inglês (B1)", "Perguntas do dia a dia, como no teste para vistos e cidadania britânica"], "pl": ["Ustny test z angielskiego (B1)", "Codzienne pytania, jak na teście do brytyjskiej wizy i obywatelstwa"], "ro": ["Test oral de engleză (B1)", "Întrebări de zi cu zi, ca la testul pentru vize și cetățenie britanică"], "uk": ["Усний тест з англійської (B1)", "Повсякденні запитання, як на тесті для британських віз і громадянства"], "zh": ["英语口语考试（B1）", "日常问题，类似英国签证和入籍考试"], "ar": ["اختبار المحادثة الإنجليزية (B1)", "أسئلة يومية مثل اختبار التأشيرات والجنسية البريطانية"], "nl": ["Engelse spreektoets (B1)", "Alledaagse vragen, zoals bij de toets voor Britse visa en staatsburgerschap"], "tr": ["İngilizce konuşma sınavı (B1)", "İngiltere vizesi ve vatandaşlığı sınavındaki gibi günlük sorular"], "ja": ["英語スピーキングテスト（B1）", "英国のビザや市民権の試験のような日常的な質問"], "ko": ["영어 말하기 시험 (B1)", "영국 비자·시민권 시험 같은 일상 질문"], "vi": ["Bài thi nói tiếng Anh (B1)", "Câu hỏi hằng ngày, giống bài thi cho thị thực và quốc tịch Anh"]};
+for (const k in S) { window.IV_UI[k].t_selt = S[k][0]; window.IV_UI[k].d_selt = S[k][1]; }
+})();

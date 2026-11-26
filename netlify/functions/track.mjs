@@ -3,7 +3,7 @@
 // Read them at /stats.html with the STATS_KEY you set in Netlify.
 import { getStore } from '@netlify/blobs';
 
-const EVENTS = new Set(['story','visit','say','say_quick','check','read','speak','write','translate','summary','focus','waitlist','feedback','install','limit','coach','lesson','lesson_round','games','game_start','game_done','daily_start','daily_done','chat_start','chat_turn','chat_done','interview','iv_start','iv_answer','iv_done','iv_tip_up','iv_tip_down','pres_start','pres_done','d5_start','d5_done']);
+const EVENTS = new Set(['story','visit','say','say_quick','check','read','speak','write','translate','summary','focus','waitlist','feedback','install','limit','coach','lesson','lesson_round','games','game_start','game_done','daily_start','daily_done','chat_start','chat_turn','chat_done','interview','iv_start','iv_answer','iv_done','iv_tip_up','iv_tip_down','pres_start','pres_done','citizen','ct_test','ct_pass','ct_fail','ct_practice','d5_start','d5_done']);
 const LANGS = new Set(['en','enus','es','esmx','fr','it','de','pt','nl']);
 const ok = () => new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
 

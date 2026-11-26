@@ -21,7 +21,7 @@ function joinResults(results){
 }
 // How long a pause sends the answer: the person's setting (Short / Normal / Long), shared by Chats and Interview Coach.
 const PAUSES = { short: 0.65, normal: 1, long: 1.6 };
-const KINDS = ['general', 'competency', 'customer'];
+const KINDS = ['general', 'competency', 'customer', 'selt']; // selt: English speaking test practice (Harley Citizen)
 const LEVELS = ['easy', 'normal', 'hard'];
 const LANGS = { en: ['en-GB', '🇬🇧'], enus: ['en-US', '🇺🇸'], es: ['es-ES', '🇪🇸'], esmx: ['es-MX', '🇲🇽'], fr: ['fr-FR', '🇫🇷'], it: ['it-IT', '🇮🇹'], de: ['de-DE', '🇩🇪'], pt: ['pt-PT', '🇵🇹'], nl: ['nl-NL', '🇳🇱'] };
 const UI = window.IV_UI, ACC = window.HG_ACC || {};
@@ -73,6 +73,8 @@ const S = {
 };
 const pauseMs = () => PAUSE_BASE * (PAUSES[S.pause] || 1);
 if (!KINDS.includes(S.kind)) S.kind = 'general';
+// Opened from Harley Citizen (/interview/?kind=selt): straight to the English speaking test, in English.
+try { const k = new URLSearchParams(location.search).get('kind'); if (KINDS.includes(k)) { S.kind = k; S.intro = false; S.mode = 'iv'; if (k === 'selt' && lang !== 'en' && lang !== 'enus') lang = 'en'; } } catch (e) {}
 if (!LEVELS.includes(S.level)) S.level = 'normal';
 const rich = text => esc(text).replace(/«([^»]+)»/g, (m, w) => `<button class="w" data-line="${w}">${w}</button>`);
 
@@ -262,7 +264,7 @@ async function headers() {
 }
 async function call(action) {
   const r = await fetch('/.netlify/functions/chat', { method: 'POST', headers: await headers(),
-    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: 'interview', level: S.level, persona: S.who, job: S.job, itype: S.kind, history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end', delivery: S.items.filter(x => x.r === 'l').map(x => x.m || null) }) });
+    body: JSON.stringify({ action, device: DEVICE_ID, lang, ui, scene: 'interview', level: S.level, persona: S.who, job: S.kind === 'selt' ? '' : S.job, itype: S.kind, history: S.history, tips: S.live ? 'live' : 'end', voice: action !== 'end', delivery: S.items.filter(x => x.r === 'l').map(x => x.m || null) }) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || j.error) { const e = new Error(j.error || 'HTTP ' + r.status); e.status = r.status; e.j = j; throw e; }
   return j;
@@ -506,8 +508,8 @@ function vSetup() {
   <div class="card iv-in" style="--d:1">
     <div class="lbl" style="margin-top:0">${esc(t('who'))}</div>
     <div class="who">${['man', 'woman'].map(w => `<button data-who="${w}" class="${S.who === w ? 'on' : ''}" aria-pressed="${S.who === w}"><span class="pic">${window.HSTalk.face(w)}</span>${esc(t('who_' + w))}</button>`).join('')}</div>
-    <label class="lbl" for="ivJob">${esc(t('job'))}</label>
-    <input id="ivJob" maxlength="60" autocomplete="off" value="${esc(S.job)}" placeholder="${esc(t('jobPh'))}">
+    ${S.kind === 'selt' ? '' : `<label class="lbl" for="ivJob">${esc(t('job'))}</label>
+    <input id="ivJob" maxlength="60" autocomplete="off" value="${esc(S.job)}" placeholder="${esc(t('jobPh'))}">`}
     <div class="lbl">${esc(t('kind'))}</div>
     ${chips('kind', KINDS.map(k => [k, t('t_' + k), t('d_' + k)]), S.kind, t('kind'))}
     <div class="lbl">${esc(t('level'))}</div>
