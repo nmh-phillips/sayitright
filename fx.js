@@ -164,6 +164,7 @@ const css = `
 .hsx-sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .hsx-sw.on{background:#22C55E}.hsx-sw.on::after{transform:translateX(20px)}
 .hsx-shop{display:block;width:100%;margin-top:12px;border:0;border-radius:14px;padding:12px;background:linear-gradient(135deg,#7B2FD0,#E0457B);color:#fff;font:800 15px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 #55209a}
+.hsx-fr{background:linear-gradient(135deg,#3346C8,#0E9F9A);box-shadow:0 3px 0 #22308f}
 .hsx-close{display:block;width:100%;margin-top:12px;border:0;border-radius:14px;padding:12px;background:#3346C8;color:#fff;font:800 15px Inter,system-ui,sans-serif;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.hsx-ring.bump,.hsx-float,.hsx-conf i{animation:none!important}.hsx-conf{display:none}}`;
 function addCss() { if (document.getElementById('hsxCss')) return; const s = document.createElement('style'); s.id = 'hsxCss'; s.textContent = css; document.head.appendChild(s); }
@@ -227,6 +228,7 @@ function openPanel() {
       else if (b.dataset.snd !== undefined) { put('hs_sound', !soundOn()); fill(); if (soundOn()) { ctx(); sound('pop'); } }
       else if (b.dataset.cls !== undefined) d.close();
       else if (b.dataset.shop !== undefined) { d.close(); window.HSShop.open(); }
+      else if (b.dataset.friends !== undefined) { d.close(); window.HSFriends.open(); }
     });
   }
   const fill = () => {
@@ -240,6 +242,7 @@ function openPanel() {
       <p class="hsx-note">${esc(t('freezeInfo'))}</p>
       <div class="hsx-row"><span>${esc(t('total'))}</span><b>${(xpState().total || 0).toLocaleString()}</b></div>
       <div class="hsx-row"><span>${esc(t('sounds'))}</span><button class="hsx-sw${soundOn() ? ' on' : ''}" data-snd role="switch" aria-checked="${soundOn()}" aria-label="${esc(t('sounds'))}"></button></div>
+      ${window.HSFriends ? `<button class="hsx-shop hsx-fr" data-friends>👥 ${esc(HSFriends.title())}</button>` : ''}
       ${window.HSShop ? `<button class="hsx-shop" data-shop>🛍️ ${esc(HSShop.title())} · ${HSShop.balance().toLocaleString()} XP</button>` : ''}
       <button class="hsx-close" data-cls>${esc(t('close'))}</button></div>`;
   };

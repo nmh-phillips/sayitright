@@ -181,3 +181,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Card under Daily 5: "A day out in {city}" (city by learning language). Opens a full-screen map from morning to night with 8 stops: morning coffee, asking the way, shopping, lunch, pharmacy, station, hotel, evening party.
 - Each stop = one lesson round (10 phrases) of a matching topic (`hsStartRound(set, round)` in lesson.js), plus that place's Harley Chats scene when Chats is on (`hsChatScene`). Finishing (1+ stars) unlocks the next stop, +25 XP; the map reopens with the dog walking on. After all 8: confetti and "Start day 2".
 - Events: lesson.js fires `hs-round` { set, round, stars }; chat.js fires `hs-chat-done` { scene }. Stored per learning language in `hs_journey`.
+
+### Friends and leaderboard (friends.js, supabase/friends.sql)
+- Signed-in only. Pick a display name → get an invite code; share `https://harleysays.com/?invite=CODE` (or type a code). Accepting makes you friends both ways (max 50).
+- Friends-only leaderboard of this week's XP (ISO week, from fx.js's daily XP, pushed via `hs_push_xp` a few seconds after earning XP). Remove a friend with a double tap. "Share my streak" works without signing in.
+- Database: tables `friend_profiles`, `friendships`, `weekly_xp` with RLS on and no direct access; everything goes through security-definer functions `hs_me`, `hs_set_name`, `hs_accept`, `hs_remove_friend`, `hs_push_xp`, `hs_board` (authenticated only, scoped by `auth.uid()`). All rows cascade when an account is deleted. Applied to the live project 26 Nov 2026.
+- Opened from the 👥 Friends button in the XP ring panel. Privacy policy updated (Friends section).

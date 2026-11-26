@@ -223,6 +223,8 @@
   window.hsAccountRelabel = () => { if (cfg) renderBtn(); };
   // For the games page: offer sign-in after a daily puzzle.
   window.hsAccount = { ready: () => !!cfg, signedIn: () => !!user, open: () => openDlg() };
+  // The signed-in Supabase client (friends.js), or null when signed out
+  window.hsSupabase = async () => { try { if (!cfg || !user) return null; return await client(); } catch (e) { return null; } };
   // Current sign-in token (or null), for features limited to some accounts (Harley Chats beta).
   window.hsAuthToken = async () => { try { if (!cfg || !hasSession()) return null; const c = await client(); const { data } = await c.auth.getSession(); return (data && data.session && data.session.access_token) || null; } catch (e) { return null; } };
 
