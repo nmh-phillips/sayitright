@@ -29,13 +29,17 @@ function pick(){
   shuffle(all, rnd).forEach(add);
   return out;
 }
+// Kept in memory, so the same phrase is the same object every time (the precise check compares the phrase it
+// recorded with the current one; re-reading storage made a new copy and the result was thrown away).
+let cache = null;
 function state(){
+  if (cache && cache.day === today() && cache.lang === lang) return cache;
   let s = store.get('hs_d5', null);
   if (!s || s.day !== today() || s.lang !== lang || !Array.isArray(s.items) || !s.items.length) {
     s = { day: today(), lang, items: pick(), tried: {} };
     store.set('hs_d5', s);
   }
-  return s;
+  return (cache = s);
 }
 function streak(){ const s = store.get('hs_d5_streak', null); return s && (s.last === today() || s.last === yesterday()) ? s.n : 0; }
 const doneCount = s => s.items.filter(p => s.tried[p[0]] !== undefined).length;

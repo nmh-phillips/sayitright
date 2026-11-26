@@ -120,7 +120,7 @@ async function sayStop(){
       body: JSON.stringify({ audio: wav.b64, text: p[0], lang, device: DEVICE_ID, kind:'say' }) });
     const j = await r.json().catch(()=>({}));
     done();
-    if (current() !== p) return; // moved to another phrase meanwhile
+    if (!current() || current()[0] !== p[0]) return; // moved to another phrase meanwhile
     if (r.status === 503){ PRON_ON = false; showError(t('say_tapAgain')); return; }
     if (r.status === 429 || j.error === 'limit'){ store.set('sir_say_left', { day: today(), n: 0 }); showError(t('say_used')); track('limit'); return; }
     if (j.error === 'nomatch'){ showError(t('noCatch')); return; }
