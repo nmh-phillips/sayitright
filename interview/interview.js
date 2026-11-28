@@ -22,6 +22,9 @@ function joinResults(results){
 // How long a pause sends the answer: the person's setting (Short / Normal / Long), shared by Chats and Interview Coach.
 const PAUSES = { short: 0.65, normal: 1, long: 1.6 };
 const KINDS = ['general', 'competency', 'customer', 'selt']; // selt: English speaking test practice (Harlo Citizen)
+// Opened from Harlo Citizen (?kind=selt): the page wears Citizen's name and colours and only offers the speaking test.
+const CIT = (() => { try { return new URLSearchParams(location.search).get('kind') === 'selt'; } catch (e) { return false; } })();
+if (CIT) document.documentElement.classList.add('cit');
 const LEVELS = ['easy', 'normal', 'hard'];
 const LANGS = { en: ['en-GB', '🇬🇧'], enus: ['en-US', '🇺🇸'], es: ['es-ES', '🇪🇸'], esmx: ['es-MX', '🇲🇽'], fr: ['fr-FR', '🇫🇷'], it: ['it-IT', '🇮🇹'], de: ['de-DE', '🇩🇪'], pt: ['pt-PT', '🇵🇹'], nl: ['nl-NL', '🇳🇱'] };
 const UI = window.IV_UI, ACC = window.HG_ACC || {};
@@ -524,6 +527,16 @@ function vIntro() {
 function vSetup() {
   if (S.intro) return vIntro();
   const tabs = `<div class="modes iv-in" role="tablist">${[['iv', '💼', 'modeIv'], ['pres', '🎤', 'modePres']].map(([m, ic, k]) => `<button role="tab" aria-selected="${S.mode === m}" data-pmode="${m}" class="${S.mode === m ? 'on' : ''}">${ic} ${esc(t(k))}</button>`).join('')}</div>`;
+  if (CIT) return `<a class="cit-back iv-in" href="/citizen/">← Harlo Citizen</a><div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>🇬🇧 ${esc(t('t_selt'))}</h2><p>${esc(t('d_selt'))}</p></div></div>
+  <div class="card iv-in" style="--d:1">
+    <div class="lbl" style="margin-top:0">${esc(t('who'))}</div>
+    <div class="who">${['man', 'woman'].map(w => `<button data-who="${w}" class="${S.who === w ? 'on' : ''}" aria-pressed="${S.who === w}"><span class="pic">${window.HSTalk.face(w)}</span>${esc(t('who_' + w))}</button>`).join('')}</div>
+    <div style="height:14px"></div>
+    <button class="btn primary big iv-startb" data-start>▶ ${esc(t('start'))}</button>
+    <p class="meta">${esc(t('meta', { n: TURNS }))}</p>
+    ${Rec ? '' : `<p class="meta">${esc(t('noMic'))}</p>`}
+    ${S.error ? `<p class="err">${S.error}</p>` : ''}
+  </div>`;
   if (S.mode === 'pres') return tabs + `<div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('presH'))}</h2><p>${esc(t('presP'))}</p></div></div>` + vPresSetup();
   return tabs + `<div class="hero iv-in"><div class="dog ivr">${window.HSTalk.face(S.who)}</div><div><h2>${esc(t('heroH'))}</h2></div></div>
   <div class="card iv-in" style="--d:1">
@@ -627,8 +640,9 @@ function draw() {
 }
 function applyStatic() {
   document.documentElement.lang = ui; document.documentElement.dir = window.IV_RTL[ui] ? 'rtl' : 'ltr';
-  document.title = t('title');
+  document.title = CIT ? t('t_selt') + ' — Harlo Citizen' : t('title');
   document.querySelectorAll('[data-t],[data-i18n]').forEach(el => { el.textContent = t(el.dataset.t || el.dataset.i18n); });
+  if (CIT) { const b = document.querySelector('header a.brand'), sp = b && b.querySelector('[data-t="title"]'); if (b) b.href = '/citizen/'; if (sp) sp.innerHTML = 'Harlo<sup style="font-size:.5em;font-weight:600">™</sup> <b style="color:#FFB4BE">Citizen</b>'; }
   const sel = $('ivUi'); if (sel) { sel.innerHTML = window.IV_UI_LANGS.map(([k, n]) => `<option value="${k}" ${k === ui ? 'selected' : ''}>${n}</option>`).join(''); }
   if (window.hsAccountRelabel) window.hsAccountRelabel();
 }
