@@ -37,7 +37,7 @@
   .app .go{flex:none;width:36px;height:36px;border-radius:50%;background:#fff;color:var(--c1);display:grid;place-items:center;font-weight:900;font-size:18px}
   .app .tag{position:absolute;top:10px;right:12px;font-size:11px;font-weight:800;background:#fff;color:var(--c1);border-radius:999px;padding:3px 9px}
   .app.off{filter:saturate(.75);opacity:.9}
-  .app.off .tx{padding-top:16px}
+  .app.off .tx,.app.tagged .tx{padding-top:16px}
   @keyframes in{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.app{animation:none}}
   footer{text-align:center;padding:20px 16px 34px;color:var(--muted);font-size:13px}
@@ -69,7 +69,8 @@
     document.getElementById('grid').innerHTML=HS_APPS.list(ui).map((a,i)=>{
       const tag=a.status?`<span class="tag">${esc(a.id==='chats'?HS_APPS.t('partOf',ui)+' · '+HS_APPS.t('beta',ui):HS_APPS.t(a.status,ui))}</span>`:'';
       const inner=`<span class="ic" aria-hidden="true">${a.ic}</span><span class="tx"><b>${esc(a.id==='says'?a.name:'Harlo '+a.name)}</b><span class="d">${esc(a.desc)}</span></span>`;
-      return a.href ? `<a class="app" href="${esc(a.href)}" style="--c1:${a.c1};--c2:${a.c2};--i:${i}">${inner}<span class="go" aria-hidden="true">→</span></a>`
+      const part=a.id==='work'?`<span class="tag">${esc(HS_APPS.t('partOf',ui))}</span>`:'';
+      return a.href ? `<a class="app${part?' tagged':''}" href="${esc(a.href)}" style="--c1:${a.c1};--c2:${a.c2};--i:${i}">${part}${inner}<span class="go" aria-hidden="true">→</span></a>`
                     : `<div class="app off" style="--c1:${a.c1};--c2:${a.c2};--i:${i}">${tag}${inner}</div>`;
     }).join('');
   }
