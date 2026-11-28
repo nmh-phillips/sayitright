@@ -153,7 +153,10 @@
   function setup(game) {
     document.title = `${game.name} · Harlo Games`;
     const n = prog.done[game.id] || 0;
-    const chip = (id, ic, label, extra) => `<button type="button" data-pick="${id}" class="${extra || ''}${id === pick ? ' on' : ''}"><span>${ic}</span> ${esc(label)}</button>`;
+    const PAL = [['#3346C8','#6C7BFF'],['#E8603C','#FFB25B'],['#0F9B8E','#3FD8A0'],['#7B2FD0','#D06CF0'],['#D93A7A','#FF8FB1'],['#0369A1','#38BDF8'],['#16A34A','#4ADE80'],['#C2410C','#FB923C'],['#6D28D9','#A78BFA'],['#BE185D','#F472B6']];
+    let ci = 0;
+    const chip = (id, ic, label, extra) => { const [c1, c2] = extra ? ['#FF7A2F', '#FFB547'] : PAL[ci++ % PAL.length];
+      return `<button type="button" data-pick="${id}" class="${extra || ''}${id === pick ? ' on' : ''}" style="--c1:${c1};--c2:${c2};--i:${ci}"><span>${ic}</span><b>${esc(label)}</b></button>`; };
     app.innerHTML = `
       <section class="setup g-${game.id}">
         <div class="su-top"><a href="#" class="su-back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a><span class="su-ic">${game.ic}</span></div>
@@ -167,7 +170,7 @@
       </section>
       <section class="card su-card su-in" style="--d:2">
         <h4>${esc(t('level'))}</h4>
-        <div class="su-lvl" role="group" aria-label="${esc(t('level'))}">${LEVELS.map((l, i) => `<button type="button" data-level="${l}" class="${l === level ? 'on' : ''}"><span>${'●'.repeat(i + 1)}</span>${esc(t(l))}</button>`).join('')}</div>
+        <div class="su-lvl" role="group" aria-label="${esc(t('level'))}">${LEVELS.map((l, i) => `<button type="button" data-level="${l}" class="lv-${i}${l === level ? ' on' : ''}"><span>${['🌱', '🔥', '🚀'][i] || '●'}</span><b>${esc(t(l))}</b><i>${'●'.repeat(i + 1)}</i></button>`).join('')}</div>
       </section>
       <button type="button" class="su-play g-${game.id} su-in" style="--d:3" id="suPlay">${esc(t('g_play'))}</button>`;
     app.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => {

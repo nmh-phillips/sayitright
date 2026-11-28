@@ -216,6 +216,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Header reads **Harlo™ Says**; 👥 invite button in the top bar opens Friends.
 - `hs-pick.css`: bubbly "I speak / I'm learning" cards, used on home, Games and Interview Coach.
 - `hub.js` (after `lesson.js`): tapping **Phrases** opens a full-screen topic picker (free topics with progress, Premium topics locked, Start lesson). The topic chips and lesson card no longer sit on the home screen (`body.ph-home`). "More from Harlo" tiles link to Games, Interview, Citizen, Travel, Work and **See all**.
+- Chats, Work, My phrase, Focus packs, Assess me and Premium each open on their own full screen. Work uses the same picker as Phrases (job tiles, Start lesson, interview link); the others move their card into `#secScreen` while open. After a Focus pack or My phrase lesson you come back to that screen.
+- Games: topic and difficulty in each game's setup are colourful tiles.
 - `apps.js` + `/products/`: every Harlo app with a one-line description in 16 languages. Add new apps to the `APPS` list there.
 
 ## Harlo Travel journeys (28 Nov 2026)

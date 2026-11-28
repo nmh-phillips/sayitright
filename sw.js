@@ -1,7 +1,7 @@
 // Harlo service worker: makes the site installable and quick to open.
 // Pages and scripts: network first (so updates show straight away), cached copy if offline.
 // Icons, photos and the speech script: cache first. API calls are never cached.
-const CACHE = 'harlo-v7';
+const CACHE = 'harlo-v8';
 const CORE = ['/', '/index.html', '/phrases.js', '/i18n.js', '/assess.js', '/pron.js', '/manifest.webmanifest', '/icons/icon-192.png',
   '/travel/', '/travel/travel.js', '/travel/travel.css', '/fx.js', '/dog.js', '/dress.js']; // Harlo Travel works offline
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
