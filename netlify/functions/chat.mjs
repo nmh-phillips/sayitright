@@ -15,6 +15,10 @@
 // separately. "Per person" = per signed-in account AND per device (both are counted, so signing out or switching device doesn't reset it),
 // plus CHAT_IP_SESSIONS new sessions per connection (default 6, a backstop against clearing the browser; homes and offices share one).
 // CHAT_NOLIMIT_EMAILS (default neil@harleysays.com): accounts with no daily limit (testing; later, Premium).
+// English speaking test (Harlo Citizen, scene 'interview' + itype 'selt'): open to anyone signed in, not just the beta list.
+// SELT_FREE_LIMIT tests per account per week (default 1, weeks start Monday). Unlimited for CHAT_NOLIMIT_EMAILS (Premium) and
+// CITIZEN_PASS_EMAILS (the one-off 6-month Citizen pass, until payments are switched on). action 'access' with itype 'selt'
+// also answers { selt: { signedIn, used, limit, unlimited } }.
 // Also: CHAT_TURNS replies per chat (default 8), CHAT_IP_LIMIT calls per connection per day (default 120),
 // CHAT_GLOBAL_LIMIT calls across everyone per day (default 3000).
 import { getStore } from '@netlify/blobs';
@@ -24,6 +28,10 @@ import { pickPreset, lineSsml, synth } from '../lib/voice.mjs';
 const FREE = Number(process.env.CHAT_FREE_LIMIT ?? 1);
 const FREE_IV = Number(process.env.INTERVIEW_FREE_LIMIT ?? 1);
 const IP_SESSIONS = Number(process.env.CHAT_IP_SESSIONS || 6);
+const SELT_FREE = Number(process.env.SELT_FREE_LIMIT ?? 1);
+const PASS = String(process.env.CITIZEN_PASS_EMAILS ?? '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+// Monday of this week (UTC), e.g. 2026-11-23
+export function weekOf(d = new Date()) { const x = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); }
 export const NOLIMIT = String(process.env.CHAT_NOLIMIT_EMAILS ?? 'neil@harleysays.com').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 const TURNS = Number(process.env.CHAT_TURNS || 8);
 const ITURNS = Number(process.env.INTERVIEW_TURNS || 6); // answers per mock interview (Interview Coach, /interview)
@@ -284,9 +292,16 @@ export default async (req, context) => {
   let b;
   try { b = await req.json(); } catch { return json({ error: 'Bad JSON' }, 400); }
   const me = await whoIs(req);
-  const ok = allowedFor(me);
-  if (b.action === 'access') return json({ ok });
+  const selt = b.scene === 'interview' && b.itype === 'selt';
+  const unlimited = !!(me && me.email && (NOLIMIT.includes(me.email) || PASS.includes(me.email)));
+  const seltKey = me ? `w/${weekOf()}/u/${hash('u:' + me.id)}/selt` : null;
+  let seltStore = null, seltUsed = 0;
+  if (selt && me) { try { seltStore = testStore || getStore('chat-usage'); seltUsed = Number(await seltStore.get(seltKey)) || 0; } catch { seltStore = null; } }
+  const ok = allowedFor(me) || (selt && !!me);
+  if (b.action === 'access') return json(selt ? { ok, selt: { signedIn: !!me, used: seltUsed, limit: SELT_FREE, unlimited } } : { ok });
+  if (selt && !me) return json({ error: 'signin' }, 401);
   if (!ok) return json({ error: 'Chat not configured' }, 403);
+  if (selt && b.action === 'start' && !unlimited && seltUsed >= SELT_FREE) return json({ error: 'selt_limit', limit: SELT_FREE, remaining: 0 }, 429);
   const action = ['start', 'reply', 'end'].includes(b.action) ? b.action : null;
   const lang = String(b.lang || ''), ui = UI[b.ui] ? b.ui : 'en';
   const scene = Object.prototype.hasOwnProperty.call(SCENES, b.scene) ? b.scene : null;
@@ -308,7 +323,7 @@ export default async (req, context) => {
   const dev = hash(clean(b.device || 'none', 64));
   const ipKey = `${day}/ip/${hash((context && context.ip) || req.headers.get('x-nf-client-connection-ip') || 'unknown')}`;
   const kind = scene === 'interview' ? 'iv' : 'chats', limit = kind === 'iv' ? FREE_IV : FREE;
-  const nolimit = !!(me && me.email && NOLIMIT.includes(me.email));
+  const nolimit = !!(me && me.email && NOLIMIT.includes(me.email)) || (selt && unlimited);
   const usr = me ? hash('u:' + me.id) : null;
   const keys = { dev: `${day}/d/${dev}/${kind}`, calls: `${day}/d/${dev}/calls`, ipS: `${ipKey}/sessions`, ip: ipKey, all: `${day}/all` };
   if (usr) { keys.usr = `${day}/u/${usr}/${kind}`; keys.ucalls = `${day}/u/${usr}/calls`; }
@@ -339,6 +354,7 @@ export default async (req, context) => {
         for (const k of bump) await store.set(keys[k], String(used[k] + 1));
       } catch {}
     }
+    if (selt && action === 'start' && seltStore && !unlimited) { try { await seltStore.set(seltKey, String(seltUsed + 1)); } catch {} }
     if (action === 'start') out.remaining = nolimit ? 99 : Math.max(0, limit - sessions - 1);
     if (voice && action !== 'end') {
       const v = await synth(lineSsml(pickPreset(persona).preset, VOICE_CODE[lang], out.line), { chars: out.line.length, ipKey: (context && context.ip) || req.headers.get('x-nf-client-connection-ip') });

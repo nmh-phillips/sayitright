@@ -211,3 +211,25 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Phrasebook by situation: essentials, getting around, eating out, hotel, shopping & money, numbers, emergencies (10 emergency phrases per language written for Travel + the local emergency number, tap to call). Phrases from the main library are picked by their English meaning (topics are translated in roughly, not exactly, the same order).
 - Each phrase: listen, slow, "Say it" (quick speech check, marks it learned), "Show" (full-screen big text to show someone), "Got it". "Practise with scoring" deep-links to the main app: `/?lang=es&set=Travel&lesson=1` (deep links handled at the end of index.html).
 - Works offline: the travel page, phrases and scripts are in the service worker's core cache (`harley-v3`). Interface in 16 languages; meanings in English as in the main app. Stored in `hs_trip`. Stats: `travel`, `trip_set`, `trip_day`.
+
+## Harlo Says home, all apps page (28 Nov 2026)
+- Header reads **Harlo™ Says**; 👥 invite button in the top bar opens Friends.
+- `hs-pick.css`: bubbly "I speak / I'm learning" cards, used on home, Games and Interview Coach.
+- `hub.js` (after `lesson.js`): tapping **Phrases** opens a full-screen topic picker (free topics with progress, Premium topics locked, Start lesson). The topic chips and lesson card no longer sit on the home screen (`body.ph-home`). "More from Harlo" tiles link to Games, Interview, Citizen, Travel, Work and **See all**.
+- `apps.js` + `/products/`: every Harlo app with a one-line description in 16 languages. Add new apps to the `APPS` list there.
+
+## Harlo Travel journeys (28 Nov 2026)
+- Destination picker is bright flag tiles. Home: quick **Emergency** button, Today's 5 banner, **Choose your journey** tiles.
+- Journeys: Grand tour (one stop per situation) plus Essentials, Getting around, Eating out, Hotel, Shopping & money, Numbers, Emergencies. Each opens a map; a stop is 4 phrases (5 for numbers) and finishing a stop unlocks the next. Progress comes from `hs_trip.learned`.
+- Stops and Today's 5 run one phrase at a time (listen, slow, say it, show, got it).
+- **Emergency guide**: tap to call the local number, ask for English (or an interpreter in the UK/US), say what you need, say where you are. Extra phrases in `SOS2`.
+- "Say it" uses the phone's own speech recognition, so Travel costs nothing to run.
+
+## Citizen: English speaking test limits
+- Anyone signed in gets **1 free speaking test a week** (Monday to Sunday, `SELT_FREE_LIMIT`). It needs sign-in so the test can be counted; the rest of Citizen stays free with no sign-in.
+- Unlimited: `CHAT_NOLIMIT_EMAILS` (Premium) and `CITIZEN_PASS_EMAILS` (the one-off Citizen pass, £9.99 for 6 months, no subscription).
+- The pass card in `citizen/citizen.js` is built but off (`PASS_ON = false`) until Stripe is set up.
+
+## Parked ideas
+- **Harlo Driving (theory test English)**: the UK car theory test is only in English, Welsh or BSL, so help non-native speakers with road vocabulary and question wording, explained in their language. First step: ask DVSA for a quote to license the revision question bank (or write our own questions). Would sit beside Citizen.
+- Harlo Kids (needs a DPIA and parent accounts), three-way chat, reminders.

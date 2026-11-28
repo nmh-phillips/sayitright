@@ -271,6 +271,8 @@ async function call(action) {
   return j;
 }
 function errMsg(status, j) {
+  if (j.error === 'selt_limit') { if (S.selt) S.selt.used = S.selt.limit; return esc(t('seltUsed')); }
+  if (j.error === 'signin') return esc(t('seltSign'));
   if (status === 429 || j.error === 'limit') { track('limit'); return esc(t('limit')); }
   if (/not configured/i.test(j.error || '')) return esc(t('off'));
   return esc(t('err')) + ` <button class="link" data-retry>${esc(t('retry'))}</button>`;
@@ -283,7 +285,7 @@ async function start() {
   try {
     const j = await call('start');
     S.history.push({ r: 'c', t: j.line }); S.items.push({ r: 'c', line: j.line, translation: j.translation });
-    S.hint = j.hint || ''; track('iv_start'); stage.prefetchAcks(); azPrepare();
+    S.hint = j.hint || ''; track('iv_start'); if (S.kind === 'selt' && S.selt && !S.selt.unlimited) S.selt.used++; stage.prefetchAcks(); azPrepare();
     S.busy = false; say(j.line, afterLine, j.audio);
   } catch (e) {
     S.error = errMsg(e.status, e.j || {}); S.busy = false;
@@ -325,14 +327,26 @@ async function finish() {
 }
 
 // ---------- views ----------
+// English speaking test (from Harlo Citizen): one free a week for anyone signed in; Premium / Citizen pass for more.
+const seltBlocked = () => S.kind === 'selt' && S.selt && S.selt.signedIn && !S.selt.unlimited && S.selt.used >= S.selt.limit;
+function vSeltLimit() {
+  return `<section class="iv-intro">
+    <div class="iv-pair"><span class="ivp a">${window.HSTalk.face('man')}</span><span class="ivp b">${window.HSTalk.face('woman')}</span><span class="iv-bub">🇬🇧</span></div>
+    <h2>${esc(t('t_selt'))}</h2>
+    <div class="iv-lock" role="status"><p>✅ ${esc(t('seltUsed'))}</p><p style="font-weight:500;opacity:.92">${esc(t('seltMore'))}</p>
+    <button class="iv-go" disabled style="opacity:.7;cursor:default">⭐ ${esc(t('seltPass'))} · ${esc(t('seltSoon'))}</button></div>
+    <a class="iv-pres" href="/citizen/" style="display:block;text-decoration:none;margin-top:10px">← Harlo Citizen</a>
+  </section>`;
+}
 function vGate() {
   const signedIn = window.hsAccount && window.hsAccount.signedIn();
   const canSign = S.access === false && !signedIn && window.hsAccount && window.hsAccount.ready();
-  const msg = S.access === false ? '🔒 ' + t('beta') : t('wait', { name: coachName() });
+  const msg = S.access === false ? (S.kind === 'selt' ? '🎙️ ' + t('seltSign') : '🔒 ' + t('beta')) : t('wait', { name: coachName() });
+  const sl = S.kind === 'selt';
   return `<section class="iv-intro">
-    <div class="iv-pair"><span class="ivp a">${window.HSTalk.face('man')}</span><span class="ivp b">${window.HSTalk.face('woman')}</span><span class="iv-bub">💼</span></div>
-    <h2>${esc(t('heroH'))}</h2>
-    <p>${esc(t('heroP2'))}</p>
+    <div class="iv-pair"><span class="ivp a">${window.HSTalk.face('man')}</span><span class="ivp b">${window.HSTalk.face('woman')}</span><span class="iv-bub">${sl ? '🇬🇧' : '💼'}</span></div>
+    <h2>${esc(t(sl ? 't_selt' : 'heroH'))}</h2>
+    <p>${esc(sl ? t('d_selt') + ' · ' + t('seltLeft') : t('heroP2'))}</p>
     <ol class="iv-steps">${['🎙️', '💡', '📋'].map((ic, i) => `<li style="--i:${i}"><span>${ic}</span>${esc(t('ivS' + (i + 1)))}</li>`).join('')}</ol>
     <div class="iv-lock" role="status"><p>${esc(msg)}</p>${canSign ? `<button class="iv-go" data-signin>👤 ${esc(t('acc_signin'))}</button>` : ''}</div>
   </section>`;
@@ -603,6 +617,7 @@ function vReport() {
 function draw() {
   const app = $('app'); if (!app) return;
   if (S.access !== true) app.innerHTML = vGate();
+  else if (seltBlocked() && S.view === 'setup') app.innerHTML = vSeltLimit();
   else app.innerHTML = S.view === 'prec' ? vPresRec() : S.view === 'prev' && S.pr ? vPresReview() : S.view === 'prep' && S.pres ? vPresReport() : S.view === 'iv' ? vInterview() : S.view === 'report' && S.sum ? vReport() : vSetup();
   const slot = app.querySelector('.stage-slot'); if (slot) slot.replaceWith(stage.el);
   if (S.view === 'prec') { if (S.busy) stage.thinking(); else stage.listening(''); prTick(); }
@@ -678,8 +693,9 @@ let checking = 0;
 async function checkAccess() {
   const n = ++checking; let on = false;
   try {
-    const r = await fetch('/.netlify/functions/chat', { method: 'POST', headers: await headers(), body: JSON.stringify({ action: 'access' }) });
-    on = r.ok && !!(await r.json()).ok;
+    const r = await fetch('/.netlify/functions/chat', { method: 'POST', headers: await headers(), body: JSON.stringify(S.kind === 'selt' ? { action: 'access', scene: 'interview', itype: 'selt' } : { action: 'access' }) });
+    const j = r.ok ? await r.json() : {};
+    on = !!j.ok; S.selt = j.selt || null;
   } catch (e) {}
   if (n !== checking) return;
   if (!on) reset();

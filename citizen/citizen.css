@@ -68,3 +68,7 @@
 @keyframes ctPulse{50%{opacity:.7}}
 @media (max-width:420px){.ct-modes{grid-template-columns:1fr 1fr}.ct-mode{min-height:150px}.ct-hero h1{font-size:20px}}
 @media (prefers-reduced-motion:reduce){main *{animation:none!important}}
+
+.ct-free{display:inline-block;margin-top:6px;background:#fff;color:#C0264B;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
+.ct-pass{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(135deg,#FFF7DB,#FFE7C2);border-color:#FCD34D}
+.ct-pass .ic{font-size:30px}.ct-pass h3{margin:2px 0 4px}.ct-pass p{margin:0 0 6px;color:#5b4a1a}

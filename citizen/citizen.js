@@ -23,6 +23,13 @@ function makeItems(ids) { return ids.map(i => ({ i, order: Q[i][2].length === 2 
 const chOf = i => Q[i][0];
 
 // ---------- home ----------
+// Citizen pass: a one-off payment (no subscription) for 6 months of unlimited English speaking tests.
+// Built but switched off until payments (Stripe) are set up. Harlo Premium includes it. Server side: CITIZEN_PASS_EMAILS in chat.mjs.
+const PASS_ON = false, PASS_PRICE = '£9.99', PASS_MONTHS = 6;
+function passCard() {
+  return `<section class="card ct-pass"><span class="ic">⭐</span><div><h3>Citizen pass</h3><p>Unlimited English speaking tests for ${PASS_MONTHS} months. One payment of ${PASS_PRICE}, no subscription. Included in Harlo Premium.</p>
+    <button class="btn primary big" data-pass>Get the Citizen pass · ${PASS_PRICE}</button></div></section>`;
+}
 function home() {
   stopTimer(); R = null;
   const s = st(), tests = s.tests.slice(-3), ready = tests.length ? Math.round(100 * tests.reduce((a, x) => a + x.s, 0) / (tests.length * TEST_N)) : null;
@@ -34,8 +41,9 @@ function home() {
       <button class="ct-mode m-test" data-go="test" style="--i:0"><span class="ic">📝</span><b>Mock test</b><small>24 questions · 45 minutes · like the real test</small></button>
       <button class="ct-mode m-prac" data-go="chapters" style="--i:1"><span class="ic">📚</span><b>Practise by chapter</b><small>10 questions, with the answer explained</small></button>
       <button class="ct-mode m-wrong" data-go="mistakes" style="--i:2"${s.wrong.length ? '' : ' disabled'}><span class="ic">🔁</span><b>My mistakes</b><small>${s.wrong.length ? `${s.wrong.length} question${s.wrong.length === 1 ? '' : 's'} to practise again` : 'Questions you get wrong appear here'}</small></button>
-      <a class="ct-mode m-speak" href="/interview/?kind=selt" style="--i:3"><span class="ic">🎙️</span><b>English speaking test</b><small>Practise a B1 speaking and listening test with an examiner</small></a>
+      <a class="ct-mode m-speak" href="/interview/?kind=selt" style="--i:3"><span class="ic">🎙️</span><b>English speaking test</b><small>Practise a B1 speaking and listening test with an examiner</small><span class="ct-free">1 free test a week</span></a>
     </div>
+    ${PASS_ON ? passCard() : ''}
     <section class="card ct-facts"><h3>About the test</h3>
       <ul><li><b>24 questions</b>, multiple choice, on a computer at a test centre</li><li><b>45 minutes</b></li><li>Pass mark <b>75%</b>: at least 18 right</li><li>All questions come from the official handbook, <i>Life in the United Kingdom: A Guide for New Residents</i> (3rd edition)</li><li>Book and check the fee on <a href="https://www.gov.uk/life-in-the-uk-test" target="_blank" rel="noopener">GOV.UK</a>. Only book through the official site.</li></ul>
       <p class="fine">⚠️ Harlo Citizen is practice only. The questions here are written from the handbook; the real test questions are not published. Not affiliated with the Home Office.</p></section>`;
