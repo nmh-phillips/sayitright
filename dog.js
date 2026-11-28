@@ -1,4 +1,4 @@
-// Harley Says: build your own dog. Choose a name, coat, ears, colours and a voice; your dog can then be your tutor
+// Harlo: build your own dog. Choose a name, coat, ears, colours and a voice; your dog can then be your tutor
 // (in place of Harley or Lilou) and wear outfits from Harley's shop (dress.js, wardrobe 'mydog').
 // The voice still comes from Harley's or Lilou's voice (cfg.voice), so the server needs nothing new.
 // API: HSDog.active()  your dog is switched on as the tutor

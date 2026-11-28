@@ -1,4 +1,4 @@
--- Harley Says: optional sign-in. Run this once in Supabase → SQL Editor → New query → Run.
+-- Harlo: optional sign-in. Run this once in Supabase → SQL Editor → New query → Run.
 -- One row per person holding their synced progress (best scores, Assess me history, settings).
 create table if not exists public.progress (
   user_id uuid primary key references auth.users (id) on delete cascade,

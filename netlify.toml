@@ -2,59 +2,135 @@
   publish = "."
   command = ""
 
-# games.harleysays.com is a short address for the word games at harleysays.com/games/
+# Harlo lives at harlolearn.com (formerly Harley Says at harleysays.com).
+# Every old or extra address is sent to harlolearn.com, keeping the page path.
+
+# Short addresses for the games and Interview Coach
+
 [[redirects]]
   from = "https://games.harleysays.com/*"
-  to = "https://harleysays.com/games/:splat"
+  to = "https://harlolearn.com/games/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "http://games.harleysays.com/*"
-  to = "https://harleysays.com/games/:splat"
+  to = "https://harlolearn.com/games/:splat"
   status = 301
   force = true
 
-# interview.harleysays.com is a short address for Harley's Interview Coach at harleysays.com/interview/
 [[redirects]]
   from = "https://interview.harleysays.com/*"
-  to = "https://harleysays.com/interview/:splat"
+  to = "https://harlolearn.com/interview/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "http://interview.harleysays.com/*"
-  to = "https://harleysays.com/interview/:splat"
+  to = "https://harlolearn.com/interview/:splat"
   status = 301
   force = true
 
-# Send every other address to the main domain, keeping the page path.
+[[redirects]]
+  from = "https://games.harlolearn.com/*"
+  to = "https://harlolearn.com/games/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://games.harlolearn.com/*"
+  to = "https://harlolearn.com/games/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://interview.harlolearn.com/*"
+  to = "https://harlolearn.com/interview/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://interview.harlolearn.com/*"
+  to = "https://harlolearn.com/interview/:splat"
+  status = 301
+  force = true
+
+# Old and extra domains
+
+[[redirects]]
+  from = "https://harleysays.com/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://harleysays.com/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.harleysays.com/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.harleysays.com/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "https://harleysays.co.uk/*"
-  to = "https://harleysays.com/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://www.harleysays.co.uk/*"
-  to = "https://harleysays.com/:splat"
+  to = "https://harlolearn.com/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "http://harleysays.co.uk/*"
-  to = "https://harleysays.com/:splat"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.harleysays.co.uk/*"
+  to = "https://harlolearn.com/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "http://www.harleysays.co.uk/*"
-  to = "https://harleysays.com/:splat"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://harlolearn.co.uk/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://harlolearn.co.uk/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.harlolearn.co.uk/*"
+  to = "https://harlolearn.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.harlolearn.co.uk/*"
+  to = "https://harlolearn.com/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "https://harleysays.netlify.app/*"
-  to = "https://harleysays.com/:splat"
+  to = "https://harlolearn.com/:splat"
   status = 301
   force = true

@@ -1,4 +1,4 @@
-// Harley Work: workplace English for people working in (or applying for) jobs in the UK.
+// Harlo Work: workplace English for people working in (or applying for) jobs in the UK.
 // Eight phrase packs (care, nursing, hotels and restaurants, shops, warehouse and delivery, cleaning, customer service,
 // building), added to the English (UK and US) phrase library and shown under a "Work" tile when learning English.
 // Each pack works with everything else: lesson mode, pronunciation scoring, rounds of 10. A chip links to a job

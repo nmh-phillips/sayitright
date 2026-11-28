@@ -1,6 +1,6 @@
-// Harley Says: "A day out" — a journey map through a day in a city where your language is spoken.
+// Harlo: "A day out" — a journey map through a day in a city where your language is spoken.
 // Eight stops (café in the morning … a party in the evening). Each stop is one lesson round of 10 phrases from a
-// matching topic, plus that place's conversation in Harley Chats when Chats is available. Finishing a stop unlocks the next.
+// matching topic, plus that place's conversation in Harlo Chats when Chats is available. Finishing a stop unlocks the next.
 // Uses globals from index.html: lang, set, idx, render, store, DATA, coachFace, CHATS. Hooks: lesson.js fires 'hs-round'
 // ({ set, round, stars }) and exposes hsStartRound(name, r); chat.js fires 'hs-chat-done' ({ scene }) and exposes hsChatScene(scene).
 // Stored: hs_journey = { [lang]: { day, done: { stopId: stars }, chat: { stopId: true } } }

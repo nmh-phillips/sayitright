@@ -1,4 +1,4 @@
-// Harley Says: "Harley Chats" — spoken role-play conversations with Harley (or Lilou).
+// Harlo: "Harlo Chats" — spoken role-play conversations with Harley (or Lilou).
 // Hands-free by default: Harley speaks, the mic opens by itself, a short pause sends the reply, and the tips are saved for the end.
 // Uses globals from index.html (lang, ui, t, LN, DATA, Rec, store, set, custom, idx, render, coachId, coachFace, DEVICE_ID, track, speak, $, CUSTOM, CHATS, els)
 // and pron.js (harleySay for single words). Backend: netlify/functions/chat.mjs (+ tts.mjs kind 'line'). Strings ch_* live in i18n.js.

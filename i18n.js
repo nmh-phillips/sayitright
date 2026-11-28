@@ -1,4 +1,4 @@
-// Harley Says interface translations. UI languages: en, es, fr, it, de, pt.
+// Harlo interface translations. UI languages: en, es, fr, it, de, pt.
 window.SIR_UI_LANGS = [['en','English'],['es','Español'],['fr','Français'],['it','Italiano'],['de','Deutsch'],['pt','Português']];
 // Extra interface languages, loaded on demand from i18n/<code>.js. They can also be typed in "My phrase" and translated.
 window.SIR_EXTRA = {
@@ -40,14 +40,14 @@ en:{
   trFirst:'Type or say a phrase first.', trLong:'Please keep it under 300 characters.', trOff:"Translation isn't switched on yet.",
   trFail:'Translation failed: ', voiceNeeds:'Voice input needs Chrome, Edge or Safari.', micBlocked:'Microphone access was blocked.', cantHear:"Couldn't hear that. Try again.",
   sets:{'Basics':'Basics','Café & restaurant':'Café & restaurant','Travel':'Travel','Tricky sounds':'Tricky sounds','My phrase':'My phrase','Business & work':'Business & work','Shopping':'Shopping','Health & emergencies':'Health & emergencies','Social & small talk':'Social & small talk','Numbers, dates & time':'Numbers, dates & time'},
-  lockedText:'{n} phrases with sound-by-sound scoring ({lang}). Part of Harley Says Premium, coming soon.',
+  lockedText:'{n} phrases with sound-by-sound scoring ({lang}). Part of Harlo Premium, coming soon.',
   lockedCta:'⭐ Get notified when it launches', upsell:"🎉 That's all {n} free phrases in {set}. Premium adds {m} more.", getNotified:'Get notified',
-  comingSoon:'Coming soon', premTitle:'⭐ Harley Says Premium',
+  comingSoon:'Coming soon', premTitle:'⭐ Harlo Premium',
   feats:[['200 phrases per topic',', five times the free library'],['5 extra topics',': business, shopping, health, social life and numbers'],['Sound-by-sound scoring',' that shows exactly which sounds to fix'],['Unlimited translations',' of your own phrases'],['Progress synced',' across your phone and computer']],
   notifyLabel:'Get notified when Premium launches', notifyBtn:'Notify me',
   fine:"We'll only email you about the Premium launch. No spam, unsubscribe any time.",
   wlErr:"Sorry, that didn't go through. Please try again.", wlDone:"✓ You're on the list. We'll let you know when Premium launches.",
-  storyH:'Why we built Harley Says',
+  storyH:'Why we built Harlo',
   story1:"My wife lives in the UK and is always looking for ways to practise her pronunciation. Classes help, but in between it's hard to find someone patient enough to listen, say it back properly, and tell you honestly how you sounded.",
   story2:'So we built the tool we wished existed: free, no sign-up, and ready whenever you are.',
   whyH:'Why Harley?', cap1:'In full flight', cap2:'Ready to play',
@@ -81,14 +81,14 @@ es:{
   trFirst:'Primero escribe o di una frase.', trLong:'Máximo 300 caracteres, por favor.', trOff:'La traducción aún no está activada.',
   trFail:'Error de traducción: ', voiceNeeds:'La entrada por voz necesita Chrome, Edge o Safari.', micBlocked:'Se ha bloqueado el micrófono.', cantHear:'No se ha oído bien. Inténtalo de nuevo.',
   sets:{'Basics':'Básico','Café & restaurant':'Café y restaurante','Travel':'Viajes','Tricky sounds':'Sonidos difíciles','My phrase':'Mi frase','Business & work':'Negocios y trabajo','Shopping':'Compras','Health & emergencies':'Salud y emergencias','Social & small talk':'Vida social','Numbers, dates & time':'Números, fechas y horas'},
-  lockedText:'{n} frases con puntuación sonido a sonido ({lang}). Parte de Harley Says Premium, muy pronto.',
+  lockedText:'{n} frases con puntuación sonido a sonido ({lang}). Parte de Harlo Premium, muy pronto.',
   lockedCta:'⭐ Avísame cuando salga', upsell:'🎉 Ya has hecho las {n} frases gratis de {set}. Premium añade {m} más.', getNotified:'Avísame',
-  comingSoon:'Muy pronto', premTitle:'⭐ Harley Says Premium',
+  comingSoon:'Muy pronto', premTitle:'⭐ Harlo Premium',
   feats:[['200 frases por tema',', cinco veces la biblioteca gratuita'],['5 temas extra',': negocios, compras, salud, vida social y números'],['Puntuación sonido a sonido',' que te muestra exactamente qué sonidos mejorar'],['Traducciones ilimitadas',' de tus propias frases'],['Progreso sincronizado',' entre tu móvil y tu ordenador']],
   notifyLabel:'Avísame cuando salga Premium', notifyBtn:'Avísame',
   fine:'Solo te escribiremos sobre el lanzamiento de Premium. Sin spam; puedes darte de baja cuando quieras.',
   wlErr:'Lo sentimos, no se ha enviado. Inténtalo de nuevo.', wlDone:'✓ Estás en la lista. Te avisaremos cuando salga Premium.',
-  storyH:'Por qué creamos Harley Says',
+  storyH:'Por qué creamos Harlo',
   story1:'Mi mujer vive en el Reino Unido y siempre busca formas de practicar su pronunciación. Las clases ayudan, pero entre una y otra es difícil encontrar a alguien con la paciencia de escuchar, repetirlo bien y decirte con sinceridad cómo has sonado.',
   story2:'Así que creamos la herramienta que nos habría gustado tener: gratis, sin registro y lista cuando tú quieras.',
   whyH:'¿Por qué Harley?', cap1:'A toda velocidad', cap2:'Listo para jugar',
@@ -122,14 +122,14 @@ fr:{
   trFirst:"Écrivez ou dites d'abord une phrase.", trLong:'300 caractères maximum, s’il vous plaît.', trOff:"La traduction n'est pas encore activée.",
   trFail:'Échec de la traduction : ', voiceNeeds:'La saisie vocale nécessite Chrome, Edge ou Safari.', micBlocked:"L'accès au micro a été bloqué.", cantHear:'Pas bien entendu. Réessayez.',
   sets:{'Basics':'Les bases','Café & restaurant':'Café et restaurant','Travel':'Voyage','Tricky sounds':'Sons difficiles','My phrase':'Ma phrase','Business & work':'Affaires et travail','Shopping':'Shopping','Health & emergencies':'Santé et urgences','Social & small talk':'Vie sociale','Numbers, dates & time':'Chiffres, dates et heures'},
-  lockedText:'{n} phrases avec un score son par son ({lang}). Inclus dans Harley Says Premium, bientôt disponible.',
+  lockedText:'{n} phrases avec un score son par son ({lang}). Inclus dans Harlo Premium, bientôt disponible.',
   lockedCta:'⭐ Me prévenir au lancement', upsell:'🎉 Vous avez fait les {n} phrases gratuites de « {set} ». Premium en ajoute {m}.', getNotified:'Me prévenir',
-  comingSoon:'Bientôt', premTitle:'⭐ Harley Says Premium',
+  comingSoon:'Bientôt', premTitle:'⭐ Harlo Premium',
   feats:[['200 phrases par thème',', cinq fois la bibliothèque gratuite'],['5 thèmes en plus',' : affaires, shopping, santé, vie sociale et chiffres'],['Score son par son',' pour voir exactement quels sons travailler'],['Traductions illimitées',' de vos propres phrases'],['Progression synchronisée',' entre votre téléphone et votre ordinateur']],
   notifyLabel:'Être prévenu du lancement de Premium', notifyBtn:'Me prévenir',
   fine:'Nous vous écrirons uniquement pour le lancement de Premium. Pas de spam, désinscription à tout moment.',
   wlErr:"Désolé, l'envoi a échoué. Réessayez.", wlDone:'✓ Vous êtes sur la liste. Nous vous préviendrons au lancement de Premium.',
-  storyH:'Pourquoi nous avons créé Harley Says',
+  storyH:'Pourquoi nous avons créé Harlo',
   story1:"Ma femme vit au Royaume-Uni et cherche toujours des moyens de travailler sa prononciation. Les cours aident, mais entre deux, c'est difficile de trouver quelqu'un d'assez patient pour écouter, répéter correctement et vous dire honnêtement comment vous avez prononcé.",
   story2:"Alors nous avons créé l'outil que nous aurions aimé avoir : gratuit, sans inscription et prêt quand vous l'êtes.",
   whyH:'Pourquoi Harley ?', cap1:'À toute allure', cap2:'Prêt à jouer',
@@ -163,14 +163,14 @@ it:{
   trFirst:'Prima scrivi o pronuncia una frase.', trLong:'Massimo 300 caratteri, per favore.', trOff:'La traduzione non è ancora attiva.',
   trFail:'Traduzione non riuscita: ', voiceNeeds:"L'input vocale richiede Chrome, Edge o Safari.", micBlocked:"L'accesso al microfono è stato bloccato.", cantHear:'Non si è sentito bene. Riprova.',
   sets:{'Basics':'Base','Café & restaurant':'Bar e ristorante','Travel':'Viaggi','Tricky sounds':'Suoni difficili','My phrase':'La mia frase','Business & work':'Affari e lavoro','Shopping':'Shopping','Health & emergencies':'Salute ed emergenze','Social & small talk':'Vita sociale','Numbers, dates & time':'Numeri, date e orari'},
-  lockedText:'{n} frasi con punteggio suono per suono ({lang}). Parte di Harley Says Premium, in arrivo.',
+  lockedText:'{n} frasi con punteggio suono per suono ({lang}). Parte di Harlo Premium, in arrivo.',
   lockedCta:'⭐ Avvisami al lancio', upsell:'🎉 Hai fatto tutte le {n} frasi gratuite di «{set}». Premium ne aggiunge altre {m}.', getNotified:'Avvisami',
-  comingSoon:'In arrivo', premTitle:'⭐ Harley Says Premium',
+  comingSoon:'In arrivo', premTitle:'⭐ Harlo Premium',
   feats:[['200 frasi per argomento',', cinque volte la libreria gratuita'],['5 argomenti in più',': affari, shopping, salute, vita sociale e numeri'],['Punteggio suono per suono',' che mostra esattamente quali suoni migliorare'],['Traduzioni illimitate',' delle tue frasi'],['Progressi sincronizzati',' tra telefono e computer']],
   notifyLabel:'Avvisami quando esce Premium', notifyBtn:'Avvisami',
   fine:'Ti scriveremo solo per il lancio di Premium. Niente spam, puoi annullare l’iscrizione quando vuoi.',
   wlErr:'Spiacenti, invio non riuscito. Riprova.', wlDone:'✓ Sei in lista. Ti avviseremo quando esce Premium.',
-  storyH:'Perché abbiamo creato Harley Says',
+  storyH:'Perché abbiamo creato Harlo',
   story1:'Mia moglie vive nel Regno Unito ed è sempre alla ricerca di modi per esercitare la pronuncia. Le lezioni aiutano, ma tra una e l’altra è difficile trovare qualcuno abbastanza paziente da ascoltare, ripetere correttamente e dirti con sincerità come hai pronunciato.',
   story2:'Così abbiamo creato lo strumento che avremmo voluto avere: gratuito, senza registrazione e pronto quando lo sei tu.',
   whyH:'Perché Harley?', cap1:'A tutta velocità', cap2:'Pronto a giocare',
@@ -204,14 +204,14 @@ de:{
   trFirst:'Schreib oder sag zuerst einen Satz.', trLong:'Bitte höchstens 300 Zeichen.', trOff:'Die Übersetzung ist noch nicht eingeschaltet.',
   trFail:'Übersetzung fehlgeschlagen: ', voiceNeeds:'Spracheingabe braucht Chrome, Edge oder Safari.', micBlocked:'Der Mikrofonzugriff wurde blockiert.', cantHear:'Nicht gut verstanden. Versuch es noch einmal.',
   sets:{'Basics':'Grundlagen','Café & restaurant':'Café und Restaurant','Travel':'Reisen','Tricky sounds':'Schwierige Laute','My phrase':'Mein Satz','Business & work':'Geschäft und Arbeit','Shopping':'Einkaufen','Health & emergencies':'Gesundheit und Notfälle','Social & small talk':'Smalltalk','Numbers, dates & time':'Zahlen, Daten und Uhrzeit'},
-  lockedText:'{n} Sätze mit Bewertung Laut für Laut ({lang}). Teil von Harley Says Premium, bald verfügbar.',
+  lockedText:'{n} Sätze mit Bewertung Laut für Laut ({lang}). Teil von Harlo Premium, bald verfügbar.',
   lockedCta:'⭐ Beim Start benachrichtigen', upsell:'🎉 Das waren alle {n} kostenlosen Sätze in „{set}“. Premium bietet {m} weitere.', getNotified:'Benachrichtigen',
-  comingSoon:'Bald verfügbar', premTitle:'⭐ Harley Says Premium',
+  comingSoon:'Bald verfügbar', premTitle:'⭐ Harlo Premium',
   feats:[['200 Sätze pro Thema',', fünfmal so viel wie kostenlos'],['5 zusätzliche Themen',': Arbeit, Einkaufen, Gesundheit, Smalltalk und Zahlen'],['Bewertung Laut für Laut',', die genau zeigt, welche Laute du verbessern solltest'],['Unbegrenzte Übersetzungen',' deiner eigenen Sätze'],['Synchronisierter Fortschritt',' auf Handy und Computer']],
   notifyLabel:'Benachrichtige mich zum Start von Premium', notifyBtn:'Benachrichtigen',
   fine:'Wir schreiben dir nur zum Start von Premium. Kein Spam, jederzeit abbestellbar.',
   wlErr:'Das hat leider nicht geklappt. Bitte versuch es noch einmal.', wlDone:'✓ Du stehst auf der Liste. Wir melden uns, wenn Premium startet.',
-  storyH:'Warum wir Harley Says gebaut haben',
+  storyH:'Warum wir Harlo gebaut haben',
   story1:'Meine Frau lebt in Großbritannien und sucht immer nach Möglichkeiten, ihre Aussprache zu üben. Unterricht hilft, aber dazwischen ist es schwer, jemanden zu finden, der geduldig zuhört, es richtig vorspricht und ehrlich sagt, wie man geklungen hat.',
   story2:'Also haben wir das Tool gebaut, das wir uns gewünscht hätten: kostenlos, ohne Anmeldung und jederzeit bereit.',
   whyH:'Warum Harley?', cap1:'Mit voller Geschwindigkeit', cap2:'Bereit zum Spielen',
@@ -245,14 +245,14 @@ pt:{
   trFirst:'Primeiro escreva ou diga uma frase.', trLong:'No máximo 300 caracteres, por favor.', trOff:'A tradução ainda não está ativada.',
   trFail:'A tradução falhou: ', voiceNeeds:'A entrada por voz precisa do Chrome, Edge ou Safari.', micBlocked:'O acesso ao microfone foi bloqueado.', cantHear:'Não se ouviu bem. Tente outra vez.',
   sets:{'Basics':'Básico','Café & restaurant':'Café e restaurante','Travel':'Viagens','Tricky sounds':'Sons difíceis','My phrase':'A minha frase','Business & work':'Negócios e trabalho','Shopping':'Compras','Health & emergencies':'Saúde e emergências','Social & small talk':'Vida social','Numbers, dates & time':'Números, datas e horas'},
-  lockedText:'{n} frases com pontuação som a som ({lang}). Faz parte do Harley Says Premium, em breve.',
+  lockedText:'{n} frases com pontuação som a som ({lang}). Faz parte do Harlo Premium, em breve.',
   lockedCta:'⭐ Avise-me no lançamento', upsell:'🎉 Fez todas as {n} frases grátis de «{set}». O Premium acrescenta mais {m}.', getNotified:'Avise-me',
-  comingSoon:'Em breve', premTitle:'⭐ Harley Says Premium',
+  comingSoon:'Em breve', premTitle:'⭐ Harlo Premium',
   feats:[['200 frases por tema',', cinco vezes a biblioteca grátis'],['5 temas extra',': negócios, compras, saúde, vida social e números'],['Pontuação som a som',' que mostra exatamente que sons melhorar'],['Traduções ilimitadas',' das suas frases'],['Progresso sincronizado',' entre o telefone e o computador']],
   notifyLabel:'Avise-me quando o Premium for lançado', notifyBtn:'Avise-me',
   fine:'Só enviaremos emails sobre o lançamento do Premium. Sem spam, pode cancelar quando quiser.',
   wlErr:'Desculpe, não foi enviado. Tente outra vez.', wlDone:'✓ Está na lista. Avisamos quando o Premium for lançado.',
-  storyH:'A história do Harley Says',
+  storyH:'A história do Harlo',
   story1:'A minha mulher vive no Reino Unido e está sempre à procura de formas de praticar a pronúncia. As aulas ajudam, mas entre elas é difícil encontrar alguém com paciência para ouvir, repetir corretamente e dizer com honestidade como soou.',
   story2:'Por isso, fizemos a ferramenta que gostaríamos de ter: gratuita, sem criar conta e pronta sempre que quiser.',
   whyH:'Quem é o Harley?', cap1:'A toda a velocidade', cap2:'Pronto para brincar',
@@ -540,12 +540,12 @@ for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 // Launch: privacy footer, feedback form, install banner
 (function(){
 const S={
- en:{footer:"To score your pronunciation, your recording is sent securely to Microsoft Azure; Assess me texts and translations go to Anthropic (Claude). The quick check uses your browser's speech service. Harley Says doesn't keep your recordings, and your scores stay on this device. If you join the waitlist or send feedback, we keep your email only to reply or tell you about Premium.",fbLink:'💬 Send feedback',fbTitle:'Tell us what you think',fbMsgL:"What worked, what didn't, what you'd like to see?",fbEmailL:"Your email (optional, if you'd like a reply)",fbCancel:'Cancel',fbSend:'Send',fbThanks:'Thank you! Harley has passed it on.',fbClose:'Close',fbErr:"Sorry, that didn't send. Please try again.",inst_title:'Add Harley Says to your home screen',inst_sub:'Open it like an app, in one tap.',inst_ios:'On iPhone: tap Share ⬆️, then “Add to Home Screen”.',inst_btn:'Install',inst_close:'Not now'},
- es:{footer:'Para puntuar tu pronunciación, tu grabación se envía de forma segura a Microsoft Azure; los textos de Evalúame y las traducciones van a Anthropic (Claude). La comprobación rápida usa el servicio de voz de tu navegador. Harley Says no guarda tus grabaciones y tus puntuaciones se quedan en este dispositivo. Si te apuntas a la lista o envías comentarios, guardamos tu email solo para responderte o avisarte de Premium.',fbLink:'💬 Enviar comentarios',fbTitle:'Cuéntanos qué te parece',fbMsgL:'¿Qué ha funcionado, qué no y qué te gustaría ver?',fbEmailL:'Tu email (opcional, si quieres respuesta)',fbCancel:'Cancelar',fbSend:'Enviar',fbThanks:'¡Gracias! Harley ya lo ha pasado.',fbClose:'Cerrar',fbErr:'No se ha podido enviar. Inténtalo de nuevo.',inst_title:'Añade Harley Says a tu pantalla de inicio',inst_sub:'Ábrelo como una app, con un toque.',inst_ios:'En iPhone: toca Compartir ⬆️ y luego «Añadir a pantalla de inicio».',inst_btn:'Instalar',inst_close:'Ahora no'},
- fr:{footer:"Pour noter votre prononciation, votre enregistrement est envoyé de façon sécurisée à Microsoft Azure ; les textes d'Évaluez-moi et les traductions vont à Anthropic (Claude). La vérification rapide utilise le service vocal de votre navigateur. Harley Says ne conserve pas vos enregistrements et vos scores restent sur cet appareil. Si vous rejoignez la liste ou envoyez un avis, nous gardons votre email uniquement pour vous répondre ou vous informer de Premium.",fbLink:'💬 Donner mon avis',fbTitle:"Dites-nous ce que vous en pensez",fbMsgL:"Ce qui a marché, ce qui n'a pas marché, ce que vous aimeriez voir ?",fbEmailL:'Votre email (facultatif, pour une réponse)',fbCancel:'Annuler',fbSend:'Envoyer',fbThanks:'Merci ! Harley a transmis le message.',fbClose:'Fermer',fbErr:"Désolé, l'envoi a échoué. Réessayez.",inst_title:"Ajoutez Harley Says à votre écran d'accueil",inst_sub:"Ouvrez-le comme une app, d'un seul geste.",inst_ios:"Sur iPhone : touchez Partager ⬆️, puis « Sur l'écran d'accueil ».",inst_btn:'Installer',inst_close:'Plus tard'},
- it:{footer:"Per valutare la tua pronuncia, la registrazione viene inviata in modo sicuro a Microsoft Azure; i testi di Valutami e le traduzioni vanno ad Anthropic (Claude). La verifica rapida usa il servizio vocale del browser. Harley Says non conserva le tue registrazioni e i tuoi punteggi restano su questo dispositivo. Se ti iscrivi alla lista o invii un commento, conserviamo la tua email solo per risponderti o avvisarti di Premium.",fbLink:'💬 Invia un commento',fbTitle:'Dicci cosa ne pensi',fbMsgL:'Cosa ha funzionato, cosa no, cosa vorresti vedere?',fbEmailL:'La tua email (facoltativa, se vuoi una risposta)',fbCancel:'Annulla',fbSend:'Invia',fbThanks:"Grazie! Harley l'ha già passato.",fbClose:'Chiudi',fbErr:'Invio non riuscito. Riprova.',inst_title:'Aggiungi Harley Says alla schermata Home',inst_sub:"Aprilo come un'app, con un tocco.",inst_ios:'Su iPhone: tocca Condividi ⬆️, poi «Aggiungi alla schermata Home».',inst_btn:'Installa',inst_close:'Non ora'},
- de:{footer:'Zur Bewertung deiner Aussprache wird deine Aufnahme sicher an Microsoft Azure gesendet; Texte aus „Teste mich“ und Übersetzungen gehen an Anthropic (Claude). Die Schnellprüfung nutzt den Sprachdienst deines Browsers. Harley Says speichert deine Aufnahmen nicht, und deine Ergebnisse bleiben auf diesem Gerät. Wenn du dich für die Warteliste einträgst oder Feedback sendest, nutzen wir deine E-Mail nur für eine Antwort oder Infos zu Premium.',fbLink:'💬 Feedback senden',fbTitle:'Sag uns deine Meinung',fbMsgL:'Was hat geklappt, was nicht, was wünschst du dir?',fbEmailL:'Deine E-Mail (optional, falls du eine Antwort möchtest)',fbCancel:'Abbrechen',fbSend:'Senden',fbThanks:'Danke! Harley hat es weitergegeben.',fbClose:'Schließen',fbErr:'Senden fehlgeschlagen. Bitte versuch es noch einmal.',inst_title:'Harley Says zum Startbildschirm hinzufügen',inst_sub:'Öffne es wie eine App, mit einem Tipp.',inst_ios:'Auf dem iPhone: Tippe auf Teilen ⬆️, dann „Zum Home-Bildschirm“.',inst_btn:'Installieren',inst_close:'Nicht jetzt'},
- pt:{footer:'Para avaliar a sua pronúncia, a gravação é enviada em segurança para a Microsoft Azure; os textos do Avalie-me e as traduções vão para a Anthropic (Claude). A verificação rápida usa o serviço de voz do seu navegador. O Harley Says não guarda as suas gravações e as suas pontuações ficam neste dispositivo. Se entrar na lista ou enviar comentários, guardamos o seu email apenas para responder ou avisar sobre o Premium.',fbLink:'💬 Enviar comentários',fbTitle:'Diga-nos o que acha',fbMsgL:'O que funcionou, o que não funcionou, o que gostaria de ver?',fbEmailL:'O seu email (opcional, se quiser resposta)',fbCancel:'Cancelar',fbSend:'Enviar',fbThanks:'Obrigado! O Harley já passou a mensagem.',fbClose:'Fechar',fbErr:'Não foi possível enviar. Tente outra vez.',inst_title:'Adicione o Harley Says ao ecrã principal',inst_sub:'Abra-o como uma app, com um toque.',inst_ios:'No iPhone: toque em Partilhar ⬆️ e depois em «Adicionar ao ecrã principal».',inst_btn:'Instalar',inst_close:'Agora não'}
+ en:{footer:"To score your pronunciation, your recording is sent securely to Microsoft Azure; Assess me texts and translations go to Anthropic (Claude). The quick check uses your browser's speech service. Harlo doesn't keep your recordings, and your scores stay on this device. If you join the waitlist or send feedback, we keep your email only to reply or tell you about Premium.",fbLink:'💬 Send feedback',fbTitle:'Tell us what you think',fbMsgL:"What worked, what didn't, what you'd like to see?",fbEmailL:"Your email (optional, if you'd like a reply)",fbCancel:'Cancel',fbSend:'Send',fbThanks:'Thank you! Harley has passed it on.',fbClose:'Close',fbErr:"Sorry, that didn't send. Please try again.",inst_title:'Add Harlo to your home screen',inst_sub:'Open it like an app, in one tap.',inst_ios:'On iPhone: tap Share ⬆️, then “Add to Home Screen”.',inst_btn:'Install',inst_close:'Not now'},
+ es:{footer:'Para puntuar tu pronunciación, tu grabación se envía de forma segura a Microsoft Azure; los textos de Evalúame y las traducciones van a Anthropic (Claude). La comprobación rápida usa el servicio de voz de tu navegador. Harlo no guarda tus grabaciones y tus puntuaciones se quedan en este dispositivo. Si te apuntas a la lista o envías comentarios, guardamos tu email solo para responderte o avisarte de Premium.',fbLink:'💬 Enviar comentarios',fbTitle:'Cuéntanos qué te parece',fbMsgL:'¿Qué ha funcionado, qué no y qué te gustaría ver?',fbEmailL:'Tu email (opcional, si quieres respuesta)',fbCancel:'Cancelar',fbSend:'Enviar',fbThanks:'¡Gracias! Harley ya lo ha pasado.',fbClose:'Cerrar',fbErr:'No se ha podido enviar. Inténtalo de nuevo.',inst_title:'Añade Harlo a tu pantalla de inicio',inst_sub:'Ábrelo como una app, con un toque.',inst_ios:'En iPhone: toca Compartir ⬆️ y luego «Añadir a pantalla de inicio».',inst_btn:'Instalar',inst_close:'Ahora no'},
+ fr:{footer:"Pour noter votre prononciation, votre enregistrement est envoyé de façon sécurisée à Microsoft Azure ; les textes d'Évaluez-moi et les traductions vont à Anthropic (Claude). La vérification rapide utilise le service vocal de votre navigateur. Harlo ne conserve pas vos enregistrements et vos scores restent sur cet appareil. Si vous rejoignez la liste ou envoyez un avis, nous gardons votre email uniquement pour vous répondre ou vous informer de Premium.",fbLink:'💬 Donner mon avis',fbTitle:"Dites-nous ce que vous en pensez",fbMsgL:"Ce qui a marché, ce qui n'a pas marché, ce que vous aimeriez voir ?",fbEmailL:'Votre email (facultatif, pour une réponse)',fbCancel:'Annuler',fbSend:'Envoyer',fbThanks:'Merci ! Harley a transmis le message.',fbClose:'Fermer',fbErr:"Désolé, l'envoi a échoué. Réessayez.",inst_title:"Ajoutez Harlo à votre écran d'accueil",inst_sub:"Ouvrez-le comme une app, d'un seul geste.",inst_ios:"Sur iPhone : touchez Partager ⬆️, puis « Sur l'écran d'accueil ».",inst_btn:'Installer',inst_close:'Plus tard'},
+ it:{footer:"Per valutare la tua pronuncia, la registrazione viene inviata in modo sicuro a Microsoft Azure; i testi di Valutami e le traduzioni vanno ad Anthropic (Claude). La verifica rapida usa il servizio vocale del browser. Harlo non conserva le tue registrazioni e i tuoi punteggi restano su questo dispositivo. Se ti iscrivi alla lista o invii un commento, conserviamo la tua email solo per risponderti o avvisarti di Premium.",fbLink:'💬 Invia un commento',fbTitle:'Dicci cosa ne pensi',fbMsgL:'Cosa ha funzionato, cosa no, cosa vorresti vedere?',fbEmailL:'La tua email (facoltativa, se vuoi una risposta)',fbCancel:'Annulla',fbSend:'Invia',fbThanks:"Grazie! Harley l'ha già passato.",fbClose:'Chiudi',fbErr:'Invio non riuscito. Riprova.',inst_title:'Aggiungi Harlo alla schermata Home',inst_sub:"Aprilo come un'app, con un tocco.",inst_ios:'Su iPhone: tocca Condividi ⬆️, poi «Aggiungi alla schermata Home».',inst_btn:'Installa',inst_close:'Non ora'},
+ de:{footer:'Zur Bewertung deiner Aussprache wird deine Aufnahme sicher an Microsoft Azure gesendet; Texte aus „Teste mich“ und Übersetzungen gehen an Anthropic (Claude). Die Schnellprüfung nutzt den Sprachdienst deines Browsers. Harlo speichert deine Aufnahmen nicht, und deine Ergebnisse bleiben auf diesem Gerät. Wenn du dich für die Warteliste einträgst oder Feedback sendest, nutzen wir deine E-Mail nur für eine Antwort oder Infos zu Premium.',fbLink:'💬 Feedback senden',fbTitle:'Sag uns deine Meinung',fbMsgL:'Was hat geklappt, was nicht, was wünschst du dir?',fbEmailL:'Deine E-Mail (optional, falls du eine Antwort möchtest)',fbCancel:'Abbrechen',fbSend:'Senden',fbThanks:'Danke! Harley hat es weitergegeben.',fbClose:'Schließen',fbErr:'Senden fehlgeschlagen. Bitte versuch es noch einmal.',inst_title:'Harlo zum Startbildschirm hinzufügen',inst_sub:'Öffne es wie eine App, mit einem Tipp.',inst_ios:'Auf dem iPhone: Tippe auf Teilen ⬆️, dann „Zum Home-Bildschirm“.',inst_btn:'Installieren',inst_close:'Nicht jetzt'},
+ pt:{footer:'Para avaliar a sua pronúncia, a gravação é enviada em segurança para a Microsoft Azure; os textos do Avalie-me e as traduções vão para a Anthropic (Claude). A verificação rápida usa o serviço de voz do seu navegador. O Harlo não guarda as suas gravações e as suas pontuações ficam neste dispositivo. Se entrar na lista ou enviar comentários, guardamos o seu email apenas para responder ou avisar sobre o Premium.',fbLink:'💬 Enviar comentários',fbTitle:'Diga-nos o que acha',fbMsgL:'O que funcionou, o que não funcionou, o que gostaria de ver?',fbEmailL:'O seu email (opcional, se quiser resposta)',fbCancel:'Cancelar',fbSend:'Enviar',fbThanks:'Obrigado! O Harley já passou a mensagem.',fbClose:'Fechar',fbErr:'Não foi possível enviar. Tente outra vez.',inst_title:'Adicione o Harlo ao ecrã principal',inst_sub:'Abra-o como uma app, com um toque.',inst_ios:'No iPhone: toque em Partilhar ⬆️ e depois em «Adicionar ao ecrã principal».',inst_btn:'Instalar',inst_close:'Agora não'}
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
@@ -685,10 +685,10 @@ const S={
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
 
-// Harley Chats (chat.js). Other interface languages fall back to English; Harley's feedback itself comes in all 16.
+// Harlo Chats (chat.js). Other interface languages fall back to English; Harley's feedback itself comes in all 16.
 (function(){
 const S={
- en:{g_chats:'Chats',ch_title:'Harley Chats',ch_intro:'Have a real conversation in {lang}. {name} plays the barista, the waiter or your new neighbour, and you answer out loud. You get a quick tip after every reply.',ch_level:'Level',ch_easy:'Easy',ch_normal:'Normal',ch_hard:'Challenging',ch_pick:'Pick a scene',
+ en:{g_chats:'Chats',ch_title:'Harlo Chats',ch_intro:'Have a real conversation in {lang}. {name} plays the barista, the waiter or your new neighbour, and you answer out loud. You get a quick tip after every reply.',ch_level:'Level',ch_easy:'Easy',ch_normal:'Normal',ch_hard:'Challenging',ch_pick:'Pick a scene',
   ch_s_cafe:'At the café',ch_d_cafe:'Order a coffee and something to eat',ch_s_restaurant:'At a restaurant',ch_d_restaurant:'Get a table, order dinner, ask for the bill',ch_s_directions:'Asking the way',ch_d_directions:'You\'re lost: ask a local for directions',ch_s_shop:'Clothes shopping',ch_d_shop:'Find your size, colour and price',ch_s_hotel:'Hotel check-in',ch_d_hotel:'Check in and ask about your room',ch_s_pharmacy:'At the pharmacy',ch_d_pharmacy:'Get something for a cold',ch_s_neighbour:'Your new neighbour',ch_d_neighbour:'Friendly small talk on the stairs',ch_s_party:'At a party',ch_d_party:'Meet someone new and talk about yourself',
   ch_left:'{n} free chats left today',ch_noMic:'Your browser can\'t listen here, so you can type your answers instead.',ch_wait:'{name} is thinking… 🐾',ch_tap:'🎙️ Tap and answer',ch_listening:'👂 Listening… tap when you\'ve finished',ch_type:'⌨️ Type instead',ch_speak:'🎙️ Speak instead',ch_send:'Send',ch_placeholder:'Type your answer in {lang}',ch_try:'You could say:',ch_showTr:'Show translation',ch_hideTr:'Hide translation',
   ch_great:'Great! 🎉',ch_good:'Good 👍',ch_fix:'Try this ✏️',ch_better:'More natural:',ch_finish:'Finish chat',ch_seeSum:'See how you did →',ch_turns:'Reply {n} of {m}',ch_sumTitle:'Chat summary',ch_practise:'Phrases to practise',ch_practiseBtn:'Practise',ch_again:'Chat again',ch_other:'Another scene',
@@ -722,7 +722,7 @@ const S={
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
 
-// Harley Chats: hands-free mode and tips at the end
+// Harlo Chats: hands-free mode and tips at the end
 (function(){
 const S={
  en:{ch_intro:'Have a real conversation in {lang}. {name} plays the barista, the waiter or your new neighbour. Just talk: {name} listens when it\'s your turn, and you get your tips at the end.',ch_auto:'Hands-free: the mic opens when {name} finishes talking',ch_tipsLive:'Show tips after each reply',ch_yourTurn:'Your turn, just talk',ch_speaking:'{name} is talking…',ch_tapTalk:'Tap to talk',ch_pause:'⏸ Pause',ch_review:'Your replies'},
@@ -735,7 +735,7 @@ const S={
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
 
-// Harley Chats → Interview Coach link
+// Harlo Chats → Interview Coach link
 (function(){
 const S={en:{ch_ivLink:"Harley's Interview Coach",ch_ivSub:'Practise a job interview out loud →'},es:{ch_ivLink:'Entrevistas con Harley',ch_ivSub:'Practica una entrevista de trabajo en voz alta →'},fr:{ch_ivLink:"Le coach d'entretien de Harley",ch_ivSub:"Entraînez-vous à un entretien d'embauche →"},it:{ch_ivLink:'Il coach dei colloqui di Harley',ch_ivSub:'Esercitati per un colloquio ad alta voce →'},de:{ch_ivLink:'Harleys Interview-Coach',ch_ivSub:'Übe ein Vorstellungsgespräch laut →'},pt:{ch_ivLink:'O treinador de entrevistas do Harley',ch_ivSub:'Pratique uma entrevista de emprego em voz alta →'}};
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
@@ -754,7 +754,7 @@ const S={
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();
 
-// Harley Chats: pause setting
+// Harlo Chats: pause setting
 (function(){
 const S={
  en:{ch_pauseL:'Pause before sending',ch_pz_short:'Short',ch_pz_normal:'Normal',ch_pz_long:'Long'},
@@ -783,12 +783,12 @@ for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 // Story page (story.html)
 (function(){
 const S={
- en:{st_real:"Meet the real Harley and Lilou",st_cta:"Start practising with Harley",st_swipe:"Swipe to read our story",st_link:"🐶 Why we built Harley Says"},
- es:{st_real:"Conoce a los verdaderos Harley y Lilou",st_cta:"Empieza a practicar con Harley",st_swipe:"Desliza para leer nuestra historia",st_link:"🐶 Por qué creamos Harley Says"},
- fr:{st_real:"Voici les vrais Harley et Lilou",st_cta:"Commencez à vous entraîner avec Harley",st_swipe:"Faites glisser pour lire notre histoire",st_link:"🐶 Pourquoi nous avons créé Harley Says"},
- it:{st_real:"Ecco i veri Harley e Lilou",st_cta:"Inizia a esercitarti con Harley",st_swipe:"Scorri per leggere la nostra storia",st_link:"🐶 Perché abbiamo creato Harley Says"},
- de:{st_real:"Das sind die echten Harley und Lilou",st_cta:"Jetzt mit Harley üben",st_swipe:"Wische, um unsere Geschichte zu lesen",st_link:"🐶 Warum wir Harley Says gebaut haben"},
- pt:{st_real:"Conheça os verdadeiros Harley e Lilou",st_cta:"Comece a praticar com o Harley",st_swipe:"Deslize para ler a nossa história",st_link:"🐶 Porque criámos o Harley Says"}
+ en:{st_real:"Meet the real Harley and Lilou",st_cta:"Start practising with Harley",st_swipe:"Swipe to read our story",st_link:"🐶 Why we built Harlo"},
+ es:{st_real:"Conoce a los verdaderos Harley y Lilou",st_cta:"Empieza a practicar con Harley",st_swipe:"Desliza para leer nuestra historia",st_link:"🐶 Por qué creamos Harlo"},
+ fr:{st_real:"Voici les vrais Harley et Lilou",st_cta:"Commencez à vous entraîner avec Harley",st_swipe:"Faites glisser pour lire notre histoire",st_link:"🐶 Pourquoi nous avons créé Harlo"},
+ it:{st_real:"Ecco i veri Harley e Lilou",st_cta:"Inizia a esercitarti con Harley",st_swipe:"Scorri per leggere la nostra storia",st_link:"🐶 Perché abbiamo creato Harlo"},
+ de:{st_real:"Das sind die echten Harley und Lilou",st_cta:"Jetzt mit Harley üben",st_swipe:"Wische, um unsere Geschichte zu lesen",st_link:"🐶 Warum wir Harlo gebaut haben"},
+ pt:{st_real:"Conheça os verdadeiros Harley e Lilou",st_cta:"Comece a praticar com o Harley",st_swipe:"Deslize para ler a nossa história",st_link:"🐶 Porque criámos o Harlo"}
 };
 for (const k in S) Object.assign(window.SIR_UI[k], S[k]);
 })();

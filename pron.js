@@ -1,4 +1,4 @@
-// Harley Says: sound-by-sound scoring. Uses globals from index.html (lang, t, current, store, DEVICE_ID, speak, $, HARLEY).
+// Harlo: sound-by-sound scoring. Uses globals from index.html (lang, t, current, store, DEVICE_ID, speak, $, HARLEY).
 const PRON_MAX_SEC = 12;
 const P = { state:'idle', result:null, error:'', rec:null, sel:-1, phrase:null };
 

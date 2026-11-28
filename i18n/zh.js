@@ -1,4 +1,4 @@
-// Harley Says — 中文（简体）interface. AI translation; a native-speaker check is recommended.
+// Harlo — 中文（简体）interface. AI translation; a native-speaker check is recommended.
 (function(){
 window.SIR_LANG_NAMES.zh = {en:'英语（英国）',enus:'英语（美国）',es:'西班牙语（西班牙）',esmx:'西班牙语（拉丁美洲）',fr:'法语',it:'意大利语',de:'德语',pt:'葡萄牙语',pl:'波兰语',ro:'罗马尼亚语',uk:'乌克兰语',zh:'中文',ar:'阿拉伯语',nl:'荷兰语',tr:'土耳其语',ja:'日语',ko:'韩语',vi:'越南语'};
 window.SIR_UI.zh = {
@@ -9,12 +9,12 @@ noCatch:'没有听到声音。请靠近麦克风再试一次。',errNotAllowed:'
 tipGreat:'太棒了！清晰又自然。',tipAll:'所有单词都识别出来了。说得更清楚、更自信一些，分数会更高。',missed1:'有 1 个词没有识别出来（红色）。点击它听一听，然后再试一次。',missedN:'有 {n} 个词没有识别出来（红色）。点击红色的词听一听，然后再试一次。',
 typeBelow:'在下方输入一个短语即可开始。',ownTitle:'你自己的短语',ownSub:'输入或说出一句话，翻译后进行练习。',writingIn:'我用这种语言写',sayIt:'🎙️ 说出来',listeningShort:'⏹ 正在听…',placeholder:'例如：你能推荐附近一家好餐厅吗？',translateTo:'🌍 翻译成{lang}并练习',asWritten:'按原文练习',translating:'正在翻译…',trFirst:'请先输入或说出一个短语。',trLong:'请不要超过 300 个字符。',trOff:'翻译功能尚未开启。',trFail:'翻译失败：',voiceNeeds:'语音输入需要 Chrome、Edge 或 Safari。',micBlocked:'麦克风权限被阻止。',cantHear:'没听清，请再试一次。',
 sets:{'Basics':'基础','Café & restaurant':'咖啡馆和餐厅','Travel':'旅行','Tricky sounds':'难发的音','My phrase':'我的短语','Business & work':'商务与工作','Shopping':'购物','Health & emergencies':'健康与紧急情况','Social & small talk':'社交闲聊','Numbers, dates & time':'数字、日期和时间','Past tense':'过去时'},
-lockedText:'{n} 个短语，逐音评分（{lang}）。属于 Harley Says 高级版，即将推出。',lockedCta:'⭐ 上线时通知我',upsell:'🎉 这就是{set}中全部 {n} 个免费短语。高级版再增加 {m} 个。',getNotified:'通知我',comingSoon:'即将推出',premTitle:'⭐ Harley Says 高级版',
+lockedText:'{n} 个短语，逐音评分（{lang}）。属于 Harlo 高级版，即将推出。',lockedCta:'⭐ 上线时通知我',upsell:'🎉 这就是{set}中全部 {n} 个免费短语。高级版再增加 {m} 个。',getNotified:'通知我',comingSoon:'即将推出',premTitle:'⭐ Harlo 高级版',
 feats:[['每个主题 200 个短语','，是免费版的五倍'],['另外 5 个主题','：商务、购物、健康、社交和数字'],['逐音评分','，准确告诉你哪些音需要改进'],['无限翻译','你自己的短语'],['进度同步','，手机和电脑通用'],['50 篇阅读短文','，用于“评估我”，覆盖各个级别'],['全部专项练习包','，以及根据你的错误生成的练习']],
 notifyLabel:'高级版上线时通知我',notifyBtn:'通知我',fine:'我们只会就高级版上线给你发邮件。没有垃圾邮件，可随时退订。',wlErr:'抱歉，提交失败。请再试一次。',wlDone:'✓ 你已加入名单。高级版上线时我们会通知你。',
-storyH:'我们为什么做 Harley Says',story1:'我的妻子住在英国，一直在找练习发音的方法。上课有帮助，但课与课之间很难找到一个足够耐心的人，听你说、正确地说给你听，并诚实地告诉你发音如何。',story2:'所以我们做了这个我们一直想要的工具：免费、无需注册，随时可用。',whyH:'为什么叫 Harley？',cap1:'全速奔跑',cap2:'准备好玩了',story3:'这个应用以 Harley 命名，他是我们深爱的卷毛比雄犬。在应用里，他也在学说话，所以每次你练习，都是在和他一起练习。',
+storyH:'我们为什么做 Harlo',story1:'我的妻子住在英国，一直在找练习发音的方法。上课有帮助，但课与课之间很难找到一个足够耐心的人，听你说、正确地说给你听，并诚实地告诉你发音如何。',story2:'所以我们做了这个我们一直想要的工具：免费、无需注册，随时可用。',whyH:'为什么叫 Harley？',cap1:'全速奔跑',cap2:'准备好玩了',story3:'这个应用以 Harley 命名，他是我们深爱的卷毛比雄犬。在应用里，他也在学说话，所以每次你练习，都是在和他一起练习。',
 howH:'使用方法和小贴士',how1:'点击“听一听”收听短语，然后点击麦克风说出来。识别出的词会变绿，没识别出的会变红。点击任意一个词可以单独收听。',how2:'分数反映你说得有多清楚、多容易被听懂。它是很好的参考，但不是语音实验室：母语者仍然是最好的标准。',how3:'在 Chrome、Edge 或 Safari（包括 iPhone）中效果最好。请在安静的地方，以自然的语速说话。',
-footer:'为了给你的发音评分，你的录音会被安全地发送到 Microsoft Azure；“评估我”的文字和翻译会发送给 Anthropic（Claude）。快速检查使用浏览器自带的语音服务。Harley Says 不保存你的录音，你的分数只保存在本设备上。如果你加入名单或发送反馈，我们只会保留你的邮箱用于回复或通知你高级版的消息。',noRec:'你的浏览器不支持语音识别：可以收听，但无法评分。请在 Chrome、Edge 或 Safari 中打开本页面。',fileWarn:'以本地文件方式打开，麦克风可能无法使用。',
+footer:'为了给你的发音评分，你的录音会被安全地发送到 Microsoft Azure；“评估我”的文字和翻译会发送给 Anthropic（Claude）。快速检查使用浏览器自带的语音服务。Harlo 不保存你的录音，你的分数只保存在本设备上。如果你加入名单或发送反馈，我们只会保留你的邮箱用于回复或通知你高级版的消息。',noRec:'你的浏览器不支持语音识别：可以收听，但无法评分。请在 Chrome、Edge 或 Safari 中打开本页面。',fileWarn:'以本地文件方式打开，麦克风可能无法使用。',
 a_tab:'📊 评估我',a_title:'评估我的水平',a_free:'目前免费',a_intro:'获得{lang}的参考分数（满分 100）和 CEFR 级别（A1–C2）。',a_last:'上次结果：{score}/100（{level}），{date}',a_modeRead:'📖 朗读短文',a_modeSpeak:'🗣️ 自由说',a_modeWrite:'✍️ 写作',a_readHow:'点击“开始”，以自然的语速朗读短文，然后点击“完成”。',a_speakHow:'点击“开始”，随便说点什么，最长 5 分钟：介绍自己、你的工作、上次的假期。至少说 30 秒。',a_writeHow:'用你正在学的语言写写你自己、你的工作或计划（至少 50 个词）。',a_writePh:'从这里开始写…',a_start:'🎙️ 开始',a_finish:'⏹ 完成',a_assessWrite:'评估我的写作',a_words:'{n} 个词',a_timeLeft:'剩余 {t}',a_tooShort:'太短，无法评估。请至少说 30 秒。',a_readShort:'我们只听到了一部分内容。请尝试读完整篇短文。',a_noMatch:'内容与短文不符。请确认你在用所学的语言朗读。',a_writeShort:'请至少写 50 个词。',a_assessing:'Harley 正在评估…',a_off:'此部分尚未开启。请先试试“朗读短文”。',a_fail:'评估失败：',a_pronLevel:'发音',a_indicative:'仅供参考，不是正式的考试成绩。',a_strengths:'做得好的地方',a_improve:'需要改进',a_sub_accuracy:'准确度',a_sub_fluency:'流利度',a_sub_clarity:'清晰度',a_sub_range:'词汇',a_sub_grammar:'语法',a_sub_coherence:'连贯性',a_again:'再试一次',a_missed:'需要练习的词：{w}',a_pace:'语速：每分钟 {n} 个词',
 lvl_A1:'入门',lvl_A2:'初级',lvl_B1:'中级',lvl_B2:'中高级',lvl_C1:'高级',lvl_C2:'精通',
 trLeft:'今天还剩 {n} 次免费翻译',trLimit:'你已用完今天的 {n} 次免费翻译。无限翻译属于高级版。',
@@ -25,7 +25,7 @@ a_readHowParts:'把短文分成 {m} 小段，以自然的语速朗读。点击�
 s_see:'🏁 查看我的结果',s_title:'本节完成',s_top:'太棒了！Harley 开心极了。',s_good:'做得很好！再练一点就完美了。',s_mid:'很努力。这一节还需要多练练，你会听出进步的。',s_low:'我们一起继续练习吧。每一次尝试都有帮助！',s_none:'先练几个短语，再回来查看分数。',s_mastered:'{n}/{m} 个短语达到 80% 或以上',s_tried:'你练了 {n}/{m} 个',s_again:'再练一遍这些',s_notTried:'未练习',s_restart:'↺ 重新开始',s_nextTopic:'下一个主题 →',
 say_used:'你已用完今天的精准检查。再点一次可进行快速检查，或升级高级版享受无限精准检查。',say_tapAgain:'再点一次试试。',say_left:'今天还剩 {n} 次精准检查',say_tipClose:'每个词都很清楚。看看下面的各个音，进一步完善。',say_miss1:'有 1 个词需要练习（红色）。点击它听一听，然后再试一次。',say_missN:'有 {n} 个词需要练习（红色）。点击红色的词听一听，然后再试一次。',
 fbLink:'💬 发送反馈',fbTitle:'告诉我们你的想法',fbMsgL:'哪些好用，哪些不好用，你希望看到什么？',fbEmailL:'你的邮箱（选填，如需回复）',fbCancel:'取消',fbSend:'发送',fbThanks:'谢谢！Harley 已经转达了。',fbClose:'关闭',fbErr:'抱歉，发送失败。请再试一次。',
-inst_title:'把 Harley Says 添加到主屏幕',inst_sub:'像应用一样，一点就打开。',inst_ios:'在 iPhone 上：点击“分享”⬆️，然后选择“添加到主屏幕”。',inst_btn:'安装',inst_close:'以后再说',
+inst_title:'把 Harlo 添加到主屏幕',inst_sub:'像应用一样，一点就打开。',inst_ios:'在 iPhone 上：点击“分享”⬆️，然后选择“添加到主屏幕”。',inst_btn:'安装',inst_close:'以后再说',
 c_btn:'🐶 Harley 来讲解',c_free:'今天免费 {n} 次',c_left:'今天还剩 {n} 次',c_wait:'Harley 正在思考… 🐾',c_replay:'🔊 再听一遍',c_used:'你已用完今天 Harley 的免费讲解。无限辅导将在高级版中推出。',c_off:'Harley 的讲解功能尚未开启。',c_fail:'Harley 暂时无法回答，请再试一次。',
 p_show:'🔬 每个音',p_hide:'隐藏详情 ▴',g_phrases:'短语',g_mine:'我的短语',g_focus:'专项练习',g_assess:'评估我',g_premium:'高级版',q_label:'快速检查（不太严格）：',
 c_btn_lilou:'🎀 Lilou 来讲解',c_wait_lilou:'Lilou 正在思考… 🎀',c_used_lilou:'你已用完今天的免费讲解。Lilou 和 Harley 的无限辅导将在高级版中推出。',c_switch:'换成 {name} 来辅导',
@@ -54,4 +54,4 @@ Object.assign(window.SIR_UI.zh, {ls_start:"开始课程",ls_round:"第 {n} 轮�
 Object.assign(window.SIR_UI.zh, {a_pickRead:"朗读一段短文，了解你的发音水平",a_pickSpeak:"随便聊点什么，了解你的口语水平",a_pickWrite:"写几句话，了解你的写作水平"});
 
 // Story page (story.html)
-Object.assign(window.SIR_UI.zh, {st_real:"认识真正的 Harley 和 Lilou",st_cta:"和 Harley 一起开始练习",st_swipe:"滑动阅读我们的故事",st_link:"🐶 我们为什么创建 Harley Says"});
+Object.assign(window.SIR_UI.zh, {st_real:"认识真正的 Harley 和 Lilou",st_cta:"和 Harley 一起开始练习",st_swipe:"滑动阅读我们的故事",st_link:"🐶 我们为什么创建 Harlo"});

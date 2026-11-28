@@ -1,4 +1,4 @@
-// Harley Says: talking heads for Harley and Lilou (Harley Chats and Interview Coach).
+// Harlo: talking heads for Harley and Lilou (Harlo Chats and Interview Coach).
 // HSTalk({ persona: () => 'harley'|'lilou', code: () => 'es-ES' }) makes a "stage": a big animated head plus a caption,
 // and plays Harley's lines with the mouth moving in time with the words (timed from the text and the audio's progress),
 // blinking, and different looks for listening (ears up, nodding) and thinking (head tilt).

@@ -1,4 +1,8 @@
-# Twangly
+# Harlo (harlolearn.com)
+
+Formerly Harley Says (harleysays.com) and Twangly. Renamed 28 Nov 2026: brand Harlo, products Harlo Chats / Citizen / Travel / Work; the dog is still Harley. All old domains 301 to harlolearn.com (`netlify.toml`). localStorage keys keep their `hs_` prefix so progress carries over.
+
+<!-- old title: Twangly -->
 
 Pronunciation practice web app. Pick a language (English, Spanish, French, Italian, German, Portuguese), listen to a phrase, say it, and get a score with word-by-word feedback.
 
@@ -64,20 +68,20 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Close with ✕, Esc or the phone's Back button. "▶ Start lesson" on the normal card re-enters. Stats events: `lesson`, `lesson_round`. Strings `ls_*` in all 16 languages.
 
 ## Harley's Games (`/games/`)
-- Word games at `harleysays.com/games/`, a separate front door with its own look, same repo and same Netlify site. `games.harleysays.com` redirects there (see `netlify.toml`).
+- Word games at `harlolearn.com/games/`, a separate front door with its own look, same repo and same Netlify site. `games.harlolearn.com` redirects there (see `netlify.toml`).
 - `games/index.html` (page and styles), `games/games.js` (Word search, Crossword, Match pairs, Unscramble), `games/words.js` (11 topics, 20–30 words each, 286 in all: one row per word with all learning languages and the meanings for every interface language; present and past tense rows use `infinitive>answer[>frame]`). `HG_SWAP` holds Latin American Spanish and US English swaps.
 - Difficulty (`hs_games_level`): Easy / Medium / Hard.
   - Word search: 6 / 8 / 10 words; across and down only / plus diagonals / plus backwards.
   - Crossword: 6 / 8 / 11 words; Easy shows each word's first letter; Hard hides word lengths and doesn't mark letters red (just says how many are wrong).
   - Match pairs: 5 / 6 / 8 pairs. Unscramble: 6 / 8 / 10 words; Easy gives the first letter; Hard adds 2 decoy letters and has no hint.
 - Shares the learning language with the pronunciation app (`sir_lang`), so switching between them keeps the language. Game progress is kept on the device (`hs_games`), not synced to accounts yet.
-- Cross-links both ways: games → "Try Harley Says" (`/?from=games`); app → "Harley's word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
-- Interface in all 16 Harley Says interface languages (`games/i18n.js`: `HG_UI` screen text, `HG_GLOSS` word meanings in words.js order). Shares the "I speak" choice with the app (`sir_ui`). Clues show the meaning in the visitor's language; English learners get the meaning in their language plus a short English definition (English only if they speak English). AI-translated: get native speakers to check. Stats events: `games`, `game_start`, `game_done`.
-- To switch on `games.harleysays.com`: Netlify → Domain management → Add domain alias `games.harleysays.com`, then add the DNS record Netlify shows.
+- Cross-links both ways: games → "Try Harlo" (`/?from=games`); app → "Harley's word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
+- Interface in all 16 Harlo interface languages (`games/i18n.js`: `HG_UI` screen text, `HG_GLOSS` word meanings in words.js order). Shares the "I speak" choice with the app (`sir_ui`). Clues show the meaning in the visitor's language; English learners get the meaning in their language plus a short English definition (English only if they speak English). AI-translated: get native speakers to check. Stats events: `games`, `game_start`, `game_done`.
+- To switch on `games.harlolearn.com`: Netlify → Domain management → Add domain alias `games.harlolearn.com`, then add the DNS record Netlify shows.
 - **Daily puzzle** (`#daily`): one a day per learning language, the same for everyone (seeded from the date). The game type rotates (crossword, word search, unscramble, match pairs), the topic is picked by the date, and the level is always Medium. Streaks are kept on the device (`hs_daily`: last day, streak, best); finishing shows the streak and a Share button (phone share sheet, or copy). Stats events: `daily_start`, `daily_done`.
 - **Sign-in on the games page:** the same 👤 button and email-code dialog as the app (`account.js`, text in `games/acc-i18n.js`, copied from the app's strings). Synced to the account as well as the app data: `hs_games` (games played, higher count wins), `hs_daily` (streak: most recent day wins, best is the max), `hs_games_level`, `hs_games_topic`. No database change needed. After a daily puzzle, people who aren't signed in get a "Save your progress" button.
 
-## Harley Chats (💬 Chats section)
+## Harlo Chats (💬 Chats section)
 - **Private beta:** only signed-in accounts listed in `CHAT_BETA_EMAILS` (comma-separated; default `neil@harleysays.com`) see the Chats button and can use the function; the server checks the sign-in token with Supabase. Set `CHAT_BETA_EMAILS` to `*` to open it to everyone.
 - Spoken role-play conversations: Harley (or Lilou) plays the barista, waiter, receptionist, neighbour etc.; the learner answers out loud (browser speech recognition) or types. After every reply there's a short tip (great / good / try this), a "more natural" version, and a suggested next reply. At the end: score /100, stars, a summary and up to 3 phrases to practise (the Practise button opens them in "My phrase").
 - **Hands-free (default):** Harley's line plays (own audio element so we know when it ends), then the mic opens by itself; the reply is sent after 1.8 s of quiet (`PAUSE_MS`), and if nothing is said for 9 s (`WAIT_MS`) it stops and waits for a tap. Tips are kept for the end: the summary lists every reply with its tip and a more natural version. Switches on the scene list: hands-free on/off (`hs_chat_auto`) and "Show tips after each reply" (`hs_chat_live`). When the scene ends, the summary opens automatically. Switching tab stops the mic.
@@ -90,10 +94,10 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 
 ## Harley's Interview Coach (/interview/)
 - Spoken mock job interviews: Harley (or Lilou) plays a hiring manager and asks 6 questions (`INTERVIEW_TURNS`) for the job the person types, in one of three styles: General, Competency (STAR) or Customer-facing, at Beginner/Intermediate/Advanced language level, in any of the 9 learning languages (default English).
-- Same hands-free loop as Harley Chats (mic opens after each question; 2.5 s pause sends the answer; 12 s of nothing waits for a tap; typing allowed). Answers up to 2,200 characters (about 3 minutes of speech); if the phone stops listening by itself mid-answer, it carries on listening and keeps what was said. Feedback is on content (examples, STAR, relevance) and language; tips are kept for the end by default.
+- Same hands-free loop as Harlo Chats (mic opens after each question; 2.5 s pause sends the answer; 12 s of nothing waits for a tap; typing allowed). Answers up to 2,200 characters (about 3 minutes of speech); if the phone stops listening by itself mid-answer, it carries on listening and keeps what was said. Feedback is on content (examples, STAR, relevance) and language; tips are kept for the end by default.
 - Report: score /100, summary, strongest answer, the one thing to work on, every question with the answer given, its tip and a stronger version (tap to hear), and useful phrases.
 - Files: `interview/index.html`, `interview/interview.js`, `interview/i18n.js` (16 interface languages, AI-translated). Sign-in uses `/account.js` with the text in `/games/acc-i18n.js`. Back end: `chat.mjs` scene `interview` with `job` and `itype`; the end-of-chat report (Chats and Interview Coach) uses `CHAT_REPORT_MODEL` (default `claude-sonnet-5-5`).
-- Private beta: same `CHAT_BETA_EMAILS` list as Chats. The page has `noindex` while in beta: remove it at launch. Chats links to it; interview.harleysays.com redirects to it (add the subdomain in Netlify → Domain management, like games.harleysays.com).
+- Private beta: same `CHAT_BETA_EMAILS` list as Chats. The page has `noindex` while in beta: remove it at launch. Chats links to it; interview.harlolearn.com redirects to it (add the subdomain in Netlify → Domain management, like games.harlolearn.com).
 - Stats events: `interview`, `iv_start`, `iv_answer`, `iv_done`.
 
 ## Free limits (Chats and Interview Coach)
@@ -101,7 +105,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - `CHAT_NOLIMIT_EMAILS` (default `neil@harleysays.com`): accounts with no daily limit, for testing now and Premium later.
 
 ## Daily 5 (daily5.js)
-- Banner above the sections: five phrases a day, picked in this order: phrases from Harley Chats summaries not yet mastered (`hs_chat_review`, up to 3), phrases tried but under 80%, then new phrases from the free topics. Same five all day per language (`hs_d5`); new ones tomorrow.
+- Banner above the sections: five phrases a day, picked in this order: phrases from Harlo Chats summaries not yet mastered (`hs_chat_review`, up to 3), phrases tried but under 80%, then new phrases from the free topics. Same five all day per language (`hs_d5`); new ones tomorrow.
 - Practice uses the normal phrase card (set `DAILY5`), with the usual end-of-set summary. Done = all five tried today; streak = days in a row done (`hs_d5_streak`, kept on the device, not yet synced to accounts).
 - Strings `d5_*` in en/es/fr/it/de/pt (others show English). Stats events `d5_start`, `d5_done`.
 
@@ -130,8 +134,8 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Games hub (`/games/`): the four game cards are colourful gradients (Word search blue, Crossword pink, Match pairs teal, Unscramble purple) with floating icons, a pulsing ▶, shine and a staggered pop-in on first load; the chosen topic chip pops; the daily puzzle card has a shine and a pulsing Play button.
 
 ## Story page and Premium box
-- `story.html` + `story.js`: "Why we built Harley Says" as 5 swipeable, animated slides (floating "hello"s, mic and sound waves, Harley and Lilou drawn with `talkhead.js` faces), ending with the real photos dropping in as polaroids and a "Start practising" button. Uses the existing `story*`, `whyH` and `cap*` strings plus `st_*` (16 languages). Stats event `story`.
-- The home page shows a small "🐶 Why we built Harley Says" card linking to it instead of the full story.
+- `story.html` + `story.js`: "Why we built Harlo" as 5 swipeable, animated slides (floating "hello"s, mic and sound waves, Harley and Lilou drawn with `talkhead.js` faces), ending with the real photos dropping in as polaroids and a "Start practising" button. Uses the existing `story*`, `whyH` and `cap*` strings plus `st_*` (16 languages). Stats event `story`.
+- The home page shows a small "🐶 Why we built Harlo" card linking to it instead of the full story.
 - The Premium box (`#premiumCard`) is hidden by default and only shows in the Premium section or after tapping a Premium button (⭐ in the header, "Get notified", locked topics).
 
 ### Look and feel (Nov 2026)
@@ -179,22 +183,22 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 
 ### A day out: journey map (journey.js)
 - Card under Daily 5: "A day out in {city}" (city by learning language). Opens a full-screen map from morning to night with 8 stops: morning coffee, asking the way, shopping, lunch, pharmacy, station, hotel, evening party.
-- Each stop = one lesson round (10 phrases) of a matching topic (`hsStartRound(set, round)` in lesson.js), plus that place's Harley Chats scene when Chats is on (`hsChatScene`). Finishing (1+ stars) unlocks the next stop, +25 XP; the map reopens with the dog walking on. After all 8: confetti and "Start day 2".
+- Each stop = one lesson round (10 phrases) of a matching topic (`hsStartRound(set, round)` in lesson.js), plus that place's Harlo Chats scene when Chats is on (`hsChatScene`). Finishing (1+ stars) unlocks the next stop, +25 XP; the map reopens with the dog walking on. After all 8: confetti and "Start day 2".
 - Events: lesson.js fires `hs-round` { set, round, stars }; chat.js fires `hs-chat-done` { scene }. Stored per learning language in `hs_journey`.
 
 ### Friends and leaderboard (friends.js, supabase/friends.sql)
-- Signed-in only. Pick a display name → get an invite code; share `https://harleysays.com/?invite=CODE` (or type a code). Accepting makes you friends both ways (max 50).
+- Signed-in only. Pick a display name → get an invite code; share `https://harlolearn.com/?invite=CODE` (or type a code). Accepting makes you friends both ways (max 50).
 - Friends-only leaderboard of this week's XP (ISO week, from fx.js's daily XP, pushed via `hs_push_xp` a few seconds after earning XP). Remove a friend with a double tap. "Share my streak" works without signing in.
 - Database: tables `friend_profiles`, `friendships`, `weekly_xp` with RLS on and no direct access; everything goes through security-definer functions `hs_me`, `hs_set_name`, `hs_accept`, `hs_remove_friend`, `hs_push_xp`, `hs_board` (authenticated only, scoped by `auth.uid()`). All rows cascade when an account is deleted. Applied to the live project 26 Nov 2026.
 - Opened from the 👥 Friends button in the XP ring panel. Privacy policy updated (Friends section).
 
-### Harley Citizen (/citizen/)
+### Harlo Citizen (/citizen/)
 - Life in the UK test practice (in English, as the real test is): mock test (24 questions, 45-minute timer, pass 18, spread across chapters, review with explanations and a chapter breakdown), practise by chapter (10 questions with instant explanations, weakest first), My mistakes, and an average-of-last-3 readiness meter. Stored in `hs_ct`.
 - Question bank `citizen/questions.js`: ~150 questions written from the 3rd-edition handbook, each with an explanation. Facts that changed after the handbook (current office-holders, member counts) are left out. Practice only, not official; check new questions against the handbook.
 - English speaking test: `/interview/?kind=selt` opens the Interview Coach with the new "English speaking test (B1)" type (`ITYPES.selt` in chat.mjs): a friendly examiner asks everyday questions, in English.
 - Stats: `citizen`, `ct_test`, `ct_pass`, `ct_fail`, `ct_practice`. Linked from the main app's footer.
 
-### Harley Work (work.js)
+### Harlo Work (work.js)
 - 8 workplace phrase packs (20 each) added to the English (UK and US) library: care, nursing, hotels and restaurants, shop work, warehouse and delivery, cleaning, customer service, building. Shown under a "💼 Work" tile only when learning English; everything else (lesson mode, scoring, rounds) works as for other topics. Pack names in 16 languages (`HS_WORK.name`). Hints are in English for now.
 - A "💼 Job interview →" chip opens the Interview Coach with the job filled in (`/interview/?kind=customer&job=Nurse`).
 
@@ -202,7 +206,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - "👥 Invite a friend" card on the home page (above the games card).
 - After a good moment (any confetti: perfect game, passed mock test, interview report, daily goal; or a lesson round with 2+ stars) a small prompt suggests inviting a friend, at most once a day (`hs_nudge`), never over an open dialog.
 
-### Harley Travel (/travel/)
+### Harlo Travel (/travel/)
 - Pick a destination (Spain, France, Italy, Portugal, Germany, Netherlands, Mexico, UK, US) and optionally a date: countdown, "Today's 5 for your trip" (the next five unlearned phrases, essentials first), progress meter.
 - Phrasebook by situation: essentials, getting around, eating out, hotel, shopping & money, numbers, emergencies (10 emergency phrases per language written for Travel + the local emergency number, tap to call). Phrases from the main library are picked by their English meaning (topics are translated in roughly, not exactly, the same order).
 - Each phrase: listen, slow, "Say it" (quick speech check, marks it learned), "Show" (full-screen big text to show someone), "Got it". "Practise with scoring" deep-links to the main app: `/?lang=es&set=Travel&lesson=1` (deep links handled at the end of index.html).

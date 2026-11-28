@@ -1,4 +1,4 @@
-// Harley Citizen: practice questions for the Life in the UK test, written from the official handbook
+// Harlo Citizen: practice questions for the Life in the UK test, written from the official handbook
 // "Life in the United Kingdom: A Guide for New Residents" (3rd edition). Not official questions (those aren't published).
 // Facts that have changed since the handbook (current office-holders, numbers of members) are left out on purpose.
 // Format: [chapter, question, [options], index of the right answer, short explanation]

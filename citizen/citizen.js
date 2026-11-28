@@ -1,4 +1,4 @@
-// Harley Citizen (harleysays.com/citizen/): practice for the Life in the UK test, plus a link to English speaking
+// Harlo Citizen (harlolearn.com/citizen/): practice for the Life in the UK test, plus a link to English speaking
 // practice in the Interview Coach (kind 'selt'). Questions: citizen/questions.js (CT_Q, written from the handbook).
 // In English only: the real test is in English. Stored: hs_ct = { ok: {i: n}, bad: {i: n}, wrong: [i], tests: [{ d, s }] }
 (function () {
@@ -38,7 +38,7 @@ function home() {
     </div>
     <section class="card ct-facts"><h3>About the test</h3>
       <ul><li><b>24 questions</b>, multiple choice, on a computer at a test centre</li><li><b>45 minutes</b></li><li>Pass mark <b>75%</b>: at least 18 right</li><li>All questions come from the official handbook, <i>Life in the United Kingdom: A Guide for New Residents</i> (3rd edition)</li><li>Book and check the fee on <a href="https://www.gov.uk/life-in-the-uk-test" target="_blank" rel="noopener">GOV.UK</a>. Only book through the official site.</li></ul>
-      <p class="fine">⚠️ Harley Citizen is practice only. The questions here are written from the handbook; the real test questions are not published. Not affiliated with the Home Office.</p></section>`;
+      <p class="fine">⚠️ Harlo Citizen is practice only. The questions here are written from the handbook; the real test questions are not published. Not affiliated with the Home Office.</p></section>`;
 }
 
 // ---------- chapters ----------

@@ -1,4 +1,4 @@
--- Harley Says: friends and a friends-only weekly XP leaderboard.
+-- Harlo: friends and a friends-only weekly XP leaderboard.
 -- Everything goes through the hs_* functions below (security definer); the tables have row-level security on
 -- with no direct policies, so nobody can read another person's row except through these functions.
 create table if not exists public.friend_profiles (

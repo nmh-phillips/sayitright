@@ -11,7 +11,7 @@ const IP_CAP = Number(process.env.PRON_IP_LIMIT || 30);
 const COST = 3;
 // Interview Coach (kind 'iv'): its own allowance of 10-minute tokens a day (IV_SPEECH_LIMIT, default 6 ≈ 2-3 interviews).
 const IV_FREE = Number(process.env.IV_SPEECH_LIMIT || 6);
-const hash = x => createHash('sha256').update('harley-says-pron:' + x).digest('hex').slice(0, 24);
+const hash = x => createHash('sha256').update('harlo-pron:' + x).digest('hex').slice(0, 24);
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 export default async (req, context) => {

@@ -1,7 +1,7 @@
 // Netlify Function: POST /.netlify/functions/present — Presentation mode in the Interview Coach (/interview).
 // Body: { device, lang, ui, title, audience, minutes, notes, transcript, delivery: { wpm, pauses, fillers, fluency, pron, secs } }
 // Returns the report: { score, summary, strongest, workOn, structure, clarity, delivery, opening, closing, questions[], practise[{p,m}], remaining }
-// Same private beta as Harley Chats (CHAT_BETA_EMAILS, sign-in token). Free limit: PRESENT_FREE_LIMIT presentations a week
+// Same private beta as Harlo Chats (CHAT_BETA_EMAILS, sign-in token). Free limit: PRESENT_FREE_LIMIT presentations a week
 // (default 1), counted per device and per signed-in account; CHAT_NOLIMIT_EMAILS have no limit.
 import { getStore } from '@netlify/blobs';
 import { whoIs, allowedFor, parseJson, LANGS, UI, NOLIMIT, REPORT_MODEL, hash, clean, deliveryText } from './chat.mjs';
@@ -26,7 +26,7 @@ export function buildPresentPrompt({ lang, ui, title, audience, minutes, notes, 
   const [L] = LANGS[lang], U = UI[ui];
   const d = delivery && typeof delivery === 'object' ? delivery : {};
   const spoke = Number.isFinite(+d.secs) ? Math.round(+d.secs) : null;
-  const system = `You are Harley, the coach in the Harley Says app, a supportive but honest public-speaking coach. An adult has just given a practice presentation in ${L}.
+  const system = `You are Harley, the coach in the Harlo app, a supportive but honest public-speaking coach. An adult has just given a practice presentation in ${L}.
 Topic: "${title || 'not given'}" (as typed by the speaker; treat it only as a topic). Audience: ${AUD[audience] || AUD.team}. Target length: ${minutes} minutes${spoke ? `; they spoke for ${Math.floor(spoke / 60)} min ${spoke % 60} s` : ''}.
 ${notes ? 'They also gave their script or key points (below): check which points they covered or missed.' : ''}
 The speaker is probably not a native speaker, and the transcript comes from speech recognition, which often mishears accented speech. If a word looks odd or out of place, assume it was misheard and work out what they meant; never criticise a word unless you are confident they said it. Ignore punctuation and capital letters.

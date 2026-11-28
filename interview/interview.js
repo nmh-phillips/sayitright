@@ -1,5 +1,5 @@
-// Harley's Interview Coach (harleysays.com/interview/): spoken mock job interviews with Harley (or Lilou) as the interviewer.
-// Hands-free like Harley Chats: Harley asks, the mic opens by itself, a pause sends the answer; the report comes at the end.
+// Harley's Interview Coach (harlolearn.com/interview/): spoken mock job interviews with Harley (or Lilou) as the interviewer.
+// Hands-free like Harlo Chats: Harley asks, the mic opens by itself, a pause sends the answer; the report comes at the end.
 // Back end: /.netlify/functions/chat (scene 'interview', with job + itype) and /.netlify/functions/tts (kind 'line').
 // Text: interview/i18n.js (IV_UI) and /games/acc-i18n.js (HG_ACC, sign-in). Sign-in: /account.js. Private beta: CHAT_BETA_EMAILS.
 (function () {
@@ -21,7 +21,7 @@ function joinResults(results){
 }
 // How long a pause sends the answer: the person's setting (Short / Normal / Long), shared by Chats and Interview Coach.
 const PAUSES = { short: 0.65, normal: 1, long: 1.6 };
-const KINDS = ['general', 'competency', 'customer', 'selt']; // selt: English speaking test practice (Harley Citizen)
+const KINDS = ['general', 'competency', 'customer', 'selt']; // selt: English speaking test practice (Harlo Citizen)
 const LEVELS = ['easy', 'normal', 'hard'];
 const LANGS = { en: ['en-GB', '🇬🇧'], enus: ['en-US', '🇺🇸'], es: ['es-ES', '🇪🇸'], esmx: ['es-MX', '🇲🇽'], fr: ['fr-FR', '🇫🇷'], it: ['it-IT', '🇮🇹'], de: ['de-DE', '🇩🇪'], pt: ['pt-PT', '🇵🇹'], nl: ['nl-NL', '🇳🇱'] };
 const UI = window.IV_UI, ACC = window.HG_ACC || {};
@@ -73,7 +73,7 @@ const S = {
 };
 const pauseMs = () => PAUSE_BASE * (PAUSES[S.pause] || 1);
 if (!KINDS.includes(S.kind)) S.kind = 'general';
-// Opened from Harley Citizen (/interview/?kind=selt): straight to the English speaking test, in English.
+// Opened from Harlo Citizen (/interview/?kind=selt): straight to the English speaking test, in English.
 try { const k = new URLSearchParams(location.search).get('kind'); if (KINDS.includes(k)) { S.kind = k; S.intro = false; S.mode = 'iv'; if (k === 'selt' && lang !== 'en' && lang !== 'enus') lang = 'en'; }
   const jb = new URLSearchParams(location.search).get('job'); if (jb) { S.job = jb.slice(0, 60); if (!new URLSearchParams(location.search).get('lang') && lang !== 'en' && lang !== 'enus') lang = 'en'; } } catch (e) {}
 if (!LEVELS.includes(S.level)) S.level = 'normal';
@@ -606,7 +606,7 @@ function draw() {
 }
 function applyStatic() {
   document.documentElement.lang = ui; document.documentElement.dir = window.IV_RTL[ui] ? 'rtl' : 'ltr';
-  document.title = t('title') + ' — Harley Says';
+  document.title = t('title') + ' — Harlo';
   document.querySelectorAll('[data-t],[data-i18n]').forEach(el => { el.textContent = t(el.dataset.t || el.dataset.i18n); });
   const sel = $('ivUi'); if (sel) { sel.innerHTML = window.IV_UI_LANGS.map(([k, n]) => `<option value="${k}" ${k === ui ? 'selected' : ''}>${n}</option>`).join(''); }
   if (window.hsAccountRelabel) window.hsAccountRelabel();
@@ -667,7 +667,7 @@ document.addEventListener('submit', e => {
 document.addEventListener('keydown', e => { if (e.target.id === 'ivInput' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.form.requestSubmit(); } });
 document.addEventListener('visibilitychange', () => { if (document.hidden && S.view === 'iv') { holdReview(); hush(); stopListening(); S.paused = true; draw(); } });
 
-// ---------- access (private beta, same list as Harley Chats) ----------
+// ---------- access (private beta, same list as Harlo Chats) ----------
 let checking = 0;
 async function checkAccess() {
   const n = ++checking; let on = false;

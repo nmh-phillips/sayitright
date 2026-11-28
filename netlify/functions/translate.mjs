@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 
 const FREE = Number(process.env.TRANSLATE_FREE_LIMIT || 5);
 const IP_CAP = Number(process.env.TRANSLATE_IP_LIMIT || 50);
-const hash = x => createHash('sha256').update('harley-says:' + x).digest('hex').slice(0, 24);
+const hash = x => createHash('sha256').update('harlo:' + x).digest('hex').slice(0, 24);
 
 const NAMES = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American, as spoken in Mexico)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese (Portugal)' };
 // Languages people can translate into (the languages being learnt)

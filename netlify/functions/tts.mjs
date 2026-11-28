@@ -3,7 +3,7 @@
 //   tip  : coaching tip; words in the language being learnt are wrapped in «» and read in that accent, same voice
 //   word : one word/phrase in the language being learnt
 //   clip : 'woof' | 'yay' | 'aww' — little doggy sounds for the end-of-section summary
-//   line : a whole sentence in the language being learnt, no bark first (Harley Chats)
+//   line : a whole sentence in the language being learnt, no bark first (Harlo Chats)
 // Returns audio/mpeg. Clips are cached so repeats cost nothing.
 // Uses AZURE_SPEECH_KEY / AZURE_SPEECH_REGION. HARLEY_VOICE picks Harley's preset (default A); LILOU_VOICE picks Lilou's (L1-L4, default L1). Body may include persona: 'lilou'.
 // Budget: TTS_DAILY_CHARS across everyone (default 15000 ≈ 450k a month, inside Azure's free allowance), TTS_IP_LIMIT requests per connection (default 200).

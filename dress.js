@@ -1,4 +1,4 @@
-// Harley Says: Harley's shop. Spend the XP you've earned (fx.js) on hats, glasses, neckwear and hairstyles for
+// Harlo: Harley's shop. Spend the XP you've earned (fx.js) on hats, glasses, neckwear and hairstyles for
 // Harley and Lilou, or on treats (a streak freeze, a biscuit). What they wear shows on every drawing of them in the app.
 // API: HSDress(svg, who)        add the outfit of 'harley' | 'lilou' to one of the 300×300 face drawings
 //      HSDress.layer(who)       the outfit on its own (an SVG <g>), for drawings that place it themselves (talkhead.js)

@@ -1,4 +1,4 @@
-// Harley's Games interface translations, in the same 16 interface languages as Harley Says.
+// Harley's Games interface translations, in the same 16 interface languages as Harlo.
 // HG_UI: screen text. Word meanings live in games/words.js. AI-translated: get native speakers to check.
 window.HG_UI_LANGS = [['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['it', 'Italiano'], ['de', 'Deutsch'], ['pt', 'Português'], ['pl', 'Polski'], ['ro', 'Română'], ['uk', 'Українська'], ['zh', '中文（简体）'], ['ar', 'العربية'], ['nl', 'Nederlands'], ['tr', 'Türkçe'], ['ja', '日本語'], ['ko', '한국어'], ['vi', 'Tiếng Việt']];
 window.HG_RTL = { ar: true };
@@ -11,7 +11,7 @@ window.HG_UI = {
     t_animals: 'Animals', t_food: 'Food & drink', t_town: 'Around town', t_verbs: 'Everyday verbs', t_past: 'Past tense',
     g_wordsearch: 'Word search', d_wordsearch: 'Find the hidden words in the grid.', g_crossword: 'Crossword', d_crossword: 'Fill the grid from the clues.',
     g_match: 'Match pairs', d_match: 'Pair each word with its meaning.', g_unscramble: 'Unscramble', d_unscramble: 'Put the letters in the right order.',
-    played: '✓ Played {n}×', promoH: 'Can you say them too?', promoP: 'Harley Says listens to you and scores your pronunciation, sound by sound.', promoGo: 'Try Harley Says →',
+    played: '✓ Played {n}×', promoH: 'Can you say them too?', promoP: 'Harlo listens to you and scores your pronunciation, sound by sound.', promoGo: 'Try Harlo →',
     aboutH: 'How it works', about1: "Pick the language you're learning and a topic, then choose a game. Tap any word you've found to hear it said out loud.",
     about2: "Verbs come as infinitives (\"to eat\") and in the past tense, so you practise the forms you'll actually use.",
     h_wordsearch: 'Drag across the letters (or tap the first and last letter) to find each word.', h_crossword: 'Tap a square or a clue, then type. Accents are optional: "e" counts for "é".',
@@ -19,7 +19,7 @@ window.HG_UI = {
     found: '{n} of {m} found', across: 'Across', down: 'Down', check: 'Check', reveal: 'Reveal', toFix: 'Letters to fix (in red): {n}', toGo: 'Squares to go: {n}',
     revealed: 'Answers revealed. Tap a clue to hear the word.', noCw: "Couldn't build a crossword for this topic. Try another one.", wordOf: 'Word {n} of {m}', hint: '💡 Hint', skip: 'Skip',
     time: 'Time: {s} s · Mistakes: {m}', done3: 'Woof woof! Perfect!', done2: 'Woof! Great job!', done1: 'Woof! You did it!', again: 'Play again', other: 'Other games',
-    promo2H: 'Now say them out loud', promo2P: "Practise your pronunciation with Harley Says. He'll tell you how you sounded.", pronLink: 'Harley Says pronunciation', privacy: 'Privacy', terms: 'Terms', adults: 'For adults aged 18 and over.', back: 'All games', listen: 'Listen'
+    promo2H: 'Now say them out loud', promo2P: "Practise your pronunciation with Harlo. He'll tell you how you sounded.", pronLink: 'Harlo pronunciation', privacy: 'Privacy', terms: 'Terms', adults: 'For adults aged 18 and over.', back: 'All games', listen: 'Listen'
   },
   es: {
     iSpeak: 'Hablo', learning: 'Estoy aprendiendo', pron: '🎙️ Pronunciación', title: 'Los juegos de Harley: formas divertidas de aprender vocabulario y verbos',
@@ -27,7 +27,7 @@ window.HG_UI = {
     t_animals: 'Animales', t_food: 'Comida y bebida', t_town: 'Por la ciudad', t_verbs: 'Verbos cotidianos', t_past: 'Pasado',
     g_wordsearch: 'Sopa de letras', d_wordsearch: 'Encuentra las palabras escondidas.', g_crossword: 'Crucigrama', d_crossword: 'Rellena la cuadrícula con las pistas.',
     g_match: 'Parejas', d_match: 'Une cada palabra con su significado.', g_unscramble: 'Desordenadas', d_unscramble: 'Pon las letras en el orden correcto.',
-    played: '✓ Jugado {n}×', promoH: '¿Sabes decirlas también?', promoP: 'Harley Says te escucha y puntúa tu pronunciación, sonido a sonido.', promoGo: 'Prueba Harley Says →',
+    played: '✓ Jugado {n}×', promoH: '¿Sabes decirlas también?', promoP: 'Harlo te escucha y puntúa tu pronunciación, sonido a sonido.', promoGo: 'Prueba Harlo →',
     aboutH: 'Cómo funciona', about1: 'Elige el idioma que aprendes y un tema, y después un juego. Toca cualquier palabra encontrada para oírla en voz alta.',
     about2: 'Los verbos aparecen en infinitivo y en pasado, para que practiques las formas que de verdad usarás.',
     h_wordsearch: 'Arrastra por las letras (o toca la primera y la última) para encontrar cada palabra.', h_crossword: 'Toca una casilla o una pista y escribe. Las tildes son opcionales: «e» vale por «é».',
@@ -35,7 +35,7 @@ window.HG_UI = {
     found: '{n} de {m} encontradas', across: 'Horizontales', down: 'Verticales', check: 'Comprobar', reveal: 'Ver respuestas', toFix: 'Letras por corregir (en rojo): {n}', toGo: 'Casillas por rellenar: {n}',
     revealed: 'Respuestas mostradas. Toca una pista para oír la palabra.', noCw: 'No se pudo crear un crucigrama para este tema. Prueba otro.', wordOf: 'Palabra {n} de {m}', hint: '💡 Pista', skip: 'Saltar',
     time: 'Tiempo: {s} s · Errores: {m}', done3: '¡Guau guau! ¡Perfecto!', done2: '¡Guau! ¡Muy bien!', done1: '¡Guau! ¡Lo lograste!', again: 'Jugar otra vez', other: 'Otros juegos',
-    promo2H: 'Ahora dilas en voz alta', promo2P: 'Practica tu pronunciación con Harley Says. Te dirá cómo has sonado.', pronLink: 'Pronunciación con Harley Says', privacy: 'Privacidad', terms: 'Condiciones', adults: 'Para mayores de 18 años.', back: 'Todos los juegos', listen: 'Escuchar'
+    promo2H: 'Ahora dilas en voz alta', promo2P: 'Practica tu pronunciación con Harlo. Te dirá cómo has sonado.', pronLink: 'Pronunciación con Harlo', privacy: 'Privacidad', terms: 'Condiciones', adults: 'Para mayores de 18 años.', back: 'Todos los juegos', listen: 'Escuchar'
   },
   fr: {
     iSpeak: 'Je parle', learning: "J'apprends", pron: '🎙️ Prononciation', title: 'Les jeux de Harley : des façons amusantes d\'apprendre le vocabulaire et les verbes',
@@ -43,7 +43,7 @@ window.HG_UI = {
     t_animals: 'Animaux', t_food: 'Nourriture et boissons', t_town: 'En ville', t_verbs: 'Verbes du quotidien', t_past: 'Passé',
     g_wordsearch: 'Mots mêlés', d_wordsearch: 'Trouvez les mots cachés dans la grille.', g_crossword: 'Mots croisés', d_crossword: 'Remplissez la grille grâce aux indices.',
     g_match: 'Paires', d_match: 'Associez chaque mot à son sens.', g_unscramble: 'Lettres mélangées', d_unscramble: 'Remettez les lettres dans le bon ordre.',
-    played: '✓ Joué {n}×', promoH: 'Savez-vous aussi les dire ?', promoP: 'Harley Says vous écoute et note votre prononciation, son par son.', promoGo: 'Essayer Harley Says →',
+    played: '✓ Joué {n}×', promoH: 'Savez-vous aussi les dire ?', promoP: 'Harlo vous écoute et note votre prononciation, son par son.', promoGo: 'Essayer Harlo →',
     aboutH: 'Comment ça marche', about1: "Choisissez la langue que vous apprenez et un thème, puis un jeu. Touchez un mot trouvé pour l'entendre.",
     about2: "Les verbes sont à l'infinitif et au passé, pour pratiquer les formes que vous utiliserez vraiment.",
     h_wordsearch: 'Glissez sur les lettres (ou touchez la première et la dernière) pour trouver chaque mot.', h_crossword: "Touchez une case ou un indice, puis tapez. Les accents sont facultatifs : « e » vaut « é ».",
@@ -51,7 +51,7 @@ window.HG_UI = {
     found: '{n} sur {m} trouvés', across: 'Horizontalement', down: 'Verticalement', check: 'Vérifier', reveal: 'Voir les réponses', toFix: 'Lettres à corriger (en rouge) : {n}', toGo: 'Cases restantes : {n}',
     revealed: 'Réponses affichées. Touchez un indice pour entendre le mot.', noCw: 'Impossible de créer des mots croisés pour ce thème. Essayez-en un autre.', wordOf: 'Mot {n} sur {m}', hint: '💡 Indice', skip: 'Passer',
     time: 'Temps : {s} s · Erreurs : {m}', done3: 'Ouaf ouaf ! Parfait !', done2: 'Ouaf ! Bravo !', done1: 'Ouaf ! Réussi !', again: 'Rejouer', other: 'Autres jeux',
-    promo2H: 'Maintenant, dites-les à voix haute', promo2P: 'Travaillez votre prononciation avec Harley Says. Il vous dira comment vous avez prononcé.', pronLink: 'Prononciation Harley Says', privacy: 'Confidentialité', terms: 'Conditions', adults: 'Réservé aux adultes de 18 ans et plus.', back: 'Tous les jeux', listen: 'Écouter'
+    promo2H: 'Maintenant, dites-les à voix haute', promo2P: 'Travaillez votre prononciation avec Harlo. Il vous dira comment vous avez prononcé.', pronLink: 'Prononciation Harlo', privacy: 'Confidentialité', terms: 'Conditions', adults: 'Réservé aux adultes de 18 ans et plus.', back: 'Tous les jeux', listen: 'Écouter'
   },
   it: {
     iSpeak: 'Parlo', learning: 'Sto imparando', pron: '🎙️ Pronuncia', title: 'I giochi di Harley: modi divertenti per imparare vocaboli e verbi',
@@ -59,7 +59,7 @@ window.HG_UI = {
     t_animals: 'Animali', t_food: 'Cibo e bevande', t_town: 'In città', t_verbs: 'Verbi di tutti i giorni', t_past: 'Passato',
     g_wordsearch: 'Crucipuzzle', d_wordsearch: 'Trova le parole nascoste nella griglia.', g_crossword: 'Cruciverba', d_crossword: 'Riempi la griglia con le definizioni.',
     g_match: 'Coppie', d_match: 'Abbina ogni parola al suo significato.', g_unscramble: 'Anagrammi', d_unscramble: "Metti le lettere nell'ordine giusto.",
-    played: '✓ Giocato {n}×', promoH: 'Sai anche pronunciarle?', promoP: 'Harley Says ti ascolta e valuta la tua pronuncia, suono per suono.', promoGo: 'Prova Harley Says →',
+    played: '✓ Giocato {n}×', promoH: 'Sai anche pronunciarle?', promoP: 'Harlo ti ascolta e valuta la tua pronuncia, suono per suono.', promoGo: 'Prova Harlo →',
     aboutH: 'Come funziona', about1: 'Scegli la lingua che stai imparando e un argomento, poi un gioco. Tocca una parola trovata per sentirla.',
     about2: "I verbi sono all'infinito e al passato, così pratichi le forme che userai davvero.",
     h_wordsearch: "Trascina sulle lettere (o tocca la prima e l'ultima) per trovare ogni parola.", h_crossword: 'Tocca una casella o una definizione e scrivi. Gli accenti sono facoltativi: «e» vale «è».',
@@ -67,7 +67,7 @@ window.HG_UI = {
     found: '{n} di {m} trovate', across: 'Orizzontali', down: 'Verticali', check: 'Controlla', reveal: 'Mostra soluzioni', toFix: 'Lettere da correggere (in rosso): {n}', toGo: 'Caselle mancanti: {n}',
     revealed: 'Soluzioni mostrate. Tocca una definizione per sentire la parola.', noCw: 'Impossibile creare un cruciverba per questo argomento. Provane un altro.', wordOf: 'Parola {n} di {m}', hint: '💡 Aiuto', skip: 'Salta',
     time: 'Tempo: {s} s · Errori: {m}', done3: 'Bau bau! Perfetto!', done2: 'Bau! Ottimo lavoro!', done1: 'Bau! Ce l\'hai fatta!', again: 'Gioca ancora', other: 'Altri giochi',
-    promo2H: 'Ora dille ad alta voce', promo2P: 'Esercita la pronuncia con Harley Says. Ti dirà come hai pronunciato.', pronLink: 'Pronuncia con Harley Says', privacy: 'Privacy', terms: 'Termini', adults: 'Per adulti dai 18 anni in su.', back: 'Tutti i giochi', listen: 'Ascolta'
+    promo2H: 'Ora dille ad alta voce', promo2P: 'Esercita la pronuncia con Harlo. Ti dirà come hai pronunciato.', pronLink: 'Pronuncia con Harlo', privacy: 'Privacy', terms: 'Termini', adults: 'Per adulti dai 18 anni in su.', back: 'Tutti i giochi', listen: 'Ascolta'
   },
   de: {
     iSpeak: 'Ich spreche', learning: 'Ich lerne', pron: '🎙️ Aussprache', title: 'Harleys Spiele – Wörter und Verben spielerisch lernen',
@@ -75,7 +75,7 @@ window.HG_UI = {
     t_animals: 'Tiere', t_food: 'Essen & Trinken', t_town: 'In der Stadt', t_verbs: 'Alltagsverben', t_past: 'Vergangenheit',
     g_wordsearch: 'Suchrätsel', d_wordsearch: 'Finde die versteckten Wörter im Gitter.', g_crossword: 'Kreuzworträtsel', d_crossword: 'Fülle das Gitter mit Hilfe der Hinweise.',
     g_match: 'Paare finden', d_match: 'Ordne jedem Wort seine Bedeutung zu.', g_unscramble: 'Buchstabensalat', d_unscramble: 'Bring die Buchstaben in die richtige Reihenfolge.',
-    played: '✓ {n}× gespielt', promoH: 'Kannst du sie auch aussprechen?', promoP: 'Harley Says hört dir zu und bewertet deine Aussprache, Laut für Laut.', promoGo: 'Harley Says testen →',
+    played: '✓ {n}× gespielt', promoH: 'Kannst du sie auch aussprechen?', promoP: 'Harlo hört dir zu und bewertet deine Aussprache, Laut für Laut.', promoGo: 'Harlo testen →',
     aboutH: "So funktioniert's", about1: 'Wähle die Sprache, die du lernst, und ein Thema, dann ein Spiel. Tippe auf ein gefundenes Wort, um es zu hören.',
     about2: 'Verben gibt es im Infinitiv und in der Vergangenheit, damit du die Formen übst, die du wirklich brauchst.',
     h_wordsearch: 'Wische über die Buchstaben (oder tippe auf den ersten und letzten), um jedes Wort zu finden.', h_crossword: 'Tippe auf ein Feld oder einen Hinweis und schreib los. Akzente sind optional: „e“ zählt für „é“.',
@@ -83,7 +83,7 @@ window.HG_UI = {
     found: '{n} von {m} gefunden', across: 'Waagerecht', down: 'Senkrecht', check: 'Prüfen', reveal: 'Lösung zeigen', toFix: 'Zu korrigierende Buchstaben (rot): {n}', toGo: 'Fehlende Felder: {n}',
     revealed: 'Lösung angezeigt. Tippe auf einen Hinweis, um das Wort zu hören.', noCw: 'Für dieses Thema konnte kein Kreuzworträtsel erstellt werden. Probier ein anderes.', wordOf: 'Wort {n} von {m}', hint: '💡 Tipp', skip: 'Überspringen',
     time: 'Zeit: {s} s · Fehler: {m}', done3: 'Wuff wuff! Perfekt!', done2: 'Wuff! Super gemacht!', done1: 'Wuff! Geschafft!', again: 'Nochmal spielen', other: 'Andere Spiele',
-    promo2H: 'Jetzt sag sie laut', promo2P: 'Übe deine Aussprache mit Harley Says. Er sagt dir, wie du geklungen hast.', pronLink: 'Aussprache mit Harley Says', privacy: 'Datenschutz', terms: 'Nutzungsbedingungen', adults: 'Für Erwachsene ab 18 Jahren.', back: 'Alle Spiele', listen: 'Anhören'
+    promo2H: 'Jetzt sag sie laut', promo2P: 'Übe deine Aussprache mit Harlo. Er sagt dir, wie du geklungen hast.', pronLink: 'Aussprache mit Harlo', privacy: 'Datenschutz', terms: 'Nutzungsbedingungen', adults: 'Für Erwachsene ab 18 Jahren.', back: 'Alle Spiele', listen: 'Anhören'
   },
   pt: {
     iSpeak: 'Falo', learning: 'Quero aprender', pron: '🎙️ Pronúncia', title: 'Os jogos do Harley: formas divertidas de aprender vocabulário e verbos',
@@ -91,7 +91,7 @@ window.HG_UI = {
     t_animals: 'Animais', t_food: 'Comida e bebida', t_town: 'Pela cidade', t_verbs: 'Verbos do dia a dia', t_past: 'Passado',
     g_wordsearch: 'Sopa de letras', d_wordsearch: 'Encontre as palavras escondidas na grelha.', g_crossword: 'Palavras cruzadas', d_crossword: 'Preencha a grelha com as pistas.',
     g_match: 'Pares', d_match: 'Junte cada palavra ao seu significado.', g_unscramble: 'Letras baralhadas', d_unscramble: 'Ponha as letras pela ordem certa.',
-    played: '✓ Jogado {n}×', promoH: 'Também as sabe dizer?', promoP: 'O Harley Says ouve-o e avalia a sua pronúncia, som a som.', promoGo: 'Experimentar o Harley Says →',
+    played: '✓ Jogado {n}×', promoH: 'Também as sabe dizer?', promoP: 'O Harlo ouve-o e avalia a sua pronúncia, som a som.', promoGo: 'Experimentar o Harlo →',
     aboutH: 'Como funciona', about1: 'Escolha a língua que está a aprender e um tema, depois um jogo. Toque numa palavra encontrada para a ouvir.',
     about2: 'Os verbos aparecem no infinitivo e no passado, para praticar as formas que vai mesmo usar.',
     h_wordsearch: 'Arraste pelas letras (ou toque na primeira e na última) para encontrar cada palavra.', h_crossword: 'Toque numa casa ou numa pista e escreva. Os acentos são opcionais: «e» conta como «é».',
@@ -99,7 +99,7 @@ window.HG_UI = {
     found: '{n} de {m} encontradas', across: 'Horizontais', down: 'Verticais', check: 'Verificar', reveal: 'Ver respostas', toFix: 'Letras a corrigir (a vermelho): {n}', toGo: 'Casas por preencher: {n}',
     revealed: 'Respostas mostradas. Toque numa pista para ouvir a palavra.', noCw: 'Não foi possível criar palavras cruzadas para este tema. Experimente outro.', wordOf: 'Palavra {n} de {m}', hint: '💡 Dica', skip: 'Saltar',
     time: 'Tempo: {s} s · Erros: {m}', done3: 'Ão ão! Perfeito!', done2: 'Ão! Muito bem!', done1: 'Ão! Conseguiu!', again: 'Jogar outra vez', other: 'Outros jogos',
-    promo2H: 'Agora diga-as em voz alta', promo2P: 'Pratique a pronúncia com o Harley Says. Ele diz-lhe como soou.', pronLink: 'Pronúncia com o Harley Says', privacy: 'Privacidade', terms: 'Termos', adults: 'Para adultos com 18 anos ou mais.', back: 'Todos os jogos', listen: 'Ouvir'
+    promo2H: 'Agora diga-as em voz alta', promo2P: 'Pratique a pronúncia com o Harlo. Ele diz-lhe como soou.', pronLink: 'Pronúncia com o Harlo', privacy: 'Privacidade', terms: 'Termos', adults: 'Para adultos com 18 anos ou mais.', back: 'Todos os jogos', listen: 'Ouvir'
   },
   pl: {
     iSpeak: 'Mówię po', learning: 'Uczę się', pron: '🎙️ Wymowa', title: 'Gry Harleya – zabawne sposoby nauki słówek i czasowników',
@@ -107,7 +107,7 @@ window.HG_UI = {
     t_animals: 'Zwierzęta', t_food: 'Jedzenie i picie', t_town: 'W mieście', t_verbs: 'Codzienne czasowniki', t_past: 'Czas przeszły',
     g_wordsearch: 'Wykreślanka', d_wordsearch: 'Znajdź ukryte słowa w diagramie.', g_crossword: 'Krzyżówka', d_crossword: 'Wypełnij diagram na podstawie wskazówek.',
     g_match: 'Pary', d_match: 'Połącz każde słowo z jego znaczeniem.', g_unscramble: 'Rozsypanka', d_unscramble: 'Ułóż litery we właściwej kolejności.',
-    played: '✓ Zagrano {n}×', promoH: 'Umiesz je też wymówić?', promoP: 'Harley Says słucha cię i ocenia twoją wymowę, dźwięk po dźwięku.', promoGo: 'Wypróbuj Harley Says →',
+    played: '✓ Zagrano {n}×', promoH: 'Umiesz je też wymówić?', promoP: 'Harlo słucha cię i ocenia twoją wymowę, dźwięk po dźwięku.', promoGo: 'Wypróbuj Harlo →',
     aboutH: 'Jak to działa', about1: 'Wybierz język, którego się uczysz, i temat, a potem grę. Dotknij znalezionego słowa, aby je usłyszeć.',
     about2: 'Czasowniki występują w bezokoliczniku i w czasie przeszłym, więc ćwiczysz formy, których naprawdę użyjesz.',
     h_wordsearch: 'Przeciągnij po literach (albo dotknij pierwszej i ostatniej), aby znaleźć każde słowo.', h_crossword: 'Dotknij pola lub wskazówki i pisz. Akcenty są opcjonalne: „e” liczy się jako „é”.',
@@ -115,7 +115,7 @@ window.HG_UI = {
     found: 'Znaleziono {n} z {m}', across: 'Poziomo', down: 'Pionowo', check: 'Sprawdź', reveal: 'Pokaż odpowiedzi', toFix: 'Litery do poprawy (na czerwono): {n}', toGo: 'Pozostałe pola: {n}',
     revealed: 'Odpowiedzi pokazane. Dotknij wskazówki, aby usłyszeć słowo.', noCw: 'Nie udało się ułożyć krzyżówki dla tego tematu. Spróbuj innego.', wordOf: 'Słowo {n} z {m}', hint: '💡 Podpowiedź', skip: 'Pomiń',
     time: 'Czas: {s} s · Błędy: {m}', done3: 'Hau hau! Idealnie!', done2: 'Hau! Świetna robota!', done1: 'Hau! Udało się!', again: 'Zagraj ponownie', other: 'Inne gry',
-    promo2H: 'Teraz powiedz je na głos', promo2P: 'Ćwicz wymowę z Harley Says. Powie ci, jak brzmiałeś.', pronLink: 'Wymowa z Harley Says', privacy: 'Prywatność', terms: 'Regulamin', adults: 'Dla dorosłych od 18 lat.', back: 'Wszystkie gry', listen: 'Posłuchaj'
+    promo2H: 'Teraz powiedz je na głos', promo2P: 'Ćwicz wymowę z Harlo. Powie ci, jak brzmiałeś.', pronLink: 'Wymowa z Harlo', privacy: 'Prywatność', terms: 'Regulamin', adults: 'Dla dorosłych od 18 lat.', back: 'Wszystkie gry', listen: 'Posłuchaj'
   },
   ro: {
     iSpeak: 'Vorbesc', learning: 'Învăț', pron: '🎙️ Pronunție', title: 'Jocurile lui Harley – moduri distractive de a învăța vocabular și verbe',
@@ -123,7 +123,7 @@ window.HG_UI = {
     t_animals: 'Animale', t_food: 'Mâncare și băutură', t_town: 'Prin oraș', t_verbs: 'Verbe uzuale', t_past: 'Trecut',
     g_wordsearch: 'Cuvinte ascunse', d_wordsearch: 'Găsește cuvintele ascunse în grilă.', g_crossword: 'Rebus', d_crossword: 'Completează grila cu ajutorul indiciilor.',
     g_match: 'Perechi', d_match: 'Potrivește fiecare cuvânt cu sensul lui.', g_unscramble: 'Litere amestecate', d_unscramble: 'Pune literele în ordinea corectă.',
-    played: '✓ Jucat de {n}×', promoH: 'Știi să le și pronunți?', promoP: 'Harley Says te ascultă și îți notează pronunția, sunet cu sunet.', promoGo: 'Încearcă Harley Says →',
+    played: '✓ Jucat de {n}×', promoH: 'Știi să le și pronunți?', promoP: 'Harlo te ascultă și îți notează pronunția, sunet cu sunet.', promoGo: 'Încearcă Harlo →',
     aboutH: 'Cum funcționează', about1: 'Alege limba pe care o înveți și o temă, apoi un joc. Atinge un cuvânt găsit ca să-l auzi.',
     about2: 'Verbele apar la infinitiv și la trecut, ca să exersezi formele pe care chiar le vei folosi.',
     h_wordsearch: 'Trage peste litere (sau atinge prima și ultima literă) ca să găsești fiecare cuvânt.', h_crossword: 'Atinge un pătrat sau un indiciu, apoi scrie. Accentele sunt opționale: „e” contează ca „é”.',
@@ -131,7 +131,7 @@ window.HG_UI = {
     found: '{n} din {m} găsite', across: 'Orizontal', down: 'Vertical', check: 'Verifică', reveal: 'Arată răspunsurile', toFix: 'Litere de corectat (cu roșu): {n}', toGo: 'Pătrate rămase: {n}',
     revealed: 'Răspunsuri afișate. Atinge un indiciu ca să auzi cuvântul.', noCw: 'Nu s-a putut crea un rebus pentru această temă. Încearcă alta.', wordOf: 'Cuvântul {n} din {m}', hint: '💡 Indiciu', skip: 'Sari peste',
     time: 'Timp: {s} s · Greșeli: {m}', done3: 'Ham ham! Perfect!', done2: 'Ham! Foarte bine!', done1: 'Ham! Ai reușit!', again: 'Joacă din nou', other: 'Alte jocuri',
-    promo2H: 'Acum spune-le cu voce tare', promo2P: 'Exersează-ți pronunția cu Harley Says. Îți spune cum ai sunat.', pronLink: 'Pronunție cu Harley Says', privacy: 'Confidențialitate', terms: 'Termeni', adults: 'Pentru adulți de peste 18 ani.', back: 'Toate jocurile', listen: 'Ascultă'
+    promo2H: 'Acum spune-le cu voce tare', promo2P: 'Exersează-ți pronunția cu Harlo. Îți spune cum ai sunat.', pronLink: 'Pronunție cu Harlo', privacy: 'Confidențialitate', terms: 'Termeni', adults: 'Pentru adulți de peste 18 ani.', back: 'Toate jocurile', listen: 'Ascultă'
   },
   uk: {
     iSpeak: 'Я розмовляю', learning: 'Я вивчаю', pron: '🎙️ Вимова', title: 'Ігри Гарлі — веселі способи вчити слова й дієслова',
@@ -139,7 +139,7 @@ window.HG_UI = {
     t_animals: 'Тварини', t_food: 'Їжа та напої', t_town: 'У місті', t_verbs: 'Щоденні дієслова', t_past: 'Минулий час',
     g_wordsearch: 'Пошук слів', d_wordsearch: 'Знайди сховані слова в сітці.', g_crossword: 'Кросворд', d_crossword: 'Заповни сітку за підказками.',
     g_match: 'Пари', d_match: 'Поєднай кожне слово з його значенням.', g_unscramble: 'Анаграми', d_unscramble: 'Розстав літери в правильному порядку.',
-    played: '✓ Зіграно {n}×', promoH: 'А вимовити їх зможеш?', promoP: 'Harley Says слухає тебе й оцінює вимову звук за звуком.', promoGo: 'Спробувати Harley Says →',
+    played: '✓ Зіграно {n}×', promoH: 'А вимовити їх зможеш?', promoP: 'Harlo слухає тебе й оцінює вимову звук за звуком.', promoGo: 'Спробувати Harlo →',
     aboutH: 'Як це працює', about1: 'Обери мову, яку вивчаєш, і тему, а потім гру. Торкнись знайденого слова, щоб його почути.',
     about2: 'Дієслова подано в інфінітиві та в минулому часі, щоб ти тренував форми, які справді знадобляться.',
     h_wordsearch: 'Проведи по літерах (або торкнись першої й останньої), щоб знайти кожне слово.', h_crossword: 'Торкнись клітинки або підказки й пиши. Наголоси необов’язкові: «e» зараховується як «é».',
@@ -147,7 +147,7 @@ window.HG_UI = {
     found: 'Знайдено {n} з {m}', across: 'По горизонталі', down: 'По вертикалі', check: 'Перевірити', reveal: 'Показати відповіді', toFix: 'Літер виправити (червоним): {n}', toGo: 'Клітинок залишилось: {n}',
     revealed: 'Відповіді показано. Торкнись підказки, щоб почути слово.', noCw: 'Не вдалося скласти кросворд для цієї теми. Спробуй іншу.', wordOf: 'Слово {n} з {m}', hint: '💡 Підказка', skip: 'Пропустити',
     time: 'Час: {s} с · Помилки: {m}', done3: 'Гав-гав! Ідеально!', done2: 'Гав! Чудово!', done1: 'Гав! Вийшло!', again: 'Грати знову', other: 'Інші ігри',
-    promo2H: 'Тепер скажи їх уголос', promo2P: 'Тренуй вимову з Harley Says. Він скаже, як ти прозвучав.', pronLink: 'Вимова з Harley Says', privacy: 'Конфіденційність', terms: 'Умови', adults: 'Для дорослих від 18 років.', back: 'Усі ігри', listen: 'Слухати'
+    promo2H: 'Тепер скажи їх уголос', promo2P: 'Тренуй вимову з Harlo. Він скаже, як ти прозвучав.', pronLink: 'Вимова з Harlo', privacy: 'Конфіденційність', terms: 'Умови', adults: 'Для дорослих від 18 років.', back: 'Усі ігри', listen: 'Слухати'
   },
   zh: {
     iSpeak: '我说', learning: '我在学', pron: '🎙️ 发音练习', title: 'Harley 的游戏——轻松有趣地学词汇和动词',
@@ -155,7 +155,7 @@ window.HG_UI = {
     t_animals: '动物', t_food: '食物和饮料', t_town: '城市里', t_verbs: '常用动词', t_past: '过去时',
     g_wordsearch: '找词游戏', d_wordsearch: '在字母方格里找出隐藏的单词。', g_crossword: '填字游戏', d_crossword: '根据提示填满方格。',
     g_match: '配对', d_match: '把每个单词和它的意思配对。', g_unscramble: '字母重组', d_unscramble: '把字母排成正确的顺序。',
-    played: '✓ 已玩 {n} 次', promoH: '你也会说吗？', promoP: 'Harley Says 会听你说，并逐个音给你的发音打分。', promoGo: '试试 Harley Says →',
+    played: '✓ 已玩 {n} 次', promoH: '你也会说吗？', promoP: 'Harlo 会听你说，并逐个音给你的发音打分。', promoGo: '试试 Harlo →',
     aboutH: '怎么玩', about1: '选择你在学的语言和一个主题，然后选一个游戏。点一下找到的单词就能听到读音。',
     about2: '动词有原形和过去时两种形式，让你练习真正用得上的形式。',
     h_wordsearch: '在字母上滑动（或点第一个和最后一个字母）来找出每个单词。', h_crossword: '点一个方格或一条提示，然后输入。重音符号可省略：“e”也算“é”。',
@@ -163,7 +163,7 @@ window.HG_UI = {
     found: '已找到 {n}/{m}', across: '横向', down: '纵向', check: '检查', reveal: '显示答案', toFix: '需要改正的字母（红色）：{n}', toGo: '还剩方格：{n}',
     revealed: '已显示答案。点一条提示可以听单词。', noCw: '这个主题无法生成填字游戏，请换一个试试。', wordOf: '第 {n}/{m} 个单词', hint: '💡 提示', skip: '跳过',
     time: '用时：{s} 秒 · 错误：{m}', done3: '汪汪！太完美了！', done2: '汪！做得好！', done1: '汪！完成了！', again: '再玩一次', other: '其他游戏',
-    promo2H: '现在大声说出来', promo2P: '用 Harley Says 练习发音，它会告诉你说得怎么样。', pronLink: 'Harley Says 发音练习', privacy: '隐私', terms: '条款', adults: '仅限 18 岁及以上成人使用。', back: '所有游戏', listen: '听'
+    promo2H: '现在大声说出来', promo2P: '用 Harlo 练习发音，它会告诉你说得怎么样。', pronLink: 'Harlo 发音练习', privacy: '隐私', terms: '条款', adults: '仅限 18 岁及以上成人使用。', back: '所有游戏', listen: '听'
   },
   ar: {
     iSpeak: 'أتحدث', learning: 'أتعلم', pron: '🎙️ النطق', title: 'ألعاب هارلي — طرق ممتعة لتعلّم المفردات والأفعال',
@@ -171,7 +171,7 @@ window.HG_UI = {
     t_animals: 'الحيوانات', t_food: 'الطعام والشراب', t_town: 'في المدينة', t_verbs: 'أفعال يومية', t_past: 'الماضي',
     g_wordsearch: 'البحث عن الكلمات', d_wordsearch: 'اعثر على الكلمات المخفية في الشبكة.', g_crossword: 'الكلمات المتقاطعة', d_crossword: 'املأ الشبكة باستخدام التلميحات.',
     g_match: 'الأزواج', d_match: 'طابق كل كلمة مع معناها.', g_unscramble: 'ترتيب الحروف', d_unscramble: 'رتّب الحروف بالترتيب الصحيح.',
-    played: '✓ لُعبت {n} مرة', promoH: 'هل تستطيع نطقها أيضًا؟', promoP: 'يستمع إليك Harley Says ويقيّم نطقك صوتًا بصوت.', promoGo: '← جرّب Harley Says',
+    played: '✓ لُعبت {n} مرة', promoH: 'هل تستطيع نطقها أيضًا؟', promoP: 'يستمع إليك Harlo ويقيّم نطقك صوتًا بصوت.', promoGo: '← جرّب Harlo',
     aboutH: 'كيف تعمل', about1: 'اختر اللغة التي تتعلمها وموضوعًا، ثم اختر لعبة. المس أي كلمة وجدتها لتسمعها.',
     about2: 'تأتي الأفعال في صيغة المصدر وفي الماضي، لتتدرّب على الصيغ التي ستستخدمها فعلًا.',
     h_wordsearch: 'اسحب على الحروف (أو المس الحرف الأول والأخير) للعثور على كل كلمة.', h_crossword: 'المس مربعًا أو تلميحًا ثم اكتب. علامات الحروف اختيارية: «e» تُحسب «é».',
@@ -179,7 +179,7 @@ window.HG_UI = {
     found: 'وُجدت {n} من {m}', across: 'أفقيًا', down: 'عموديًا', check: 'تحقّق', reveal: 'اعرض الإجابات', toFix: 'حروف تحتاج إلى تصحيح (بالأحمر): {n}', toGo: 'مربعات متبقية: {n}',
     revealed: 'تم عرض الإجابات. المس تلميحًا لسماع الكلمة.', noCw: 'تعذّر إنشاء كلمات متقاطعة لهذا الموضوع. جرّب موضوعًا آخر.', wordOf: 'الكلمة {n} من {m}', hint: '💡 تلميح', skip: 'تخطَّ',
     time: 'الوقت: {s} ث · الأخطاء: {m}', done3: 'هاو هاو! ممتاز!', done2: 'هاو! أحسنت!', done1: 'هاو! لقد نجحت!', again: 'العب مجددًا', other: 'ألعاب أخرى',
-    promo2H: 'والآن قلها بصوت عالٍ', promo2P: 'تدرّب على النطق مع Harley Says، وسيخبرك كيف بدا نطقك.', pronLink: 'النطق مع Harley Says', privacy: 'الخصوصية', terms: 'الشروط', adults: 'للبالغين من عمر 18 عامًا فما فوق.', back: 'كل الألعاب', listen: 'استمع'
+    promo2H: 'والآن قلها بصوت عالٍ', promo2P: 'تدرّب على النطق مع Harlo، وسيخبرك كيف بدا نطقك.', pronLink: 'النطق مع Harlo', privacy: 'الخصوصية', terms: 'الشروط', adults: 'للبالغين من عمر 18 عامًا فما فوق.', back: 'كل الألعاب', listen: 'استمع'
   },
   nl: {
     iSpeak: 'Ik spreek', learning: 'Ik leer', pron: '🎙️ Uitspraak', title: 'Harley’s spelletjes – leuke manieren om woorden en werkwoorden te leren',
@@ -187,7 +187,7 @@ window.HG_UI = {
     t_animals: 'Dieren', t_food: 'Eten en drinken', t_town: 'In de stad', t_verbs: 'Alledaagse werkwoorden', t_past: 'Verleden tijd',
     g_wordsearch: 'Woordzoeker', d_wordsearch: 'Vind de verborgen woorden in het rooster.', g_crossword: 'Kruiswoordpuzzel', d_crossword: 'Vul het rooster in met de hints.',
     g_match: 'Paren', d_match: 'Koppel elk woord aan de betekenis.', g_unscramble: 'Letterhusselaar', d_unscramble: 'Zet de letters in de goede volgorde.',
-    played: '✓ {n}× gespeeld', promoH: 'Kun je ze ook uitspreken?', promoP: 'Harley Says luistert naar je en beoordeelt je uitspraak, klank voor klank.', promoGo: 'Probeer Harley Says →',
+    played: '✓ {n}× gespeeld', promoH: 'Kun je ze ook uitspreken?', promoP: 'Harlo luistert naar je en beoordeelt je uitspraak, klank voor klank.', promoGo: 'Probeer Harlo →',
     aboutH: 'Zo werkt het', about1: 'Kies de taal die je leert en een onderwerp, en dan een spel. Tik op een gevonden woord om het te horen.',
     about2: 'Werkwoorden staan in de infinitief en de verleden tijd, zodat je de vormen oefent die je echt gebruikt.',
     h_wordsearch: 'Veeg over de letters (of tik op de eerste en laatste letter) om elk woord te vinden.', h_crossword: 'Tik op een vakje of een hint en typ. Accenten zijn optioneel: "e" telt als "é".',
@@ -195,7 +195,7 @@ window.HG_UI = {
     found: '{n} van {m} gevonden', across: 'Horizontaal', down: 'Verticaal', check: 'Controleren', reveal: 'Antwoorden tonen', toFix: 'Letters te verbeteren (rood): {n}', toGo: 'Vakjes te gaan: {n}',
     revealed: 'Antwoorden getoond. Tik op een hint om het woord te horen.', noCw: 'Voor dit onderwerp kon geen kruiswoordpuzzel worden gemaakt. Probeer een ander.', wordOf: 'Woord {n} van {m}', hint: '💡 Hint', skip: 'Overslaan',
     time: 'Tijd: {s} s · Fouten: {m}', done3: 'Woef woef! Perfect!', done2: 'Woef! Goed gedaan!', done1: 'Woef! Gelukt!', again: 'Opnieuw spelen', other: 'Andere spellen',
-    promo2H: 'Zeg ze nu hardop', promo2P: 'Oefen je uitspraak met Harley Says. Hij vertelt je hoe je klonk.', pronLink: 'Uitspraak met Harley Says', privacy: 'Privacy', terms: 'Voorwaarden', adults: 'Voor volwassenen vanaf 18 jaar.', back: 'Alle spellen', listen: 'Luisteren'
+    promo2H: 'Zeg ze nu hardop', promo2P: 'Oefen je uitspraak met Harlo. Hij vertelt je hoe je klonk.', pronLink: 'Uitspraak met Harlo', privacy: 'Privacy', terms: 'Voorwaarden', adults: 'Voor volwassenen vanaf 18 jaar.', back: 'Alle spellen', listen: 'Luisteren'
   },
   tr: {
     iSpeak: 'Konuştuğum dil', learning: 'Öğrendiğim dil', pron: '🎙️ Telaffuz', title: 'Harley’nin Oyunları – kelime ve fiil öğrenmenin eğlenceli yolları',
@@ -203,7 +203,7 @@ window.HG_UI = {
     t_animals: 'Hayvanlar', t_food: 'Yiyecek ve içecek', t_town: 'Şehirde', t_verbs: 'Günlük fiiller', t_past: 'Geçmiş zaman',
     g_wordsearch: 'Kelime avı', d_wordsearch: 'Tablodaki gizli kelimeleri bul.', g_crossword: 'Bulmaca', d_crossword: 'İpuçlarıyla tabloyu doldur.',
     g_match: 'Eşleştirme', d_match: 'Her kelimeyi anlamıyla eşleştir.', g_unscramble: 'Karışık harfler', d_unscramble: 'Harfleri doğru sıraya koy.',
-    played: '✓ {n} kez oynandı', promoH: 'Peki söyleyebiliyor musun?', promoP: 'Harley Says seni dinler ve telaffuzunu ses ses puanlar.', promoGo: 'Harley Says’i dene →',
+    played: '✓ {n} kez oynandı', promoH: 'Peki söyleyebiliyor musun?', promoP: 'Harlo seni dinler ve telaffuzunu ses ses puanlar.', promoGo: 'Harlo’i dene →',
     aboutH: 'Nasıl çalışır', about1: 'Öğrendiğin dili ve bir konu seç, sonra bir oyun seç. Bulduğun bir kelimeye dokunarak sesli dinle.',
     about2: 'Fiiller mastar ve geçmiş zaman hâliyle gelir; böylece gerçekten kullanacağın biçimleri çalışırsın.',
     h_wordsearch: 'Her kelimeyi bulmak için harflerin üzerinde kaydır (ya da ilk ve son harfe dokun).', h_crossword: 'Bir kareye ya da ipucuna dokun, sonra yaz. Aksanlar isteğe bağlı: "e", "é" yerine sayılır.',
@@ -211,7 +211,7 @@ window.HG_UI = {
     found: '{m} kelimeden {n} tanesi bulundu', across: 'Soldan sağa', down: 'Yukarıdan aşağıya', check: 'Kontrol et', reveal: 'Cevapları göster', toFix: 'Düzeltilecek harf (kırmızı): {n}', toGo: 'Kalan kare: {n}',
     revealed: 'Cevaplar gösterildi. Kelimeyi duymak için bir ipucuna dokun.', noCw: 'Bu konu için bulmaca oluşturulamadı. Başka bir konu dene.', wordOf: 'Kelime {n}/{m}', hint: '💡 İpucu', skip: 'Geç',
     time: 'Süre: {s} sn · Hata: {m}', done3: 'Hav hav! Mükemmel!', done2: 'Hav! Harika iş!', done1: 'Hav! Başardın!', again: 'Tekrar oyna', other: 'Diğer oyunlar',
-    promo2H: 'Şimdi yüksek sesle söyle', promo2P: 'Harley Says ile telaffuzunu çalış. Sana nasıl söylediğini anlatır.', pronLink: 'Harley Says ile telaffuz', privacy: 'Gizlilik', terms: 'Koşullar', adults: '18 yaş ve üzeri yetişkinler içindir.', back: 'Tüm oyunlar', listen: 'Dinle'
+    promo2H: 'Şimdi yüksek sesle söyle', promo2P: 'Harlo ile telaffuzunu çalış. Sana nasıl söylediğini anlatır.', pronLink: 'Harlo ile telaffuz', privacy: 'Gizlilik', terms: 'Koşullar', adults: '18 yaş ve üzeri yetişkinler içindir.', back: 'Tüm oyunlar', listen: 'Dinle'
   },
   ja: {
     iSpeak: '私の言語', learning: '学習中', pron: '🎙️ 発音練習', title: 'ハーレーのゲーム ― 単語と動詞を楽しく覚えよう',
@@ -219,7 +219,7 @@ window.HG_UI = {
     t_animals: '動物', t_food: '食べ物と飲み物', t_town: '街で', t_verbs: 'よく使う動詞', t_past: '過去形',
     g_wordsearch: '単語探し', d_wordsearch: 'マスの中に隠れた単語を見つけよう。', g_crossword: 'クロスワード', d_crossword: 'ヒントを見てマスを埋めよう。',
     g_match: 'ペア合わせ', d_match: '単語と意味を組み合わせよう。', g_unscramble: '並べ替え', d_unscramble: '文字を正しい順番に並べよう。',
-    played: '✓ {n}回プレイ', promoH: '声に出して言えますか？', promoP: 'Harley Says があなたの声を聞いて、発音を一音ずつ採点します。', promoGo: 'Harley Says を試す →',
+    played: '✓ {n}回プレイ', promoH: '声に出して言えますか？', promoP: 'Harlo があなたの声を聞いて、発音を一音ずつ採点します。', promoGo: 'Harlo を試す →',
     aboutH: '遊び方', about1: '学んでいる言語とテーマを選んでから、ゲームを選びます。見つけた単語をタップすると読み上げます。',
     about2: '動詞は原形と過去形の両方が出てくるので、実際に使う形を練習できます。',
     h_wordsearch: '文字の上をなぞって（または最初と最後の文字をタップして）単語を見つけよう。', h_crossword: 'マスかヒントをタップして入力します。アクセント記号は省略可：「e」は「é」として扱います。',
@@ -227,7 +227,7 @@ window.HG_UI = {
     found: '{m}個中{n}個見つけた', across: 'ヨコ', down: 'タテ', check: 'チェック', reveal: '答えを見る', toFix: '直す文字（赤）：{n}', toGo: '残りのマス：{n}',
     revealed: '答えを表示しました。ヒントをタップすると単語を読み上げます。', noCw: 'このテーマではクロスワードを作れませんでした。別のテーマを試してください。', wordOf: '{m}語中{n}語目', hint: '💡 ヒント', skip: 'スキップ',
     time: 'タイム：{s}秒 · ミス：{m}', done3: 'ワンワン！パーフェクト！', done2: 'ワン！よくできました！', done1: 'ワン！クリア！', again: 'もう一度', other: 'ほかのゲーム',
-    promo2H: '声に出して言ってみよう', promo2P: 'Harley Says で発音を練習しよう。どう聞こえたか教えてくれます。', pronLink: 'Harley Says 発音練習', privacy: 'プライバシー', terms: '利用規約', adults: '18歳以上の方を対象としています。', back: 'すべてのゲーム', listen: '聞く'
+    promo2H: '声に出して言ってみよう', promo2P: 'Harlo で発音を練習しよう。どう聞こえたか教えてくれます。', pronLink: 'Harlo 発音練習', privacy: 'プライバシー', terms: '利用規約', adults: '18歳以上の方を対象としています。', back: 'すべてのゲーム', listen: '聞く'
   },
   ko: {
     iSpeak: '내 언어', learning: '학습 언어', pron: '🎙️ 발음 연습', title: '할리의 게임 – 어휘와 동사를 재미있게 배우기',
@@ -235,7 +235,7 @@ window.HG_UI = {
     t_animals: '동물', t_food: '음식과 음료', t_town: '시내에서', t_verbs: '일상 동사', t_past: '과거형',
     g_wordsearch: '단어 찾기', d_wordsearch: '격자 속에 숨은 단어를 찾으세요.', g_crossword: '십자말풀이', d_crossword: '힌트를 보고 칸을 채우세요.',
     g_match: '짝 맞추기', d_match: '단어와 뜻을 짝지으세요.', g_unscramble: '글자 맞추기', d_unscramble: '글자를 올바른 순서로 놓으세요.',
-    played: '✓ {n}번 플레이', promoH: '소리 내어 말할 수도 있나요?', promoP: 'Harley Says가 듣고 발음을 소리 하나하나 채점해 줘요.', promoGo: 'Harley Says 해 보기 →',
+    played: '✓ {n}번 플레이', promoH: '소리 내어 말할 수도 있나요?', promoP: 'Harlo가 듣고 발음을 소리 하나하나 채점해 줘요.', promoGo: 'Harlo 해 보기 →',
     aboutH: '이용 방법', about1: '배우는 언어와 주제를 고른 다음 게임을 선택하세요. 찾은 단어를 누르면 발음을 들을 수 있어요.',
     about2: '동사는 기본형과 과거형으로 나와서 실제로 쓰는 형태를 연습할 수 있어요.',
     h_wordsearch: '글자 위를 드래그하거나 첫 글자와 마지막 글자를 눌러 단어를 찾으세요.', h_crossword: '칸이나 힌트를 누른 다음 입력하세요. 악센트는 생략해도 돼요: "e"는 "é"로 인정돼요.',
@@ -243,7 +243,7 @@ window.HG_UI = {
     found: '{m}개 중 {n}개 찾음', across: '가로', down: '세로', check: '확인', reveal: '정답 보기', toFix: '고칠 글자(빨간색): {n}', toGo: '남은 칸: {n}',
     revealed: '정답을 보여 드렸어요. 힌트를 누르면 단어를 들을 수 있어요.', noCw: '이 주제로는 십자말풀이를 만들 수 없었어요. 다른 주제를 골라 보세요.', wordOf: '{m}개 중 {n}번째 단어', hint: '💡 힌트', skip: '건너뛰기',
     time: '시간: {s}초 · 실수: {m}', done3: '멍멍! 완벽해요!', done2: '멍! 잘했어요!', done1: '멍! 해냈어요!', again: '다시 하기', other: '다른 게임',
-    promo2H: '이제 소리 내어 말해 보세요', promo2P: 'Harley Says로 발음을 연습하세요. 어떻게 들렸는지 알려 줘요.', pronLink: 'Harley Says 발음 연습', privacy: '개인정보', terms: '이용약관', adults: '만 18세 이상 성인용입니다.', back: '모든 게임', listen: '듣기'
+    promo2H: '이제 소리 내어 말해 보세요', promo2P: 'Harlo로 발음을 연습하세요. 어떻게 들렸는지 알려 줘요.', pronLink: 'Harlo 발음 연습', privacy: '개인정보', terms: '이용약관', adults: '만 18세 이상 성인용입니다.', back: '모든 게임', listen: '듣기'
   },
   vi: {
     iSpeak: 'Tôi nói', learning: 'Tôi đang học', pron: '🎙️ Phát âm', title: 'Trò chơi của Harley – cách vui để học từ vựng và động từ',
@@ -251,7 +251,7 @@ window.HG_UI = {
     t_animals: 'Động vật', t_food: 'Đồ ăn và thức uống', t_town: 'Trong thành phố', t_verbs: 'Động từ hằng ngày', t_past: 'Thì quá khứ',
     g_wordsearch: 'Tìm từ', d_wordsearch: 'Tìm các từ ẩn trong bảng chữ.', g_crossword: 'Ô chữ', d_crossword: 'Điền vào ô theo gợi ý.',
     g_match: 'Ghép cặp', d_match: 'Ghép mỗi từ với nghĩa của nó.', g_unscramble: 'Xếp chữ', d_unscramble: 'Xếp các chữ cái theo đúng thứ tự.',
-    played: '✓ Đã chơi {n} lần', promoH: 'Bạn có nói được không?', promoP: 'Harley Says lắng nghe và chấm điểm phát âm của bạn theo từng âm.', promoGo: 'Thử Harley Says →',
+    played: '✓ Đã chơi {n} lần', promoH: 'Bạn có nói được không?', promoP: 'Harlo lắng nghe và chấm điểm phát âm của bạn theo từng âm.', promoGo: 'Thử Harlo →',
     aboutH: 'Cách chơi', about1: 'Chọn ngôn ngữ bạn đang học và một chủ đề, rồi chọn trò chơi. Chạm vào từ đã tìm được để nghe đọc to.',
     about2: 'Động từ có ở dạng nguyên mẫu và thì quá khứ, để bạn luyện những dạng sẽ thực sự dùng.',
     h_wordsearch: 'Kéo qua các chữ cái (hoặc chạm chữ đầu và chữ cuối) để tìm từng từ.', h_crossword: 'Chạm vào một ô hoặc một gợi ý rồi gõ. Dấu là tùy chọn: "e" được tính là "é".',
@@ -259,7 +259,7 @@ window.HG_UI = {
     found: 'Đã tìm {n}/{m}', across: 'Hàng ngang', down: 'Hàng dọc', check: 'Kiểm tra', reveal: 'Xem đáp án', toFix: 'Chữ cần sửa (màu đỏ): {n}', toGo: 'Ô còn lại: {n}',
     revealed: 'Đã hiện đáp án. Chạm vào gợi ý để nghe từ.', noCw: 'Không tạo được ô chữ cho chủ đề này. Hãy thử chủ đề khác.', wordOf: 'Từ {n}/{m}', hint: '💡 Gợi ý', skip: 'Bỏ qua',
     time: 'Thời gian: {s} giây · Lỗi: {m}', done3: 'Gâu gâu! Hoàn hảo!', done2: 'Gâu! Giỏi lắm!', done1: 'Gâu! Bạn làm được rồi!', again: 'Chơi lại', other: 'Trò chơi khác',
-    promo2H: 'Giờ hãy nói to lên', promo2P: 'Luyện phát âm với Harley Says. Harley sẽ cho bạn biết bạn nói thế nào.', pronLink: 'Phát âm với Harley Says', privacy: 'Quyền riêng tư', terms: 'Điều khoản', adults: 'Dành cho người lớn từ 18 tuổi trở lên.', back: 'Tất cả trò chơi', listen: 'Nghe'
+    promo2H: 'Giờ hãy nói to lên', promo2P: 'Luyện phát âm với Harlo. Harley sẽ cho bạn biết bạn nói thế nào.', pronLink: 'Phát âm với Harlo', privacy: 'Quyền riêng tư', terms: 'Điều khoản', adults: 'Dành cho người lớn từ 18 tuổi trở lên.', back: 'Tất cả trò chơi', listen: 'Nghe'
   }
 };
 

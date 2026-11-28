@@ -1,6 +1,6 @@
 // Harley's Games: word search, crossword, match pairs and unscramble.
 // Plain JS, no build step. Uses games/words.js. Shares the learning language
-// (localStorage 'sir_lang') with the Harley Says pronunciation app.
+// (localStorage 'sir_lang') with the Harlo pronunciation app.
 (function () {
   'use strict';
   const W = window.HG_WORDS, LANGS = window.HG_LANGS, TOPICS = window.HG_TOPICS, UI = window.HG_UI, GLOSS = window.HG_GLOSS;
@@ -60,7 +60,7 @@
     return Object.assign(n, { today: true });
   }
   const L3 = (e, m, h) => (level === 'easy' ? e : level === 'hard' ? h : m);
-  // Interface language: shared with Harley Says ('sir_ui').
+  // Interface language: shared with Harlo ('sir_ui').
   let ui = (() => { const v = store.get('sir_ui', null); if (UI[v]) return v; const b = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase().split('-')[0]; return UI[b] ? b : 'en'; })();
   const ACC = window.HG_ACC || {};
   function t(k, vars) { let v = (UI[ui] && UI[ui][k] !== undefined) ? UI[ui][k] : UI.en[k] !== undefined ? UI.en[k] : (ACC[ui] && ACC[ui][k] !== undefined) ? ACC[ui][k] : (ACC.en || {})[k]; if (vars) for (const [a, b] of Object.entries(vars)) v = v.split('{' + a + '}').join(b); return v; }
@@ -227,7 +227,7 @@
     let dailyBox = '';
     if (daily) {
       const st = recordDaily();
-      const shareTxt = `${t('dShareText')} 📅 ${dayKey()}\n${'⭐'.repeat(stars)} · ${t('dStreak', { n: st.streak })}\nhttps://harleysays.com/games/`;
+      const shareTxt = `${t('dShareText')} 📅 ${dayKey()}\n${'⭐'.repeat(stars)} · ${t('dStreak', { n: st.streak })}\nhttps://harlolearn.com/games/`;
       dailyBox = `<div class="dl-res"><b>${esc(t('dStreak', { n: st.streak }))}</b><span>${esc(t('dBack'))}</span>
         <button type="button" class="btn" id="dShare" data-txt="${esc(shareTxt)}">📤 ${esc(t('dShare'))}</button>
         ${window.hsAccount && window.hsAccount.ready() && !window.hsAccount.signedIn() ? `<button type="button" class="btn" id="dSave">👤 ${esc(t('acc_title'))}</button>` : ''}</div>`;
@@ -717,7 +717,7 @@
       if (ended) return; ended = true;
       const won = rec.g[rec.g.length - 1].join('') === target.join('');
       const grid = rec.g.map(g => score(g).map(v => v === 2 ? '🟩' : v === 1 ? '🟨' : '⬜').join('')).join('\n');
-      const shareTxt = `${t('g_wordday')} 📅 ${dayKey()} ${won ? rec.g.length : 'X'}/${tries}\n${grid}\nhttps://harleysays.com/games/`;
+      const shareTxt = `${t('g_wordday')} 📅 ${dayKey()} ${won ? rec.g.length : 'X'}/${tries}\n${grid}\nhttps://harlolearn.com/games/`;
       $('wdKb').innerHTML = '';
       $('wdEnd').innerHTML = `<div class="wd-end ${won ? 'won' : ''}"><b>${won ? '🎉 ' + esc(t('n_great')) : esc(t('n_wordWas'))}</b>
         <button type="button" class="w big" data-say="${esc(x.w)}">🔊 ${esc(x.w)}</button><span dir="auto">${esc(x.clue)}</span>
@@ -738,7 +738,7 @@
     draw();
   }
 
-  // ---------- Fill the gap: phrases from Harley Says with one word missing ----------
+  // ---------- Fill the gap: phrases from Harlo with one word missing ----------
   let phrasesP = null;
   const loadPhrases = () => phrasesP || (phrasesP = new Promise((res, rej) => { if (window.SIR_DATA) return res(); const sc = document.createElement('script'); sc.src = '/phrases.js'; sc.onload = res; sc.onerror = () => { phrasesP = null; rej(); }; document.head.appendChild(sc); }));
   function fill(game) {

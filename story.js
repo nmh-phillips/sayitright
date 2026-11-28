@@ -1,4 +1,4 @@
-// "Why we built Harley Says": five swipeable slides, ending with the real photos of Harley and Lilou.
+// "Why we built Harlo": five swipeable slides, ending with the real photos of Harley and Lilou.
 (function () {
   'use strict';
   const UI = window.SIR_UI || {};

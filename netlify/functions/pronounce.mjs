@@ -15,7 +15,7 @@ const ASSESS_FREE = Number(process.env.ASSESS_PRON_LIMIT || 9);
 // Main "Tap and say it" button sends kind:'say': SAY_FREE_LIMIT per device per day (default 25), SAY_IP_LIMIT per connection (default 150).
 const SAY_FREE = Number(process.env.SAY_FREE_LIMIT || 25);
 const SAY_IP_CAP = Number(process.env.SAY_IP_LIMIT || 150);
-const hash = x => createHash('sha256').update('harley-says-pron:' + x).digest('hex').slice(0, 24);
+const hash = x => createHash('sha256').update('harlo-pron:' + x).digest('hex').slice(0, 24);
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 const num = v => Math.round(Number(v) || 0);
 

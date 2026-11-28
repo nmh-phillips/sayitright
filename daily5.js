@@ -1,5 +1,5 @@
-// Harley Says: "Daily 5" — five phrases a day, picked for you, with a streak.
-// Picks, in order: phrases from your Harley Chats summaries not yet mastered (hs_chat_review), phrases you've tried but not
+// Harlo: "Daily 5" — five phrases a day, picked for you, with a streak.
+// Picks, in order: phrases from your Harlo Chats summaries not yet mastered (hs_chat_review), phrases you've tried but not
 // mastered (best < 80%), then new phrases from the free topics. Same five all day (per language); a new five tomorrow.
 // Done = all five tried today. Streak = days in a row done. Practice uses the normal phrase card (set DAILY5 in index.html).
 // Uses globals from index.html: lang, set, idx, DATA, scores, key, store, t, render, track, FOCUS_SETS, isLocked, DAILY5, els, $.

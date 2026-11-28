@@ -9,7 +9,7 @@ const FREE = Number(process.env.AI_ASSESS_LIMIT || 3);
 const IP_CAP = Number(process.env.AI_ASSESS_IP_LIMIT || 20);
 // Safety net for API spend: AI_ASSESS_GLOBAL_LIMIT assessments per day across everyone (default 300, roughly $3-6 a day at most).
 const GLOBAL_CAP = Number(process.env.AI_ASSESS_GLOBAL_LIMIT || 300);
-const hash = x => createHash('sha256').update('harley-says-ai:' + x).digest('hex').slice(0, 24);
+const hash = x => createHash('sha256').update('harlo-ai:' + x).digest('hex').slice(0, 24);
 
 const LANGS = { en: 'English (British)', enus: 'English (American)', es: 'Spanish (Spain)', esmx: 'Spanish (Latin American)', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', nl: 'Dutch' };
 const UI = { en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', de: 'German', pt: 'Portuguese', pl: 'Polish', ro: 'Romanian', uk: 'Ukrainian', zh: 'Simplified Chinese', ar: 'Arabic', nl: 'Dutch', tr: 'Turkish', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese' };

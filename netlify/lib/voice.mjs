@@ -33,7 +33,7 @@ export function pickPreset(persona, preset) {
   return { lilou, preset: PRESETS[preset] || (lilou ? (PRESETS[process.env.LILOU_VOICE] || PRESETS.L1) : (PRESETS[process.env.HARLEY_VOICE] || PRESETS.A)) };
 }
 export const wrap = (preset, body) => `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="${preset.voice}">${body}</voice></speak>`;
-// A whole sentence in the language being learnt (Harley Chats, Interview Coach).
+// A whole sentence in the language being learnt (Harlo Chats, Interview Coach).
 export function lineSsml(preset, target, text) {
   return wrap(preset, `<lang xml:lang="${target}"><prosody pitch="${pct(preset.pitch)}" rate="${pct(preset.rate - 6)}">${esc(text.replace(EMOJI, ''))}</prosody></lang>`);
 }
@@ -46,7 +46,7 @@ export async function synth(ssml, { chars, ipKey, cache = true }) {
   let store = null;
   try { store = getStore('tts-cache'); const hit = await store.get(cacheKey, { type: 'arrayBuffer' }); if (hit) return { buf: hit }; } catch { store = null; }
   const day = new Date().toISOString().slice(0, 10);
-  const ip = sha('harley-says-tts:' + (ipKey || 'unknown')).slice(0, 24);
+  const ip = sha('harlo-tts:' + (ipKey || 'unknown')).slice(0, 24);
   let usage = null, used = 0, ipUsed = 0;
   try { usage = getStore('tts-usage'); used = Number(await usage.get(`${day}/chars`)) || 0; ipUsed = Number(await usage.get(`${day}/ip/${ip}`)) || 0; } catch { usage = null; }
   if (used >= DAILY_CHARS || ipUsed >= IP_CAP) return { error: 'limit', status: 429 };
@@ -54,7 +54,7 @@ export async function synth(ssml, { chars, ipKey, cache = true }) {
   try {
     r = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
       method: 'POST',
-      headers: { 'Ocp-Apim-Subscription-Key': key, 'Content-Type': 'application/ssml+xml', 'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3', 'User-Agent': 'harley-says' },
+      headers: { 'Ocp-Apim-Subscription-Key': key, 'Content-Type': 'application/ssml+xml', 'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3', 'User-Agent': 'harlo' },
       body: ssml
     });
   } catch { return { error: 'Could not reach the voice service', status: 502 }; }
