@@ -202,11 +202,62 @@ sec.addEventListener('click', e => { if (e.target.closest('[data-sclose]')) clos
 let lessonJustEnded = 0;
 window.addEventListener('popstate', () => { if (secId && !document.body.classList.contains('lesson-on') && Date.now() - lessonJustEnded > 600) closeSec(true); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && secId && !document.body.classList.contains('lesson-on')) closeSec(); });
+
+// ---------- "Save your progress" nudge for people who haven't signed in ----------
+// Shown after a finished lesson round (when the lesson closes), at most once every 3 days, and never after 4 "Not now"s.
+const SAVE = {
+  en: ['Save your progress', 'Add your email so your scores, streak and XP are kept safe and follow you to any phone or computer. No password.', 'Save my progress', 'Not now'],
+  es: ['Guarda tu progreso', 'Añade tu email para que tus puntos, tu racha y tu XP estén a salvo y te sigan a cualquier móvil u ordenador. Sin contraseña.', 'Guardar mi progreso', 'Ahora no'],
+  fr: ['Sauvegarde ta progression', 'Ajoute ton e-mail pour garder tes scores, ta série et tes XP en sécurité, sur n’importe quel téléphone ou ordinateur. Sans mot de passe.', 'Sauvegarder', 'Plus tard'],
+  it: ['Salva i tuoi progressi', 'Aggiungi la tua email per tenere al sicuro punteggi, serie e XP e ritrovarli su qualsiasi telefono o computer. Senza password.', 'Salva i progressi', 'Non ora'],
+  de: ['Fortschritt sichern', 'Gib deine E-Mail an, damit Punkte, Serie und XP sicher sind und dir auf jedes Handy oder jeden Computer folgen. Kein Passwort.', 'Fortschritt sichern', 'Später'],
+  pt: ['Guarda o teu progresso', 'Adiciona o teu email para guardar pontuações, sequência e XP em segurança, em qualquer telemóvel ou computador. Sem palavra-passe.', 'Guardar progresso', 'Agora não'],
+  pl: ['Zapisz postępy', 'Dodaj e-mail, a twoje wyniki, seria i XP będą bezpieczne na każdym telefonie i komputerze. Bez hasła.', 'Zapisz postępy', 'Nie teraz'],
+  ro: ['Salvează-ți progresul', 'Adaugă emailul ca scorurile, seria și XP-ul să fie în siguranță, pe orice telefon sau calculator. Fără parolă.', 'Salvează progresul', 'Nu acum'],
+  uk: ['Збережи прогрес', 'Додай пошту, щоб бали, серія та XP були в безпеці й відкривалися на будь-якому телефоні чи комп’ютері. Без пароля.', 'Зберегти прогрес', 'Не зараз'],
+  zh: ['保存你的进度', '添加邮箱，你的分数、连续天数和 XP 都会安全保存，在任何手机或电脑上都能继续。无需密码。', '保存我的进度', '以后再说'],
+  ar: ['احفظ تقدّمك', 'أضف بريدك الإلكتروني ليبقى تقدّمك وسلسلتك ونقاطك محفوظة وتتابعك على أي هاتف أو حاسوب. بدون كلمة مرور.', 'احفظ تقدّمي', 'ليس الآن'],
+  nl: ['Bewaar je voortgang', 'Voeg je e-mail toe zodat je scores, reeks en XP veilig zijn en je volgen naar elke telefoon of computer. Geen wachtwoord.', 'Voortgang bewaren', 'Niet nu'],
+  tr: ['İlerlemeni kaydet', 'E-postanı ekle; puanların, serin ve XP’n güvende kalsın ve her telefonda ya da bilgisayarda seninle olsun. Şifre yok.', 'İlerlememi kaydet', 'Şimdi değil'],
+  ja: ['進み具合を保存', 'メールを登録すると、スコア・連続記録・XP が安全に保存され、どのスマホやパソコンでも続きから使えます。パスワード不要。', '保存する', 'あとで'],
+  ko: ['진행 상황 저장', '이메일을 추가하면 점수, 연속 기록, XP가 안전하게 저장되고 어떤 휴대폰이나 컴퓨터에서도 이어서 할 수 있어요. 비밀번호 없음.', '진행 상황 저장하기', '나중에'],
+  vi: ['Lưu tiến độ', 'Thêm email để điểm, chuỗi ngày và XP được giữ an toàn và theo bạn sang mọi điện thoại hay máy tính. Không cần mật khẩu.', 'Lưu tiến độ của tôi', 'Để sau']
+};
+const nudgeCss = `#saveNudge{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);z-index:70;max-width:480px;margin:0 auto;background:#fff;border-radius:22px;padding:16px 16px 14px;
+  box-shadow:0 18px 50px rgba(28,37,99,.32);border:2px solid #DDE1FF;animation:snUp .45s cubic-bezier(.2,.9,.3,1.2)}
+#saveNudge .sn-top{display:flex;gap:12px;align-items:center}
+#saveNudge .sn-ic{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,#5B6CFF,#8C5BFF);box-shadow:0 4px 0 #3346C8}
+#saveNudge h3{margin:0;font-size:18px;color:var(--ink)}
+#saveNudge p{margin:8px 0 12px;font-size:14.5px;line-height:1.45;color:var(--muted)}
+#saveNudge .sn-b{display:flex;gap:8px}
+#saveNudge .sn-b button{flex:1;border:0;border-radius:14px;padding:13px;font:800 15px Inter,sans-serif;cursor:pointer}
+#saveNudge .sn-go{background:linear-gradient(135deg,#3346C8,#6C7BFF);color:#fff;box-shadow:0 4px 0 #1C2563}
+#saveNudge .sn-no{background:#EEF0FF;color:var(--ink);flex:0 0 auto!important;padding:13px 16px!important}
+@keyframes snUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#saveNudge{animation:none}}`;
+document.head.insertAdjacentHTML('beforeend', '<style>' + nudgeCss + '</style>');
+const NK = 'hs_save_nudge';
+let roundsDone = 0;
+window.addEventListener('hs-round', () => { roundsDone++; });
+function maybeNudge() {
+  if (!roundsDone || !window.hsAccount || !hsAccount.ready() || hsAccount.signedIn() || $('saveNudge')) return;
+  let st = {}; try { st = JSON.parse(localStorage.getItem(NK)) || {}; } catch (e) {}
+  if ((st.no || 0) >= 4 || (st.at && Date.now() - st.at < 3 * 864e5)) return;
+  roundsDone = 0; st.at = Date.now(); try { localStorage.setItem(NK, JSON.stringify(st)); } catch (e) {}
+  const L = SAVE[ui] || SAVE.en, el = document.createElement('div');
+  el.id = 'saveNudge'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-labelledby', 'snH');
+  el.innerHTML = `<div class="sn-top"><span class="sn-ic" aria-hidden="true">💾</span><h3 id="snH">${esc(L[0])}</h3></div><p>${esc(L[1])}</p><div class="sn-b"><button type="button" class="sn-go">${esc(L[2])}</button><button type="button" class="sn-no">${esc(L[3])}</button></div>`;
+  document.body.appendChild(el);
+  el.querySelector('.sn-go').onclick = () => { el.remove(); try { hsAccount.open(); } catch (e) {} if (typeof track === 'function') try { track('save_nudge_yes'); } catch (e) {} };
+  el.querySelector('.sn-no').onclick = () => { el.remove(); st.no = (st.no || 0) + 1; try { localStorage.setItem(NK, JSON.stringify(st)); } catch (e) {} };
+  if (typeof track === 'function') try { track('save_nudge'); } catch (e) {}
+}
+window.addEventListener('hs-auth', e => { if (e.detail && e.detail.email) { const n = $('saveNudge'); if (n) n.remove(); } });
 // After a Focus pack's lesson ends, come back to the Focus packs screen
 let wasLesson = false;
 new MutationObserver(() => {
   const on = document.body.classList.contains('lesson-on');
-  if (wasLesson && !on) lessonJustEnded = Date.now();
+  if (wasLesson && !on) { lessonJustEnded = Date.now(); setTimeout(maybeNudge, 900); }
   if (wasLesson && !on && secId === 'focus' && FOCUS_SETS.includes(set)) { set = FOCUS; idx = 0; render(); }
   wasLesson = on;
 }).observe(document.body, { attributes: true, attributeFilter: ['class'] });

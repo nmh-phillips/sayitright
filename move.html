@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Harlo is moving to harlolearn.com</title>
+</head>
+<body style="font-family:system-ui,sans-serif;text-align:center;padding:48px 20px;color:#1C2563;background:#F4F5FF">
+<p style="font-size:42px;margin:0">🐶</p>
+<p style="font-size:18px;font-weight:700">Harley Says is now Harlo. Taking you to harlolearn.com…</p>
+<noscript><a href="https://harlolearn.com/">Go to harlolearn.com</a></noscript>
+<script>
+// Served on the old addresses (harleysays.com etc.) instead of a plain redirect, so people keep their progress and sign-in.
+// Browser storage belongs to one web address, so we copy Harlo's saved data (keys starting sir_ or hs_) to harlolearn.com
+// once, in the part of the link after # (never sent to any server). index.html on harlolearn.com reads it, then removes it.
+(function () {
+  var dest = 'https://harlolearn.com/', path = location.pathname + location.search;
+  if (path !== '/' && path.indexOf('/move.html') !== 0) dest += '?hsnext=' + encodeURIComponent(path);
+  try {
+    if (!localStorage.getItem('hs_moved')) {
+      var d = {}, n = 0;
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (/^(sir_|hs_)/.test(k) && k !== 'hs_auth_cfg') { d[k] = localStorage.getItem(k); n++; }
+      }
+      if (n) {
+        var s = JSON.stringify(d);
+        if (s.length < 300000) dest += '#hsmove=' + encodeURIComponent(btoa(unescape(encodeURIComponent(s))));
+      }
+      localStorage.setItem('hs_moved', '1');
+    }
+  } catch (e) {}
+  var go = function () { location.replace(dest); };
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+      navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); go(); }, go);
+      setTimeout(go, 800);
+    } else go();
+  } catch (e) { go(); }
+})();
+</script>
+</body>
+</html>

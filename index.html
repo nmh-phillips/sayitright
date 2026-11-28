@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// Arriving from the old harleysays.com address: bring saved progress and sign-in across (see move.html), then tidy the link.
+(function(){try{
+  var m=location.hash.match(/[#&]hsmove=([^&]+)/), nx=new URLSearchParams(location.search).get('hsnext');
+  if(m){
+    var d=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(m[1]))))), ls=localStorage;
+    Object.keys(d).forEach(function(k){
+      if(!/^(sir_|hs_)/.test(k)) return;
+      var cur=ls.getItem(k);
+      if(cur===null){ ls.setItem(k,d[k]); return; }
+      if(k==='sir_scores'){ var a=JSON.parse(cur)||{}, b=JSON.parse(d[k])||{}; Object.keys(b).forEach(function(x){ if(!(a[x]>=b[x])) a[x]=b[x]; }); ls.setItem(k,JSON.stringify(a)); }
+    });
+  }
+  if(m||nx){
+    if(nx&&/^\/(?!\/)/.test(nx)&&nx.indexOf('/move.html')!==0){ location.replace(nx); return; }
+    history.replaceState(null,'',location.pathname+location.search.replace(/[?&]hsnext=[^&]*/,'').replace(/^&/,'?'));
+  }
+}catch(e){}})();
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Harlo Says — pronunciation practice</title>

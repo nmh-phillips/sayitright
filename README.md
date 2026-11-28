@@ -235,3 +235,9 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 ## Parked ideas
 - **Harlo Driving (theory test English)**: the UK car theory test is only in English, Welsh or BSL, so help non-native speakers with road vocabulary and question wording, explained in their language. First step: ask DVSA for a quote to license the revision question bank (or write our own questions). Would sit beside Citizen.
 - Harlo Kids (needs a DPIA and parent accounts), three-way chat, reminders.
+
+## Moving people from harleysays.com (28 Nov 2026)
+Browser storage (progress, settings, sign-in) belongs to one web address, so after the rename people arrived at harlolearn.com blank and had to sign in again. Now the old addresses serve `move.html` (a 200 rewrite in `netlify.toml`, on the old address): it copies keys starting `sir_`/`hs_` once into the `#hsmove=` part of the link (never sent to a server) and goes to harlolearn.com, where the first script in `index.html` merges them in (existing values win; best scores take the higher) and tidies the link. `hs_moved` on the old address stops it copying twice. Anyone who already started again on harlolearn.com gets their old progress merged in by opening any harleysays.com link once.
+
+## Save-your-progress prompt
+`hub.js`: if accounts are on and someone isn't signed in, a "💾 Save your progress" card appears when a lesson closes after at least one finished round. At most once every 3 days; stops after 4 "Not now"s (`hs_save_nudge`). Tracked as `save_nudge` / `save_nudge_yes` on the stats page.

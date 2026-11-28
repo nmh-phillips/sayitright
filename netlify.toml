@@ -55,55 +55,64 @@
   status = 301
   force = true
 
-# Old and extra domains
+# Old domains: serve move.html (on the old address) so people's saved progress and sign-in come with them,
+# then it sends them on to harlolearn.com. http goes to https first, because storage differs between the two.
 
 [[redirects]]
-  from = "https://harleysays.com/*"
-  to = "https://harlolearn.com/:splat"
+  from = "http://harleysays.com/*"
+  to = "https://harleysays.com/:splat"
   status = 301
   force = true
 
 [[redirects]]
-  from = "http://harleysays.com/*"
-  to = "https://harlolearn.com/:splat"
+  from = "https://harleysays.com/*"
+  to = "/move.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "http://www.harleysays.com/*"
+  to = "https://www.harleysays.com/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "https://www.harleysays.com/*"
-  to = "https://harlolearn.com/:splat"
-  status = 301
+  to = "/move.html"
+  status = 200
   force = true
 
 [[redirects]]
-  from = "http://www.harleysays.com/*"
-  to = "https://harlolearn.com/:splat"
+  from = "http://harleysays.co.uk/*"
+  to = "https://harleysays.co.uk/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "https://harleysays.co.uk/*"
-  to = "https://harlolearn.com/:splat"
-  status = 301
+  to = "/move.html"
+  status = 200
   force = true
 
 [[redirects]]
-  from = "http://harleysays.co.uk/*"
-  to = "https://harlolearn.com/:splat"
+  from = "http://www.harleysays.co.uk/*"
+  to = "https://www.harleysays.co.uk/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "https://www.harleysays.co.uk/*"
-  to = "https://harlolearn.com/:splat"
-  status = 301
+  to = "/move.html"
+  status = 200
   force = true
 
 [[redirects]]
-  from = "http://www.harleysays.co.uk/*"
-  to = "https://harlolearn.com/:splat"
-  status = 301
+  from = "https://harleysays.netlify.app/*"
+  to = "/move.html"
+  status = 200
   force = true
+
+# Extra new-brand addresses: plain redirect (nothing saved there yet)
 
 [[redirects]]
   from = "https://harlolearn.co.uk/*"
@@ -125,12 +134,6 @@
 
 [[redirects]]
   from = "http://www.harlolearn.co.uk/*"
-  to = "https://harlolearn.com/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://harleysays.netlify.app/*"
   to = "https://harlolearn.com/:splat"
   status = 301
   force = true
