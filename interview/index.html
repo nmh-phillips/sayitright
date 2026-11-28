@@ -18,6 +18,7 @@
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="theme-color" content="#1C2563">
 <link rel="stylesheet" href="/fonts/inter.css">
+<link rel="stylesheet" href="/hs-pick.css">
 <style>
   :root{--ink:#1C2563;--muted:#5b6475;--line:#e3e6f2;--bg:#F4F6FF;--card:#fff;--blue:#3346C8;--bluebg:#eef1ff;--sun:#FF8A3D;--bad:#c62828}
   *{box-sizing:border-box}
@@ -33,6 +34,11 @@
   main{max-width:680px;margin:0 auto;padding:16px}
   .bar{display:flex;justify-content:flex-end;align-items:center;gap:8px;font-weight:600;font-size:14px;margin-bottom:10px}
   select,input,textarea{font:inherit;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .bar.hs-pick{display:block;max-width:280px;margin:0 0 12px auto}
+  .iv-lock{margin-top:4px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:18px;padding:14px;animation:ivIn .5s backwards .6s}
+  .iv-lock p{margin:0 0 10px;font-size:15px;line-height:1.4;font-weight:600}
+  .iv-lock p:last-child{margin-bottom:0}
+  .iv-lock .iv-go{animation:none}
   .hero{display:flex;gap:14px;align-items:center;margin:4px 0 14px}
   .hero h2{margin:0 0 4px;font-size:22px;line-height:1.2;letter-spacing:-.01em}
   .hero p{margin:0;color:var(--muted);line-height:1.45}
@@ -179,7 +185,7 @@
   <div class="hdr-r"><button class="acc-btn" id="accBtn" type="button" hidden>👤</button><a class="pron" href="/?from=interview" data-t="pron">🎙️ Pronunciation</a></div>
 </header>
 <main>
-  <div class="bar"><label for="ivUi" data-t="speak">I speak</label><select id="ivUi"></select></div>
+  <div class="bar hs-pick"><label><span data-t="speak">I speak</span><select id="ivUi"></select></label></div>
   <div id="app"></div>
 </main>
 <footer>

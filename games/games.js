@@ -133,7 +133,7 @@
         <div><h2>${esc(t('heroH'))}</h2>
         <p>${esc(t('heroP'))}</p></div>
       </section>
-      <div class="bar"><label>${esc(t('iSpeak'))} <select id="hgUi">${uiOpts}</select></label><label>${esc(t('learning'))} <select id="hgLang">${langOpts}</select></label></div>
+      <div class="bar hs-pick"><label><span>${esc(t('iSpeak'))}</span><select id="hgUi">${uiOpts}</select></label><label><span>${esc(t('learning'))}</span><select id="hgLang">${langOpts}</select></label></div>
       ${dailyCard()}
       <h3 class="pick-h">${esc(t('g_pick'))}</h3>
       <div class="cards${hub.introDone ? '' : ' intro'}">${GAMES.map((g, i) => {

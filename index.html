@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Harlo — pronunciation practice</title>
+<title>Harlo Says — pronunciation practice</title>
 <meta name="description" content="Practise your pronunciation and get scored on every sound. English, Spanish, French, Italian, German and Portuguese. Free, no sign-up.">
 <link rel="canonical" href="https://harlolearn.com/">
 <meta property="og:type" content="website">
@@ -21,6 +21,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%22280%22%20height%3D%22280%22%20rx%3D%2264%22%20fill%3D%22%233346C8%22/%3E%3Cpath%20d%3D%22M92%20228%20l-26%2040%20l52%20-24%20z%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22212%22%20cy%3D%22148%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22184%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22169%22%20cy%3D%22207%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%22207%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22184%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%2288%22%20cy%3D%22148%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22112%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%2289%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22169%22%20cy%3D%2289%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22112%22%20r%3D%2233%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22148%22%20r%3D%2270%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22125%22%20cy%3D%22138%22%20r%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22138%22%20r%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22%23fff%22/%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22163%22%20rx%3D%2213%22%20ry%3D%229%22%20fill%3D%22%231C2563%22/%3E%3Cpath%20d%3D%22M143%20180%20q7%2016%2014%200%20z%22%20fill%3D%22%23F07C92%22/%3E%3Cpath%20d%3D%22M150%20171%20q-10%2014%20-22%204%20M150%20171%20q10%2014%2022%204%22%20fill%3D%22none%22%20stroke%3D%22%231C2563%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
 <meta name="theme-color" content="#14213d">
 <link rel="stylesheet" href="/fonts/inter.css">
+<link rel="stylesheet" href="/hs-pick.css">
 <style>
   :root{
     --ink:#1C2563; --muted:#5b6475; --line:#e3e6ec; --bg:#f6f7f9; --card:#fff;
@@ -183,10 +184,8 @@
   .sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
   .hdr-r{display:flex;gap:8px;align-items:center}
   .hdr-r{flex:1;min-width:0;justify-content:flex-end}
-  .langbar{display:flex;gap:8px 14px;flex-wrap:wrap;justify-content:center;align-items:center;padding:10px 12px;background:#E8EBFA;border-bottom:1px solid var(--line)}
-  .langbar label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink)}
-  .langbar select{max-width:210px;min-width:0;text-overflow:ellipsis}
-  header h1{flex-shrink:0}
+  .langbar{padding:12px 12px 14px;background:linear-gradient(180deg,#E3E7FF,#F4F5FF);border-bottom:1px solid var(--line)}
+      header h1{flex-shrink:0}
   @media(max-width:440px){.prem-btn .t{display:none} header h1 span:not(.logo){display:none} header{padding:12px 12px}}
   .hdr-r{display:flex;gap:8px;align-items:center}
   .acc-btn{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font:700 13px Inter,sans-serif;padding:7px 10px;border-radius:10px;cursor:pointer;white-space:nowrap}
@@ -194,6 +193,9 @@
   @media(max-width:440px){.acc-btn .t{display:none}}
   dialog.fb input.code{width:100%;font:700 22px Inter,sans-serif;letter-spacing:.3em;text-align:center;padding:10px;border-radius:10px;border:1px solid var(--line);margin:6px 0 10px}
   dialog.fb .acc-st{display:none}
+  .inv-btn{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:linear-gradient(135deg,#FF8A3D,#FF5E7E);color:#fff;font-size:19px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2);display:grid;place-items:center;padding:0}
+  .inv-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+  header h1 #tagline{opacity:1!important;display:inline!important;font-weight:800!important;color:#FFC95C;margin-left:-4px}
   .prem-btn{border:none;background:#f5c542;color:var(--ink);font:700 13px Inter,sans-serif;padding:8px 11px;border-radius:10px;cursor:pointer;white-space:nowrap}
   .tabs button.locked{color:#8a6d00;background:#fff8e1;border-color:#f3dfa0}
   .tabs button.locked.on{background:#f5c542;color:var(--ink);border-color:#f5c542}
@@ -368,16 +370,17 @@
 </head>
 <body>
 <header>
-  <h1 style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg></span><b style="white-space:nowrap;font-weight:inherit;color:inherit">Harlo<sup class="tm" style="font-size:.5em;font-weight:600;vertical-align:super;margin-left:1px">™</sup></b> <span id="tagline">· pronunciation</span></h1>
+  <h1 style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="280" height="280" rx="64" fill="#3346C8"/><path d="M92 228 l-26 40 l52 -24 z" fill="#fff"/><circle cx="212" cy="148" r="33" fill="#fff"/><circle cx="200" cy="184" r="33" fill="#fff"/><circle cx="169" cy="207" r="33" fill="#fff"/><circle cx="131" cy="207" r="33" fill="#fff"/><circle cx="100" cy="184" r="33" fill="#fff"/><circle cx="88" cy="148" r="33" fill="#fff"/><circle cx="100" cy="112" r="33" fill="#fff"/><circle cx="131" cy="89" r="33" fill="#fff"/><circle cx="169" cy="89" r="33" fill="#fff"/><circle cx="200" cy="112" r="33" fill="#fff"/><circle cx="150" cy="148" r="70" fill="#fff"/><circle cx="125" cy="138" r="9" fill="#1C2563"/><circle cx="175" cy="138" r="9" fill="#1C2563"/><circle cx="128" cy="135" r="3" fill="#fff"/><circle cx="178" cy="135" r="3" fill="#fff"/><ellipse cx="150" cy="163" rx="13" ry="9" fill="#1C2563"/><path d="M143 180 q7 16 14 0 z" fill="#F07C92"/><path d="M150 171 q-10 14 -22 4 M150 171 q10 14 22 4" fill="none" stroke="#1C2563" stroke-width="4" stroke-linecap="round"/></svg></span><b style="white-space:nowrap;font-weight:inherit;color:inherit">Harlo<sup class="tm" style="font-size:.5em;font-weight:600;vertical-align:super;margin-left:1px">™</sup></b> <span id="tagline">Says</span></h1>
   <div class="hdr-r">
+  <button class="inv-btn" id="invBtn" type="button" aria-label="Invite a friend" title="Invite a friend" onclick="window.HSFriends&&HSFriends.open()">👥</button>
   <button class="acc-btn" id="accBtn" type="button" hidden>👤</button>
   <button class="prem-btn" id="premBtn" aria-label="Premium">⭐<span class="t"> Premium</span></button>
   </div>
 </header>
-<div class="langbar">
-  <label><span data-i18n="iSpeak">I speak</span> <select id="ui"></select></label>
-  <label><span data-i18n="learning">I'm learning</span> <select id="lang"></select></label>
-</div>
+<div class="langbar"><div class="hs-pick">
+  <label><span data-i18n="iSpeak">I speak</span><select id="ui"></select></label>
+  <label><span data-i18n="learning">I'm learning</span><select id="lang"></select></label>
+</div></div>
 
 <main>
   <div class="warn" id="warn"></div>
@@ -473,11 +476,7 @@
     <div class="bar"><i id="progBar"></i></div>
   </section>
 
-  <a class="card games-link" href="/games/?from=app" id="gamesLink">
-    <span class="gl-fl" aria-hidden="true"><i>🔎</i><i>✏️</i><i>🧩</i><i>🔤</i></span>
-    <span class="gl-t"><b data-i18n="gm_h">🎮 Harlo word games</b><span data-i18n="gm_p">Learn vocabulary and verbs with word searches, crosswords and quick puzzles.</span></span>
-    <span class="gl-go" data-i18n="gm_btn">Play the games →</span>
-  </a>
+
 
 
   <section class="card install" id="installBar" aria-live="polite">
@@ -500,7 +499,7 @@
   </details>
 </main>
 <footer>
-  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/games/" data-i18n="gm_foot">🎮 Word games</a><a href="/interview/">💼 Interview Coach</a><a href="/citizen/">🇬🇧 Life in the UK test</a><a href="/travel/">✈️ Travel phrases</a><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
+  <div class="foot-links"><button type="button" id="fbOpen" data-i18n="fbLink">💬 Send feedback</button><a href="/products/">✨ All Harlo apps</a><a href="/games/" data-i18n="gm_foot">🎮 Word games</a><a href="/interview/">💼 Interview Coach</a><a href="/citizen/">🇬🇧 Life in the UK test</a><a href="/travel/">✈️ Travel phrases</a><a href="/privacy.html" data-i18n="lg_priv">Privacy</a><a href="/terms.html" data-i18n="lg_terms">Terms</a></div>
   <p class="adult" data-i18n="lg_adult">For adults aged 18 and over.</p>
   <span data-i18n="footer"></span>
 <p class="tmnote" style="font-size:12px;opacity:.7;margin:6px 0 0">Harlo™ is a trade mark of NMH Phillips Consulting Ltd.</p></footer>
@@ -976,7 +975,7 @@ function applyUI(){
   document.documentElement.dir=(window.SIR_EXTRA[ui]&&window.SIR_EXTRA[ui].rtl)?'rtl':'ltr';
   document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
   if(window.hsAccountRelabel) window.hsAccountRelabel();
-  $('tagline').textContent='· '+t('tagline');
+  $('tagline').textContent='Says';
   els.play.textContent=t('listen'); els.slow.textContent=t('slowly'); if(!listening) els.mic.textContent=t('tapSay');
   els.prev.textContent=t('back'); els.next.textContent=t('next');
   els.customText.placeholder=t('placeholder');
@@ -1174,6 +1173,8 @@ render();
 <script src="journey.js"></script>
 <script src="account.js"></script>
 <script src="friends.js"></script>
+<script src="apps.js"></script>
+<script src="hub.js"></script>
 <script>
 // Deep links, e.g. from Harlo Travel: /?lang=es&set=Travel&lesson=1
 (function(){ try{ const q=new URLSearchParams(location.search), l=q.get('lang'), s=q.get('set');

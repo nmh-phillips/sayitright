@@ -327,9 +327,15 @@ async function finish() {
 // ---------- views ----------
 function vGate() {
   const signedIn = window.hsAccount && window.hsAccount.signedIn();
-  return `<div class="hero"><div class="dog">${face()}</div><div><h2>${esc(t('heroH'))}</h2><p>${esc(t('heroP2'))}</p></div></div>
-    <div class="card"><p>${esc(t(S.access === false ? 'beta' : 'wait', { name: coachName() }))}</p>
-    ${S.access === false && !signedIn && window.hsAccount && window.hsAccount.ready() ? `<button class="btn primary" data-signin>👤 ${esc(t('acc_signin'))}</button>` : ''}</div>`;
+  const canSign = S.access === false && !signedIn && window.hsAccount && window.hsAccount.ready();
+  const msg = S.access === false ? '🔒 ' + t('beta') : t('wait', { name: coachName() });
+  return `<section class="iv-intro">
+    <div class="iv-pair"><span class="ivp a">${window.HSTalk.face('man')}</span><span class="ivp b">${window.HSTalk.face('woman')}</span><span class="iv-bub">💼</span></div>
+    <h2>${esc(t('heroH'))}</h2>
+    <p>${esc(t('heroP2'))}</p>
+    <ol class="iv-steps">${['🎙️', '💡', '📋'].map((ic, i) => `<li style="--i:${i}"><span>${ic}</span>${esc(t('ivS' + (i + 1)))}</li>`).join('')}</ol>
+    <div class="iv-lock" role="status"><p>${esc(msg)}</p>${canSign ? `<button class="iv-go" data-signin>👤 ${esc(t('acc_signin'))}</button>` : ''}</div>
+  </section>`;
 }
 function chips(name, list, cur, label) {
   return `<div class="chips" role="group" aria-label="${esc(label)}">${list.map(([v, txt, sub]) => `<button data-${name}="${v}" class="${cur === v ? 'on' : ''}" aria-pressed="${cur === v}">${esc(txt)}${sub ? `<small>${esc(sub)}</small>` : ''}</button>`).join('')}</div>`;
