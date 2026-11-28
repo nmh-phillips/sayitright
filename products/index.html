@@ -40,6 +40,8 @@
   .app.off .tx,.app.tagged .tx{padding-top:16px}
   @keyframes in{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.app{animation:none}}
+  #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 24px);transform:translate(-50%,20px);opacity:0;background:#1C2563;color:#fff;padding:12px 18px;border-radius:999px;font-weight:700;transition:.25s;pointer-events:none;z-index:9}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
   footer{text-align:center;padding:20px 16px 34px;color:var(--muted);font-size:13px}
   footer a{color:#3346C8;text-decoration:none;font-weight:600;margin:0 8px}
   [dir=rtl] .app .tag{right:auto;left:12px}
@@ -69,11 +71,13 @@
     document.getElementById('grid').innerHTML=HS_APPS.list(ui).map((a,i)=>{
       const tag=a.status?`<span class="tag">${esc(a.id==='chats'?HS_APPS.t('partOf',ui)+' · '+HS_APPS.t('beta',ui):HS_APPS.t(a.status,ui))}</span>`:'';
       const inner=`<span class="ic" aria-hidden="true">${a.ic}</span><span class="tx"><b>${esc(a.id==='says'?a.name:'Harlo '+a.name)}</b><span class="d">${esc(a.desc)}</span></span>`;
-      const part=a.id==='work'?`<span class="tag">${esc(HS_APPS.t('partOf',ui))}</span>`:'';
+      const part=a.id==='work'?`<span class="tag">${esc(HS_APPS.t('partOf',ui))}</span>`:a.id==='chats'?tag:'';
       return a.href ? `<a class="app${part?' tagged':''}" href="${esc(a.href)}" style="--c1:${a.c1};--c2:${a.c2};--i:${i}">${part}${inner}<span class="go" aria-hidden="true">→</span></a>`
-                    : `<div class="app off" style="--c1:${a.c1};--c2:${a.c2};--i:${i}">${tag}${inner}</div>`;
+                    : `<div class="app off" role="button" tabindex="0" data-soon style="--c1:${a.c1};--c2:${a.c2};--i:${i}">${tag}${inner}</div>`;
     }).join('');
   }
+  const toast=msg=>{ let t=document.getElementById('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); } t.textContent=msg; t.className='show'; clearTimeout(t._h); t._h=setTimeout(()=>t.className='',2200); };
+  document.getElementById('grid').addEventListener('click',e=>{ const s=e.target.closest('[data-soon]'); if(!s) return; s.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:300}); toast('🌍 '+HS_APPS.t('soon',ui)); });
   sel.onchange=()=>{ ui=sel.value; try{ localStorage.setItem('sir_ui',JSON.stringify(ui)); }catch(e){} draw(); };
   draw();
 })();

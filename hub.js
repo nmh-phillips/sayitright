@@ -265,6 +265,26 @@ new MutationObserver(() => {
 goPremium = function () { openSec('premium'); setTimeout(() => { const e = $('wlEmail'); if (e && e.offsetParent) e.focus({ preventScroll: true }); }, 400); }; // eslint-disable-line no-global-assign
 $('premBtn').onclick = goPremium; if ($('lockedCta')) $('lockedCta').onclick = goPremium;
 
+
+// ---------- deep links: /?open=chats|mine|focus|assess|premium|phrases|work (used by the All apps page) ----------
+(function () {
+  let want; try { want = new URLSearchParams(location.search).get('open'); } catch (e) {}
+  if (!want) return;
+  try { history.replaceState(history.state, '', location.pathname + location.search.replace(/[?&]open=[^&]*/, '').replace(/^&/, '?') + location.hash); } catch (e) {}
+  const press = () => { const b = document.querySelector('#groups .g-' + want); if (b) { b.click(); return true; } return false; };
+  if (want !== 'chats') { setTimeout(press, 300); return; }
+  // Chats appears once the beta access check finishes; if it never does, say it's invite-only for now.
+  const t0 = Date.now(), iv = setInterval(() => {
+    if (press()) return clearInterval(iv);
+    if (Date.now() - t0 > 6000) {
+      clearInterval(iv);
+      const n = document.createElement('div'); n.setAttribute('role', 'status');
+      n.style.cssText = 'position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 24px);transform:translateX(-50%);z-index:80;background:#1C2563;color:#fff;padding:13px 18px;border-radius:18px;font-weight:700;max-width:90vw;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3)';
+      n.textContent = '💬 ' + (window.HS_APPS ? HS_APPS.t('chats', ui) + ' · ' + HS_APPS.t('beta', ui) : 'Chats · Beta') + ' 🔒';
+      document.body.appendChild(n); setTimeout(() => n.remove(), 4000);
+    }
+  }, 300);
+})();
 // ---------- hook into render ----------
 const baseRender = render;
 render = function () { // eslint-disable-line no-global-assign

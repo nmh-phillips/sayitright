@@ -10,7 +10,7 @@ const APPS = [
   ['citizen', '🇬🇧', '/citizen/',                          '#C0264B', '#FF6B8B', ''],
   ['travel',  '✈️', '/travel/',                           '#0EA5E9', '#38BDF8', ''],
   ['work',    '🦺', '/?lang=en&set=' + encodeURIComponent('Work: Care'), '#6D28D9', '#A78BFA', ''],
-  ['chats',   '💬', '',                          '#DB2777', '#F472B6', 'beta'],
+  ['chats',   '💬', '/?open=chats',                          '#DB2777', '#F472B6', 'beta'],
   ['live',    '🌍', '',                                   '#475569', '#94A3B8', 'soon']
 ];
 const K = ['says','saysD','games','gamesD','iv','ivD','citizen','citizenD','travel','travelD','work','workD','chats','chatsD','live','liveD','more','seeAll','allTitle','allSub','soon','beta','open','partOf'];
