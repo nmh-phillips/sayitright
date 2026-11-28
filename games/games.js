@@ -1,4 +1,4 @@
-// Harley's Games: word search, crossword, match pairs and unscramble.
+// Harlo Games: word search, crossword, match pairs and unscramble.
 // Plain JS, no build step. Uses games/words.js. Shares the learning language
 // (localStorage 'sir_lang') with the Harlo pronunciation app.
 (function () {
@@ -151,7 +151,7 @@
 
   // ---------- Game setup: pick topic and level inside the chosen game, then Play ----------
   function setup(game) {
-    document.title = `${game.name} · Harley's Games`;
+    document.title = `${game.name} · Harlo Games`;
     const n = prog.done[game.id] || 0;
     const chip = (id, ic, label, extra) => `<button type="button" data-pick="${id}" class="${extra || ''}${id === pick ? ' on' : ''}"><span>${ic}</span> ${esc(label)}</button>`;
     app.innerHTML = `
@@ -204,7 +204,7 @@
     tick = setInterval(() => { const el = $('gTimer'); if (!el) return clearInterval(tick); el.textContent = '⏱ ' + mmss((Date.now() - gameT0) / 1000); }, 1000);
   }
   function frame(game, inner) {
-    document.title = `${game.name} · ${topicName()} · Harley's Games`;
+    document.title = `${game.name} · ${topicName()} · Harlo Games`;
     app.innerHTML = `
       <div class="ghead"><a href="#${daily ? '' : game.id}" class="back" aria-label="${esc(t('back'))}">${window.HG_RTL[ui] ? '→' : '←'}</a>
         <span class="gtimer" id="gTimer" aria-hidden="true">⏱ 0:00</span><div><h2>${game.ic} ${esc(game.name)}</h2><p class="sub">${daily ? `📅 ${esc(t('dTitle'))} · ` : ''}${esc(learnName())}${game.noSetup ? ` · 📅 ${esc(dayKey())}` : `${game.noTopic ? '' : ` · ${pick === 'random' && !daily ? '🎲 ' : ''}${esc(topicName())}`}${daily ? '' : ` · ${esc(t(level))}`}`}</p></div></div>

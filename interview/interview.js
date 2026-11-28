@@ -1,4 +1,4 @@
-// Harley's Interview Coach (harlolearn.com/interview/): spoken mock job interviews with Harley (or Lilou) as the interviewer.
+// Harlo Interview Coach (harlolearn.com/interview/): spoken mock job interviews with Harley (or Lilou) as the interviewer.
 // Hands-free like Harlo Chats: Harley asks, the mic opens by itself, a pause sends the answer; the report comes at the end.
 // Back end: /.netlify/functions/chat (scene 'interview', with job + itype) and /.netlify/functions/tts (kind 'line').
 // Text: interview/i18n.js (IV_UI) and /games/acc-i18n.js (HG_ACC, sign-in). Sign-in: /account.js. Private beta: CHAT_BETA_EMAILS.
@@ -606,7 +606,7 @@ function draw() {
 }
 function applyStatic() {
   document.documentElement.lang = ui; document.documentElement.dir = window.IV_RTL[ui] ? 'rtl' : 'ltr';
-  document.title = t('title') + ' — Harlo';
+  document.title = t('title');
   document.querySelectorAll('[data-t],[data-i18n]').forEach(el => { el.textContent = t(el.dataset.t || el.dataset.i18n); });
   const sel = $('ivUi'); if (sel) { sel.innerHTML = window.IV_UI_LANGS.map(([k, n]) => `<option value="${k}" ${k === ui ? 'selected' : ''}>${n}</option>`).join(''); }
   if (window.hsAccountRelabel) window.hsAccountRelabel();

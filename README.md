@@ -67,7 +67,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Every 10 phrases a round summary shows that round's score (this session's attempts), stars, Harley's reaction and the weakest phrases, with Continue / Practise again. After the last round the full topic summary appears.
 - Close with ✕, Esc or the phone's Back button. "▶ Start lesson" on the normal card re-enters. Stats events: `lesson`, `lesson_round`. Strings `ls_*` in all 16 languages.
 
-## Harley's Games (`/games/`)
+## Harlo Games (`/games/`)
 - Word games at `harlolearn.com/games/`, a separate front door with its own look, same repo and same Netlify site. `games.harlolearn.com` redirects there (see `netlify.toml`).
 - `games/index.html` (page and styles), `games/games.js` (Word search, Crossword, Match pairs, Unscramble), `games/words.js` (11 topics, 20–30 words each, 286 in all: one row per word with all learning languages and the meanings for every interface language; present and past tense rows use `infinitive>answer[>frame]`). `HG_SWAP` holds Latin American Spanish and US English swaps.
 - Difficulty (`hs_games_level`): Easy / Medium / Hard.
@@ -75,7 +75,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
   - Crossword: 6 / 8 / 11 words; Easy shows each word's first letter; Hard hides word lengths and doesn't mark letters red (just says how many are wrong).
   - Match pairs: 5 / 6 / 8 pairs. Unscramble: 6 / 8 / 10 words; Easy gives the first letter; Hard adds 2 decoy letters and has no hint.
 - Shares the learning language with the pronunciation app (`sir_lang`), so switching between them keeps the language. Game progress is kept on the device (`hs_games`), not synced to accounts yet.
-- Cross-links both ways: games → "Try Harlo" (`/?from=games`); app → "Harley's word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
+- Cross-links both ways: games → "Try Harlo" (`/?from=games`); app → "Harlo word games" card and footer link (strings `gm_*`, in en/es/fr/it/de/pt; other interface languages show English).
 - Interface in all 16 Harlo interface languages (`games/i18n.js`: `HG_UI` screen text, `HG_GLOSS` word meanings in words.js order). Shares the "I speak" choice with the app (`sir_ui`). Clues show the meaning in the visitor's language; English learners get the meaning in their language plus a short English definition (English only if they speak English). AI-translated: get native speakers to check. Stats events: `games`, `game_start`, `game_done`.
 - To switch on `games.harlolearn.com`: Netlify → Domain management → Add domain alias `games.harlolearn.com`, then add the DNS record Netlify shows.
 - **Daily puzzle** (`#daily`): one a day per learning language, the same for everyone (seeded from the date). The game type rotates (crossword, word search, unscramble, match pairs), the topic is picked by the date, and the level is always Medium. Streaks are kept on the device (`hs_daily`: last day, streak, best); finishing shows the streak and a Share button (phone share sheet, or copy). Stats events: `daily_start`, `daily_done`.
@@ -92,7 +92,7 @@ Needs `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in Netlify. Free users: `PRON
 - Phrases to practise are kept on the device (`hs_chat_review`, last 30) for the planned Daily 5.
 - Stats events: `chat_start`, `chat_turn`, `chat_done`. Daily counters (store `chat-usage`) are deleted after 7 days by `cleanup.mjs`.
 
-## Harley's Interview Coach (/interview/)
+## Harlo Interview Coach (/interview/)
 - Spoken mock job interviews: Harley (or Lilou) plays a hiring manager and asks 6 questions (`INTERVIEW_TURNS`) for the job the person types, in one of three styles: General, Competency (STAR) or Customer-facing, at Beginner/Intermediate/Advanced language level, in any of the 9 learning languages (default English).
 - Same hands-free loop as Harlo Chats (mic opens after each question; 2.5 s pause sends the answer; 12 s of nothing waits for a tap; typing allowed). Answers up to 2,200 characters (about 3 minutes of speech); if the phone stops listening by itself mid-answer, it carries on listening and keeps what was said. Feedback is on content (examples, STAR, relevance) and language; tips are kept for the end by default.
 - Report: score /100, summary, strongest answer, the one thing to work on, every question with the answer given, its tip and a stronger version (tap to hear), and useful phrases.

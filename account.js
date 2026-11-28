@@ -1,6 +1,6 @@
 // Optional sign-in (email code or link, no password) so progress follows you across devices.
 // Uses Supabase. Hidden until SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY are set in Netlify (see README).
-// Synced: best scores, Assess me history, settings (languages, coach) and Harley's Games progress
+// Synced: best scores, Assess me history, settings (languages, coach) and Harlo Games progress
 // (games played, daily-puzzle streak, level and topic). Not synced: device ID and daily allowances.
 // Used on both the app page and the games page (games/).
 (function () {

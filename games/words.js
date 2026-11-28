@@ -1,4 +1,4 @@
-// Harley's Games word lists.
+// Harlo Games word lists.
 // Word topics, one row per word:
 //   en | English definition | es | fr | it | de | pt | nl | pl | ro | uk | zh | ar | tr | ja | ko | vi
 //   (es…nl are the words to learn AND the meaning shown to speakers of those languages;

@@ -1,4 +1,4 @@
-// Harley's Games interface translations, in the same 16 interface languages as Harlo.
+// Harlo Games interface translations, in the same 16 interface languages as Harlo.
 // HG_UI: screen text. Word meanings live in games/words.js. AI-translated: get native speakers to check.
 window.HG_UI_LANGS = [['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['it', 'Italiano'], ['de', 'Deutsch'], ['pt', 'Português'], ['pl', 'Polski'], ['ro', 'Română'], ['uk', 'Українська'], ['zh', '中文（简体）'], ['ar', 'العربية'], ['nl', 'Nederlands'], ['tr', 'Türkçe'], ['ja', '日本語'], ['ko', '한국어'], ['vi', 'Tiếng Việt']];
 window.HG_RTL = { ar: true };
@@ -6,7 +6,7 @@ window.HG_LEARN_NAMES = { en: 'English (UK)', enus: 'English (US)', es: 'Españo
 
 window.HG_UI = {
   en: {
-    iSpeak: 'I speak', learning: "I'm learning", pron: '🎙️ Pronunciation', title: "Harley's Games — fun ways to learn vocabulary and verbs",
+    iSpeak: 'I speak', learning: "I'm learning", pron: '🎙️ Pronunciation', title: "Harlo Games — fun ways to learn vocabulary and verbs",
     heroH: 'Fun ways to learn vocabulary and verbs', heroP: 'Word searches, crosswords and quick puzzles in 9 languages. Free, no sign-up.',
     t_animals: 'Animals', t_food: 'Food & drink', t_town: 'Around town', t_verbs: 'Everyday verbs', t_past: 'Past tense',
     g_wordsearch: 'Word search', d_wordsearch: 'Find the hidden words in the grid.', g_crossword: 'Crossword', d_crossword: 'Fill the grid from the clues.',
@@ -22,7 +22,7 @@ window.HG_UI = {
     promo2H: 'Now say them out loud', promo2P: "Practise your pronunciation with Harlo. He'll tell you how you sounded.", pronLink: 'Harlo pronunciation', privacy: 'Privacy', terms: 'Terms', adults: 'For adults aged 18 and over.', back: 'All games', listen: 'Listen'
   },
   es: {
-    iSpeak: 'Hablo', learning: 'Estoy aprendiendo', pron: '🎙️ Pronunciación', title: 'Los juegos de Harley: formas divertidas de aprender vocabulario y verbos',
+    iSpeak: 'Hablo', learning: 'Estoy aprendiendo', pron: '🎙️ Pronunciación', title: 'Los juegos de Harlo: formas divertidas de aprender vocabulario y verbos',
     heroH: 'Formas divertidas de aprender vocabulario y verbos', heroP: 'Sopas de letras, crucigramas y pasatiempos rápidos en 9 idiomas. Gratis y sin registro.',
     t_animals: 'Animales', t_food: 'Comida y bebida', t_town: 'Por la ciudad', t_verbs: 'Verbos cotidianos', t_past: 'Pasado',
     g_wordsearch: 'Sopa de letras', d_wordsearch: 'Encuentra las palabras escondidas.', g_crossword: 'Crucigrama', d_crossword: 'Rellena la cuadrícula con las pistas.',
@@ -38,7 +38,7 @@ window.HG_UI = {
     promo2H: 'Ahora dilas en voz alta', promo2P: 'Practica tu pronunciación con Harlo. Te dirá cómo has sonado.', pronLink: 'Pronunciación con Harlo', privacy: 'Privacidad', terms: 'Condiciones', adults: 'Para mayores de 18 años.', back: 'Todos los juegos', listen: 'Escuchar'
   },
   fr: {
-    iSpeak: 'Je parle', learning: "J'apprends", pron: '🎙️ Prononciation', title: 'Les jeux de Harley : des façons amusantes d\'apprendre le vocabulaire et les verbes',
+    iSpeak: 'Je parle', learning: "J'apprends", pron: '🎙️ Prononciation', title: 'Les jeux Harlo : des façons amusantes d\'apprendre le vocabulaire et les verbes',
     heroH: "Des façons amusantes d'apprendre le vocabulaire et les verbes", heroP: 'Mots mêlés, mots croisés et petits jeux en 9 langues. Gratuit, sans inscription.',
     t_animals: 'Animaux', t_food: 'Nourriture et boissons', t_town: 'En ville', t_verbs: 'Verbes du quotidien', t_past: 'Passé',
     g_wordsearch: 'Mots mêlés', d_wordsearch: 'Trouvez les mots cachés dans la grille.', g_crossword: 'Mots croisés', d_crossword: 'Remplissez la grille grâce aux indices.',
@@ -54,7 +54,7 @@ window.HG_UI = {
     promo2H: 'Maintenant, dites-les à voix haute', promo2P: 'Travaillez votre prononciation avec Harlo. Il vous dira comment vous avez prononcé.', pronLink: 'Prononciation Harlo', privacy: 'Confidentialité', terms: 'Conditions', adults: 'Réservé aux adultes de 18 ans et plus.', back: 'Tous les jeux', listen: 'Écouter'
   },
   it: {
-    iSpeak: 'Parlo', learning: 'Sto imparando', pron: '🎙️ Pronuncia', title: 'I giochi di Harley: modi divertenti per imparare vocaboli e verbi',
+    iSpeak: 'Parlo', learning: 'Sto imparando', pron: '🎙️ Pronuncia', title: 'I giochi Harlo: modi divertenti per imparare vocaboli e verbi',
     heroH: 'Modi divertenti per imparare vocaboli e verbi', heroP: 'Crucipuzzle, cruciverba e giochi veloci in 9 lingue. Gratis, senza registrazione.',
     t_animals: 'Animali', t_food: 'Cibo e bevande', t_town: 'In città', t_verbs: 'Verbi di tutti i giorni', t_past: 'Passato',
     g_wordsearch: 'Crucipuzzle', d_wordsearch: 'Trova le parole nascoste nella griglia.', g_crossword: 'Cruciverba', d_crossword: 'Riempi la griglia con le definizioni.',
@@ -70,7 +70,7 @@ window.HG_UI = {
     promo2H: 'Ora dille ad alta voce', promo2P: 'Esercita la pronuncia con Harlo. Ti dirà come hai pronunciato.', pronLink: 'Pronuncia con Harlo', privacy: 'Privacy', terms: 'Termini', adults: 'Per adulti dai 18 anni in su.', back: 'Tutti i giochi', listen: 'Ascolta'
   },
   de: {
-    iSpeak: 'Ich spreche', learning: 'Ich lerne', pron: '🎙️ Aussprache', title: 'Harleys Spiele – Wörter und Verben spielerisch lernen',
+    iSpeak: 'Ich spreche', learning: 'Ich lerne', pron: '🎙️ Aussprache', title: 'Harlo Spiele – Wörter und Verben spielerisch lernen',
     heroH: 'Wörter und Verben spielerisch lernen', heroP: 'Suchrätsel, Kreuzworträtsel und kurze Spiele in 9 Sprachen. Kostenlos, ohne Anmeldung.',
     t_animals: 'Tiere', t_food: 'Essen & Trinken', t_town: 'In der Stadt', t_verbs: 'Alltagsverben', t_past: 'Vergangenheit',
     g_wordsearch: 'Suchrätsel', d_wordsearch: 'Finde die versteckten Wörter im Gitter.', g_crossword: 'Kreuzworträtsel', d_crossword: 'Fülle das Gitter mit Hilfe der Hinweise.',
@@ -86,7 +86,7 @@ window.HG_UI = {
     promo2H: 'Jetzt sag sie laut', promo2P: 'Übe deine Aussprache mit Harlo. Er sagt dir, wie du geklungen hast.', pronLink: 'Aussprache mit Harlo', privacy: 'Datenschutz', terms: 'Nutzungsbedingungen', adults: 'Für Erwachsene ab 18 Jahren.', back: 'Alle Spiele', listen: 'Anhören'
   },
   pt: {
-    iSpeak: 'Falo', learning: 'Quero aprender', pron: '🎙️ Pronúncia', title: 'Os jogos do Harley: formas divertidas de aprender vocabulário e verbos',
+    iSpeak: 'Falo', learning: 'Quero aprender', pron: '🎙️ Pronúncia', title: 'Os jogos Harlo: formas divertidas de aprender vocabulário e verbos',
     heroH: 'Formas divertidas de aprender vocabulário e verbos', heroP: 'Sopas de letras, palavras cruzadas e jogos rápidos em 9 línguas. Grátis, sem registo.',
     t_animals: 'Animais', t_food: 'Comida e bebida', t_town: 'Pela cidade', t_verbs: 'Verbos do dia a dia', t_past: 'Passado',
     g_wordsearch: 'Sopa de letras', d_wordsearch: 'Encontre as palavras escondidas na grelha.', g_crossword: 'Palavras cruzadas', d_crossword: 'Preencha a grelha com as pistas.',
@@ -102,7 +102,7 @@ window.HG_UI = {
     promo2H: 'Agora diga-as em voz alta', promo2P: 'Pratique a pronúncia com o Harlo. Ele diz-lhe como soou.', pronLink: 'Pronúncia com o Harlo', privacy: 'Privacidade', terms: 'Termos', adults: 'Para adultos com 18 anos ou mais.', back: 'Todos os jogos', listen: 'Ouvir'
   },
   pl: {
-    iSpeak: 'Mówię po', learning: 'Uczę się', pron: '🎙️ Wymowa', title: 'Gry Harleya – zabawne sposoby nauki słówek i czasowników',
+    iSpeak: 'Mówię po', learning: 'Uczę się', pron: '🎙️ Wymowa', title: 'Gry Harlo – zabawne sposoby nauki słówek i czasowników',
     heroH: 'Zabawne sposoby nauki słówek i czasowników', heroP: 'Wykreślanki, krzyżówki i szybkie łamigłówki w 9 językach. Za darmo, bez rejestracji.',
     t_animals: 'Zwierzęta', t_food: 'Jedzenie i picie', t_town: 'W mieście', t_verbs: 'Codzienne czasowniki', t_past: 'Czas przeszły',
     g_wordsearch: 'Wykreślanka', d_wordsearch: 'Znajdź ukryte słowa w diagramie.', g_crossword: 'Krzyżówka', d_crossword: 'Wypełnij diagram na podstawie wskazówek.',
@@ -118,7 +118,7 @@ window.HG_UI = {
     promo2H: 'Teraz powiedz je na głos', promo2P: 'Ćwicz wymowę z Harlo. Powie ci, jak brzmiałeś.', pronLink: 'Wymowa z Harlo', privacy: 'Prywatność', terms: 'Regulamin', adults: 'Dla dorosłych od 18 lat.', back: 'Wszystkie gry', listen: 'Posłuchaj'
   },
   ro: {
-    iSpeak: 'Vorbesc', learning: 'Învăț', pron: '🎙️ Pronunție', title: 'Jocurile lui Harley – moduri distractive de a învăța vocabular și verbe',
+    iSpeak: 'Vorbesc', learning: 'Învăț', pron: '🎙️ Pronunție', title: 'Jocurile Harlo – moduri distractive de a învăța vocabular și verbe',
     heroH: 'Moduri distractive de a învăța vocabular și verbe', heroP: 'Cuvinte ascunse, rebusuri și jocuri rapide în 9 limbi. Gratuit, fără cont.',
     t_animals: 'Animale', t_food: 'Mâncare și băutură', t_town: 'Prin oraș', t_verbs: 'Verbe uzuale', t_past: 'Trecut',
     g_wordsearch: 'Cuvinte ascunse', d_wordsearch: 'Găsește cuvintele ascunse în grilă.', g_crossword: 'Rebus', d_crossword: 'Completează grila cu ajutorul indiciilor.',
@@ -134,7 +134,7 @@ window.HG_UI = {
     promo2H: 'Acum spune-le cu voce tare', promo2P: 'Exersează-ți pronunția cu Harlo. Îți spune cum ai sunat.', pronLink: 'Pronunție cu Harlo', privacy: 'Confidențialitate', terms: 'Termeni', adults: 'Pentru adulți de peste 18 ani.', back: 'Toate jocurile', listen: 'Ascultă'
   },
   uk: {
-    iSpeak: 'Я розмовляю', learning: 'Я вивчаю', pron: '🎙️ Вимова', title: 'Ігри Гарлі — веселі способи вчити слова й дієслова',
+    iSpeak: 'Я розмовляю', learning: 'Я вивчаю', pron: '🎙️ Вимова', title: 'Ігри Harlo — веселі способи вчити слова й дієслова',
     heroH: 'Веселі способи вчити слова й дієслова', heroP: 'Пошук слів, кросворди та швидкі головоломки 9 мовами. Безкоштовно, без реєстрації.',
     t_animals: 'Тварини', t_food: 'Їжа та напої', t_town: 'У місті', t_verbs: 'Щоденні дієслова', t_past: 'Минулий час',
     g_wordsearch: 'Пошук слів', d_wordsearch: 'Знайди сховані слова в сітці.', g_crossword: 'Кросворд', d_crossword: 'Заповни сітку за підказками.',
@@ -150,7 +150,7 @@ window.HG_UI = {
     promo2H: 'Тепер скажи їх уголос', promo2P: 'Тренуй вимову з Harlo. Він скаже, як ти прозвучав.', pronLink: 'Вимова з Harlo', privacy: 'Конфіденційність', terms: 'Умови', adults: 'Для дорослих від 18 років.', back: 'Усі ігри', listen: 'Слухати'
   },
   zh: {
-    iSpeak: '我说', learning: '我在学', pron: '🎙️ 发音练习', title: 'Harley 的游戏——轻松有趣地学词汇和动词',
+    iSpeak: '我说', learning: '我在学', pron: '🎙️ 发音练习', title: 'Harlo 游戏——轻松有趣地学词汇和动词',
     heroH: '轻松有趣地学词汇和动词', heroP: '找词游戏、填字游戏和小谜题，支持 9 种语言。免费，无需注册。',
     t_animals: '动物', t_food: '食物和饮料', t_town: '城市里', t_verbs: '常用动词', t_past: '过去时',
     g_wordsearch: '找词游戏', d_wordsearch: '在字母方格里找出隐藏的单词。', g_crossword: '填字游戏', d_crossword: '根据提示填满方格。',
@@ -166,7 +166,7 @@ window.HG_UI = {
     promo2H: '现在大声说出来', promo2P: '用 Harlo 练习发音，它会告诉你说得怎么样。', pronLink: 'Harlo 发音练习', privacy: '隐私', terms: '条款', adults: '仅限 18 岁及以上成人使用。', back: '所有游戏', listen: '听'
   },
   ar: {
-    iSpeak: 'أتحدث', learning: 'أتعلم', pron: '🎙️ النطق', title: 'ألعاب هارلي — طرق ممتعة لتعلّم المفردات والأفعال',
+    iSpeak: 'أتحدث', learning: 'أتعلم', pron: '🎙️ النطق', title: 'ألعاب Harlo — طرق ممتعة لتعلّم المفردات والأفعال',
     heroH: 'طرق ممتعة لتعلّم المفردات والأفعال', heroP: 'البحث عن الكلمات والكلمات المتقاطعة وألغاز سريعة بـ 9 لغات. مجانًا ومن دون تسجيل.',
     t_animals: 'الحيوانات', t_food: 'الطعام والشراب', t_town: 'في المدينة', t_verbs: 'أفعال يومية', t_past: 'الماضي',
     g_wordsearch: 'البحث عن الكلمات', d_wordsearch: 'اعثر على الكلمات المخفية في الشبكة.', g_crossword: 'الكلمات المتقاطعة', d_crossword: 'املأ الشبكة باستخدام التلميحات.',
@@ -182,7 +182,7 @@ window.HG_UI = {
     promo2H: 'والآن قلها بصوت عالٍ', promo2P: 'تدرّب على النطق مع Harlo، وسيخبرك كيف بدا نطقك.', pronLink: 'النطق مع Harlo', privacy: 'الخصوصية', terms: 'الشروط', adults: 'للبالغين من عمر 18 عامًا فما فوق.', back: 'كل الألعاب', listen: 'استمع'
   },
   nl: {
-    iSpeak: 'Ik spreek', learning: 'Ik leer', pron: '🎙️ Uitspraak', title: 'Harley’s spelletjes – leuke manieren om woorden en werkwoorden te leren',
+    iSpeak: 'Ik spreek', learning: 'Ik leer', pron: '🎙️ Uitspraak', title: 'Harlo spelletjes – leuke manieren om woorden en werkwoorden te leren',
     heroH: 'Leuke manieren om woorden en werkwoorden te leren', heroP: 'Woordzoekers, kruiswoordpuzzels en korte puzzels in 9 talen. Gratis, zonder account.',
     t_animals: 'Dieren', t_food: 'Eten en drinken', t_town: 'In de stad', t_verbs: 'Alledaagse werkwoorden', t_past: 'Verleden tijd',
     g_wordsearch: 'Woordzoeker', d_wordsearch: 'Vind de verborgen woorden in het rooster.', g_crossword: 'Kruiswoordpuzzel', d_crossword: 'Vul het rooster in met de hints.',
@@ -198,7 +198,7 @@ window.HG_UI = {
     promo2H: 'Zeg ze nu hardop', promo2P: 'Oefen je uitspraak met Harlo. Hij vertelt je hoe je klonk.', pronLink: 'Uitspraak met Harlo', privacy: 'Privacy', terms: 'Voorwaarden', adults: 'Voor volwassenen vanaf 18 jaar.', back: 'Alle spellen', listen: 'Luisteren'
   },
   tr: {
-    iSpeak: 'Konuştuğum dil', learning: 'Öğrendiğim dil', pron: '🎙️ Telaffuz', title: 'Harley’nin Oyunları – kelime ve fiil öğrenmenin eğlenceli yolları',
+    iSpeak: 'Konuştuğum dil', learning: 'Öğrendiğim dil', pron: '🎙️ Telaffuz', title: 'Harlo Oyunları – kelime ve fiil öğrenmenin eğlenceli yolları',
     heroH: 'Kelime ve fiil öğrenmenin eğlenceli yolları', heroP: '9 dilde kelime avı, bulmaca ve hızlı oyunlar. Ücretsiz, üyelik yok.',
     t_animals: 'Hayvanlar', t_food: 'Yiyecek ve içecek', t_town: 'Şehirde', t_verbs: 'Günlük fiiller', t_past: 'Geçmiş zaman',
     g_wordsearch: 'Kelime avı', d_wordsearch: 'Tablodaki gizli kelimeleri bul.', g_crossword: 'Bulmaca', d_crossword: 'İpuçlarıyla tabloyu doldur.',
@@ -214,7 +214,7 @@ window.HG_UI = {
     promo2H: 'Şimdi yüksek sesle söyle', promo2P: 'Harlo ile telaffuzunu çalış. Sana nasıl söylediğini anlatır.', pronLink: 'Harlo ile telaffuz', privacy: 'Gizlilik', terms: 'Koşullar', adults: '18 yaş ve üzeri yetişkinler içindir.', back: 'Tüm oyunlar', listen: 'Dinle'
   },
   ja: {
-    iSpeak: '私の言語', learning: '学習中', pron: '🎙️ 発音練習', title: 'ハーレーのゲーム ― 単語と動詞を楽しく覚えよう',
+    iSpeak: '私の言語', learning: '学習中', pron: '🎙️ 発音練習', title: 'Harlo ゲーム ― 単語と動詞を楽しく覚えよう',
     heroH: '単語と動詞を楽しく覚えよう', heroP: '単語探し、クロスワード、ミニパズルを9か国語で。無料・登録不要。',
     t_animals: '動物', t_food: '食べ物と飲み物', t_town: '街で', t_verbs: 'よく使う動詞', t_past: '過去形',
     g_wordsearch: '単語探し', d_wordsearch: 'マスの中に隠れた単語を見つけよう。', g_crossword: 'クロスワード', d_crossword: 'ヒントを見てマスを埋めよう。',
@@ -230,7 +230,7 @@ window.HG_UI = {
     promo2H: '声に出して言ってみよう', promo2P: 'Harlo で発音を練習しよう。どう聞こえたか教えてくれます。', pronLink: 'Harlo 発音練習', privacy: 'プライバシー', terms: '利用規約', adults: '18歳以上の方を対象としています。', back: 'すべてのゲーム', listen: '聞く'
   },
   ko: {
-    iSpeak: '내 언어', learning: '학습 언어', pron: '🎙️ 발음 연습', title: '할리의 게임 – 어휘와 동사를 재미있게 배우기',
+    iSpeak: '내 언어', learning: '학습 언어', pron: '🎙️ 발음 연습', title: 'Harlo 게임 – 어휘와 동사를 재미있게 배우기',
     heroH: '어휘와 동사를 재미있게 배우기', heroP: '9개 언어로 즐기는 단어 찾기, 십자말풀이, 짧은 퍼즐. 무료, 가입 필요 없음.',
     t_animals: '동물', t_food: '음식과 음료', t_town: '시내에서', t_verbs: '일상 동사', t_past: '과거형',
     g_wordsearch: '단어 찾기', d_wordsearch: '격자 속에 숨은 단어를 찾으세요.', g_crossword: '십자말풀이', d_crossword: '힌트를 보고 칸을 채우세요.',
@@ -246,7 +246,7 @@ window.HG_UI = {
     promo2H: '이제 소리 내어 말해 보세요', promo2P: 'Harlo로 발음을 연습하세요. 어떻게 들렸는지 알려 줘요.', pronLink: 'Harlo 발음 연습', privacy: '개인정보', terms: '이용약관', adults: '만 18세 이상 성인용입니다.', back: '모든 게임', listen: '듣기'
   },
   vi: {
-    iSpeak: 'Tôi nói', learning: 'Tôi đang học', pron: '🎙️ Phát âm', title: 'Trò chơi của Harley – cách vui để học từ vựng và động từ',
+    iSpeak: 'Tôi nói', learning: 'Tôi đang học', pron: '🎙️ Phát âm', title: 'Trò chơi Harlo – cách vui để học từ vựng và động từ',
     heroH: 'Cách vui để học từ vựng và động từ', heroP: 'Tìm từ, ô chữ và câu đố nhanh bằng 9 ngôn ngữ. Miễn phí, không cần đăng ký.',
     t_animals: 'Động vật', t_food: 'Đồ ăn và thức uống', t_town: 'Trong thành phố', t_verbs: 'Động từ hằng ngày', t_past: 'Thì quá khứ',
     g_wordsearch: 'Tìm từ', d_wordsearch: 'Tìm các từ ẩn trong bảng chữ.', g_crossword: 'Ô chữ', d_crossword: 'Điền vào ô theo gợi ý.',
@@ -292,22 +292,22 @@ window.HG_UI = {
 (function () {
   const K = ["dTitle", "dPlay", "dDone", "dStreak", "dStart", "dBest", "dShare", "dCopied", "dShareText", "dBack"];
   const S = {
-    en: ["Daily puzzle", "Play today's →", "Done ✓", "🔥 {n}-day streak", "Play every day to build a streak", "best {n}", "Share", "Copied", "I solved today's Harley's Games puzzle!", "New puzzle tomorrow. See you then!"],
-    es: ["Reto del día", "Jugar el de hoy →", "Hecho ✓", "🔥 Racha de {n} días", "Juega cada día para hacer una racha", "récord {n}", "Compartir", "Copiado", "¡He resuelto el reto de hoy de Harley's Games!", "Mañana hay uno nuevo. ¡Hasta mañana!"],
-    fr: ["Défi du jour", "Jouer au défi →", "Terminé ✓", "🔥 Série de {n} jours", "Jouez chaque jour pour lancer une série", "record {n}", "Partager", "Copié", "J'ai résolu le défi du jour de Harley's Games !", "Nouveau défi demain. À demain !"],
-    it: ["Sfida del giorno", "Gioca quella di oggi →", "Fatto ✓", "🔥 Serie di {n} giorni", "Gioca ogni giorno per fare una serie", "record {n}", "Condividi", "Copiato", "Ho risolto la sfida di oggi di Harley's Games!", "Domani una nuova sfida. A domani!"],
-    de: ["Tagesrätsel", "Heutiges spielen →", "Erledigt ✓", "🔥 {n} Tage in Folge", "Spiel jeden Tag für eine Serie", "Rekord {n}", "Teilen", "Kopiert", "Ich habe das heutige Rätsel von Harley's Games gelöst!", "Morgen gibt's ein neues. Bis morgen!"],
-    pt: ["Desafio do dia", "Jogar o de hoje →", "Feito ✓", "🔥 {n} dias seguidos", "Jogue todos os dias para fazer uma sequência", "recorde {n}", "Partilhar", "Copiado", "Resolvi o desafio de hoje do Harley's Games!", "Amanhã há um novo. Até amanhã!"],
-    pl: ["Zagadka dnia", "Zagraj w dzisiejszą →", "Gotowe ✓", "🔥 Seria: {n} dni", "Graj codziennie, by zbudować serię", "rekord {n}", "Udostępnij", "Skopiowano", "Rozwiązałem dzisiejszą zagadkę Harley's Games!", "Jutro nowa zagadka. Do jutra!"],
-    ro: ["Provocarea zilei", "Joacă provocarea de azi →", "Gata ✓", "🔥 {n} zile la rând", "Joacă zilnic ca să faci o serie", "record {n}", "Distribuie", "Copiat", "Am rezolvat provocarea de azi din Harley's Games!", "Mâine vine una nouă. Pe mâine!"],
-    uk: ["Завдання дня", "Грати сьогоднішнє →", "Готово ✓", "🔥 {n} днів поспіль", "Грай щодня, щоб почати серію", "рекорд {n}", "Поділитися", "Скопійовано", "Я розв'язав сьогоднішнє завдання Harley's Games!", "Завтра буде нове. До завтра!"],
-    zh: ["每日一题", "玩今天的 →", "已完成 ✓", "🔥 连续 {n} 天", "每天玩一次，累积连续天数", "最佳 {n}", "分享", "已复制", "我完成了今天的 Harley's Games 每日一题！", "明天有新题，明天见！"],
-    ar: ["لغز اليوم", "العب لغز اليوم ←", "تم ✓", "🔥 {n} أيام متتالية", "العب كل يوم لتبدأ سلسلة", "الأفضل {n}", "مشاركة", "تم النسخ", "حللت لغز اليوم في Harley's Games!", "لغز جديد غدًا. نراك غدًا!"],
-    nl: ["Puzzel van de dag", "Speel die van vandaag →", "Klaar ✓", "🔥 {n} dagen op rij", "Speel elke dag voor een reeks", "record {n}", "Delen", "Gekopieerd", "Ik heb de puzzel van vandaag van Harley's Games opgelost!", "Morgen een nieuwe. Tot morgen!"],
-    tr: ["Günün bulmacası", "Bugünküyü oyna →", "Tamam ✓", "🔥 {n} günlük seri", "Seri yapmak için her gün oyna", "en iyi {n}", "Paylaş", "Kopyalandı", "Harley's Games'in bugünkü bulmacasını çözdüm!", "Yarın yeni bulmaca var. Yarın görüşürüz!"],
-    ja: ["今日のパズル", "今日のパズルで遊ぶ →", "クリア ✓", "🔥 {n}日連続", "毎日遊んで連続記録を作ろう", "最高 {n}", "シェア", "コピーしました", "Harley's Games の今日のパズルを解きました！", "また明日、新しいパズルで会おう！"],
-    ko: ["오늘의 퍼즐", "오늘 퍼즐 하기 →", "완료 ✓", "🔥 {n}일 연속", "매일 해서 연속 기록을 만드세요", "최고 {n}", "공유", "복사됨", "Harley's Games 오늘의 퍼즐을 풀었어요!", "내일 새 퍼즐이 나와요. 내일 만나요!"],
-    vi: ["Câu đố hôm nay", "Chơi câu đố hôm nay →", "Xong ✓", "🔥 Chuỗi {n} ngày", "Chơi mỗi ngày để tạo chuỗi", "cao nhất {n}", "Chia sẻ", "Đã sao chép", "Mình đã giải câu đố hôm nay của Harley's Games!", "Mai có câu đố mới. Hẹn gặp lại!"]
+    en: ["Daily puzzle", "Play today's →", "Done ✓", "🔥 {n}-day streak", "Play every day to build a streak", "best {n}", "Share", "Copied", "I solved today's Harlo Games puzzle!", "New puzzle tomorrow. See you then!"],
+    es: ["Reto del día", "Jugar el de hoy →", "Hecho ✓", "🔥 Racha de {n} días", "Juega cada día para hacer una racha", "récord {n}", "Compartir", "Copiado", "¡He resuelto el reto de hoy de Harlo Games!", "Mañana hay uno nuevo. ¡Hasta mañana!"],
+    fr: ["Défi du jour", "Jouer au défi →", "Terminé ✓", "🔥 Série de {n} jours", "Jouez chaque jour pour lancer une série", "record {n}", "Partager", "Copié", "J'ai résolu le défi du jour de Harlo Games !", "Nouveau défi demain. À demain !"],
+    it: ["Sfida del giorno", "Gioca quella di oggi →", "Fatto ✓", "🔥 Serie di {n} giorni", "Gioca ogni giorno per fare una serie", "record {n}", "Condividi", "Copiato", "Ho risolto la sfida di oggi di Harlo Games!", "Domani una nuova sfida. A domani!"],
+    de: ["Tagesrätsel", "Heutiges spielen →", "Erledigt ✓", "🔥 {n} Tage in Folge", "Spiel jeden Tag für eine Serie", "Rekord {n}", "Teilen", "Kopiert", "Ich habe das heutige Rätsel von Harlo Games gelöst!", "Morgen gibt's ein neues. Bis morgen!"],
+    pt: ["Desafio do dia", "Jogar o de hoje →", "Feito ✓", "🔥 {n} dias seguidos", "Jogue todos os dias para fazer uma sequência", "recorde {n}", "Partilhar", "Copiado", "Resolvi o desafio de hoje do Harlo Games!", "Amanhã há um novo. Até amanhã!"],
+    pl: ["Zagadka dnia", "Zagraj w dzisiejszą →", "Gotowe ✓", "🔥 Seria: {n} dni", "Graj codziennie, by zbudować serię", "rekord {n}", "Udostępnij", "Skopiowano", "Rozwiązałem dzisiejszą zagadkę Harlo Games!", "Jutro nowa zagadka. Do jutra!"],
+    ro: ["Provocarea zilei", "Joacă provocarea de azi →", "Gata ✓", "🔥 {n} zile la rând", "Joacă zilnic ca să faci o serie", "record {n}", "Distribuie", "Copiat", "Am rezolvat provocarea de azi din Harlo Games!", "Mâine vine una nouă. Pe mâine!"],
+    uk: ["Завдання дня", "Грати сьогоднішнє →", "Готово ✓", "🔥 {n} днів поспіль", "Грай щодня, щоб почати серію", "рекорд {n}", "Поділитися", "Скопійовано", "Я розв'язав сьогоднішнє завдання Harlo Games!", "Завтра буде нове. До завтра!"],
+    zh: ["每日一题", "玩今天的 →", "已完成 ✓", "🔥 连续 {n} 天", "每天玩一次，累积连续天数", "最佳 {n}", "分享", "已复制", "我完成了今天的 Harlo Games 每日一题！", "明天有新题，明天见！"],
+    ar: ["لغز اليوم", "العب لغز اليوم ←", "تم ✓", "🔥 {n} أيام متتالية", "العب كل يوم لتبدأ سلسلة", "الأفضل {n}", "مشاركة", "تم النسخ", "حللت لغز اليوم في Harlo Games!", "لغز جديد غدًا. نراك غدًا!"],
+    nl: ["Puzzel van de dag", "Speel die van vandaag →", "Klaar ✓", "🔥 {n} dagen op rij", "Speel elke dag voor een reeks", "record {n}", "Delen", "Gekopieerd", "Ik heb de puzzel van vandaag van Harlo Games opgelost!", "Morgen een nieuwe. Tot morgen!"],
+    tr: ["Günün bulmacası", "Bugünküyü oyna →", "Tamam ✓", "🔥 {n} günlük seri", "Seri yapmak için her gün oyna", "en iyi {n}", "Paylaş", "Kopyalandı", "Harlo Games'in bugünkü bulmacasını çözdüm!", "Yarın yeni bulmaca var. Yarın görüşürüz!"],
+    ja: ["今日のパズル", "今日のパズルで遊ぶ →", "クリア ✓", "🔥 {n}日連続", "毎日遊んで連続記録を作ろう", "最高 {n}", "シェア", "コピーしました", "Harlo Games の今日のパズルを解きました！", "また明日、新しいパズルで会おう！"],
+    ko: ["오늘의 퍼즐", "오늘 퍼즐 하기 →", "완료 ✓", "🔥 {n}일 연속", "매일 해서 연속 기록을 만드세요", "최고 {n}", "공유", "복사됨", "Harlo Games 오늘의 퍼즐을 풀었어요!", "내일 새 퍼즐이 나와요. 내일 만나요!"],
+    vi: ["Câu đố hôm nay", "Chơi câu đố hôm nay →", "Xong ✓", "🔥 Chuỗi {n} ngày", "Chơi mỗi ngày để tạo chuỗi", "cao nhất {n}", "Chia sẻ", "Đã sao chép", "Mình đã giải câu đố hôm nay của Harlo Games!", "Mai có câu đố mới. Hẹn gặp lại!"]
   };
   for (const l in S) K.forEach((k, i) => { window.HG_UI[l][k] = S[l][i]; });
 })();

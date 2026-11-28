@@ -1,5 +1,5 @@
 // Harlo: sounds, vibration, XP with a daily goal ring, and an overall streak with streak freezes.
-// Shared by the main app, Harley's Games and the Interview Coach (same localStorage, so XP and the streak are shared).
+// Shared by the main app, Harlo Games and the Interview Coach (same localStorage, so XP and the streak are shared).
 // API: HSFX.result(pct)  a phrase attempt: sound + buzz + XP by score
 //      HSFX.xp(n)        add XP (shows "+n XP", fills the ring, may complete the daily goal)
 //      HSFX.sound(name)  'great' | 'good' | 'try' | 'pop' | 'win' | 'tick'
